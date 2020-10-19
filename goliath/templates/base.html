@@ -1,5 +1,5 @@
 {% load static i18n compress%}<!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -16,14 +16,14 @@
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
 
     {% block css %}
-    
+
 
     <!-- Your stuff: Third-party CSS libraries go here -->
     {% compress css %}
     <!-- This file stores project-specific CSS -->
-    
+
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    
+
     {% endcompress %}
     {% endblock %}
 
@@ -33,6 +33,7 @@
 
     <div class="mb-1">
       <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -67,6 +68,7 @@
             {% endif %}
           </ul>
         </div>
+      </div>
       </nav>
 
     </div>
@@ -91,12 +93,12 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     {% block javascript %}
-      
+
       <!-- Vendor dependencies bundled as one file-->
       {% compress js %}
       <script src="{% static 'js/vendors.js' %}"></script>
       {% endcompress %}
-      
+
 
       <!-- place project specific Javascript in this file -->
       {% compress js %}
@@ -106,4 +108,4 @@
     {% endblock javascript %}
   </body>
 </html>
- 
+
