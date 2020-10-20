@@ -1,8 +1,51 @@
 {% extends "base.html" %} {% block content %}
-<h2>Case</h2>
+<h2>Case #{{case.id}}</h2>
 
-{{case.status}}
-<br/>
-{{case.case_type.name}}
+<table class="table">
+  <tbody>
+    <tr>
+      <th scope="row">Status</th>
+      <td>{{case.status}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Case Type</th>
+      <td>{{case.case_type}}</td>
+    </tr>
+    <tr>
+      <th scope="row">User</th>
+      <td>{{case.user}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Email</th>
+      <td>{{case.email}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+{% for m in case.receivedmessage_set.all %}
+<div class="card">
+  <div class="card-header">
+    {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{m.subject}}</h5>
+    <p class="card-text">{{m.content}}</p>
+  </div>
+</div>
+{% endfor %}
+
+
+{% for m in case.sentmessage_set.all %}
+<div class="card">
+  <div class="card-header">
+    {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{m.subject}}</h5>
+    <p class="card-text">{{m.content}}</p>
+  </div>
+</div>
+{% endfor %}
 
 {% endblock %}

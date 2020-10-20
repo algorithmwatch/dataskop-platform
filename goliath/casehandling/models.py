@@ -1,15 +1,6 @@
-import secrets
-import string
-
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from goliath.users.models import User
-
-
-def random_string(digits):
-    alphabet = string.ascii_lowercase + string.digits
-    password = "".join(secrets.choice(alphabet) for i in range(digits))
-    return password
 
 
 class TimeStampMixin(models.Model):
@@ -47,7 +38,7 @@ class CaseType(TimeStampMixin):
     entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.name
+        return self.name + " " + str(self.entity)
 
 
 class Case(TimeStampMixin):
@@ -62,14 +53,14 @@ class Case(TimeStampMixin):
     case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    def save(self, *args, **kwargs):
-        if self.email is None:
-            self.email = self.user.name + random_string(4) + "@aw.jfilter.de"
-        super(Case, self).save(*args, **kwargs)
+    # not getting called right now
+    # def save(self, *args, **kwargs):
+    #     if self.email is None:
+    #         self.email = self.user.name + random_string(4) + "@aw.jfilter.de"
+    #     super(Case, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return f"/case/{self.pk}/"
-
 
 
 class Message(TimeStampMixin):
