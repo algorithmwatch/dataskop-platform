@@ -281,3 +281,4 @@ goliath/static/css/
 goliath/static/js/project.min.js
 goliath/static/js/vendors.js
 goliath/static/js/vendors.min.js
+.vscode
