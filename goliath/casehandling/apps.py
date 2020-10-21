@@ -7,8 +7,4 @@ class CaseHandlingAppConfig(AppConfig):
     verbose_name = _("Case handling for the Goliath project.")
 
     def ready(self):
-        try:
-            # noinspection PyUnresolvedReferences
-            from . import signals  # noqa F401
-        except ImportError:
-            pass
+        from . import signals  # noqa F401

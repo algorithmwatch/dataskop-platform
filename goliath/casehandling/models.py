@@ -42,8 +42,8 @@ class CaseType(TimeStampMixin):
 
 
 class Case(TimeStampMixin):
-    questions = JSONField()
-    answers = JSONField()
+    questions = JSONField(null=True)
+    answers = JSONField(null=True)
     email = models.EmailField()
     status = models.CharField(
         max_length=2,
@@ -52,6 +52,7 @@ class Case(TimeStampMixin):
     )
     case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True)
 
     # not getting called right now
     # def save(self, *args, **kwargs):
@@ -66,7 +67,7 @@ class Case(TimeStampMixin):
 class Message(TimeStampMixin):
     from_email = models.EmailField()
     to_email = models.EmailField()
-    subject = models.TextField()
+    subject = models.CharField(max_length=255)
     content = models.TextField()
     case = models.ForeignKey("Case", on_delete=models.SET_NULL, null=True)
     sent_at = models.DateTimeField()
@@ -80,7 +81,8 @@ class Message(TimeStampMixin):
 
 
 class SentMessage(Message):
-    delievered_at = models.DateTimeField(blank=True, null=True)
+    esp_message_id = models.CharField(max_length=255, null=True)
+    esp_message_status = models.CharField(max_length=255, null=True)
     error_message = models.TextField(blank=True, null=True)
 
 

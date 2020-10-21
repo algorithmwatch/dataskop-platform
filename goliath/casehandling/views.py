@@ -24,6 +24,7 @@ class CaseCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.case_type = CaseType.objects.get(pk=self.kwargs["case_type"])
+        form.instance.entity = form.instance.case_type.entity
         form.instance.email = self.request.user.name + random_string(4) + "@aw.jfilter.de"
         return super(CaseCreate, self).form_valid(form)
 
