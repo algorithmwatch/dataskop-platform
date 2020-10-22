@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from goliath.users.models import User
 
@@ -44,7 +44,7 @@ class CaseType(TimeStampMixin):
 class Case(TimeStampMixin):
     questions = JSONField(null=True)
     answers = JSONField(null=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
@@ -89,3 +89,8 @@ class SentMessage(Message):
 class ReceivedMessage(Message):
     received_at = models.DateTimeField()
     html = models.TextField(blank=True, null=True)
+    from_display_name = models.TextField()
+    from_display_email = models.EmailField()
+    spam_score = models.FloatField()
+    to_addresses = ArrayField(models.TextField())
+    cc_addresses = ArrayField(models.TextField())
