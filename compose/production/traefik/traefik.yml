@@ -30,6 +30,7 @@ http:
       entryPoints:
         - web
       middlewares:
+        - test-auth
         - redirect
         - csrf
       service: django
@@ -39,6 +40,7 @@ http:
       entryPoints:
         - web-secure
       middlewares:
+        - test-auth
         - csrf
       service: django
       tls:
@@ -65,6 +67,9 @@ http:
       # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
       headers:
         hostsProxyHeaders: ["X-CSRFToken"]
+    test-auth:
+      basicAuth:
+        usersFile: "/etc/traefik/htpasswd"
 
   services:
     django:

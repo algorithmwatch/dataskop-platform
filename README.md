@@ -1,3 +1,15 @@
+## Deployment
+
+
+
+```bash
+htpasswd -c compose/production/traefik/htpasswd user
+```
+
+
+https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
+
+
 Goliath
 =======
 
