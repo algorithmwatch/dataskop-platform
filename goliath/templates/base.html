@@ -46,8 +46,13 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item {% if url_name == 'home' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'home' %}">Home</a>
+              <li class="nav-item {% if url_name == 'new' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'new' %}">Neues Anliegen</a>
+              </li>
+              <li
+                class="nav-item {% if url_name == 'cases' %}active{% endif %}"
+              >
+                <a class="nav-link" href="{% url 'cases' %}">Andere Anliegen</a>
               </li>
               <li
                 class="nav-item {% if url_name == 'about' %}active{% endif %}"
@@ -102,7 +107,7 @@
     </div>
     {% endwith %}
 
-    <div class="container">
+    <div class="container main-container">
       {% if messages %} {% for message in messages %}
       <div
         class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
@@ -123,7 +128,48 @@
     <!-- /container -->
 
     {% block modal %}{% endblock modal %}
-
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md">
+          <img
+            class="mb-2"
+            src="/static/images/aw-logo.svg"
+            alt="AlgorithmWatch logo"
+            height="50"
+          />
+          <small class="d-block mb-3 text-muted">© 2020</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Features</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Cool stuff</a></li>
+            <li><a class="text-muted" href="#">Random feature</a></li>
+            <li><a class="text-muted" href="#">Team feature</a></li>
+            <li><a class="text-muted" href="#">Stuff for developers</a></li>
+            <li><a class="text-muted" href="#">Another one</a></li>
+            <li><a class="text-muted" href="#">Last time</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Resource</a></li>
+            <li><a class="text-muted" href="#">Resource name</a></li>
+            <li><a class="text-muted" href="#">Another resource</a></li>
+            <li><a class="text-muted" href="#">Final resource</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>About</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Team</a></li>
+            <li><a class="text-muted" href="#">Locations</a></li>
+            <li><a class="text-muted" href="#">Privacy</a></li>
+            <li><a class="text-muted" href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
