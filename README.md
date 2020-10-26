@@ -139,3 +139,8 @@ docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
 
 Bootstrap's javascript as well as its dependencies is concatenated into
 a single file: `static/js/vendors.js`.
+
+
+## License
+
+Affero General Public License 3.0
