@@ -32,6 +32,16 @@ Install and use [Docker](https://docs.docker.com/get-docker/).
 
 https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html
 
+```bash
+./locale.sh
+```
+
+To build from scratch:
+
+```bash
+./locale.sh --build --no-cache
+```
+
 ### Type checks
 
 Running type checks with mypy:
