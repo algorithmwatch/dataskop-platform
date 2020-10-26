@@ -102,6 +102,18 @@ application, open your browser and go to `http://127.0.0.1:8025`
 Two different environments: `staging` for previewing before finally releasing to `production`.
 Useful because the email handling only works if the app is deployed somewhere.
 
+```bash
+docker-compose -f staging.yml run --rm django python manage.py migrate
+```
+
+```bash
+docker-compose -f staging.yml run --rm django python manage.py createsuperuser
+```
+
+```bash
+docker-compose -f staging.yml up
+```
+
 ### Staging
 
 Prodect the staging enviroment with basic auth.
@@ -137,6 +149,46 @@ documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on
 See detailed [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
 
+
+### Systemd Service
+
+```
+[Unit]
+Description=Goliath (Staging)
+After=docker.service
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+
+Type=oneshot
+RemainAfterExit=yes
+StandardOutput=file:/var/log/goli.log
+StandardError=file:/var/log/goli_error.log
+
+WorkingDirectory=/root/code/goliath/
+ExecStart=/usr/bin/docker-compose -f staging.yml up -d
+ExecStop=/usr/bin/docker-compose -f staging.yml down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+systemctl enable goliath-staging
+```
+
+```bash
+systemctl status goliath-staging
+```
+
+```bash
+systemctl start goliath-staging
+```
+
+```bash
+systemctl stop goliath-staging
+```
 
 ## License
 
