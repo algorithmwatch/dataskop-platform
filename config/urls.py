@@ -10,13 +10,13 @@ urlpatterns = [
 
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+        "ueber-uns/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("goliath.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
+    # path("user/", include("goliath.users.urls", namespace="users")),
+    path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
 
     # Your stuff: custom urls includes go here
