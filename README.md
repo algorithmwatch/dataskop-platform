@@ -1,50 +1,36 @@
-## Deployment
+# Goliath ![image](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg) ![image](https://img.shields.io/badge/code%20style-black-000000.svg)
+
+The Goliath project by AlgorithmWatch.
+
+## Information & Features
+
+This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django).
+
+### Settings
+
+Check out for a description of [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+
+### Custom Bootstrap Compilation
+
+The generated CSS is set up with automatic Bootstrap recompilation with
+variables of your choice. Bootstrap v4 is installed using npm and
+customised by tweaking your variables in
+`static/sass/custom_bootstrap_vars`.
+
+You can find a list of available variables [in the Bootstrap
+source](https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss),
+or get explanations on them in the [Bootstrap
+docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
+
+Bootstrap's javascript as well as its dependencies is concatenated into
+a single file: `static/js/vendors.js`.
 
 
+## Development
 
-```bash
-htpasswd -c compose/production/traefik/htpasswd user
-```
+Install and use [Docker](https://docs.docker.com/get-docker/).
 
-
-https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
-
-Goliath
-=======
-
-The Goliath project by AlgorithmWatch
-
-![image](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg%0A%20%20:target:%20https://github.com/pydanny/cookiecutter-django/%0A%20%20:alt:%20Built%20with%20Cookiecutter%20Django)
-
-![image](https://img.shields.io/badge/code%20style-black-000000.svg%0A%20%20:target:%20https://github.com/ambv/black%0A%20%20:alt:%20Black%20code%20style)
-
-License
-:   GPLv3
-
-Settings
---------
-
-Moved to
-[settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
-
-Basic Commands
---------------
-
-### Setting Up Your Users
-
--   To create a **normal user account**, just go to Sign Up and fill out
-    the form. Once you submit it, you'll see a "Verify Your E-mail
-    Address" page. Go to your console to see a simulated email
-    verification message. Copy the link into your browser. Now the
-    user's email should be verified and ready to go.
--   To create an **superuser account**, use this command:
-
-        $ python manage.py createsuperuser
-
-For convenience, you can keep your normal user logged in on Chrome and
-your superuser logged in on Firefox (or similar), so that you can see
-how the site behaves for both kinds of users.
+https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html
 
 ### Type checks
 
@@ -76,7 +62,7 @@ This app comes with Celery.
 
 To run a celery worker:
 
-``` {.sourceCode .bash}
+```bash
 cd goliath
 celery -A config.celery_app worker -l info
 ```
@@ -100,7 +86,23 @@ for more details how to start all containers.
 With MailHog running, to view messages that are sent by your
 application, open your browser and go to `http://127.0.0.1:8025`
 
-### Sentry
+
+## Deployment
+
+Two different environments: `staging` for previewing before finally releasing to `production`.
+Useful because the email handling only works if the app is deployed somewhere.
+
+### Staging
+
+Prodect the staging enviroment with basic auth.
+
+```bash
+htpasswd -c compose/production/traefik/htpasswd user
+```
+
+### Production
+
+#### Sentry
 
 Sentry is an error logging aggregator service. You can sign up for a
 free account at <https://sentry.io/signup/?code=cookiecutter> or
@@ -110,35 +112,20 @@ application.
 
 You must set the DSN url in production.
 
-Deployment
-----------
+https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
+
 
 The following details how to deploy this application.
 
-### Heroku
+#### Heroku
 
 See detailed [cookiecutter-django Heroku
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
 
-### Docker
+#### Docker
 
 See detailed [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
-
-Custom Bootstrap Compilation \^\^\^\^\^\^
-
-The generated CSS is set up with automatic Bootstrap recompilation with
-variables of your choice. Bootstrap v4 is installed using npm and
-customised by tweaking your variables in
-`static/sass/custom_bootstrap_vars`.
-
-You can find a list of available variables [in the bootstrap
-source](https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss),
-or get explanations on them in the [Bootstrap
-docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
-
-Bootstrap's javascript as well as its dependencies is concatenated into
-a single file: `static/js/vendors.js`.
 
 
 ## License
