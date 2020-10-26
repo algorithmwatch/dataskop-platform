@@ -44,7 +44,7 @@ def send_initial_email(case, subject, content):
         esp_message_id=esp_message_id,
         esp_message_status=esp_message_status,
         error_message=error_message,
-        sent_at=datetime.datetime.now(),
+        sent_at=datetime.datetime.utcnow(),
     )
 
 
@@ -58,13 +58,20 @@ def send_notifical_email(to_email, from_email, subject, content):
 
 @celery_app.task()
 def persist_inbound_email(message):
-    # can be None
-    case = Case.objects.filter(email=message.envelope_recipient).first()
+    all_to_addresses = [x.addr_spec for x in message.to] + [message.envelope_recipient]
+
+    to_address = None
+    for x in all_to_addresses:
+        # can be None
+        case = Case.objects.filter(email=x).first()
+        if case is not None:
+            to_address = x
+            break
 
     msg = ReceivedMessage.objects.create(
         case=case,
         from_email=message.envelope_sender,
-        to_email=message.envelope_recipient,
+        to_email=to_address,
         content=message.text,
         html=message.html,
         subject=message.subject,
@@ -76,7 +83,7 @@ def persist_inbound_email(message):
         from_display_email=message.from_email.addr_spec
         if message.from_email is not None
         else None,
-        received_at=datetime.datetime.now(),
-        to_addresses=[str(x) for x in message.to],
+        received_at=datetime.datetime.utcnow(),
+        to_addresses=[str(x) for x in message.to] + [message.envelope_recipient],
         cc_addresses=[str(x) for x in message.cc],
     )

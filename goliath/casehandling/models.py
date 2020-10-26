@@ -35,7 +35,7 @@ class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     questions = JSONField()
-    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True)
+    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name + " " + str(self.entity)
@@ -50,9 +50,9 @@ class Case(TimeStampMixin):
         choices=Status.choices,
         default=Status.WAITING_RESPONSE,
     )
-    case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True)
+    case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
 
     # not getting called right now
     # def save(self, *args, **kwargs):
@@ -69,12 +69,12 @@ class Message(TimeStampMixin):
     to_email = models.EmailField()
     subject = models.CharField(max_length=255)
     content = models.TextField()
-    case = models.ForeignKey("Case", on_delete=models.SET_NULL, null=True)
+    case = models.ForeignKey("Case", on_delete=models.SET_NULL, null=True, blank=True)
     sent_at = models.DateTimeField()
 
     class Meta:
         abstract = True
-        ordering = ["-sent_at"]
+        ordering = ["sent_at"]
 
     def __str__(self):
         return self.from_email + self.to_email + self.subject
@@ -89,8 +89,8 @@ class SentMessage(Message):
 class ReceivedMessage(Message):
     received_at = models.DateTimeField()
     html = models.TextField(blank=True, null=True)
-    from_display_name = models.TextField()
+    from_display_name = models.TextField(null=True, blank=True)
     from_display_email = models.EmailField()
     spam_score = models.FloatField()
     to_addresses = ArrayField(models.TextField())
-    cc_addresses = ArrayField(models.TextField())
+    cc_addresses = ArrayField(models.TextField(), null=True, blank=True)
