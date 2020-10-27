@@ -15,7 +15,11 @@ def _send_email(to_email, html_content, *kwargs):
 
     status = msg.anymail_status  # available after sending
     esp_message_id = status.message_id  # e.g., '<12345.67890@example.com>'
-    esp_message_status = status.recipients[to_email].status  # e.g., 'queued'
+
+    # can only be None during debug, don't run this section in debug?
+    esp_message_status = None
+    if to_email in status.recipients:
+        esp_message_status = status.recipients[to_email].status  # e.g., 'queued'
     return esp_message_id, esp_message_status
 
 
@@ -60,7 +64,7 @@ def send_notifical_email(to_email, from_email, subject, content):
 def persist_inbound_email(message):
     all_to_addresses = [x.addr_spec for x in message.to] + [message.envelope_recipient]
 
-    to_address = None
+    to_address, case = None, None
     for x in all_to_addresses:
         # can be None
         case = Case.objects.filter(email=x).first()
