@@ -17,9 +17,12 @@
 
     {% block css %}
 
+    {% block morecss %} {% endblock %}
+
     <!-- Your stuff: Third-party CSS libraries go here -->
     {% compress css %}
     <!-- This file stores project-specific CSS -->
+
 
     <link href="{% static 'css/project.css' %}" rel="stylesheet" />
 
@@ -180,9 +183,12 @@
     <script src="{% static 'js/vendors.js' %}"></script>
     {% endcompress %}
 
+    {% block morejslibs %} {% endblock %}
+
     <!-- place project specific Javascript in this file -->
     {% compress js %}
     <script src="{% static 'js/project.js' %}"></script>
     {% endcompress %} {% endblock javascript %}
+    {% block morejs %} {% endblock %}
   </body>
 </html>

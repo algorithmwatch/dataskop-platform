@@ -54,14 +54,8 @@ class Case(TimeStampMixin):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
 
-    # not getting called right now
-    # def save(self, *args, **kwargs):
-    #     if self.email is None:
-    #         self.email = self.user.name + random_string(4) + "@aw.jfilter.de"
-    #     super(Case, self).save(*args, **kwargs)
-
     def get_absolute_url(self):
-        return f"/case/{self.pk}/"
+        return f"/anliegen/{self.pk}/"
 
 
 class Message(TimeStampMixin):

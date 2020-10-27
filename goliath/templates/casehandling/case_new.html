@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block content %}
+<h2>Neues Anliegen aufgeben</h2>
+
+<div id="survey-container"></div>
+
+<!-- <form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Save" />
+</form> -->
+
+{% endblock %} {% block morejslibs %}
+<script src="https://unpkg.com/survey-jquery"></script>
+{% endblock %} {% block morecss %}
+<link
+  href="https://unpkg.com/survey-jquery/survey.min.css"
+  type="text/css"
+  rel="stylesheet"
+/>
+{% endblock %} {% block morejs %}
+<script>
+  // lol @ Django's JSON handling
+  var True = true;
+  var False = false;
+  window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}");
+</script>
+{% endblock %}
