@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from goliath.users.models import User
-
+from simple_history.models import HistoricalRecords
 
 class TimeStampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,6 +36,7 @@ class CaseType(TimeStampMixin):
     description = models.TextField(blank=True, null=True)
     questions = JSONField()
     entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name + " " + str(self.entity)
