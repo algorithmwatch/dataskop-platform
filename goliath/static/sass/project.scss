@@ -1,8 +1,12 @@
-
 @import "custom_bootstrap_vars";
 @import "bootstrap";
 
-
+.aw-casetype-item img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  max-height: 10rem;
+}
 
 .main-container {
   height: calc(100vh - 260px);
@@ -12,7 +16,7 @@
 // project specific CSS goes here
 
 ////////////////////////////////
-		//Variables//
+//Variables//
 ////////////////////////////////
 
 // Alert colors
@@ -25,7 +29,7 @@ $dark-pink: #eed3d7;
 $red: #b94a48;
 
 ////////////////////////////////
-		//Alerts//
+//Alerts//
 ////////////////////////////////
 
 // bootstrap alert CSS, translated to the django-standard levels of

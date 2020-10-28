@@ -1,11 +1,25 @@
 {% extends "base.html" %}
 
 {% block title %}Neues Anliegen - {% endblock %}
+
+
 {% block content %}
-    <h2>Case Types</h2>
-    <ul>
-        {% for case_type in object_list %}
-            <li><a href="/neu/{{case_type.pk}}/">{{ case_type.name }}</a></li>
-        {% endfor %}
-    </ul>
+    <h2>Wählen Sie Ihr Anliegen</h2>
+
+
+
+  <div class="row" style="height: 100%;">
+    {% for case_type in object_list %}
+      <div class="col-md">
+        <a href="/neu/{{case_type.pk}}/">
+          <div class="card border-dark mb-3 aw-casetype-item" style="width: 33%">
+          <img class="card-img-top" src="/static/images/examplepic.png" alt="">
+          <div class="card-body text-dark">
+            <h5 class="card-title">{{ case_type.name }}</h5>
+            <p class="card-text">{{ case_type.description }}</p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+    </div>
 {% endblock %}
