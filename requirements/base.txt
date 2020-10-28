@@ -24,3 +24,5 @@ django-redis==4.12.1  # https://github.com/jazzband/django-redis
 djangorestframework==3.12.1  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
 django-anymail[mailjet]==8.1  # https://github.com/anymail/django-anymail
+django-tables2==2.3.2
+django-filter==2.4.0

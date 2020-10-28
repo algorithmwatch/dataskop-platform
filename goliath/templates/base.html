@@ -52,7 +52,7 @@
                 <a class="nav-link" href="{% url 'new' %}">Neues Anliegen</a>
               </li>
               <li
-                class="nav-item {% if url_name == 'cases' %}active{% endif %}"
+                class="nav-item {% if url_name in 'cases cases-detail' %}active{% endif %}"
               >
                 <a class="nav-link" href="{% url 'cases' %}">Andere Anliegen</a>
               </li>
