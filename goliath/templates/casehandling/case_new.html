@@ -1,6 +1,13 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block title %}{{case_type.name}} - Neues Anliegen - {% endblock %}
+
+
+{% block content %}
 <h2>Neues Anliegen</h2>
 <h3>{{case_type.name}}</h3>
+
+<p>{{case_type.description}}</p>
 
 <div id="survey-container"></div>
 

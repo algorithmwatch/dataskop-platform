@@ -1,5 +1,9 @@
-{% extends "base.html" %} {% block content %}
-<h2>Case #{{case.id}}</h2>
+{% extends "base.html" %}
+
+{% block title %} - Anliegen #{{case.id}}{% endblock %}
+
+{% block content %}
+<h2>Anliegen #{{case.id}}</h2>
 
 <table class="table">
   <tbody>
