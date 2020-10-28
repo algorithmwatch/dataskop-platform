@@ -40,6 +40,9 @@ class CaseType(TimeStampMixin):
     def __str__(self):
         return self.name + " " + str(self.entity)
 
+    def get_absolute_url(self):
+        return f"/neu/{self.pk}/"
+
 
 class Case(TimeStampMixin):
     questions = JSONField(null=True)

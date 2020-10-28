@@ -11,7 +11,7 @@
   <div class="row" style="height: 100%;">
     {% for case_type in object_list %}
       <div class="col-md">
-        <a href="/neu/{{case_type.pk}}/">
+        <a href="{{ case_type.get_absolute_url }}">
           <div class="card border-dark mb-3 aw-casetype-item" style="width: 33%">
           <img class="card-img-top" src="/static/images/examplepic.png" alt="">
           <div class="card-body text-dark">
