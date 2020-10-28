@@ -15,14 +15,11 @@
 
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
 
-    {% block css %}
-
-    {% block morecss %} {% endblock %}
+    {% block css %} {% block morecss %} {% endblock %}
 
     <!-- Your stuff: Third-party CSS libraries go here -->
     {% compress css %}
     <!-- This file stores project-specific CSS -->
-
 
     <link href="{% static 'css/project.css' %}" rel="stylesheet" />
 
@@ -49,7 +46,9 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item {% if url_name == 'new' %}active{% endif %}">
+              <li
+                class="nav-item {% if url_name in 'new new-wizzard' %}active{% endif %}"
+              >
                 <a class="nav-link" href="{% url 'new' %}">Neues Anliegen</a>
               </li>
               <li
@@ -181,9 +180,7 @@
     <!-- Vendor dependencies bundled as one file-->
     {% compress js %}
     <script src="{% static 'js/vendors.js' %}"></script>
-    {% endcompress %}
-
-    {% block morejslibs %} {% endblock %}
+    {% endcompress %} {% block morejslibs %} {% endblock %}
 
     <!-- place project specific Javascript in this file -->
     {% compress js %}
