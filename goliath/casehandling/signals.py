@@ -9,7 +9,7 @@ from .tasks import send_initial_email, persist_inbound_email
 @receiver(post_save, sender=Case)
 def initial_email(sender, instance, created, **kwargs):
     if created:
-        send_initial_email(instance, "New Case", "Hey, we have a new case for you. ;)")
+        send_initial_email(instance, "New Case", instance.text)
 
 
 @receiver(inbound)  # add weak=False if inside some other function/class

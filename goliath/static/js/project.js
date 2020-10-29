@@ -1,10 +1,18 @@
 /* Project specific Javascript goes here. */
 
 function setupSurvey(casetypeId, surveyJSON, csrfToken) {
-  function sendDataToServer(survey) {
+  function sendDataToServer(survey, options) {
+    if (options.isCompleteOnTrigger) {
+      alert("Please do something else");
+      window.location.replace("/neu/");
+      return;
+    }
+
+    console.log(window.finalText)
     // jQuery does some wild preprocessing with JSONs so turn it into string
     var body = {
       answers: JSON.stringify(survey.data),
+      text: window.finalText,
       csrfmiddlewaretoken: csrfToken,
     };
 
@@ -19,6 +27,35 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
         }, 1000);
       });
   }
+
+  function constructLetterText() {
+    var text = "";
+    var values = window.awsurvey.getPlainData();
+    for (var i = 0; i < values.length; i++) {
+      if (values[i].value != null) text += values[i].value + " ";
+    }
+    return text;
+  }
+
+// survejs changed the values right before completing. So check if the complete button was clicked to prevent chaning the preview text ect.
+window.isCompleting = false;
+function beforeComplete() {
+  window.isCompleting = true;
+  return true
+}
+
+  var surveyValueChanged = function (sender, options) {
+    if (options.name != "previewhtml" && window.isCompleting === false) {
+      window.finalText = constructLetterText()
+      window.awsurvey.getQuestionByName("previewhtml").html =
+        "<h1>Vorschau</h1>" + "<p>" + window.finalText + "</p>";
+    }
+
+    var el = document.getElementById(options.name);
+    if (el) {
+      el.value = options.value;
+    }
+  };
 
   // Survey.StylesManager.applyTheme("modern");
   // Survey.StylesManager.applyTheme("bootstrap");
@@ -40,11 +77,16 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   survey.showProgressBar = "top";
   survey.showPageNumbers = true;
   survey.showTitle = false;
+  survey.showPreviewBeforeComplete = true;
   survey.completedHtml = "<p>Bitte einen kurzen Augenblick warten...</p>";
 
+  window.awsurvey = survey;
+
   $("#survey-container").Survey({
-    model: survey,
+    model: window.awsurvey,
     onComplete: sendDataToServer,
+    onCompleting: beforeComplete,
+    onValueChanged: surveyValueChanged,
     css: {
       navigationButton: "button btn-primary",
     },

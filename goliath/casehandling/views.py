@@ -29,10 +29,13 @@ class CaseCreate(LoginRequiredMixin, View):
     def post(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
         answers = json.loads(request.POST["answers"])
+        text = request.POST["text"]
+
         new_email = random_string(4) + "@aw.jfilter.de"
         case = Case.objects.create(
             case_type=case_type,
             email=new_email,
+            text=text,
             user=self.request.user,
             entity=case_type.entity,
             answers=answers,
