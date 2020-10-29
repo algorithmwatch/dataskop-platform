@@ -26,6 +26,7 @@ class Entity(TimeStampMixin):
     description = models.TextField(blank=True, null=True)
     email = models.EmailField()
     url = models.URLField(blank=True, null=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -57,6 +58,7 @@ class Case(TimeStampMixin):
     case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
+    history = HistoricalRecords()
 
     def get_absolute_url(self):
         return f"/anliegen/{self.pk}/"
@@ -82,6 +84,7 @@ class SentMessage(Message):
     esp_message_id = models.CharField(max_length=255, null=True)
     esp_message_status = models.CharField(max_length=255, null=True)
     error_message = models.TextField(blank=True, null=True)
+    history = HistoricalRecords()
 
 
 class ReceivedMessage(Message):
@@ -92,3 +95,4 @@ class ReceivedMessage(Message):
     spam_score = models.FloatField()
     to_addresses = ArrayField(models.TextField())
     cc_addresses = ArrayField(models.TextField(), null=True, blank=True)
+    history = HistoricalRecords()
