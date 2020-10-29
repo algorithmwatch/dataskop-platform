@@ -2,6 +2,8 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from goliath.users.models import User
 from simple_history.models import HistoricalRecords
+from markupfield.fields import MarkupField
+
 
 class TimeStampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -23,10 +25,12 @@ class Entity(TimeStampMixin):
     """Generic complaint / request recipient"""
 
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     email = models.EmailField()
     url = models.URLField(blank=True, null=True)
-    history = HistoricalRecords()
+
+    # history is broken right now in conjungtion with MarkupField.
+    # history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -34,10 +38,14 @@ class Entity(TimeStampMixin):
 
 class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     questions = JSONField()
-    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
-    history = HistoricalRecords()
+    entity = models.ForeignKey(
+        "Entity", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+    # history is broken right now in conjungtion with MarkupField.
+    # history = HistoricalRecords()
 
     def __str__(self):
         return self.name + " " + str(self.entity)
@@ -55,10 +63,15 @@ class Case(TimeStampMixin):
         choices=Status.choices,
         default=Status.WAITING_RESPONSE,
     )
-    case_type = models.ForeignKey("CaseType", on_delete=models.SET_NULL, null=True, blank=True)
+    case_type = models.ForeignKey(
+        "CaseType", on_delete=models.SET_NULL, null=True, blank=True
+    )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    entity = models.ForeignKey("Entity", on_delete=models.SET_NULL, null=True, blank=True)
+    entity = models.ForeignKey(
+        "Entity", on_delete=models.SET_NULL, null=True, blank=True
+    )
     history = HistoricalRecords()
+    text = models.TextField(null=True, blank=True)
 
     def get_absolute_url(self):
         return f"/anliegen/{self.pk}/"

@@ -79,7 +79,8 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_tables2",
     "django_filters",
-    "simple_history"
+    "simple_history",
+    "markupfield"
 ]
 
 LOCAL_APPS = [
