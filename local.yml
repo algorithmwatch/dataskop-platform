@@ -50,11 +50,11 @@ services:
   #   ports:
   #     - "7000:7000"
 
-  # mailhog:
-  #   image: mailhog/mailhog:v1.0.0
-  #   container_name: mailhog
-  #   ports:
-  #     - "8025:8025"
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    container_name: mailhog
+    ports:
+      - "8025:8025"
 
   redis:
     image: redis:5.0
