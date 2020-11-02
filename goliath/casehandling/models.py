@@ -29,8 +29,8 @@ class Entity(TimeStampMixin):
     email = models.EmailField()
     url = models.URLField(blank=True, null=True)
 
-    # history is broken right now in conjungtion with MarkupField.
-    # history = HistoricalRecords()
+    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
+    history = HistoricalRecords(excluded_fields=['_description_rendered', 'description_markup_type'])
 
     def __str__(self):
         return self.name
@@ -44,8 +44,8 @@ class CaseType(TimeStampMixin):
         "Entity", on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    # history is broken right now in conjungtion with MarkupField.
-    # history = HistoricalRecords()
+    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
+    history = HistoricalRecords(excluded_fields=['_description_rendered', 'description_markup_type'])
 
     def __str__(self):
         return self.name + " " + str(self.entity)
