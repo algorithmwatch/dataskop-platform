@@ -35,7 +35,7 @@ class CaseCreate(LoginRequiredMixin, View):
         case = Case.objects.create(
             case_type=case_type,
             email=new_email,
-            text=text,
+            answers_text=text,
             user=self.request.user,
             entity=case_type.entity,
             answers=answers,
@@ -67,7 +67,7 @@ class CaseTable(Table):
     class Meta:
         model = Case
         template_name = "django_tables2/bootstrap.html"
-        exclude = ("questions", "answers", "email")
+        exclude = ("questions", "answers", "email", "answers_text")
 
     def render_id(self, value):
         return format_html('<a href="/anliegen/{}/">{}</a>', value, value)

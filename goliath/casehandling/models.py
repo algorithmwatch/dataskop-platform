@@ -70,8 +70,9 @@ class Case(TimeStampMixin):
     entity = models.ForeignKey(
         "Entity", on_delete=models.SET_NULL, null=True, blank=True
     )
+    answers_text = models.TextField(null=True, blank=True)
+
     history = HistoricalRecords()
-    text = models.TextField(null=True, blank=True)
 
     def get_absolute_url(self):
         return f"/anliegen/{self.pk}/"
