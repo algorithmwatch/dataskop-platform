@@ -6,6 +6,9 @@ from config import celery_app
 
 from .models import SentMessage, Case, ReceivedMessage
 
+# to avoid DB lookups
+BASE_DOMAIN = "https://lab2.algorithmwatch.org"
+
 
 def _send_email(to_email, html_content, *kwargs):
     """Send email."""
@@ -91,3 +94,13 @@ def persist_inbound_email(message):
         to_addresses=[str(x) for x in message.to] + [message.envelope_recipient],
         cc_addresses=[str(x) for x in message.cc],
     )
+
+    if case is not None:
+        send_notifical_email(
+            case.user.email,
+            "info@aw.jfilter.de",
+            "Neue Antwort auf Goliath",
+            "Hallo, Sie haben eine neue E-Mai auf Goliath.\n\n"
+            + BASE_DOMAIN
+            + case.get_absolute_url(),
+        )
