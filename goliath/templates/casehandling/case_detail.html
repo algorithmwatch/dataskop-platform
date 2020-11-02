@@ -28,7 +28,7 @@
 
 
 {% for m in case.receivedmessage_set.all %}
-<div class="card">
+<div class="card mb-2">
   <div class="card-header">
     {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
   </div>
@@ -41,7 +41,7 @@
 
 
 {% for m in case.sentmessage_set.all %}
-<div class="card">
+<div class="card mb-2">
   <div class="card-header">
     {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
   </div>
