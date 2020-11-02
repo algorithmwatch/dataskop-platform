@@ -2,7 +2,6 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres import fields
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.html import format_html
@@ -104,6 +103,7 @@ class CaseTable(Table):
 
 
 class CaseList(SingleTableMixin, FilterView):
+    # TODO: limit to user? or public?
     model = Case
     table_class = CaseTable
     template_name = "casehandling/case_list.html"
