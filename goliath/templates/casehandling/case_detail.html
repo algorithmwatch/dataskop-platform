@@ -26,9 +26,8 @@
   </tbody>
 </table>
 
-
-{% for m in case.receivedmessage_set.all %}
-<div class="card mb-2">
+{% for m in case.all_messages %}
+<div class="card mb-3">
   <div class="card-header">
     {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
   </div>
@@ -39,17 +38,5 @@
 </div>
 {% endfor %}
 
-
-{% for m in case.sentmessage_set.all %}
-<div class="card mb-2">
-  <div class="card-header">
-    {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">{{m.subject}}</h5>
-    <p class="card-text">{{m.content}}</p>
-  </div>
-</div>
-{% endfor %}
 
 {% endblock %}

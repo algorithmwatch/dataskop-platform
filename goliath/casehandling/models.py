@@ -83,6 +83,12 @@ class Case(TimeStampMixin):
     def get_absolute_url(self):
         return f"/anliegen/{self.pk}/"
 
+    def all_messages(self):
+        return sorted(
+            list(self.receivedmessage_set.all()) + list(self.sentmessage_set.all()),
+            key=lambda x: x.sent_at,
+        )
+
 
 class Message(TimeStampMixin):
     from_email = models.EmailField()
