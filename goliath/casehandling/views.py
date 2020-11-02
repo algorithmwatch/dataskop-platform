@@ -7,12 +7,14 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.html import format_html
 from django.views.generic import DetailView, ListView, View
+from django.views.generic.edit import UpdateView
 from django_filters import FilterSet
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, Table
 
 from goliath.utils.strings import random_string
 
+from .forms import CaseStatusForm
 from .models import Case, CaseType
 
 User = get_user_model()
@@ -50,11 +52,39 @@ class CaseCreate(LoginRequiredMixin, View):
 case_create_view = CaseCreate.as_view()
 
 
+class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
+    """Adapted from
+    https://docs.djangoproject.com/en/3.1/topics/class-based-views/mixins/
+    """
+
+    template_name = "casehandling/case_detail.html"
+    form_class = CaseStatusForm
+    model = Case
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+
 class CaseDetailView(LoginRequiredMixin, DetailView):
     model = Case
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = CaseStatusForm()
+        return context
 
-case_detail_view = CaseDetailView.as_view()
+
+class CaseDetailAndUpdate(View):
+    def get(self, request, *args, **kwargs):
+        view = CaseDetailView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = CaseStatusUpdateView.as_view()
+        return view(request, *args, **kwargs)
+
+
+case_detail_and_update = CaseDetailAndUpdate.as_view()
 
 
 class CaseFilter(FilterSet):

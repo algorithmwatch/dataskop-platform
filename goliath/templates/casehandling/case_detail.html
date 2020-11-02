@@ -26,6 +26,11 @@
   </tbody>
 </table>
 
+{% load crispy_forms_tags %}
+
+{% crispy form %}
+
+
 {% for m in case.all_messages %}
 <div class="card mb-3">
   <div class="card-header">
