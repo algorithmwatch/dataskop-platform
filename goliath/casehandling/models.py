@@ -30,7 +30,9 @@ class Entity(TimeStampMixin):
     url = models.URLField(blank=True, null=True)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
-    history = HistoricalRecords(excluded_fields=['_description_rendered', 'description_markup_type'])
+    history = HistoricalRecords(
+        excluded_fields=["_description_rendered", "description_markup_type"]
+    )
 
     def __str__(self):
         return self.name
@@ -39,13 +41,17 @@ class Entity(TimeStampMixin):
 class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
-    questions = JSONField()
+    questions = JSONField(
+        help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
+    )
     entity = models.ForeignKey(
         "Entity", on_delete=models.SET_NULL, null=True, blank=True
     )
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
-    history = HistoricalRecords(excluded_fields=['_description_rendered', 'description_markup_type'])
+    history = HistoricalRecords(
+        excluded_fields=["_description_rendered", "description_markup_type"]
+    )
 
     def __str__(self):
         return self.name + " " + str(self.entity)
