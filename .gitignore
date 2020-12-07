@@ -283,4 +283,3 @@ goliath/static/js/vendors.js
 goliath/static/js/vendors.min.js
 .vscode
 deploy.sh
-local.sh

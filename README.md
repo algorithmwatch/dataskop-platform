@@ -25,7 +25,6 @@ docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
 Bootstrap's javascript as well as its dependencies is concatenated into
 a single file: `static/js/vendors.js`.
 
-
 ## Development
 
 Install and use [Docker](https://docs.docker.com/get-docker/).
@@ -36,10 +35,22 @@ https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.h
 ./locale.sh
 ```
 
-To build from scratch:
+to build from scratch:
 
 ```bash
 ./locale.sh --build --no-cache
+```
+
+to migrate:
+
+```bash
+docker-compose -f local.yml run --rm django python manage.py migrate
+```
+
+to create a super user:
+
+```bash
+docker-compose -f local.yml run --rm django python manage.py createsuperuser
 ```
 
 ### Type checks
@@ -77,9 +88,9 @@ cd goliath
 celery -A config.celery_app worker -l info
 ```
 
-Please note: For Celery's import magic to work, it is important *where*
+Please note: For Celery's import magic to work, it is important _where_
 the celery commands are run. If you are in the same folder with
-*manage.py*, you should be right.
+_manage.py_, you should be right.
 
 ### Email Server
 
@@ -95,7 +106,6 @@ for more details how to start all containers.
 
 With MailHog running, to view messages that are sent by your
 application, open your browser and go to `http://127.0.0.1:8025`
-
 
 ## Deployment
 
@@ -136,7 +146,6 @@ You must set the DSN url in production.
 
 https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
 
-
 The following details how to deploy this application.
 
 #### Heroku
@@ -148,7 +157,6 @@ documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on
 
 See detailed [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
-
 
 ### Systemd Service
 
