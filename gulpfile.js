@@ -7,6 +7,7 @@ const { src, dest, parallel, series, watch } = require("gulp");
 const pjson = require("./package.json");
 
 // Plugins
+const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
 const browserSync = require("browser-sync").create();
 
@@ -55,6 +56,7 @@ var paths = pathsConfig();
 // Styles autoprefixing and minification
 function styles() {
   var processCss = [
+    tailwindcss(),
     autoprefixer(), // adds vendor prefixes
     pixrem(), // add fallbacks for rem units
   ];
