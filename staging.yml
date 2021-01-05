@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   staging_postgres_data: {}
@@ -61,5 +61,3 @@ services:
     <<: *django
     image: goliath_staging_flower
     command: /start-flower
-
-

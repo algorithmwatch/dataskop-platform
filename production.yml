@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   production_postgres_data: {}
@@ -61,5 +61,3 @@ services:
     <<: *django
     image: goliath_production_flower
     command: /start-flower
-
-  
