@@ -3,6 +3,8 @@ Base settings to build other settings files upon.
 """
 from pathlib import Path
 
+import os
+
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -39,7 +41,7 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 
 # restrict to German for now (otherwise remove LocaleMiddleware)
 LANGUAGES = [
-  ('de', 'Deutsch'),
+    ("de", "Deutsch"),
 ]
 
 # DATABASES
@@ -80,7 +82,7 @@ THIRD_PARTY_APPS = [
     "django_tables2",
     "django_filters",
     "simple_history",
-    "markupfield"
+    "markupfield",
 ]
 
 LOCAL_APPS = [
@@ -145,7 +147,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "simple_history.middleware.HistoryRequestMiddleware"
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 # STATIC
@@ -271,7 +273,9 @@ if USE_TZ:
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
     CELERY_TIMEZONE = TIME_ZONE
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
-CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_BROKER_URL = (
+    env("CELERY_BROKER_URL") if "CELERY_BROKER_URL" in os.environ else env("REDIS_URL")
+)
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
@@ -324,5 +328,3 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
-
-
