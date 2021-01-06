@@ -8,7 +8,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
       return;
     }
 
-    console.log(window.finalText)
+    console.log(window.finalText);
     // jQuery does some wild preprocessing with JSONs so turn it into string
     var body = {
       answers: JSON.stringify(survey.data),
@@ -37,16 +37,16 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
     return text;
   }
 
-// survejs changed the values right before completing. So check if the complete button was clicked to prevent chaning the preview text ect.
-window.isCompleting = false;
-function beforeComplete() {
-  window.isCompleting = true;
-  return true
-}
+  // survejs changed the values right before completing. So check if the complete button was clicked to prevent chaning the preview text ect.
+  window.isCompleting = false;
+  function beforeComplete() {
+    window.isCompleting = true;
+    return true;
+  }
 
   var surveyValueChanged = function (sender, options) {
     if (options.name != "previewhtml" && window.isCompleting === false) {
-      window.finalText = constructLetterText()
+      window.finalText = constructLetterText();
       window.awsurvey.getQuestionByName("previewhtml").html =
         "<h1>Vorschau</h1>" + "<p>" + window.finalText + "</p>";
     }
@@ -82,6 +82,9 @@ function beforeComplete() {
 
   window.awsurvey = survey;
 
+  // what classes to customize
+  // https://surveyjs.io/Examples/Library/?id=survey-customcss&platform=jQuery&theme=modern#content-docs
+
   $("#survey-container").Survey({
     model: window.awsurvey,
     onComplete: sendDataToServer,
@@ -89,6 +92,7 @@ function beforeComplete() {
     onValueChanged: surveyValueChanged,
     css: {
       navigationButton: "button btn-primary",
+      question: { mainRoot: "sv_q sv_qstn fade-in" },
     },
   });
 }
