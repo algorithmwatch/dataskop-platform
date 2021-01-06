@@ -10,21 +10,6 @@ This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pyd
 
 Check out for a description of [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
-### Custom Bootstrap Compilation
-
-The generated CSS is set up with automatic Bootstrap recompilation with
-variables of your choice. Bootstrap v4 is installed using npm and
-customised by tweaking your variables in
-`static/sass/custom_bootstrap_vars`.
-
-You can find a list of available variables [in the Bootstrap
-source](https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss),
-or get explanations on them in the [Bootstrap
-docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
-
-Bootstrap's javascript as well as its dependencies is concatenated into
-a single file: `static/js/vendors.js`.
-
 ## Development
 
 Install and use [Docker](https://docs.docker.com/get-docker/).
@@ -52,6 +37,27 @@ to create a super user:
 ```bash
 docker-compose -f local.yml run --rm django python manage.py createsuperuser
 ```
+
+### Frontend
+
+[Not supporting IE 11 because of Tailwind v2](https://tailwindcss.com/docs/browser-support), but IE 11 usage is [dropping fast](https://gs.statcounter.com/browser-market-share/desktop/germany/#monthly-201812-202012).
+
+When adapting the `package.json` I had problems with the Docker container. Removing the volume `/app/node_modules` building the image, then adding the volume, then building again fixed this. (`docker-compose -f local.yml build node`)
+
+### Custom Bootstrap Compilation
+
+The generated CSS is set up with automatic Bootstrap recompilation with
+variables of your choice. Bootstrap v4 is installed using npm and
+customised by tweaking your variables in
+`static/sass/custom_bootstrap_vars`.
+
+You can find a list of available variables [in the Bootstrap
+source](https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss),
+or get explanations on them in the [Bootstrap
+docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
+
+Bootstrap's javascript as well as its dependencies is concatenated into
+a single file: `static/js/vendors.js`.
 
 ### Type checks
 
@@ -158,7 +164,7 @@ documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on
 See detailed [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
 
-### Systemd Service
+#### Deployment with systemd service
 
 ```
 [Unit]
@@ -182,6 +188,8 @@ ExecStop=/usr/bin/docker-compose -f staging.yml down
 WantedBy=multi-user.target
 ```
 
+##### Commands
+
 ```bash
 systemctl enable goliath-staging
 ```
@@ -196,6 +204,13 @@ systemctl start goliath-staging
 
 ```bash
 systemctl stop goliath-staging
+```
+
+##### Deployment
+
+```bash
+rsync -avz . awlab2:~/code/goliath
+ssh awlab2 "cd code/goliath && docker-compose -f staging.yml up --detach --build django && docker-compose -f staging.yml run --rm django python manage.py migrate"
 ```
 
 ## License
