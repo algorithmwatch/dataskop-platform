@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "simple_history",
     "markupfield",
+    "taggit",
 ]
 
 LOCAL_APPS = [
@@ -328,4 +329,7 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
+AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
 URL_ORIGIN = env.str("URL_ORIGIN", None)
