@@ -18,6 +18,12 @@ Install and use [Docker](https://docs.docker.com/get-docker/). [More information
 ./local.sh
 ```
 
+To create migrations:
+
+```bash
+docker-compose -f local.yml run --rm django python manage.py makemigrations
+```
+
 to migrate:
 
 ```bash
@@ -158,7 +164,7 @@ ssh awlab2 "cd code/goliath && docker-compose -f staging.yml up --detach --build
 
 ### Production
 
-You as well use the Docker-compose setup from `staging`.
+You may as well use the Docker-compose setup from `staging`.
 
 ### Heroku
 
