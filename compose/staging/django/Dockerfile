@@ -1,4 +1,4 @@
-FROM node:10-stretch-slim as client-builder
+FROM node:12-stretch-slim as client-builder
 
 WORKDIR /app
 COPY ./package.json /app
