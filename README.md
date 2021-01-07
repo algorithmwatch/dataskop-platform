@@ -12,18 +12,10 @@ Check out for a description of [settings](http://cookiecutter-django.readthedocs
 
 ## Development
 
-Install and use [Docker](https://docs.docker.com/get-docker/).
-
-https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html
+Install and use [Docker](https://docs.docker.com/get-docker/). [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
 
 ```bash
-./locale.sh
-```
-
-to build from scratch:
-
-```bash
-./locale.sh --build --no-cache
+./local.sh
 ```
 
 to migrate:
@@ -44,48 +36,24 @@ docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
 When adapting the `package.json` I had problems with the Docker container. Removing the volume `/app/node_modules` building the image, then adding the volume, then building again fixed this. (`docker-compose -f local.yml build node`)
 
-### Custom Bootstrap Compilation
-
-The generated CSS is set up with automatic Bootstrap recompilation with
-variables of your choice. Bootstrap v4 is installed using npm and
-customised by tweaking your variables in
-`static/sass/custom_bootstrap_vars`.
-
-You can find a list of available variables [in the Bootstrap
-source](https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss),
-or get explanations on them in the [Bootstrap
-docs](https://getbootstrap.com/docs/4.1/getting-started/theming/).
-
-Bootstrap's javascript as well as its dependencies is concatenated into
-a single file: `static/js/vendors.js`.
-
-### Type checks
-
-Running type checks with mypy:
-
-    $ mypy goliath
-
 ### Test coverage
 
 To run the tests, check your test coverage, and generate an HTML
 coverage report:
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
+```bash
+coverage run -m pytest
+coverage html
+open htmlcov/index.html
+```
 
 #### Running tests with py.test
 
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS
-compilation](http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html).
+```bash
+pytest
+```
 
 ### Celery
-
-This app comes with Celery.
 
 To run a celery worker:
 
@@ -110,61 +78,41 @@ containers. Please check [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
 for more details how to start all containers.
 
-With MailHog running, to view messages that are sent by your
-application, open your browser and go to `http://127.0.0.1:8025`
+View emails at: `http://127.0.0.1:8025`
 
 ## Deployment
 
 Two different environments: `staging` for previewing before finally releasing to `production`.
 Useful because the email handling only works if the app is deployed somewhere.
 
-```bash
-docker-compose -f staging.yml run --rm django python manage.py migrate
-```
+### Sentry
 
-```bash
-docker-compose -f staging.yml run --rm django python manage.py createsuperuser
-```
+Setup [Sentry](https://sentry.io) and set the `SENTRY_DSN` as environment variable.
 
-```bash
-docker-compose -f staging.yml up
-```
+### E-Mail Services
+
+TODO
 
 ### Staging
 
-Prodect the staging enviroment with basic auth.
+```bash
+docker-compose -f staging.yml run --rm django python manage.py migrate
+docker-compose -f staging.yml run --rm django python manage.py createsuperuser
+docker-compose -f staging.yml up
+```
+
+Protect the staging enviroment with basic auth.
 
 ```bash
 htpasswd -c compose/production/traefik/htpasswd user
 ```
 
-### Production
+#### Docker with systemd service
 
-#### Sentry
+Here an example on how to deploy with Docker-Compose and systemd.
 
-Sentry is an error logging aggregator service. You can sign up for a
-free account at <https://sentry.io/signup/?code=cookiecutter> or
-download and host it yourself. The system is setup with reasonable
-defaults, including 404 logging and integration with the WSGI
-application.
-
-You must set the DSN url in production.
-
-https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
-The following details how to deploy this application.
-
-#### Heroku
-
-See detailed [cookiecutter-django Heroku
-documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
-
-#### Docker
-
-See detailed [cookiecutter-django Docker
+Some more details in the [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
-
-#### Deployment with systemd service
 
 ```
 [Unit]
@@ -190,27 +138,39 @@ WantedBy=multi-user.target
 
 ##### Commands
 
+Usefull commands
+
 ```bash
 systemctl enable goliath-staging
-```
-
-```bash
 systemctl status goliath-staging
-```
-
-```bash
 systemctl start goliath-staging
-```
-
-```bash
 systemctl stop goliath-staging
 ```
 
 ##### Deployment
 
+Create a simple deployment script:
+
 ```bash
 rsync -avz . awlab2:~/code/goliath
 ssh awlab2 "cd code/goliath && docker-compose -f staging.yml up --detach --build django && docker-compose -f staging.yml run --rm django python manage.py migrate"
+```
+
+### Production
+
+You as well use the Docker-compose setup from `staging`.
+
+### Heroku
+
+Check out the [cookiecutter-django Heroku
+documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
+
+### Dokku
+
+Set up a [Dokku application](http://dokku.viewdocs.io/dokku/deployment/application-deployment/), create and link a Postgres DB and a Redis instance, respectivly. Then set up all the environment variables. Finally:
+
+```bash
+git push dokku
 ```
 
 ## License
