@@ -328,3 +328,4 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+URL_ORIGIN = env.str("URL_ORIGIN", None)

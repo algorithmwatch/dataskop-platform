@@ -6,8 +6,9 @@ from config import celery_app
 
 from .models import SentMessage, Case, ReceivedMessage
 
+from django.conf import settings
+
 # to avoid DB lookups
-BASE_DOMAIN = "https://lab2.algorithmwatch.org"
 
 
 def _send_email(to_email, html_content, *kwargs):
@@ -101,6 +102,6 @@ def persist_inbound_email(message):
             "info@aw.jfilter.de",
             "Neue Antwort auf Goliath",
             "Hallo, Sie haben eine neue E-Mai auf Goliath.\n\n"
-            + BASE_DOMAIN
+            + settings.url
             + case.get_absolute_url(),
         )
