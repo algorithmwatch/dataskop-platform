@@ -11,6 +11,7 @@ from django_filters import FilterSet
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, Table
 
+
 from goliath.utils.strings import random_string
 
 from .forms import CaseStatusForm
