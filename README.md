@@ -179,6 +179,13 @@ Set up a [Dokku application](http://dokku.viewdocs.io/dokku/deployment/applicati
 git push dokku
 ```
 
+#### Upgrade to a specific database version
+
+```bash
+docker pull postgres:11
+dokku postgres:upgrade $dbname -I 11
+```
+
 ## License
 
 Affero General Public License 3.0
