@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from goliath.users.models import User
 from simple_history.models import HistoricalRecords
@@ -43,7 +43,7 @@ class Entity(TimeStampMixin):
 class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
-    questions = JSONField(
+    questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
     )
     entity = models.ForeignKey(
@@ -63,8 +63,8 @@ class CaseType(TimeStampMixin):
 
 
 class Case(TimeStampMixin):
-    questions = JSONField(null=True)
-    answers = JSONField(null=True)
+    questions = models.JSONField(null=True)
+    answers = models.JSONField(null=True)
     email = models.EmailField(unique=True)
     status = models.CharField(
         max_length=2,
