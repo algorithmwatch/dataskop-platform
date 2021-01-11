@@ -13,7 +13,7 @@ from .api_views import ExternalSupportViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r"external", ExternalSupportViewSet, basename="external")
+router.register(r"externalsupport", ExternalSupportViewSet, basename="externalsupport")
 
 urlpatterns = [
     path("api/", include(router.urls)),

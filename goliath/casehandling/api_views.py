@@ -5,13 +5,13 @@ from rest_framework import viewsets
 from .models import ExternalSupport
 
 
-class ExternalSerializer(serializers.ModelSerializer):
+class ExternalSupportSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExternalSupport
         fields = "__all__"
 
 
-class ExternalFilter(filters.FilterSet):
+class ExternalSupportFilter(filters.FilterSet):
     q = filters.CharFilter(method="search_fulltext")
 
     def search_fulltext(self, queryset, field_name, value):
@@ -25,8 +25,8 @@ class ExternalFilter(filters.FilterSet):
 
 class ExternalSupportViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ExternalSupport.objects
-    serializer_class = ExternalSerializer
-    filterset_class = ExternalFilter
+    serializer_class = ExternalSupportSerializer
+    filterset_class = ExternalSupportFilter
     pagination_class = None
 
     def filter_queryset(self, queryset):
