@@ -33,5 +33,10 @@ django-simple-history==2.12.0
 django-markupfield==2.0.0
 markdown==3.3.3
 django-taggit
+
+# import data
 airtable-python-wrapper
 tqdm
+
+# to generate fake data
+factory-boy==3.0.1  # https://github.com/FactoryBoy/factory_boy
