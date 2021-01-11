@@ -2,7 +2,7 @@ from airtable import Airtable
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-# from tqdm import tqdm
+from tqdm import tqdm
 
 # from ...autocomplete import generate_phrases
 from ...models import ExternalSupport
@@ -19,12 +19,14 @@ class Command(BaseCommand):
 
         ExternalSupport.objects.all().delete()
 
-        for entry in entries:
+        for entry in tqdm(entries):
             fields = entry["fields"]
             tags = fields.pop("tags", [])
             tags = [x.replace("#", "") for x in tags]
             obj = ExternalSupport.objects.create(**fields)
             obj.tags.add(*tags)
+
+        ExternalSupport.objects.sync_search()
 
         self.stdout.write(
             "created " + str(len(entries)) + " external support providers"

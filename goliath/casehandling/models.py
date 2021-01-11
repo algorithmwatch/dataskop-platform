@@ -3,8 +3,53 @@ from django.db import models
 from goliath.users.models import User
 from simple_history.models import HistoricalRecords
 from markupfield.fields import MarkupField
-
+from django.db.models import F
 from taggit.managers import TaggableManager
+
+from django.contrib.postgres.search import (
+    SearchHeadline,
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
+
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
+
+
+class SearchExpertnalSupportQuerySet(models.QuerySet):
+    def search(self, search_text, highlight=True):
+        if search_text is None:
+            return self
+
+        search_query = SearchQuery(
+            search_text, config="german", search_type="websearch"
+        )
+
+        qs = self.filter(search_vector=search_query)
+        qs = qs.annotate(rank=SearchRank(F("search_vector"), search_query)).order_by(
+            "-rank"
+        )
+
+        print(search_text)
+
+        if highlight:
+            qs = qs.annotate(
+                name_highlighted=SearchHeadline(
+                    "name", search_query, config="german", highlight_all=True
+                ),
+                description_highlighted=SearchHeadline(
+                    "description", search_query, config="german", highlight_all=True
+                ),
+            )
+
+        return qs
+
+    def sync_search(self):
+        self.update(
+            search_vector=SearchVector("name", weight="A", config="german")
+            + SearchVector("description", weight="B", config="german")
+        )
 
 
 class TimeStampMixin(models.Model):
@@ -131,3 +176,9 @@ class ExternalSupport(TimeStampMixin):
     description = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=255, blank=True, null=True)
     tags = TaggableManager()
+    search_vector = SearchVectorField(null=True)
+
+    objects = SearchExpertnalSupportQuerySet.as_manager()
+
+    class Meta(object):
+        indexes = [GinIndex(fields=["search_vector"])]

@@ -34,3 +34,4 @@ django-markupfield==2.0.0
 markdown==3.3.3
 django-taggit
 airtable-python-wrapper
+tqdm

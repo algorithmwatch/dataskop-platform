@@ -36,6 +36,10 @@ to create a super user:
 docker-compose -f local.yml run --rm django python manage.py createsuperuser
 ```
 
+```bash
+docker-compose -f local.yml run --rm django python manage.py importsupport
+```
+
 ### Frontend
 
 [Not supporting IE 11 because of Tailwind v2](https://tailwindcss.com/docs/browser-support), but IE 11 usage is [dropping fast](https://gs.statcounter.com/browser-market-share/desktop/germany/#monthly-201812-202012).
