@@ -1,0 +1,293 @@
+{
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Hallo!",
+      "elements": [
+        {
+          "name": "question2",
+          "type": "text",
+          "visible": false,
+          "defaultValue": "Sehr geehrte Damen und Herren, ich möchte Sie bitten, zu folgendem Fall Stellung zu nehmen. In der Nähe meines Wohnorts kommt es zu Störungen durch "
+        },
+        {
+          "name": "question1",
+          "type": "radiogroup",
+          "title": "Bitte wählen Sie zwischen folgenden Möglichkeiten aus.",
+          "choices": [
+            {
+              "text": "Ich fühle mich gestört durch Ausweichverkehr (Umleitungen, Maut-Ausweichverkehr etc.).",
+              "value": "Ausweichverkehr."
+            },
+            {
+              "text": "Es fahren dauernd LKWs durch meine Wohnstraße.",
+              "value": "durch den Ort fahrende LKWs."
+            },
+            {
+              "text": "Meine Straße ist jetzt eine Fahrradstraße und trotzdem fahren dauernd Autos durch, die keine Anlieger sind.",
+              "value": "Autoverkehr in der Fahrradstraße."
+            }
+          ],
+          "hasOther": true,
+          "otherText": "Mein Anliegen ist nicht dabei [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+        }
+      ],
+      "description": "Hier können wir Ihnen helfen, Ihr Anliegen wegen der Navigation von XY. Kartendienst an XY mitzuteilen. "
+    },
+    {
+      "name": "page2",
+      "elements": [
+        {
+          "name": "question2a",
+          "type": "radiogroup",
+          "title": "Lassen Sie uns das zusammen weiter eingrenzen. Handelt es sich um:",
+          "choices": [
+            {
+              "text": "temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen.",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr.",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "ich bin mir nicht sicher.",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Nichts davon. [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question1} = 'Ausweichverkehr.'"
+        },
+        {
+          "name": "question2b",
+          "type": "radiogroup",
+          "title": "Lassen Sie uns das zusammen weiter eingrenzen. Handelt es sich um:",
+          "choices": [
+            {
+              "text": "hauptsächlich regionalen Verkehr",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "hauptsächlich überregionalen Verkehr",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "ich bin mir nicht sicher",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Nichts davon. [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question1} = 'durch den Ort fahrende LKWs.'"
+        },
+        {
+          "name": "question2c",
+          "type": "radiogroup",
+          "title": "Lassen Sie uns das zusammen weiter eingrenzen. Handelt es sich um:",
+          "choices": [
+            {
+              "text": "eine neue Fahrradstraße (unter 2 Monate)",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "eine schon länger existierende Fahrradstraße (über 2 Monate)",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "ich bin mir nicht sicher",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Nichts davon. [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question1} = 'Autoverkehr in der Fahrradstraße.'"
+        }
+      ]
+    },
+    {
+      "name": "page3",
+      "elements": [
+        {
+          "name": "question3",
+          "type": "checkbox",
+          "title": "In Ordnung. Was hiervon beschreibt diese Situation am besten? Eine Mehrfachauswahl ist möglich.",
+          "choices": [
+            {
+              "text": "Mich stört die Lärmbelästigung.",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "Der viele Verkehr erhöht die Unsicherheit für andere Straßenteilnehmende",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "ich bin mir nicht sicher.",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Nichts davon. [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visibleIf": "{question2a} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] or {question2b} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] or {question2c} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher']",
+          "isRequired": true
+        }
+      ],
+      "visibleIf": "{question2a} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] or {question2b} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] or {question2c} anyof ['    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    C - ich bin mir nicht sicher']"
+    },
+    {
+      "name": "page4",
+      "elements": [
+        {
+          "name": "question4a",
+          "type": "checkbox",
+          "title": "Das klingt unerfreulich. Was erwarten Sie von Kartendienst XY?",
+          "choices": [
+            {
+              "text": "Meine Straße soll als ungeeignet für Ausweichverkehr gekennzeichnet werden.",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "Kartendienst XY soll die von der Verkehrsleitung vorgegebenen Umleitungen anzeigen, nicht die kürzeste Route.",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "Kartendienst XY soll mit dem lokalen Verkehrsmanagement in Verbindung treten.",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Etwas anderes [Bitte schreiben Sie das hier in das Textfeld. Wir treten dann zügig mit Ihn in Kontakt.]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question3} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] and {question2a} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher']"
+        },
+        {
+          "name": "question4b",
+          "type": "checkbox",
+          "title": "Das klingt unerfreulich. Was erwarten Sie von Kartendienst XY?",
+          "choices": [
+            {
+              "text": "Kartendienst XY soll LKWs über die für sie geeigneten Straßen navigieren, nicht durch Wohngebiete.",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "to be defined",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "Kartendienst XY soll mit dem lokalen Verkehrsmanagement in Verbindung treten.",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Etwas anderes [Bitte schreiben Sie das hier in das Textfeld. Wir treten dann zügig mit Ihn in Kontakt.]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question3} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    C - ich bin mir nicht sicher', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr'] and {question2b} anyof ['    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher', '    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen']"
+        },
+        {
+          "name": "question4c",
+          "type": "checkbox",
+          "title": "Das klingt unerfreulich. Was erwarten Sie von Kartendienst XY?",
+          "choices": [
+            {
+              "text": "Kartendienst XY soll das Kartenmaterial aktualisieren.",
+              "value": "    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen"
+            },
+            {
+              "text": "Kartendienst XY soll die Routen für Autonavigation anpassen - Fahrradstraßen sollten da nicht auftauchen.",
+              "value": "    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr"
+            },
+            {
+              "text": "Kartendienst XY soll mit dem lokalen Verkehrsmanagement in Verbindung treten.",
+              "value": "    C - ich bin mir nicht sicher"
+            },
+            {
+              "text": "Etwas anderes [Bitte schreiben Sie das hier in das Textfeld. Wir treten dann zügig mit Ihn in Kontakt.]",
+              "value": "    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+            }
+          ],
+          "visibleIf": "{question3} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher'] and {question2c} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher']"
+        }
+      ],
+      "visibleIf": "{question3} anyof ['    A - temporären Ausweichverkehr, z.B. aufgrund von zeitlich begrenzten Umleitungen', '    B - dauernden Verkehr, z.B. aufgrund von Maut-Ausweichverkehr', '    C - ich bin mir nicht sicher']"
+    },
+    {
+      "name": "page5",
+      "elements": [
+        {
+          "name": "Textfeld",
+          "type": "comment",
+          "title": "Bitte schreiben Sie Ihr Anliegen hier in das Textfeld. Wir treten dann zügig mit Ihnen in Kontakt.",
+          "visibleIf": "({question4C} ==     Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite])"
+        }
+      ],
+      "visibleIf": "{question4a} = '    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]' or {question4b} = '    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]' or {question4c} = '    Nicht dabei. [Tut uns leid. vllt. ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]'"
+    },
+    {
+      "name": "page6",
+      "elements": [
+        {
+          "name": "question5",
+          "type": "radiogroup",
+          "title": "Nun sind wir fast soweit. Bitte geben Sie uns noch den Ort an, auf den sich ihr Anliegen bezieht.",
+          "choices": [
+            {
+              "text": "Adresse (ohne Hausnr., ggf. Nur PLZ, Ortsname. Geokoord., Pick auf Karte?)",
+              "value": "item1"
+            },
+            {
+              "text": "Das möchte ich nicht. [Ok. Sind Sie sicher, dass ihr Anliegen auch ohne Ortsangabe verständlich ist? Ja/Nein]",
+              "value": "item2"
+            }
+          ],
+          "visible": false,
+          "visibleIf": "{question4a} notempty or {question4b} notempty or {question4c} notempty"
+        },
+        {
+          "name": "Adresseingabe",
+          "type": "multipletext",
+          "items": [
+            { "name": "text3", "title": "Straße (ohne Hausnummer)" },
+            { "name": "text1", "title": "PLZ" },
+            { "name": "text2", "title": "Ort" },
+            { "name": "text4", "title": "Geokoordinaten (falls verfügbar)" }
+          ],
+          "title": "Adresseingabe",
+          "visible": false,
+          "visibleIf": "{question5} = 'item1'"
+        }
+      ],
+      "visibleIf": "{question4a} notempty or {question4b} notempty or {question4c} notempty"
+    },
+    {
+      "name": "page7",
+      "elements": [
+        {
+          "name": "Herzlichen Dank",
+          "type": "text",
+          "visibleIf": "{question5} anyof ['item1', 'item2']",
+          "description": "Wir erstellen nun eine Vorschau Ihres Anliegens. Im nächsten Schritt können Sie Ihre Angaben nocheinmal überprüfen."
+        },
+        { "name": "previewhtml", "type": "html" }
+      ],
+      "visibleIf": "{question5} = 'item2' or {Adresseingabe.text4} notempty or {Adresseingabe.text2} notempty or {Adresseingabe.text3} notempty or {Adresseingabe.text4} notempty or {question5} = 'item2'"
+    }
+  ],
+  "triggers": [{ "type": "complete" }],
+  "showCompletedPage": false,
+  "showQuestionNumbers": "off"
+}

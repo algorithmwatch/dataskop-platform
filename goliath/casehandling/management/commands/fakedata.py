@@ -1,3 +1,4 @@
+from pathlib import Path
 import random
 
 from django.db.models import signals
@@ -125,6 +126,10 @@ class Command(BaseCommand):
     @factory.django.mute_signals(signals.pre_save, signals.post_save)
     @transaction.atomic
     def handle(self, *args, **options):
+        questions = Path(
+            "/app/goliath/casehandling/management/commands/questions.json"
+        ).read_text()
+
         if options["delete"]:
             self.stdout.write("Deleting old data (besides superusers)...")
 
@@ -149,7 +154,7 @@ class Command(BaseCommand):
         case_types = []
         for _ in range(options["case_type"]):
             e = random.choice(entities)
-            ct = CaseTypeFactory(entity=e)
+            ct = CaseTypeFactory(entity=e, questions=questions)
             case_types.append(ct)
 
         cases = []
