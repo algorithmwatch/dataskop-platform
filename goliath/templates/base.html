@@ -1,4 +1,5 @@
-{% load static i18n compress%}<!DOCTYPE html>
+{% load static i18n compress %}
+<!DOCTYPE html>
 <html lang="de">
   <head>
     <meta charset="utf-8" />
@@ -7,12 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="The Goliath project by AlgorithmWatch" />
     <meta name="author" content="AlgorithmWatch" />
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
-
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
 
     {% block css %} {% block morecss %} {% endblock %}
@@ -27,152 +22,54 @@
   </head>
 
   <body>
-    {% with url_name=request.resolver_match.url_name %}
-    <div class="mb-1">
-      <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <div class="container">
-          <button
-            class="navbar-toggler navbar-toggler-right"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand" href="{% url 'home' %}">Goliath</a>
+    <div>
+      {% include "navbar.html" %}
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li
-                class="nav-item {% if url_name in 'new new-wizzard' %}active{% endif %}"
-              >
-                <a class="nav-link" href="{% url 'new' %}">Neues Anliegen</a>
-              </li>
-              <li
-                class="nav-item {% if url_name in 'cases cases-detail' %}active{% endif %}"
-              >
-                <a class="nav-link" href="{% url 'cases' %}">Andere Anliegen</a>
-              </li>
-              <li
-                class="nav-item {% if url_name == 'about' %}active{% endif %}"
-              >
-                <a class="nav-link" href="{% url 'about' %}">Über uns</a>
-              </li>
-              {% if request.user.is_authenticated %}
-              <li
-                class="nav-item {% if url_name == 'account_email' %}active{% endif %}"
-              >
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_email' %}"
-                  >Mein Account</a
-                >
-              </li>
-              <li
-                class="nav-item {% if url_name == 'account_logout' %}active{% endif %}"
-              >
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}"
-                  >{% trans "Sign Out" %}</a
-                >
-              </li>
-              {% else %}
-              <li
-                class="nav-item {% if url_name == 'account_signup' %}active{% endif %}"
-              >
-                {# URL provided by django-allauth/account/urls.py #}
-                <a
-                  id="sign-up-link"
-                  class="nav-link"
-                  href="{% url 'account_signup' %}"
-                  >{% trans "Sign Up" %}</a
-                >
-              </li>
-              <li
-                class="nav-item {% if url_name == 'account_login' %}active{% endif %}"
-              >
-                {# URL provided by django-allauth/account/urls.py #}
-                <a
-                  id="log-in-link"
-                  class="nav-link"
-                  href="{% url 'account_login' %}"
-                  >{% trans "Sign In" %}</a
-                >
-              </li>
-              {% endif %}
-            </ul>
-          </div>
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 class="text-3xl font-bold leading-tight text-gray-900">
+            change me please
+          </h1>
         </div>
-      </nav>
-    </div>
-    {% endwith %}
+      </header>
+      <main style="min-height: 30rem;">
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <!-- <div class="container main-container"> -->
 
-    <div class="container main-container">
-      {% if messages %} {% for message in messages %}
-      <div
-        class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
-      >
-        {{ message }}<button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endfor %} {% endif %} {% block content %}
-      <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-    </div>
+          <!-- FIXME: Make messages work for Tailwind -->
+          {% if messages %} {% for message in messages %}
+          <div
+            class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+          >
+            {{ message }}<button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %} {% endif %}
+
+        {% block content %}
+          <!-- Replace with your content -->
+          <div class="px-4 py-6 sm:px-0">
+            <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">Replace content block.</div>
+          </div>
+          <!-- /End replace -->
+        {% endblock content %}
+        </div>
+      </main>
+  </div>
     <!-- /container -->
 
+    <!-- FIXME: Make Modal work for Tailwind -->
     {% block modal %}{% endblock modal %}
-    <div class="container">
-      <div class="row">
-        <div class="col-12 col-md">
-          <img
-            class="mb-2"
-            src="/static/images/aw-logo.svg"
-            alt="AlgorithmWatch logo"
-            height="50"
-          />
-          <small class="d-block mb-3 text-muted">© 2020</small>
-        </div>
-        <div class="col-6 col-md">
-          <h5>Features</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">Cool stuff</a></li>
-            <li><a class="text-muted" href="#">Random feature</a></li>
-            <li><a class="text-muted" href="#">Team feature</a></li>
-            <li><a class="text-muted" href="#">Stuff for developers</a></li>
-            <li><a class="text-muted" href="#">Another one</a></li>
-            <li><a class="text-muted" href="#">Last time</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-md">
-          <h5>Resources</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">Resource</a></li>
-            <li><a class="text-muted" href="#">Resource name</a></li>
-            <li><a class="text-muted" href="#">Another resource</a></li>
-            <li><a class="text-muted" href="#">Final resource</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-md">
-          <h5>About</h5>
-          <ul class="list-unstyled text-small">
-            <li><a class="text-muted" href="#">Team</a></li>
-            <li><a class="text-muted" href="#">Locations</a></li>
-            <li><a class="text-muted" href="#">Privacy</a></li>
-            <li><a class="text-muted" href="#">Terms</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Le javascript
+
+    {% include "footer.html" %}
+
+    <!-- Javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     {% block javascript %}

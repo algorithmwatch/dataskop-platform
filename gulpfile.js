@@ -30,11 +30,11 @@ function pathsConfig(appName) {
   const vendorsRoot = "node_modules";
 
   return {
-    bootstrapSass: `${vendorsRoot}/bootstrap/scss`,
+    // bootstrapSass: `${vendorsRoot}/bootstrap/scss`,
     vendorsJs: [
       `${vendorsRoot}/jquery/dist/jquery.js`,
-      `${vendorsRoot}/popper.js/dist/umd/popper.js`,
-      `${vendorsRoot}/bootstrap/dist/js/bootstrap.js`,
+      // `${vendorsRoot}/popper.js/dist/umd/popper.js`,
+      // `${vendorsRoot}/bootstrap/dist/js/bootstrap.js`,
     ],
 
     app: this.app,
