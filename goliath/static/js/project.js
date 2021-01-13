@@ -37,6 +37,18 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
     return text;
   }
 
+  function afterRenderQuestion(sender, options) {
+    setTimeout(
+      () =>
+        options.htmlElement.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "end",
+        }),
+      100
+    );
+  }
+
   // survejs changed the values right before completing. So check if the complete button was clicked to prevent chaning the preview text ect.
   window.isCompleting = false;
   function beforeComplete() {
@@ -74,11 +86,17 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   var survey = new Survey.Model(surveyJSON);
 
   survey.locale = "de";
-  survey.showProgressBar = "top";
-  survey.showPageNumbers = true;
-  survey.showTitle = false;
+  // survey.showProgressBar = "top";
+  // survey.showPageNumbers = true;
+  // survey.showTitle = false;
   survey.showPreviewBeforeComplete = true;
   survey.completedHtml = "<p>Bitte einen kurzen Augenblick warten...</p>";
+
+  // https://surveyjs.io/Documentation/Library?id=SurveyModel#questionsOnPageMode
+  survey.questionsOnPageMode = "singlePage";
+
+  // ensure deleting all values when
+  survey.clearInvisibleValues = "onHidden";
 
   window.awsurvey = survey;
 
@@ -87,11 +105,11 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
 
   $("#survey-container").Survey({
     model: window.awsurvey,
+    onAfterRenderQuestion: afterRenderQuestion,
     onComplete: sendDataToServer,
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigationButton: "button btn-primary",
       question: { mainRoot: "sv_q sv_qstn fade-in" },
     },
   });

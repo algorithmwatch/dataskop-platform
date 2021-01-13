@@ -98,6 +98,23 @@ $red: #b94a48;
   }
 }
 
+input[type="radio"] {
+  visibility: hidden;
+}
+input[type="radio"]:checked {
+  visibility: visible !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .sv_q_radiogroup_label span:nth-child(4) {
+    @apply inline-block box-border border-4 my-2 p-2 text-right;
+  }
+
+  .sv_q_radiogroup_label {
+    @apply text-right;
+  }
+}
