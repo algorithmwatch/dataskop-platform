@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import signals
 import factory
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -11,6 +12,7 @@ from goliath.casehandling.models import (
     Entity,
     ReceivedMessage,
     SentMessage,
+    Status,
 )
 from goliath.users.models import User
 
@@ -19,26 +21,26 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.Faker("name")
-    email = factory.Faker("email")
+    username = factory.Faker("name", locale="de")
+    email = factory.Faker("email", locale="de")
 
 
 class EntityFactory(DjangoModelFactory):
     class Meta:
         model = Entity
 
-    name = factory.Faker("name")
-    email = factory.Faker("company_email")
-    description = factory.Faker("text")
-    url = factory.Faker("url")
+    name = factory.Faker("company", locale="de")
+    email = factory.Faker("company_email", locale="de")
+    description = factory.Faker("text", locale="de")
+    url = factory.Faker("url", locale="de")
 
 
 class CaseTypeFactory(DjangoModelFactory):
     class Meta:
         model = CaseType
 
-    name = factory.Faker("name")
-    description = factory.Faker("text")
+    name = factory.Faker("catch_phrase", locale="de")
+    description = factory.Faker("text", locale="de")
     questions = "{}"
 
 
@@ -47,7 +49,7 @@ class CaseFactory(DjangoModelFactory):
         model = Case
 
     answers_text = factory.Faker("text")
-    email = factory.Faker("company_email")
+    email = factory.Faker("company_email", locale="de")
     questions = "{}"
     answers = "{}"
 
@@ -56,8 +58,8 @@ class SentMessageFactory(DjangoModelFactory):
     class Meta:
         model = SentMessage
 
-    from_email = factory.Faker("company_email")
-    to_email = factory.Faker("company_email")
+    from_email = factory.Faker("email", locale="de")
+    to_email = factory.Faker("company_email", locale="de")
     subject = factory.Faker("sentence")
     content = factory.Faker("text")
     sent_at = factory.Faker("date_this_year")
@@ -67,23 +69,16 @@ class ReceivedMessageFactory(DjangoModelFactory):
     class Meta:
         model = ReceivedMessage
 
-    from_email = factory.Faker("company_email")
-    to_email = factory.Faker("company_email")
+    from_email = factory.Faker("company_email", locale="de")
+    to_email = factory.Faker("email", locale="de")
     subject = factory.Faker("sentence")
     content = factory.Faker("text")
     sent_at = factory.Faker("date_this_year")
     received_at = factory.Faker("date_this_year")
-    from_display_name = factory.Faker("name")
-    from_display_email = factory.Faker("email")
+    from_display_name = factory.Faker("company", locale="de")
+    from_display_email = factory.Faker("company_email", locale="de")
     spam_score = factory.Faker("pyfloat")
-    to_addresses = [factory.Faker("text")]
-
-
-NUM_USERS = 50
-NUM_CLUBS = 10
-NUM_THREADS = 12
-COMMENTS_PER_THREAD = 25
-USERS_PER_CLUB = 8
+    to_addresses = [factory.Faker("email")]
 
 
 class Command(BaseCommand):
@@ -97,43 +92,49 @@ class Command(BaseCommand):
 
         parser.add_argument(
             "--user",
-            default=10,
-            type=int,
-        )
-
-        parser.add_argument(
-            "--entity",
             default=5,
             type=int,
         )
 
         parser.add_argument(
+            "--entity",
+            default=3,
+            type=int,
+        )
+
+        parser.add_argument(
             "--case_type",
-            default=10,
+            default=5,
             type=int,
         )
 
         parser.add_argument(
             "--case",
-            default=30,
+            default=10,
             type=int,
         )
 
         parser.add_argument(
             "--message",
-            default=3,
+            default=2,
             type=int,
         )
 
+    # mute signals when creating fake data (via https://stackoverflow.com/a/26490827/4028896)
+
+    @factory.django.mute_signals(signals.pre_save, signals.post_save)
     @transaction.atomic
     def handle(self, *args, **options):
         if options["delete"]:
-            self.stdout.write("Deleting old data...")
-            models = [User, Entity, Case, CaseType, SentMessage, ReceivedMessage]
+            self.stdout.write("Deleting old data (besides superusers)...")
+
+            User.objects.filter(is_superuser=False).delete()
+            models = [Entity, Case, CaseType, SentMessage, ReceivedMessage]
             for m in models:
                 m.objects.all().delete()
 
         self.stdout.write("Creating new data...")
+
         # Create all the users
         people = []
         for _ in range(options["user"]):
@@ -151,12 +152,13 @@ class Command(BaseCommand):
             ct = CaseTypeFactory(entity=e)
             case_types.append(ct)
 
-        # TODO: status
         cases = []
         for _ in range(options["case"]):
             ct = random.choice(case_types)
             u = random.choice(people)
-            c = CaseFactory(case_type=ct, user=u, entity=ct.entity)
+            status = random.choice(Status.choices)[0]
+
+            c = CaseFactory(case_type=ct, user=u, entity=ct.entity, status=status)
 
             SentMessageFactory(case=c)
             for _ in range(options["message"]):
@@ -164,19 +166,5 @@ class Command(BaseCommand):
                     SentMessageFactory(case=c)
                 else:
                     ReceivedMessageFactory(case=c)
-            # cases.append(c)
 
-        # # Add some users to clubs
-        # for _ in range(NUM_CLUBS):
-        #     members = random.choices(people, k=USERS_PER_CLUB)
-        #     club.user.add(*members)
-        #     club = ClubFactory()
-        #     members = random.choices(people, k=USERS_PER_CLUB)
-        #     club.user.add(*members)
-
-        # # Create all the threads
-        # for _ in range(NUM_THREADS):
-        #     # Create comments for each thread
-        #     for _ in range(COMMENTS_PER_THREAD):
-        #         commentor = random.choice(people)
-        #         CommentFactory(user=commentor, thread=thread)
+            cases.append(c)
