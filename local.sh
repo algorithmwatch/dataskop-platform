@@ -3,4 +3,4 @@
 # To run form scratch:
 # ./local.sh --build --no-cache
 
-docker-compose -f local.yml up --remove-orphans $1
+docker-compose -f local.yml up --remove-orphans "$@"

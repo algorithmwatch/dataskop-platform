@@ -18,26 +18,16 @@ Install and use [Docker](https://docs.docker.com/get-docker/). [More information
 ./local.sh
 ```
 
-To create migrations:
+To run Django management comannds:
 
 ```bash
-docker-compose -f local.yml run --rm django python manage.py makemigrations
-```
-
-to migrate:
-
-```bash
-docker-compose -f local.yml run --rm django python manage.py migrate
-```
-
-to create a super user:
-
-```bash
-docker-compose -f local.yml run --rm django python manage.py createsuperuser
-```
-
-```bash
-docker-compose -f local.yml run --rm django python manage.py importsupport
+./local_manage.sh makemigrations
+./local_manage.sh migrate
+./local_manage.sh createsuperuser
+./local_manage.sh reset_db
+./local_manage.sh shell_plus --print-sql
+./local_manage.sh importsupport
+./local_manage.sh fakedata
 ```
 
 ### Frontend

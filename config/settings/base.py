@@ -21,6 +21,7 @@ if READ_DOT_ENV_FILE:
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
+
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -301,7 +302,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = None if DEBUG else "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = "goliath.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
