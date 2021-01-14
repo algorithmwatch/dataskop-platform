@@ -19,6 +19,11 @@
     "pixrem": "^5.0.0",
     "popper.js": "^1.16.1",
     "postcss": "^8.2.2",
+    "stylelint": "^13.8.0",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-recommended-scss": "^4.2.0",
+    "stylelint-order": "^4.1.0",
+    "stylelint-scss": "^3.18.0",
     "tailwindcss": "^2.0.2"
   },
   "engines": {
