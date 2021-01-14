@@ -3,10 +3,14 @@
 {% block title %}{{case_type.name}} - Neues Anliegen{% endblock %}
 
 {% block content %}
-  <h2>Neues Anliegen</h2>
-  <h3>{{case_type.name}}</h3>
+  <h1>Neues Anliegen</h2>
+  <h2>{{case_type.name}}</h3>
   <p>{{case_type.description}}</p>
-  <div id="survey-container"></div>
+  <div class="survey-container">
+    <div class="survey-inner">
+
+    </div>
+  </div>
 {% endblock %}
 
 {% block morejs %}

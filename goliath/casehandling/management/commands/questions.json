@@ -26,10 +26,12 @@
             {
               "text": "Meine Straße ist jetzt eine Fahrradstraße und trotzdem fahren dauernd Autos durch, die keine Anlieger sind.",
               "value": "Autoverkehr in der Fahrradstraße."
+            },
+            {
+              "text": "Mein Anliegen ist nicht dabei [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]",
+              "value": "Autoverkehr in der Fahrradstraße."
             }
-          ],
-          "hasOther": true,
-          "otherText": "Mein Anliegen ist nicht dabei [Das tut uns leid. Vielleicht ist ein anderer Falltyp für Sie besser geeignet?-> Startseite]"
+          ]
         }
       ],
       "description": "Hier können wir Ihnen helfen, Ihr Anliegen wegen der Navigation von XY. Kartendienst an XY mitzuteilen. "

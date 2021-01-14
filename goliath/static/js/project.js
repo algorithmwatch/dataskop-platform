@@ -35,6 +35,10 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   }
 
   function afterRenderQuestion(sender, options) {
+    if (options.question.name === "previewhtml") {
+      $(".aw-completebutton").removeClass("aw-hidden");
+    }
+
     setTimeout(
       () =>
         options.htmlElement.scrollIntoView({
@@ -58,7 +62,10 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
     if (options.name != "previewhtml" && window.isCompleting === false) {
       window.finalText = constructLetterText();
       window.awsurvey.getQuestionByName("previewhtml").html =
-        "<h1>Vorschau</h1>" + "<p>" + window.finalText + "</p>";
+        "<div class='previewhtml'><h2>Vorschau</h2>" +
+        "<p>" +
+        window.finalText +
+        "</p></div>";
     }
 
     var el = document.getElementById(options.name);
@@ -93,19 +100,24 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   // ensure deleting all values when
   survey.clearInvisibleValues = "onHidden";
 
+  survey.completeText = "Anliegen melden & versenden";
+
   window.awsurvey = survey;
 
   // what classes to customize
   // https://surveyjs.io/Examples/Library/?id=survey-customcss&platform=jQuery&theme=modern#content-docs
 
-  $("#survey-container").Survey({
+  $(".survey-inner").Survey({
     model: window.awsurvey,
     onAfterRenderQuestion: afterRenderQuestion,
     onComplete: sendDataToServer,
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      question: { mainRoot: "sv_q sv_qstn fade-in" },
+      navigation: { complete: "btn aw-hidden aw-completebutton" },
+      question: {
+        mainRoot: "sv_q sv_qstn fade-in",
+      },
     },
   });
 }
