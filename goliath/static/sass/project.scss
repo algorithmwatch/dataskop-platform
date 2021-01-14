@@ -69,4 +69,31 @@ input[type="radio"]:checked {
   .sv_q_radiogroup_label {
     @apply text-right;
   }
+
+  .btn {
+    @apply border-2 border-blue-500 rounded-lg text-blue-500 px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white m-2;
+  }
+
+  .unverified {
+    @apply text-sm mr-2 bg-red-600 text-white p-1 rounded;
+  }
+
+  .textinput {
+    @apply border-2 border-blue-500 px-2 py-1;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl py-3;
+  }
+  h2 {
+    @apply text-xl py-2;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
 }
