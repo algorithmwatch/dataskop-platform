@@ -30,11 +30,10 @@ function pathsConfig(appName) {
   const vendorsRoot = "node_modules";
 
   return {
-    // bootstrapSass: `${vendorsRoot}/bootstrap/scss`,
+    vendorSass: `${vendorsRoot}/survey-jquery/survey.min.css`,
     vendorsJs: [
       `${vendorsRoot}/jquery/dist/jquery.js`,
-      // `${vendorsRoot}/popper.js/dist/umd/popper.js`,
-      // `${vendorsRoot}/bootstrap/dist/js/bootstrap.js`,
+      `${vendorsRoot}/survey-jquery/survey.jquery.js`,
     ],
 
     app: this.app,
@@ -68,7 +67,7 @@ function styles() {
   return src(`${paths.sass}/project.scss`)
     .pipe(
       sass({
-        includePaths: [paths.bootstrapSass, paths.sass],
+        includePaths: [paths.vendorSass, paths.sass],
       }).on("error", sass.logError)
     )
     .pipe(plumber()) // Checks for errors

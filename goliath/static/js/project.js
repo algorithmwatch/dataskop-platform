@@ -1,5 +1,3 @@
-/* Project specific Javascript goes here. */
-
 function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   function sendDataToServer(survey, options) {
     if (options.isCompleteOnTrigger) {
@@ -8,7 +6,6 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
       return;
     }
 
-    console.log(window.finalText);
     // jQuery does some wild preprocessing with JSONs so turn it into string
     var body = {
       answers: JSON.stringify(survey.data),
@@ -49,7 +46,8 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
     );
   }
 
-  // survejs changed the values right before completing. So check if the complete button was clicked to prevent chaning the preview text ect.
+  // survejs changed the values right before completing.
+  // So check if the complete button was clicked to prevent chaning the preview text ect.
   window.isCompleting = false;
   function beforeComplete() {
     window.isCompleting = true;
@@ -68,9 +66,6 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
       el.value = options.value;
     }
   };
-
-  // Survey.StylesManager.applyTheme("modern");
-  // Survey.StylesManager.applyTheme("bootstrap");
 
   var defaultThemeColors = Survey.StylesManager.ThemeColors["default"];
   defaultThemeColors["$main-color"] = "#1f9bcc";

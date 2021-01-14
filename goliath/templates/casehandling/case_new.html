@@ -2,24 +2,18 @@
 
 {% block title %}{{case_type.name}} - Neues Anliegen - {% endblock %}
 
-
 {% block content %}
-<h2>Neues Anliegen</h2>
-<h3>{{case_type.name}}</h3>
+  <h2>Neues Anliegen</h2>
+  <h3>{{case_type.name}}</h3>
+  <p>{{case_type.description}}</p>
+  <div id="survey-container"></div>
+{% endblock %}
 
-<p>{{case_type.description}}</p>
-
-<div id="survey-container"></div>
-
-{% endblock %} {% block morejslibs %}
-<script src="/static/js/survey.jquery.min.js"></script>
-{% endblock %} {% block morecss %}
-<link href="/static/css/survey.min.css" type="text/css" rel="stylesheet" />
-{% endblock %} {% block morejs %}
-<script>
-  // lol @ Django's JSON handling
-  var True = true;
-  var False = false;
-  window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}");
-</script>
+{% block morejs %}
+  <script>
+    // lol @ Django's JSON handling
+    var True = true;
+    var False = false;
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}");
+  </script>
 {% endblock %}

@@ -4,7 +4,6 @@
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^10.1.0",
-    "bootstrap": "4.3.1",
     "browser-sync": "^2.14.0",
     "cssnano": "^4.1.10",
     "gulp": "^4.0.0",
@@ -17,17 +16,17 @@
     "gulp-uglify-es": "^1.0.4",
     "jquery": "3.3.1",
     "pixrem": "^5.0.0",
-    "popper.js": "^1.16.1",
     "postcss": "^8.2.2",
     "stylelint": "^13.8.0",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.18.0",
+    "survey-jquery": "^1.8.25",
     "tailwindcss": "^2.0.2"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "browserslist": [
     "last 2 versions"

@@ -1,22 +1,4 @@
-// @import "custom_bootstrap_vars";
-// @import "bootstrap";
-
-.aw-casetype-item img {
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-  max-height: 10rem;
-}
-
-.main-container {
-  min-height: calc(100vh - 260px);
-}
-
-// project specific CSS goes here
-
-////////////////////////////////
-//Variables//
-////////////////////////////////
+// some stuff from
 
 // Alert colors
 
@@ -26,10 +8,6 @@ $black: #000;
 $pink: #f2dede;
 $dark-pink: #eed3d7;
 $red: #b94a48;
-
-////////////////////////////////
-//Alerts//
-////////////////////////////////
 
 // bootstrap alert CSS, translated to the django-standard levels of
 // debug, info, success, warning, error
@@ -46,50 +24,24 @@ $red: #b94a48;
   color: $red;
 }
 
+// Goliath starting from here
+
+.aw-casetype-item img {
+  max-height: 10rem;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+// .main-container {
+//   min-height: calc(100vh - 260px);
+// }
+
 .fade-in {
   animation: fadeIn ease 1s;
-  -webkit-animation: fadeIn ease 1s;
-  -moz-animation: fadeIn ease 1s;
-  -o-animation: fadeIn ease 1s;
-  -ms-animation: fadeIn ease 1s;
 }
+
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-moz-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-o-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@-ms-keyframes fadeIn {
   0% {
     opacity: 0;
   }
