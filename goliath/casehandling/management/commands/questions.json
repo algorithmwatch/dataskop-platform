@@ -279,14 +279,11 @@
       "name": "page7",
       "elements": [
         {
-          "name": "Herzlichen Dank",
-          "type": "text",
-          "visibleIf": "{question5} anyof ['item1', 'item2']",
-          "description": "Wir erstellen nun eine Vorschau Ihres Anliegens. Im nächsten Schritt können Sie Ihre Angaben nocheinmal überprüfen."
-        },
-        { "name": "previewhtml", "type": "html" }
-      ],
-      "visibleIf": "{question5} = 'item2' or {Adresseingabe.text4} notempty or {Adresseingabe.text2} notempty or {Adresseingabe.text3} notempty or {Adresseingabe.text4} notempty or {question5} = 'item2'"
+          "name": "previewhtml",
+          "type": "html",
+          "visibleIf": "{question5} = 'item2' or {Adresseingabe.text4} notempty or {Adresseingabe.text2} notempty or {Adresseingabe.text3} notempty or {Adresseingabe.text4} notempty or {question5} = 'item2'"
+        }
+      ]
     }
   ],
   "triggers": [{ "type": "complete" }],

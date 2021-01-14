@@ -1,4 +1,45 @@
-function setupSurvey(casetypeId, surveyJSON, csrfToken) {
+function addUserToJson(surveyJSON) {
+  var lastPageIndex = surveyJSON.pages.length - 1;
+  var lastPage = surveyJSON.pages[lastPageIndex];
+  var previewhtmlElement = lastPage.elements[0];
+
+  var nameQuestion = {
+    visible: false,
+    type: "text",
+    name: "awnamequestion",
+    title: "Wie ist dein Name?",
+    visibleIf: previewhtmlElement.visibleIf,
+  };
+
+  // TODO: email validation
+  var emailQuestion = {
+    visible: false,
+    type: "text",
+    name: "awemailquestion",
+    title: "Wie ist dein E-Mail-Adresse?",
+    visibleIf: "{awnamequestion} notempty",
+    validators: [
+      {
+        type: "email",
+      },
+    ],
+  };
+
+  previewhtmlElement.visibleIf = "{awemailquestion} notempty";
+
+  console.log(surveyJSON.pages[lastPageIndex]);
+  surveyJSON.pages[lastPageIndex].elements = [
+    nameQuestion,
+    emailQuestion,
+    previewhtmlElement,
+  ];
+  console.log(surveyJSON.pages[lastPageIndex]);
+  return surveyJSON;
+}
+
+function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
+  surveyJSON = addUserToJson(surveyJSON);
+
   function sendDataToServer(survey, options) {
     if (options.isCompleteOnTrigger) {
       alert("Please do something else");
@@ -20,7 +61,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
       .fail(function () {
         alert("error");
         setTimeout(function () {
-          sendDataToServer(survey);
+          sendDataToServer(survey, options);
         }, 1000);
       });
   }
@@ -35,19 +76,22 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
   }
 
   function afterRenderQuestion(sender, options) {
+    // make button visibile when preview gets rendered
     if (options.question.name === "previewhtml") {
       $(".aw-completebutton").removeClass("aw-hidden");
     }
 
-    setTimeout(
-      () =>
-        options.htmlElement.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-          inline: "end",
-        }),
-      100
-    );
+    setTimeout(function () {
+      options.htmlElement.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "end",
+      });
+    }, 100);
+    setTimeout(function () {
+      $(options.htmlElement).find("input").focus();
+      options.htmlElement.focus();
+    }, 150);
   }
 
   // survejs changed the values right before completing.
@@ -74,16 +118,18 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken) {
     }
   };
 
-  var defaultThemeColors = Survey.StylesManager.ThemeColors["default"];
-  defaultThemeColors["$main-color"] = "#1f9bcc";
-  defaultThemeColors["$main-hover-color"] = "#1f9bcc";
+  // not using default theme right now
+
+  // var defaultThemeColors = Survey.StylesManager.ThemeColors["default"];
+  // defaultThemeColors["$main-color"] = "#1f9bcc";
+  // defaultThemeColors["$main-hover-color"] = "#1f9bcc";
   // defaultThemeColors["$text-color"] = "#4a4a4a";
   // defaultThemeColors["$header-color"] = "#7ff07f";
 
   // defaultThemeColors["$header-background-color"] = "#4a4a4a";
   // defaultThemeColors["$body-container-background-color"] = "#f8f8f8";
 
-  Survey.StylesManager.applyTheme();
+  // Survey.StylesManager.applyTheme();
 
   var survey = new Survey.Model(surveyJSON);
 
