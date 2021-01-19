@@ -1,3 +1,4 @@
+from goliath.users.views import UserUpdate
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -13,6 +14,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="pages/about.html"),
         name="about",
     ),
+    path("account/", UserUpdate.as_view()),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management

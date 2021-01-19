@@ -7,5 +7,13 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser):
     """Default user for Goliath."""
 
+    # simplier to not remove username completly
+    username = CharField(max_length=255)
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
     first_name = CharField(_("First Name"), max_length=255)
     last_name = CharField("Last Name", max_length=255)
+
+
+User._meta.get_field("email")._unique = True

@@ -1,0 +1,29 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block inner %}
+
+<h1>Dein Account</h1>
+
+<div>
+  {{ user.email }}
+</div>
+<div>
+  {{ user.first_name }}
+</div>
+<div>
+  {{ user.last_name }}
+</div>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button class="btn btn-primary" type="submit">Update</button>
+</form>
+
+{% endblock %}
+

@@ -22,7 +22,8 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.Faker("name", locale="de")
+    first_name = factory.Faker("name", locale="de")
+    last_name = factory.Faker("name", locale="de")
     email = factory.Faker("email", locale="de")
 
 
