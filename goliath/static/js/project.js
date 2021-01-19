@@ -38,7 +38,7 @@ function addUserToJson(surveyJSON) {
 }
 
 function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
-  surveyJSON = addUserToJson(surveyJSON);
+  if (newUser) surveyJSON = addUserToJson(surveyJSON);
 
   function sendDataToServer(survey, options) {
     if (options.isCompleteOnTrigger) {

@@ -14,10 +14,14 @@
 {% endblock %}
 
 {% block morejs %}
-  <script>
-    // lol @ Django's JSON handling
-    var True = true;
-    var False = false;
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}");
+<script>
+  // lol @ Django's JSON handling
+  var True = true;
+  var False = false;
+  {% if user.is_authenticated %}
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", false);
+  {% else %}
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", true);
+  {% endif %}
   </script>
 {% endblock %}
