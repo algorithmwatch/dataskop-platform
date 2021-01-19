@@ -5,6 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
+from django import forms
+
+from allauth.account.forms import SignupForm
+
 
 class UserChangeForm(admin_forms.UserChangeForm):
     class Meta(admin_forms.UserChangeForm.Meta):
@@ -20,12 +24,9 @@ class UserCreationForm(admin_forms.UserCreationForm):
     class Meta(admin_forms.UserCreationForm.Meta):
         model = User
 
-    def clean_username(self):
-        username = self.cleaned_data["username"]
 
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            return username
-
-        raise ValidationError(self.error_messages["duplicate_username"])
+class CustomSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields["first_name"] = forms.CharField(required=True)
+        self.fields["last_name"] = forms.CharField(required=True)

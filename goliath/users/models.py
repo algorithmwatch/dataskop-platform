@@ -7,14 +7,5 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser):
     """Default user for Goliath."""
 
-    #: First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-
-    def get_absolute_url(self):
-        """Get url for user's detail view.
-
-        Returns:
-            str: URL for user detail.
-
-        """
-        return reverse("users:detail", kwargs={"username": self.username})
+    first_name = CharField(_("First Name"), max_length=255)
+    last_name = CharField("Last Name", max_length=255)
