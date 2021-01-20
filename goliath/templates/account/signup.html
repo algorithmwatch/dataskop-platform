@@ -38,5 +38,19 @@
   <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
 </form>
 
+
+<form class="signup" id="signup_form" method="post" action="{% url 'sesam_registration' %}">
+  {% csrf_token %}
+  <label for="first_name">First Name: </label>
+  <input id="first_name" type="text" name="first_name">
+  <label for="last_name">Last Name: </label>
+  <input id="last_name" type="text" name="last_name">
+  <label for="email">Email: </label>
+  <input id="email" type="text" name="email">
+  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
+</form>
+
+
+
 {% endblock %}
 

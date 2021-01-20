@@ -109,6 +109,7 @@ MIGRATION_MODULES = {"sites": "goliath.contrib.sites.migrations"}
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    "sesame.backends.ModelBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
@@ -315,6 +316,12 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_FORMS = {"signup": "goliath.users.forms.CustomSignupForm"}
+
+# don't ask user, always remember
+ACCOUNT_SESSION_REMEMBER = True
+
+# magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
+SESAME_MAX_AGE = 300
 
 # django-compressor
 # ------------------------------------------------------------------------------

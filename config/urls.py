@@ -6,7 +6,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
-from goliath.users.views import UserUpdate
+from goliath.users.views import UserUpdate, MagicLinkRegistration
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -14,6 +14,11 @@ urlpatterns = [
         "ueber-uns/",
         TemplateView.as_view(template_name="pages/about.html"),
         name="about",
+    ),
+    path(
+        "sesam/registration/",
+        MagicLinkRegistration.as_view(),
+        name="sesam_registration",
     ),
     # hacking simple account page here
     path("account/", UserUpdate.as_view(), name="account_index"),
