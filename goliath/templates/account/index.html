@@ -3,22 +3,31 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block head_title %}Dein Account{% endblock %}
 
 {% block inner %}
 
 <h1>Dein Account</h1>
 
 <div>
-  {{ user.email }}
+  Email: {{ user.email }}
 </div>
 <div>
-  {{ user.first_name }}
+  Vorname: {{ user.first_name }}
 </div>
 <div>
-  {{ user.last_name }}
+  Nachname: {{ user.last_name }}
 </div>
 
+<br />
+
+<h3>E-mail ändern</h3>
+
+<p><a href='/account/email/'>Hier können Sie Ihre E-Mail-Adresse ändern</a></p>
+
+<br />
+
+<h3>Namen ändern</h3>
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
   {{ form|crispy }}

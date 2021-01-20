@@ -1,4 +1,3 @@
-from goliath.users.views import UserUpdate
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -7,6 +6,8 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from goliath.users.views import UserUpdate
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -14,11 +15,11 @@ urlpatterns = [
         TemplateView.as_view(template_name="pages/about.html"),
         name="about",
     ),
-    path("account/", UserUpdate.as_view()),
+    # hacking simple account page here
+    path("account/", UserUpdate.as_view(), name="account_index"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("user/", include("goliath.users.urls", namespace="users")),
     path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
     # Your stuff: custom urls includes go here

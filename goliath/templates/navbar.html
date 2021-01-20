@@ -21,7 +21,7 @@
               <!-- TODO: mobile -->
               {% if request.user.is_authenticated %}
                 <a href="{% url 'cases' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Meine Anliegen</a>
-                <a href="{% url 'account_email' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mein Account</a>
+                <a href="{% url 'account_index' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mein Account</a>
                 <a href="{% url 'account_logout' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Log out</a>
               {% else %}
               <a href="{% url 'account_login' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
