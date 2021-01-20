@@ -2,6 +2,11 @@
 
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
@@ -9,6 +14,20 @@
 <h1>{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+<!-- <a href="{% provider_login_url 'twitter' %}">Mit Twitter Anmelden</a>
+<a href="{% provider_login_url 'google' %}">Mit Google Anmelden</a>
+<a href="{% provider_login_url 'facebook' %}">Mit FB Anmelden</a> -->
+
+<div class="socialaccount_ballot">
+  <p>Alternativ Login mit:</p>
+  <ul class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </ul>
+
+  <div class="login-or">{% trans 'or' %}</div>
+
+</div>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
