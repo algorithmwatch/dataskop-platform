@@ -7,32 +7,52 @@
 
 {% block inner %}
 
-<h1>Dein Account</h1>
+<h1>Mein Konto</h1>
+
+<p>Ein Text, der erklärt, wofür welche Daten verwendet werden. Bspw. werden Name & E-Mail dem Empfänger gezeigt?</p>
+
+<br />
+
+<h3>Ihr Name</h3>
+<br />
+
+<form class="account-update" id="account-update" method="post" action="{% url 'account_index' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button class="btn btn-primary" type="submit">Speichern</button>
+</form>
+
+<br />
+
+<h3>Ihre E-Mail-Adresse</h3>
+
+<br />
 
 <div>
   Email: {{ user.email }}
 </div>
-<div>
-  Vorname: {{ user.first_name }}
-</div>
-<div>
-  Nachname: {{ user.last_name }}
-</div>
 
 <br />
 
-<h3>E-mail ändern</h3>
-
-<p><a href='/account/email/'>Hier können Sie Ihre E-Mail-Adresse ändern</a></p>
+<p><a href='/account/email/'>E-Mail-Adresse ändern</a></p>
 
 <br />
 
-<h3>Namen ändern</h3>
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button class="btn btn-primary" type="submit">Update</button>
-</form>
+<p><a href='/account/password/change/'>Passwort ändern</a></p>
+
+<br />
+<hr />
+<br />
+
+<p><a href='/account/'>Daten exportieren</a></p>
+<br />
+
+<hr />
+<br />
+
+<p><a href='/account/'>Daten löschen</a></p>
+
+
 
 {% endblock %}
 

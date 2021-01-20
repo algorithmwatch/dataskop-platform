@@ -15,5 +15,8 @@ class User(AbstractUser):
     first_name = CharField(_("First Name"), max_length=255)
     last_name = CharField("Last Name", max_length=255)
 
+    def get_absolute_url(self):
+        return reverse("account_index")
+
 
 User._meta.get_field("email")._unique = True
