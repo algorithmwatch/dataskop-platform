@@ -9,6 +9,7 @@ from django.utils.http import urlquote
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_query_string, get_user
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -28,13 +29,50 @@ class UserUpdate(UpdateView):
         return form
 
 
-class MagicLinkLogin(View):
-    def post(self, request, case_type):
-        pass
+def send_magic_link(user, email, viewname):
+    magic_link = settings.URL_ORIGIN + (
+        reverse(viewname)
+        + get_query_string(user, scope=email)
+        + "&email="
+        + urlquote(email)
+    )
 
-    def get(self, request, case_type):
-        case_type = get_object_or_404(CaseType, pk=case_type)
-        return render(request, "casehandling/case_new.html", {"case_type": case_type})
+    send_mail(
+        "Email Login",
+        "Click the link " + magic_link,
+        "noreply@aw.jfilter.de",
+        [email],
+        html_message=f"""<html><a href="{magic_link}">Click the link to login</a></html>""",
+    )
+
+
+class MagicLinkLogin(View):
+    def post(self, request):
+        email = request.POST["email"]
+        user = EmailAddress.objects.filter(email=email).first()
+
+        if not user:
+            raise PermissionDenied
+        user = user.user
+
+        send_magic_link(user, email, "sesame_login")
+        messages.info(
+            request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
+        )
+        return redirect("account_login")
+
+    def get(self, request):
+        email = request.GET.get("email")
+        user = get_user(request, scope=email)
+
+        if user is None:
+            messages.error(
+                request, "Es wurde kein Account mit diese E-Mail-Adresse gefunden."
+            )
+            return redirect("account_login")
+        messages.success(request, "Login erfolgreich")
+        login(request, user)
+        return redirect("account_index")
 
 
 class MagicLinkRegistration(View):
@@ -49,22 +87,12 @@ class MagicLinkRegistration(View):
         EmailAddress.objects.create(
             user=user, email=email, primary=True, verified=False
         )
-
-        magic_link = settings.URL_ORIGIN + (
-            reverse("sesam_registration")
-            + get_query_string(user, scope=email)
-            + "&email="
-            + urlquote(email)
+        send_magic_link(user, email, "sesame_registration")
+        messages.success(
+            request,
+            "Ein Link zum Abschluss der Registrierung wrude an Ihre E-Mail-Adresse versandt.",
         )
-
-        send_mail(
-            "Email Login",
-            "Click the link" + magic_link,
-            "noreply@aw.jfilter.de",
-            [email],
-            html_message=f"<html>Click the link: {magic_link}</html>",
-        )
-        return redirect("home")
+        return redirect("account_signup")
 
     def get(self, request):
         """
@@ -84,5 +112,8 @@ class MagicLinkRegistration(View):
             email_address.set_as_primary(conditional=True)
             email_address.save()
             login(request, user)
+        else:
+            raise PermissionDenied
 
-        return redirect("home")
+        messages.success(request, "Account erfolgreich erstellt.")
+        return redirect("account_index")
