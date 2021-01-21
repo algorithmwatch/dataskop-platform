@@ -8,7 +8,7 @@ class User(AbstractUser):
     """Default user for Goliath."""
 
     # simplier to not remove username completly
-    username = CharField(max_length=255)
+    username = CharField(max_length=255, blank=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

@@ -1,15 +1,13 @@
 from allauth.account.models import EmailAddress
-from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.core.exceptions import PermissionDenied
-from django.core.mail import send_mail
 from django.shortcuts import redirect
-from django.urls import reverse
-from django.utils.http import urlquote
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
-from sesame.utils import get_query_string, get_user
-from django.contrib import messages
+from sesame.utils import get_user
+
+from ..utils.magic_link import send_magic_link
 
 User = get_user_model()
 
@@ -27,23 +25,6 @@ class UserUpdate(UpdateView):
         for f in self.fields:
             form.fields[f].required = False
         return form
-
-
-def send_magic_link(user, email, viewname):
-    magic_link = settings.URL_ORIGIN + (
-        reverse(viewname)
-        + get_query_string(user, scope=email)
-        + "&email="
-        + urlquote(email)
-    )
-
-    send_mail(
-        "Email Login",
-        "Click the link " + magic_link,
-        "noreply@aw.jfilter.de",
-        [email],
-        html_message=f"""<html><a href="{magic_link}">Click the link to login</a></html>""",
-    )
 
 
 class MagicLinkLogin(View):
@@ -82,7 +63,7 @@ class MagicLinkRegistration(View):
         email = request.POST["email"]
 
         user = User.objects.create_user(
-            username=" ", first_name=first_name, last_name=last_name, email=email
+            username="", first_name=first_name, last_name=last_name, email=email
         )
         EmailAddress.objects.create(
             user=user, email=email, primary=True, verified=False
