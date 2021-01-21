@@ -61,8 +61,10 @@ class TimeStampMixin(models.Model):
 
 
 class Status(models.TextChoices):
+    WAITING_USER_VERIFIED = "UV", "Waiting user verification"
+    WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until email sent"
     WAITING_RESPONSE = "WR", "Waiting for response"
-    WAITING_USER = "WU", "Waiting for user input"
+    WAITING_USER_INPUT = "WU", "Waiting for user input"
     CLOSED_NEGATIVE = "CN", "Closed, given up"
     CLOSED_POSITIVE = "CP", "Closed, case resolved"
     CLOSED_MIXED = "CM", "Closed, mixed feelings"
@@ -114,7 +116,6 @@ class Case(TimeStampMixin):
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
-        default=Status.WAITING_RESPONSE,
     )
     case_type = models.ForeignKey(
         "CaseType", on_delete=models.SET_NULL, null=True, blank=True
