@@ -13,43 +13,17 @@
 {% block inner %}
 <h1>{% trans "Sign Up" %}</h1>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
-<!-- <a href="{% provider_login_url 'twitter' %}">Mit Twitter Anmelden</a>
-<a href="{% provider_login_url 'google' %}">Mit Google Anmelden</a>
-<a href="{% provider_login_url 'facebook' %}">Mit FB Anmelden</a> -->
-
-<div class="socialaccount_ballot">
-  <p>Alternativ Login mit:</p>
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+<div class="registration-providers">
+    <a class="btn block" href="{% url 'signup_email' %}">Mit E-Mail registrieren</a>
+    <a class="btn block" href="{% provider_login_url 'twitter' %}">Mit Twitter registrieren</a>
+    <a class="btn block" href="{% provider_login_url 'google' %}">Mit Google registrieren</a>
+    <a class="btn block" href="{% provider_login_url 'facebook' %}">Mit Facbook registrieren</a>
 
   <div class="login-or">{% trans 'or' %}</div>
-
 </div>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
-</form>
-
-
-<form class="signup" id="signup_form" method="post" action="{% url 'sesame_registration' %}">
-  {% csrf_token %}
-  <label for="first_name">First Name: </label>
-  <input id="first_name" type="text" name="first_name">
-  <label for="last_name">Last Name: </label>
-  <input id="last_name" type="text" name="last_name">
-  <label for="email">Email: </label>
-  <input id="email" type="text" name="email">
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
-</form>
-
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 
 {% endblock %}

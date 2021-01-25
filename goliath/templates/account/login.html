@@ -10,31 +10,22 @@
 
 <h1>{% trans "Sign In" %}</h1>
 
-{% get_providers as socialaccount_providers %}
+<form class="login" method="post" action="{% url 'sesame_login' %}">
+  {% csrf_token %}
+  <label for="email">Email: </label>
+  <input id="email" type="text" name="email" class="textinput">
+  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+</form>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+<a href="{% url 'account_reset_password' %}">Passwort zurücksetzen</a>
+<div class="login-or">{% trans 'or' %}</div>
+<br/>
 
-<div class="socialaccount_ballot">
+<a class="btn block" href="{% provider_login_url 'twitter' %}">Mit Twitter anmelden</a>
+<a class="btn block" href="{% provider_login_url 'google' %}">Mit Google anmelden</a>
+<a class="btn block" href="{% provider_login_url 'facebook' %}">Mit Facbook anmelden</a>
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
-
-<form class="login" method="POST" action="{% url 'account_login' %}">
+<!-- <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
   {{ form|crispy }}
   {% if redirect_field_value %}
@@ -42,14 +33,9 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
   {% endif %}
   <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
   <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
+</form> -->
 
-<form class="login" method="post" action="{% url 'sesame_login' %}">
-  {% csrf_token %}
-  <label for="email">Email: </label>
-  <input id="email" type="text" name="email" class="textinput">
-  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
+
 
 {% endblock %}
 

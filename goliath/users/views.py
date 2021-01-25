@@ -1,18 +1,29 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
+from django.shortcuts import render
+from django.views.decorators.http import require_GET
 
 from ..utils.magic_link import send_magic_link
 
 User = get_user_model()
 
 
-class UserUpdate(UpdateView):
+@require_GET
+def sign_up_email_view(request):
+    return render(
+        request,
+        "account/signup_email.html",
+    )
+
+
+class UserUpdate(LoginRequiredMixin, UpdateView):
     template_name = "account/index.html"
     model = User
     fields = ["first_name", "last_name"]
@@ -29,6 +40,9 @@ class UserUpdate(UpdateView):
 
 class MagicLinkLogin(View):
     def post(self, request):
+        """
+        sending magic link to user's email adress
+        """
         email = request.POST["email"]
         user = EmailAddress.objects.filter(email=email).first()
 
@@ -43,6 +57,9 @@ class MagicLinkLogin(View):
         return redirect("account_login")
 
     def get(self, request):
+        """
+        login when person opened magic link from email
+        """
         email = request.GET.get("email")
         user = get_user(request, scope=email)
 
@@ -58,6 +75,9 @@ class MagicLinkLogin(View):
 
 class MagicLinkRegistration(View):
     def post(self, request):
+        """
+        create new user with registration
+        """
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
         email = request.POST["email"]

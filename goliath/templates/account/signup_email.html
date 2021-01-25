@@ -1,0 +1,49 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block inner %}
+<h1>{% trans "Sign Up" %}</h1>
+
+
+<form class="signup" method="post" action="{% url 'sesame_registration' %}">
+  {% csrf_token %}
+
+  <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+    <div class="grid grid-cols-3 gap-6">
+      <div class="col-span-3 sm:col-span-2">
+        <label for="first_name" class="block text-sm font-medium text-gray-700">
+          Vorname
+        </label>
+        <input id="first_name" type="text" name="first_name" class="border-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded sm:text-sm border-gray-300">
+      </div>
+      <div class="col-span-3 sm:col-span-2">
+        <label for="last_name" class="block text-sm font-medium text-gray-700">
+          Nachname
+        </label>
+        <input id="last_name" type="text" name="last_name" class="border-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded sm:text-sm border-gray-300">
+      </div>
+      <div class="col-span-3 sm:col-span-2">
+        <label for="email" class="block text-sm font-medium text-gray-700">
+          E-Mail-Adresse
+        </label>
+        <input id="email" type="email" name="email" class="border-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded sm:text-sm border-gray-300">
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
+</form>
+
+
+
+{% endblock %}
+
