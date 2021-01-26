@@ -8,9 +8,10 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 from goliath.users.views import (
     UserUpdate,
-    MagicLinkRegistration,
-    MagicLinkLogin,
-    sign_up_email_view,
+    MagicLinkVerifyEmail,
+    MagicLinkLoginEmail,
+    magic_link_signup_view,
+    magic_link_login_view,
 )
 
 urlpatterns = [
@@ -22,18 +23,24 @@ urlpatterns = [
     ),
     path(
         "sesame/registration/",
-        MagicLinkRegistration.as_view(),
+        MagicLinkVerifyEmail.as_view(),
         name="sesame_registration",
     ),
     path(
         "sesame/login/",
-        MagicLinkLogin.as_view(),
+        MagicLinkLoginEmail.as_view(),
         name="sesame_login",
     ),
     path(
-        "account/signup/email",
-        sign_up_email_view,
-        name="signup_email",
+        "account/signup/email/",
+        magic_link_signup_view,
+        name="account_signup_email",
+    ),
+    # overriding allauth specific login page
+    path(
+        "account/login/",
+        magic_link_login_view,
+        name="account_login",
     ),
     # hacking simple account page here
     path("account/", UserUpdate.as_view(), name="account_index"),

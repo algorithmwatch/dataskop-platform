@@ -10,10 +10,9 @@
 
 <h1>{% trans "Sign In" %}</h1>
 
-<form class="login" method="post" action="{% url 'sesame_login' %}">
+<form class="login" method="post" action="{% url 'account_login' %}">
   {% csrf_token %}
-  <label for="email">Email: </label>
-  <input id="email" type="text" name="email" class="textinput">
+  {{ form|crispy }}
   <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
 </form>
 

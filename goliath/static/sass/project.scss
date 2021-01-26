@@ -75,7 +75,8 @@ input[type="radio"]:checked {
     @apply text-sm mr-2 bg-red-600 text-white p-1 rounded;
   }
 
-  .textinput {
+  .textinput,
+  .emailinput {
     @apply border-2 border-blue-500 px-2 py-1;
   }
 
@@ -99,6 +100,6 @@ input[type="radio"]:checked {
     @apply text-lg;
   }
   a {
-    @apply text-blue-600 underline;
+    @apply text-blue-600;
   }
 }

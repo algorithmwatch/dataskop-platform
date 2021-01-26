@@ -8,19 +8,13 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.db import IntegrityError
 
 from ..utils.magic_link import send_magic_link
 
+from .forms import MagicLinkLoginForm, MagicLinkSignupForm
+
 User = get_user_model()
-
-
-@require_GET
-def sign_up_email_view(request):
-    return render(
-        request,
-        "account/signup_email.html",
-    )
 
 
 class UserUpdate(LoginRequiredMixin, UpdateView):
@@ -38,24 +32,65 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
         return form
 
 
-class MagicLinkLogin(View):
-    def post(self, request):
-        """
-        sending magic link to user's email adress
-        """
-        email = request.POST["email"]
-        user = EmailAddress.objects.filter(email=email).first()
+def magic_link_signup_view(request):
+    if request.method == "POST":
+        form = MagicLinkSignupForm(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            email = form.cleaned_data["email"]
 
-        if not user:
-            raise PermissionDenied
-        user = user.user
+            try:
+                user = User.objects.create_user(
+                    username=" ",
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                )
+                EmailAddress.objects.create(
+                    user=user, email=email, primary=True, verified=False
+                )
+                send_magic_link(user, email, "sesame_registration")
+                messages.success(
+                    request,
+                    "Ein Link zum Abschluss der Registrierung wurde an Ihre E-Mail-Adresse versandt.",
+                )
 
-        send_magic_link(user, email, "sesame_login")
-        messages.info(
-            request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
-        )
-        return redirect("account_login")
+            except IntegrityError as e:
+                if "unique constraint" in str(e.args):
+                    messages.error(
+                        request,
+                        "Mit dieser E-mail-Adresse wurde schon ein Account erstellt.",
+                    )
+    else:
+        form = MagicLinkSignupForm()
 
+    return render(request, "account/signup_email.html", {"form": form})
+
+
+def magic_link_login_view(request):
+    if request.method == "POST":
+        form = MagicLinkLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = EmailAddress.objects.filter(email=email).first()
+
+            if not user:
+                raise PermissionDenied
+            user = user.user
+
+            send_magic_link(user, email, "sesame_login")
+            messages.info(
+                request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
+            )
+
+    else:
+        form = MagicLinkLoginForm()
+
+    return render(request, "account/login.html", {"form": form})
+
+
+class MagicLinkLoginEmail(View):
     def get(self, request):
         """
         login when person opened magic link from email
@@ -73,28 +108,7 @@ class MagicLinkLogin(View):
         return redirect("account_index")
 
 
-class MagicLinkRegistration(View):
-    def post(self, request):
-        """
-        create new user with registration
-        """
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        email = request.POST["email"]
-
-        user = User.objects.create_user(
-            username="", first_name=first_name, last_name=last_name, email=email
-        )
-        EmailAddress.objects.create(
-            user=user, email=email, primary=True, verified=False
-        )
-        send_magic_link(user, email, "sesame_registration")
-        messages.success(
-            request,
-            "Ein Link zum Abschluss der Registrierung wrude an Ihre E-Mail-Adresse versandt.",
-        )
-        return redirect("account_signup")
-
+class MagicLinkVerifyEmail(View):
     def get(self, request):
         """
         Scope for each email to ensure the token was actually sent to this
