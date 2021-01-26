@@ -28,22 +28,15 @@
 
       <main style="min-height: 30rem;">
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <!-- <div class="container main-container"> -->
 
-          <!-- FIXME: Make messages work for Tailwind -->
           {% if messages %} {% for message in messages %}
-          <div
-            class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
-          >
-            {{ message }}<button
-              type="button"
-              class="close"
-              data-dismiss="alert"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+          {% if message.tags == "error" %}
+            {% include "message.html" with message=message color="red" %}
+          {% elif message.tags == "info" %}
+            {% include "message.html" with message=message color="blue" %}
+          {% elif message.tags == "success" %}
+            {% include "message.html" with message=message color="green" %}
+          {% endif %}
           {% endfor %} {% endif %}
 
         {% block content %}
