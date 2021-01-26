@@ -46,6 +46,8 @@ def magic_link_signup_view(request):
                     last_name=last_name,
                     email=email,
                 )
+                # use cleaned email address in user from now on
+                email = user.email
                 EmailAddress.objects.create(
                     user=user, email=email, primary=True, verified=False
                 )

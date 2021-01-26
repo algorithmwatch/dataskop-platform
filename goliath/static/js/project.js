@@ -3,21 +3,28 @@ function addUserToJson(surveyJSON) {
   var lastPage = surveyJSON.pages[lastPageIndex];
   var previewhtmlElement = lastPage.elements[0];
 
-  var nameQuestion = {
+  var firstNameQuestion = {
     visible: false,
     type: "text",
-    name: "awnamequestion",
-    title: "Wie ist dein Name?",
+    name: "awfirstnamequestion",
+    title: "Wie ist dein Vorname?",
     visibleIf: previewhtmlElement.visibleIf,
   };
 
-  // TODO: email validation
+  var lastNameQuestion = {
+    visible: false,
+    type: "text",
+    name: "awlastnamequestion",
+    title: "Wie ist dein Nachname?",
+    visibleIf: "{awfirstnamequestion} notempty",
+  };
+
   var emailQuestion = {
     visible: false,
     type: "text",
     name: "awemailquestion",
     title: "Wie ist dein E-Mail-Adresse?",
-    visibleIf: "{awnamequestion} notempty",
+    visibleIf: "{awlastnamequestion} notempty",
     validators: [
       {
         type: "email",
@@ -27,13 +34,12 @@ function addUserToJson(surveyJSON) {
 
   previewhtmlElement.visibleIf = "{awemailquestion} notempty";
 
-  console.log(surveyJSON.pages[lastPageIndex]);
   surveyJSON.pages[lastPageIndex].elements = [
-    nameQuestion,
+    firstNameQuestion,
+    lastNameQuestion,
     emailQuestion,
     previewhtmlElement,
   ];
-  console.log(surveyJSON.pages[lastPageIndex]);
   return surveyJSON;
 }
 

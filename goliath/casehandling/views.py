@@ -14,6 +14,7 @@ from django_tables2 import SingleTableMixin, Table
 
 from goliath.utils.strings import random_string
 
+from ..utils.magic_link import send_magic_link
 from .forms import CaseStatusForm
 from .models import Case, CaseType, Status
 
@@ -33,22 +34,29 @@ class CaseCreate(View):
         answers = json.loads(request.POST["answers"])
         text = request.POST["text"]
 
-        is_logged_in = request.user.is_authenticated()
+        is_logged_in = request.user.is_authenticated
         if is_logged_in:
             user = self.request.user
         else:
             # need to create a new, unverified user
             # https://stackoverflow.com/q/29147550/4028896
 
-            # creating without password
-            # https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#django.contrib.auth.models.UserManager.create_user
+            first_name, last_name, email = (
+                answers["awfirstnamequestion"],
+                answers["awlastnamequestion"],
+                answers["awemailquestion"],
+            )
+            user = User.objects.create_user(
+                first_name=first_name, last_name=last_name, email=email
+            )
+            # cleaned version
+            email = user.email
 
-            first_name, email = request.POST["first_name"], request.POST["email"]
-
-            user = User.objects.create_user(username=username, email=email)
             EmailAddress.objects.create(
                 user=user, email=email, primary=True, verified=False
             )
+
+            send_magic_link(user, email, "sesame_registration")
 
         status = (
             Status.WAITING_INITIAL_EMAIL_SENT
