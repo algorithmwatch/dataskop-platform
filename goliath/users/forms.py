@@ -1,28 +1,10 @@
-from django.contrib.auth import forms as admin_forms
+from allauth.account.forms import SignupForm
+from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
-
-from django import forms
-
-from allauth.account.forms import SignupForm
-
-
-class UserChangeForm(admin_forms.UserChangeForm):
-    class Meta(admin_forms.UserChangeForm.Meta):
-        model = User
-
-
-class UserCreationForm(admin_forms.UserCreationForm):
-
-    error_message = admin_forms.UserCreationForm.error_messages.update(
-        {"duplicate_username": _("This username has already been taken.")}
-    )
-
-    class Meta(admin_forms.UserCreationForm.Meta):
-        model = User
 
 
 class CustomSignupForm(SignupForm):

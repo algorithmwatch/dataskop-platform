@@ -42,7 +42,6 @@ def magic_link_signup_view(request):
 
             try:
                 user = User.objects.create_user(
-                    username=" ",
                     first_name=first_name,
                     last_name=last_name,
                     email=email,
