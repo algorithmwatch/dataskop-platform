@@ -134,7 +134,7 @@ class CaseTable(Table):
     class Meta:
         model = Case
         template_name = "django_tables2/bootstrap.html"
-        exclude = ("questions", "answers", "email", "answers_text")
+        exclude = ("questions", "answers", "email", "answers_text", "user")
 
     def render_id(self, value):
         return format_html('<a href="/anliegen/{}/">{}</a>', value, value)
@@ -147,6 +147,10 @@ class CaseList(SingleTableMixin, FilterView):
     template_name = "casehandling/case_list.html"
 
     filterset_class = CaseFilter
+
+    def get_queryset(self):
+        qs = Case.objects.filter(user=self.request.user)
+        return qs
 
 
 case_list_view = CaseList.as_view()
