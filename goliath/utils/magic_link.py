@@ -18,5 +18,5 @@ def send_magic_link(user, email, viewname):
         "Click the link " + magic_link,
         "noreply@aw.jfilter.de",
         [email],
-        html_message=f"""<html><a href="{magic_link}">Click the link to login</a></html>""",
+        html_message=f"""<html><a rel="notrack" href="{magic_link}">Click the link to login</a></html>""",
     )
