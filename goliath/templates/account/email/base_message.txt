@@ -1,0 +1,13 @@
+{% load i18n %}
+{% autoescape off %}
+Hallo,
+
+{% block content %}{% endblock %}
+
+{% with site_name=current_site.name site_domain=current_site.domain %}Mit freundlichen Grüßen
+
+Ihr Team {{ site_name }}
+
+{{ site_domain }}
+{% endwith %}
+{% endautoescape %}

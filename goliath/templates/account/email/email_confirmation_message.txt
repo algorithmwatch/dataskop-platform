@@ -1,0 +1,7 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}Bitte bestätige deine E-Mail-Adresse indem du auf folgenden Link klickst:
+
+{{ activate_url }}{% endblocktrans %}{% endautoescape %}{% endblock %}
