@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import Case, ReceivedMessage
-from .tasks import send_initial_email, persist_inbound_email
+from .tasks import persist_inbound_email, send_initial_email
 
 
 @receiver(post_save, sender=Case)

@@ -1,9 +1,8 @@
 """
 Base settings to build other settings files upon.
 """
-from pathlib import Path
-
 import os
+from pathlib import Path
 
 import environ
 
@@ -212,8 +211,6 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-# http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
@@ -240,12 +237,23 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
+DEFAULT_EMAIL_DOMAIN = env("DEFAULT_EMAIL_DOMAIN", default="example.com")
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
+DEFAULT_FROM_EMAIL = env(
+    "DJANGO_DEFAULT_FROM_EMAIL", default=f"Goliath <noreply@{DEFAULT_EMAIL_DOMAIN}>"
+)
+# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
+SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[Goliath]")
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""AlgorithmWatch""", "info@aw.jfilter.de")]
+ADMINS = []
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
@@ -308,15 +316,12 @@ ACCOUNT_ADAPTER = "goliath.users.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "goliath.users.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-
 # https://django-allauth.readthedocs.io/en/latest/advanced.html#custom-user-models
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-
 ACCOUNT_FORMS = {"signup": "goliath.users.forms.CustomSignupForm"}
-
 # don't ask user, always remember
 ACCOUNT_SESSION_REMEMBER = True
 
@@ -341,9 +346,10 @@ REST_FRAMEWORK = {
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
-# Your stuff...
-# ------------------------------------------------------------------------------
+
+# Goliath specific settings
 
 AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
 AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
+# store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)

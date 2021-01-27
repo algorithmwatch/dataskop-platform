@@ -1,18 +1,18 @@
 import json
 
 from allauth.account.models import EmailAddress
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.utils.crypto import get_random_string
 from django.utils.html import format_html
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import UpdateView
 from django_filters import FilterSet
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, Table
-
-from goliath.utils.strings import random_string
 
 from ..utils.magic_link import send_magic_link
 from .forms import CaseStatusForm
@@ -23,9 +23,6 @@ User = get_user_model()
 
 class CaseTypeList(ListView):
     model = CaseType
-
-
-case_type_list_view = CaseTypeList.as_view()
 
 
 class CaseCreate(View):
@@ -64,7 +61,8 @@ class CaseCreate(View):
             else Status.WAITING_USER_VERIFIED
         )
 
-        new_email = random_string(4) + "@aw.jfilter.de"
+        new_email = get_random_string(4).lower() + "@" + settings.DEFAULT_EMAIL_DOMAIN
+
         case = Case.objects.create(
             case_type=case_type,
             email=new_email,
@@ -86,12 +84,9 @@ class CaseCreate(View):
         return render(request, "casehandling/case_new.html", {"case_type": case_type})
 
 
-case_create_view = CaseCreate.as_view()
-
-
 class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
-    """Adapted from
-    https://docs.djangoproject.com/en/3.1/topics/class-based-views/mixins/
+    """
+    Adapted from https://docs.djangoproject.com/en/3.1/topics/class-based-views/mixins/
     """
 
     template_name = "casehandling/case_detail.html"
@@ -121,9 +116,6 @@ class CaseDetailAndUpdate(View):
         return view(request, *args, **kwargs)
 
 
-case_detail_and_update = CaseDetailAndUpdate.as_view()
-
-
 class CaseFilter(FilterSet):
     class Meta:
         model = Case
@@ -131,6 +123,7 @@ class CaseFilter(FilterSet):
 
 
 class CaseTable(Table):
+    # TODO: proper templates
     class Meta:
         model = Case
         template_name = "django_tables2/bootstrap.html"
@@ -140,8 +133,7 @@ class CaseTable(Table):
         return format_html('<a href="/anliegen/{}/">{}</a>', value, value)
 
 
-class CaseList(SingleTableMixin, FilterView):
-    # TODO: limit to user? or public?
+class CaseList(LoginRequiredMixin, SingleTableMixin, FilterView):
     model = Case
     table_class = CaseTable
     template_name = "casehandling/case_list.html"
@@ -149,8 +141,8 @@ class CaseList(SingleTableMixin, FilterView):
     filterset_class = CaseFilter
 
     def get_queryset(self):
+        """
+        limit to user
+        """
         qs = Case.objects.filter(user=self.request.user)
         return qs
-
-
-case_list_view = CaseList.as_view()

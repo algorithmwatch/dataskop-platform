@@ -1,14 +1,11 @@
 import datetime
 
 from anymail.message import AnymailMessage
+from django.conf import settings
 
 from config import celery_app
 
-from .models import SentMessage, Case, ReceivedMessage
-
-from django.conf import settings
-
-# to avoid DB lookups
+from .models import Case, ReceivedMessage, SentMessage
 
 
 def _send_email(to_email, html_content, *kwargs):
@@ -99,9 +96,9 @@ def persist_inbound_email(message):
     if case is not None:
         send_notifical_email(
             case.user.email,
-            "info@aw.jfilter.de",
+            settings.DEFAULT_FROM_EMAIL,
             "Neue Antwort auf Goliath",
             "Hallo, Sie haben eine neue E-Mai auf Goliath.\n\n"
-            + settings.url
+            + settings.URL_ORIGIN
             + case.get_absolute_url(),
         )

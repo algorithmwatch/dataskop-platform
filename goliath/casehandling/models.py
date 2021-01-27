@@ -1,20 +1,20 @@
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from goliath.users.models import User
-from simple_history.models import HistoricalRecords
-from markupfield.fields import MarkupField
-from django.db.models import F
-from taggit.managers import TaggableManager
-
+from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchHeadline,
     SearchQuery,
     SearchRank,
     SearchVector,
+    SearchVectorField,
 )
+from django.db import models
+from django.db.models import F
+from markupfield.fields import MarkupField
+from simple_history.models import HistoricalRecords
+from taggit.managers import TaggableManager
 
-from django.contrib.postgres.search import SearchVectorField
-from django.contrib.postgres.indexes import GinIndex
+User = get_user_model()
 
 
 class SearchExpertnalSupportQuerySet(models.QuerySet):
