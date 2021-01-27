@@ -9,7 +9,7 @@ from .tasks import send_initial_email, persist_inbound_email
 @receiver(post_save, sender=Case)
 def initial_email(sender, instance, created, **kwargs):
     # only sent email if the the case was just create & the user is verified
-    if created and not instance.status.WAITING_USER_VERIFIED:
+    if created and instance.status == instance.status.WAITING_INITIAL_EMAIL_SENT:
         send_initial_email(instance, "New Case", instance.answers_text)
 
 
