@@ -3,12 +3,11 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.db import IntegrityError
+from django.shortcuts import redirect, render
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
-from django.shortcuts import render
-from django.db import IntegrityError
 
 from ..utils.magic_link import send_magic_link
 

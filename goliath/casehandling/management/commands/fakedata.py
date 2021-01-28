@@ -1,10 +1,11 @@
-from pathlib import Path
 import random
+from pathlib import Path
 
-from django.db.models import signals
 import factory
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.db.models import signals
 from factory.django import DjangoModelFactory
 
 from goliath.casehandling.models import (
@@ -15,7 +16,8 @@ from goliath.casehandling.models import (
     MessageSent,
     Status,
 )
-from goliath.users.models import User
+
+User = get_user_model()
 
 
 class UserFactory(DjangoModelFactory):

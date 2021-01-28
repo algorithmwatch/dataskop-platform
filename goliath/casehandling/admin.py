@@ -1,15 +1,14 @@
 from django.contrib import admin
-from simple_history.admin import SimpleHistoryAdmin
 from django.utils.translation import gettext_lazy as _
-
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import (
     Case,
     CaseType,
     Entity,
+    ExternalSupport,
     MessageReceived,
     MessageSent,
-    ExternalSupport,
 )
 
 
