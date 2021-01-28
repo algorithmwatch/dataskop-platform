@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "stylelint.vscode-stylelint",
+    "csstools.postcss",
+    "editorconfig.editorconfig",
+    "eamodio.gitlens",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "sleistner.vscode-fileutils",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml",
+    "ms-azuretools.vscode-docker",
+    "bradlc.vscode-tailwindcss",
+    "timonwong.shellcheck",
+    "foxundermoon.shell-format",
+    "batisteo.vscode-django"
+  ]
+}
