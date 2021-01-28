@@ -31,10 +31,6 @@
         "source.organizeImports": true
       }
     },
-    // JS
-    "prettier.disableLanguages": [
-      "html"
-    ],
     // yaml
     "yaml.format.enable": true,
     // CSS and co.
