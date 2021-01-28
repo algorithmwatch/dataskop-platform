@@ -1,7 +1,6 @@
 from airtable import Airtable
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
-
 from tqdm import tqdm
 
 # from ...autocomplete import generate_phrases

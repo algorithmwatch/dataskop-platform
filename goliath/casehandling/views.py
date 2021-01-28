@@ -14,7 +14,7 @@ from django_filters import FilterSet
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, Table
 
-from ..utils.magic_link import send_magic_link
+from ..utils.email import send_magic_link
 from .forms import CaseStatusForm
 from .models import Case, CaseType, Status
 
@@ -53,7 +53,7 @@ class CaseCreate(View):
                 user=user, email=email, primary=True, verified=False
             )
 
-            send_magic_link(request, user, email, "magic_registration")
+            send_magic_link(user, email, "magic_registration")
 
         status = (
             Status.WAITING_INITIAL_EMAIL_SENT

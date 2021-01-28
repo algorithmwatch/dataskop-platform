@@ -61,6 +61,7 @@ class TimeStampMixin(models.Model):
 
 
 class Status(models.TextChoices):
+    WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
     WAITING_USER_VERIFIED = "UV", "Waiting user verification"
     WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until email sent"
     WAITING_RESPONSE = "WR", "Waiting for response"
@@ -133,7 +134,7 @@ class Case(TimeStampMixin):
 
     def all_messages(self):
         return sorted(
-            list(self.MessageReceived_set.all()) + list(self.MessageSent_set.all()),
+            list(self.messagereceived_set.all()) + list(self.messagesent_set.all()),
             key=lambda x: x.sent_at,
         )
 

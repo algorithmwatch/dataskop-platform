@@ -1,0 +1,2 @@
+{% extends "account/email/base_message.txt" %}{% load i18n %}
+{% block content %}{% autoescape off %}{{ content }}{% endautoescape %}{% endblock %}

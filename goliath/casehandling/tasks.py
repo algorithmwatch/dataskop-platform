@@ -1,45 +1,28 @@
 import datetime
 
-from anymail.message import AnymailMessage
 from django.conf import settings
 
 from config import celery_app
 
-from .models import Case, MessageReceived, MessageSent
-
-
-def _send_email(to_email, html_content, *kwargs):
-    """Send email."""
-    msg = AnymailMessage(*kwargs, [to_email])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
-
-    status = msg.anymail_status  # available after sending
-    esp_message_id = status.message_id  # e.g., '<12345.67890@example.com>'
-
-    # can only be None during debug, don't run this section in debug?
-    esp_message_status = None
-    if to_email in status.recipients:
-        esp_message_status = status.recipients[to_email].status  # e.g., 'queued'
-    return esp_message_id, esp_message_status
+from ..utils.email import send_anymail_email
+from .models import Case, MessageReceived, MessageSent, Status
 
 
 @celery_app.task()
 def send_initial_email(case, subject, content):
-    """Initial email"""
+    """send initial email to entity of case type"""
     from_email, to_email = case.email, case.entity.email
-    text_content = content
-    html_content = f"<p>{content}</p>"
-
-    esp_message_id, esp_message_status = _send_email(
-        to_email, html_content, subject, text_content, from_email
+    esp_message_id, esp_message_status = send_anymail_email(
+        to_email,
+        subject=subject,
+        from_email=from_email,
+        text_content=content,
     )
 
     error_message = None
     if esp_message_status not in ("sent", "queued"):
         error_message = esp_message_status
 
-    # TODO: update or create
     MessageSent.objects.create(
         case=case,
         to_email=to_email,
@@ -52,13 +35,19 @@ def send_initial_email(case, subject, content):
         sent_at=datetime.datetime.utcnow(),
     )
 
+    if error_message is None:
+        case.status = Status.WAITING_RESPONSE
+    else:
+        case.status = Status.WAITING_EMAIL_ERROR
+    case.save()
+
 
 @celery_app.task()
 def send_notifical_email(to_email, from_email, subject, content):
-    """Send email."""
-    text_content = content
-    html_content = f"<p>{content}</p>"
-    _send_email(to_email, html_content, subject, text_content, from_email)
+    """Notify user about incoming new email"""
+    send_anymail_email(
+        to_email, subject=subject, text_content=content, from_emai=from_email
+    )
 
 
 @celery_app.task()
