@@ -1,18 +1,18 @@
 {
   "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "batisteo.vscode-django",
+    "bradlc.vscode-tailwindcss",
+    "mrorz.language-gettext",
     "stylelint.vscode-stylelint",
     "csstools.postcss",
     "editorconfig.editorconfig",
-    "eamodio.gitlens",
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "sleistner.vscode-fileutils",
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
-    "ms-azuretools.vscode-docker",
-    "bradlc.vscode-tailwindcss",
     "timonwong.shellcheck",
+    "sleistner.vscode-fileutils",
     "foxundermoon.shell-format",
-    "batisteo.vscode-django"
+    "ms-vsliveshare.vsliveshare"
   ]
 }
