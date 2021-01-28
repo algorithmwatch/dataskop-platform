@@ -32,7 +32,7 @@
     "last 2 versions"
   ],
   "scripts": {
-    "dev": "gulp",
-    "build": "gulp generate-assets"
+    "dev": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp generate-assets"
   }
 }

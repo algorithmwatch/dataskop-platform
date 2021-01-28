@@ -54,6 +54,34 @@ var paths = pathsConfig();
 
 // Styles autoprefixing and minification
 function styles() {
+
+  if (process.env.NODE_ENV === 'development') {
+
+    /*
+      Development build
+    */
+
+    var processCss = [
+      tailwindcss(),
+      pixrem(), // add fallbacks for rem units
+    ];
+
+    return src(`${paths.sass}/project.scss`)
+      .pipe(
+        sass({
+          includePaths: [paths.vendorSass, paths.sass],
+        }).on("error", sass.logError)
+      )
+      .pipe(plumber()) // Checks for errors
+      .pipe(postcss(processCss))
+      .pipe(dest(paths.css))
+
+  }
+
+  /*
+    Production build
+  */
+
   var processCss = [
     tailwindcss(),
     autoprefixer(), // adds vendor prefixes
