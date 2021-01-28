@@ -54,9 +54,7 @@ var paths = pathsConfig();
 
 // Styles autoprefixing and minification
 function styles() {
-
-  if (process.env.NODE_ENV === 'development') {
-
+  if (process.env.NODE_ENV === "development") {
     /*
       Development build
     */
@@ -74,8 +72,7 @@ function styles() {
       )
       .pipe(plumber()) // Checks for errors
       .pipe(postcss(processCss))
-      .pipe(dest(paths.css))
-
+      .pipe(dest(paths.css));
   }
 
   /*
