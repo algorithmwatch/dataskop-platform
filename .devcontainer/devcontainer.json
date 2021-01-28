@@ -17,13 +17,20 @@
   "workspaceFolder": "/app",
   // Set *default* container specific settings.json values on container create.
   "settings": {
+    "editor.formatOnSave": true,
     "terminal.integrated.shell.linux": "/bin/bash",
+    // Python
     "python.pythonPath": "/usr/local/bin/python",
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
     "python.languageServer": "Pylance",
     "python.linting.pylintEnabled": true,
-    "editor.formatOnSave": true,
+    // sort imports on save
+    "[python]": {
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+      }
+    },
     // JS
     "prettier.disableLanguages": [
       "html"
