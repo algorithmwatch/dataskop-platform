@@ -5,7 +5,7 @@ from django.conf import settings
 
 from config import celery_app
 
-from .models import Case, ReceivedMessage, SentMessage
+from .models import Case, MessageReceived, MessageSent
 
 
 def _send_email(to_email, html_content, *kwargs):
@@ -40,7 +40,7 @@ def send_initial_email(case, subject, content):
         error_message = esp_message_status
 
     # TODO: update or create
-    SentMessage.objects.create(
+    MessageSent.objects.create(
         case=case,
         to_email=to_email,
         from_email=from_email,
@@ -73,7 +73,7 @@ def persist_inbound_email(message):
             to_address = x
             break
 
-    msg = ReceivedMessage.objects.create(
+    msg = MessageReceived.objects.create(
         case=case,
         from_email=message.envelope_sender,
         to_email=to_address,

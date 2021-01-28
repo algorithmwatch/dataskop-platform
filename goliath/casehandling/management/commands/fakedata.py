@@ -11,8 +11,8 @@ from goliath.casehandling.models import (
     Case,
     CaseType,
     Entity,
-    ReceivedMessage,
-    SentMessage,
+    MessageReceived,
+    MessageSent,
     Status,
 )
 from goliath.users.models import User
@@ -56,9 +56,9 @@ class CaseFactory(DjangoModelFactory):
     answers = "{}"
 
 
-class SentMessageFactory(DjangoModelFactory):
+class MessageSentFactory(DjangoModelFactory):
     class Meta:
-        model = SentMessage
+        model = MessageSent
 
     from_email = factory.Faker("email", locale="de")
     to_email = factory.Faker("company_email", locale="de")
@@ -67,9 +67,9 @@ class SentMessageFactory(DjangoModelFactory):
     sent_at = factory.Faker("date_this_year")
 
 
-class ReceivedMessageFactory(DjangoModelFactory):
+class MessageReceivedFactory(DjangoModelFactory):
     class Meta:
-        model = ReceivedMessage
+        model = MessageReceived
 
     from_email = factory.Faker("company_email", locale="de")
     to_email = factory.Faker("email", locale="de")
@@ -135,7 +135,7 @@ class Command(BaseCommand):
             self.stdout.write("Deleting old data (besides superusers)...")
 
             User.objects.filter(is_superuser=False).delete()
-            models = [Entity, Case, CaseType, SentMessage, ReceivedMessage]
+            models = [Entity, Case, CaseType, MessageSent, MessageReceived]
             for m in models:
                 m.objects.all().delete()
 
@@ -166,11 +166,11 @@ class Command(BaseCommand):
 
             c = CaseFactory(case_type=ct, user=u, entity=ct.entity, status=status)
 
-            SentMessageFactory(case=c)
+            MessageSentFactory(case=c)
             for _ in range(options["message"]):
                 if random.choice([True, False]):
-                    SentMessageFactory(case=c)
+                    MessageSentFactory(case=c)
                 else:
-                    ReceivedMessageFactory(case=c)
+                    MessageReceivedFactory(case=c)
 
             cases.append(c)

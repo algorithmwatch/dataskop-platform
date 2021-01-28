@@ -2,7 +2,7 @@ from anymail.signals import inbound
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Case, ReceivedMessage
+from .models import Case, MessageReceived
 from .tasks import persist_inbound_email, send_initial_email
 
 
