@@ -1,0 +1,6 @@
+{% extends "account/email/base_message.html" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}bitte bestätige deine E-Mail-Adresse indem du auf <a rel="notrack" href="{{ activate_url }}">diesen Link</a> klickst.
+{% endautoescape %}{% endblock %}

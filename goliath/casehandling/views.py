@@ -53,7 +53,7 @@ class CaseCreate(View):
                 user=user, email=email, primary=True, verified=False
             )
 
-            send_magic_link(user, email, "sesame_registration")
+            send_magic_link(request, user, email, "magic_registration")
 
         status = (
             Status.WAITING_INITIAL_EMAIL_SENT

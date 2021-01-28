@@ -4,4 +4,4 @@
 
 {% block content %}{% autoescape off %}Bitte bestätige deine E-Mail-Adresse indem du auf folgenden Link klickst:
 
-{{ activate_url }}{% endblocktrans %}{% endautoescape %}{% endblock %}
+{{ activate_url }}{% endautoescape %}{% endblock %}

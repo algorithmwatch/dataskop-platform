@@ -22,14 +22,14 @@ urlpatterns = [
         name="about",
     ),
     path(
-        "sesame/registration/",
+        "magic/registration/",
         MagicLinkVerifyEmail.as_view(),
-        name="sesame_registration",
+        name="magic_registration",
     ),
     path(
-        "sesame/login/",
+        "magic/login/",
         MagicLinkLoginEmail.as_view(),
-        name="sesame_login",
+        name="magic_login",
     ),
     path(
         "account/signup/email/",

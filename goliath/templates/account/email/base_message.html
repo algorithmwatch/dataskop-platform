@@ -1,0 +1,17 @@
+{% load i18n %} {% autoescape off %} {% spaceless %}
+<html>
+  <body>
+    <div>
+      <p>Hallo,</p>
+      <p>{% block content %}{% endblock %}</p>
+      {% with site_name=current_site.name site_domain=current_site.domain %}
+        <p>Mit freundlichen Grüßen</p>
+
+        <p>dein Team {{ site_name }}</p>
+
+        <p>{{ site_domain }}</p>
+      {% endwith %}
+    </div>
+  </body>
+</html>
+{% endspaceless %} {% endautoescape %}

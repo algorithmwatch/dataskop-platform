@@ -1,6 +1,4 @@
-{% load i18n %}
-{% autoescape off %}
-Hallo,
+{% load i18n %}{% autoescape off %}{% spaceless %}Hallo,
 
 {% block content %}{% endblock %}
 
@@ -8,6 +6,4 @@ Hallo,
 
 Ihr Team {{ site_name }}
 
-{{ site_domain }}
-{% endwith %}
-{% endautoescape %}
+{{ site_domain }}{% endwith %}{% endspaceless %}{% endautoescape %}

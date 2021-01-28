@@ -51,7 +51,7 @@ def magic_link_signup_view(request):
                 EmailAddress.objects.create(
                     user=user, email=email, primary=True, verified=False
                 )
-                send_magic_link(user, email, "sesame_registration")
+                send_magic_link(request, user, email, "magic_registration")
                 messages.success(
                     request,
                     "Ein Link zum Abschluss der Registrierung wurde an Ihre E-Mail-Adresse versandt.",
@@ -80,7 +80,7 @@ def magic_link_login_view(request):
                 raise PermissionDenied
             user = user.user
 
-            send_magic_link(user, email, "sesame_login")
+            send_magic_link(request, user, email, "magic_login")
             messages.info(
                 request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
             )
