@@ -3,7 +3,6 @@
 set -o errexit
 set -o nounset
 
-
 celery flower \
     --app=config.celery_app \
     --broker="${CELERY_BROKER_URL}" \
