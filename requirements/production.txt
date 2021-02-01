@@ -2,6 +2,7 @@
 
 -r base.txt
 
+django-anymail[mailjet]==8.1  # https://github.com/anymail/django-anymail
 gunicorn==20.0.4  # https://github.com/benoitc/gunicorn
 sentry-sdk==0.19.1  # https://github.com/getsentry/sentry-python
 
