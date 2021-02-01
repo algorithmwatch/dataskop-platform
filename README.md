@@ -98,7 +98,7 @@ TODO
 ```bash
 docker-compose -f staging.yml run --rm django python manage.py migrate
 docker-compose -f staging.yml run --rm django python manage.py createsuperuser
-docker-compose -f staging.yml up
+docker-compose -f staging.yml --env-file .envs/.staging/.django up
 ```
 
 Protect the staging enviroment with basic auth.
@@ -129,7 +129,7 @@ StandardOutput=file:/var/log/goli.log
 StandardError=file:/var/log/goli_error.log
 
 WorkingDirectory=/root/code/goliath/
-ExecStart=/usr/bin/docker-compose -f staging.yml up -d
+ExecStart=/usr/bin/docker-compose -f staging.yml --env-file .envs/.staging/.django up -d
 ExecStop=/usr/bin/docker-compose -f staging.yml down
 
 [Install]

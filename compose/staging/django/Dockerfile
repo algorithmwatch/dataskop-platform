@@ -12,6 +12,8 @@ RUN mv /app/config/wsgi_staging.py /app/config/wsgi.py
 # Python build stage
 FROM python:3.8-slim-buster
 
+ARG GPG_PUBLIC_KEY_URL
+
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
@@ -21,6 +23,8 @@ RUN apt-get update \
   && apt-get install -y libpq-dev \
   # Translations dependencies
   && apt-get install -y gettext \
+  # for encrypting backup
+  && apt-get install -y gnupg curl \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -58,6 +62,8 @@ COPY --from=client-builder --chown=django:django /app /app
 
 
 USER django
+
+RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import
 
 WORKDIR /app
 

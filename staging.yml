@@ -10,6 +10,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/staging/django/Dockerfile
+      args:
+        - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
     image: goliath_staging_django
     depends_on:
       - postgres
