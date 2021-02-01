@@ -134,7 +134,7 @@ class Case(TimeStampMixin):
 
     def all_messages(self):
         return sorted(
-            list(self.messagereceived_set.all()) + list(self.messagesent_set.all()),
+            list(self.receivedmessage_set.all()) + list(self.sentmessage_set.all()),
             key=lambda x: x.sent_at,
         )
 
@@ -155,14 +155,14 @@ class Message(TimeStampMixin):
         return self.from_email + self.to_email + self.subject
 
 
-class MessageSent(Message):
+class SentMessage(Message):
     esp_message_id = models.CharField(max_length=255, null=True)
     esp_message_status = models.CharField(max_length=255, null=True)
     error_message = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
 
 
-class MessageReceived(Message):
+class ReceivedMessage(Message):
     received_at = models.DateTimeField()
     html = models.TextField(blank=True, null=True)
     from_display_name = models.TextField(null=True, blank=True)

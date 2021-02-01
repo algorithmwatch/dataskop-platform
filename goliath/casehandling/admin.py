@@ -7,8 +7,8 @@ from .models import (
     CaseType,
     Entity,
     ExternalSupport,
-    MessageReceived,
-    MessageSent,
+    ReceivedMessage,
+    SentMessage,
 )
 
 
@@ -100,5 +100,5 @@ admin.site.register(Entity, EntityAdmin)
 admin.site.register(CaseType, CaseTypeAdmin)
 admin.site.register(Case, CaseAdmin)
 admin.site.register(ExternalSupport, ExternalSupportAdmin)
-admin.site.register(MessageReceived, MessageAdmin)
-admin.site.register(MessageSent, MessageAdmin)
+admin.site.register(ReceivedMessage, MessageAdmin)
+admin.site.register(SentMessage, MessageAdmin)
