@@ -2,7 +2,6 @@ version: "3"
 
 volumes:
   staging_postgres_data: {}
-  staging_postgres_data_backups: {}
   staging_traefik: {}
 
 services:
@@ -20,6 +19,8 @@ services:
       - ./.envs/.staging/.django
       - ./.envs/.staging/.postgres
     command: /start
+    volumes:
+      - /var/goliath_backups/:/backups
 
   postgres:
     build:
@@ -28,7 +29,6 @@ services:
     image: goliath_staging_postgres
     volumes:
       - staging_postgres_data:/var/lib/postgresql/data:Z
-      - staging_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.staging/.postgres
 

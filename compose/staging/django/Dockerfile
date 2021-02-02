@@ -25,6 +25,8 @@ RUN apt-get update \
   && apt-get install -y gettext \
   # for encrypting backup
   && apt-get install -y gnupg curl \
+  # needed by django-dbbackup to dump postgres
+  && apt-get install -y postgresql-client \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
