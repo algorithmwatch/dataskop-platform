@@ -6,51 +6,16 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
-from goliath.users.views import (
-    UserUpdate,
-    MagicLinkVerifyEmail,
-    MagicLinkLoginEmail,
-    magic_link_signup_view,
-    magic_link_login_view,
-)
-
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "ueber-uns/",
-        TemplateView.as_view(template_name="pages/about.html"),
-        name="about",
-    ),
-    path(
-        "magic/registration/",
-        MagicLinkVerifyEmail.as_view(),
-        name="magic_registration",
-    ),
-    path(
-        "magic/login/",
-        MagicLinkLoginEmail.as_view(),
-        name="magic_login",
-    ),
-    path(
-        "account/signup/email/",
-        magic_link_signup_view,
-        name="account_signup_email",
-    ),
-    # overriding allauth specific login page
-    path(
-        "account/login/",
-        magic_link_login_view,
-        name="account_login",
-    ),
-    # hacking simple account page here
-    path("account/", UserUpdate.as_view(), name="account_index"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
-    # Your stuff: custom urls includes go here
+    path("", include("goliath.users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 # API URLS
 urlpatterns += [
