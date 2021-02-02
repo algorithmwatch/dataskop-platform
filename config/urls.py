@@ -14,6 +14,7 @@ urlpatterns = [
     path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
     path("", include("goliath.users.urls")),
+    path("", include("django.contrib.flatpages.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
