@@ -61,5 +61,5 @@
     "foxundermoon.shell-format",
   ],
   // set ENV variables such as DATABASE_URL
-  "postCreateCommand": "echo 'source /entrypoint' >> ~/.bashrc",
+  "postCreateCommand": "echo \"source /entrypoint\" >> ~/.bashrc",
 }
