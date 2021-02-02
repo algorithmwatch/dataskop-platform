@@ -1,20 +1,21 @@
 version: "3"
 
 volumes:
-  staging_postgres_data: {}
-  staging_traefik: {}
+  production_postgres_data: {}
+  production_traefik: {}
 
 services:
   django: &django
     build:
       context: .
-      dockerfile: ./compose/staging/django/Dockerfile
+      dockerfile: ./compose/production/django/Dockerfile
       args:
         - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
-    image: goliath_staging_django
+    image: goliath_production_django
     depends_on:
       - postgres
       - redis
+    # using the staging enviroment since we are actually staging with Docker compose
     env_file:
       - ./.envs/.staging/.django
       - ./.envs/.staging/.postgres
@@ -25,22 +26,22 @@ services:
   postgres:
     build:
       context: .
-      dockerfile: ./compose/staging/postgres/Dockerfile
-    image: goliath_staging_postgres
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: goliath_production_postgres
     volumes:
-      - staging_postgres_data:/var/lib/postgresql/data:Z
+      - production_postgres_data:/var/lib/postgresql/data:Z
     env_file:
       - ./.envs/.staging/.postgres
 
   traefik:
     build:
       context: .
-      dockerfile: ./compose/staging/traefik/Dockerfile
-    image: goliath_staging_traefik
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: goliath_production_traefik
     depends_on:
       - django
     volumes:
-      - staging_traefik:/etc/traefik/acme:z
+      - production_traefik:/etc/traefik/acme:z
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
@@ -51,15 +52,15 @@ services:
 
   celeryworker:
     <<: *django
-    image: goliath_staging_celeryworker
+    image: goliath_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: goliath_staging_celerybeat
+    image: goliath_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: goliath_staging_flower
+    image: goliath_production_flower
     command: /start-flower
