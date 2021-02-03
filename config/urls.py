@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages import views
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
@@ -17,6 +18,10 @@ urlpatterns = [
     path("", include("django.contrib.flatpages.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# hardcode urls for important flat pages
+urlpatterns += [
+    path("ueber-uns/", views.flatpage, {"url": "/uber-uns/"}, name="about"),
+]
 
 # API URLS
 urlpatterns += [
