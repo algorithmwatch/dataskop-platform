@@ -68,10 +68,10 @@ class CaseCreate(View):
             email=new_email,
             answers_text=text,
             user=user,
-            entity=case_type.entity,
             answers=answers,
             status=status,
         )
+        case.selected_entities.add(*case_type.entities.all())
 
         # is this enough?
         if is_logged_in:
@@ -117,9 +117,10 @@ class CaseDetailAndUpdate(View):
 
 
 class CaseFilter(FilterSet):
+    # filter by "entities"
     class Meta:
         model = Case
-        fields = ["case_type", "status", "entity"]
+        fields = ["case_type", "status"]
 
 
 class CaseTable(Table):

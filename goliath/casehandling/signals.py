@@ -3,14 +3,14 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import Case, ReceivedMessage
-from .tasks import persist_inbound_email, send_initial_email
+from .tasks import persist_inbound_email, send_initial_emails
 
 
 @receiver(post_save, sender=Case)
 def initial_email(sender, instance, created, **kwargs):
     # only sent email if the the case was just create & the user is verified
     if created and instance.status == instance.status.WAITING_INITIAL_EMAIL_SENT:
-        send_initial_email(instance, "New Case", instance.answers_text)
+        send_initial_emails(instance, "New Case", instance.answers_text)
 
 
 @receiver(inbound)  # add weak=False if inside some other function/class

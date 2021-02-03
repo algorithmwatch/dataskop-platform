@@ -157,7 +157,8 @@ class Command(BaseCommand):
         case_types = []
         for _ in range(options["case_type"]):
             e = random.choice(entities)
-            ct = CaseTypeFactory(entity=e, questions=questions)
+            ct = CaseTypeFactory(questions=questions)
+            ct.entities.add(e)
             case_types.append(ct)
 
         cases = []
@@ -166,7 +167,9 @@ class Command(BaseCommand):
             u = random.choice(people)
             status = random.choice(Status.choices)[0]
 
-            c = CaseFactory(case_type=ct, user=u, entity=ct.entity, status=status)
+            # choosen all entities
+            c = CaseFactory(case_type=ct, user=u, status=status)
+            c.selected_entities.add(*ct.entities.all())
 
             SentMessageFactory(case=c)
             for _ in range(options["message"]):

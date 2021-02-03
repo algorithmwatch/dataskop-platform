@@ -9,36 +9,47 @@ from .models import Case, ReceivedMessage, SentMessage, Status
 
 
 @celery_app.task()
-def send_initial_email(case, subject, content):
-    """send initial email to entity of case type"""
-    from_email, to_email = case.email, case.entity.email
-    esp_message_id, esp_message_status = send_anymail_email(
-        to_email,
-        subject=subject,
-        from_email=from_email,
-        text_content=content,
-    )
+def send_initial_emails(case, subject, content):
+    """
+    send initial email to entity of case type
+    """
+    to_emails = case.entities.email
+    was_error = False
 
-    error_message = None
-    if esp_message_status not in ("sent", "queued"):
-        error_message = esp_message_status
+    for to_email in to_emails:
+        from_email = case.email
 
-    SentMessage.objects.create(
-        case=case,
-        to_email=to_email,
-        from_email=from_email,
-        subject=subject,
-        content=content,
-        esp_message_id=esp_message_id,
-        esp_message_status=esp_message_status,
-        error_message=error_message,
-        sent_at=datetime.datetime.utcnow(),
-    )
+        esp_message_id, esp_message_status = send_anymail_email(
+            to_email,
+            subject=subject,
+            from_email=from_email,
+            text_content=content,
+        )
 
-    if error_message is None:
-        case.status = Status.WAITING_RESPONSE
-    else:
+        error_message = None
+        if esp_message_status not in ("sent", "queued"):
+            error_message = esp_message_status
+
+        if error_message is not None:
+            was_error = True
+
+        SentMessage.objects.create(
+            case=case,
+            to_email=to_email,
+            from_email=from_email,
+            subject=subject,
+            content=content,
+            esp_message_id=esp_message_id,
+            esp_message_status=esp_message_status,
+            error_message=error_message,
+            sent_at=datetime.datetime.utcnow(),
+        )
+
+    if was_error:
         case.status = Status.WAITING_EMAIL_ERROR
+    else:
+        # all good, waiting for response
+        case.status = Status.WAITING_RESPONSE
     case.save()
 
 

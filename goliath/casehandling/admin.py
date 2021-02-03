@@ -67,7 +67,6 @@ class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
         "id",
         "created_at",
         "name",
-        "entity",
     ]
 
 

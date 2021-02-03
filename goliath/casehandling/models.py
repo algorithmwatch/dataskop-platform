@@ -94,9 +94,7 @@ class CaseType(TimeStampMixin):
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
     )
-    entity = models.ForeignKey(
-        "Entity", on_delete=models.SET_NULL, null=True, blank=True
-    )
+    entities = models.ManyToManyField("Entity")
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -104,7 +102,7 @@ class CaseType(TimeStampMixin):
     )
 
     def __str__(self):
-        return self.name + " " + str(self.entity)
+        return self.name
 
     def get_absolute_url(self):
         return f"/neu/{self.pk}/"
@@ -122,9 +120,7 @@ class Case(TimeStampMixin):
         "CaseType", on_delete=models.SET_NULL, null=True, blank=True
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    entity = models.ForeignKey(
-        "Entity", on_delete=models.SET_NULL, null=True, blank=True
-    )
+    selected_entities = models.ManyToManyField("Entity")
     answers_text = models.TextField(null=True, blank=True)
 
     history = HistoricalRecords()
