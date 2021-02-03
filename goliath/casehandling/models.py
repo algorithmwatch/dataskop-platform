@@ -184,3 +184,13 @@ class ExternalSupport(TimeStampMixin):
 
     class Meta(object):
         indexes = [GinIndex(fields=["search_vector"])]
+
+
+# TODO: put into seperate app
+from django.contrib.flatpages.models import FlatPage
+
+
+class GoliathFlatPage(FlatPage):
+    markdown_content = MarkupField(
+        default_markup_type="markdown", blank=True, null=True
+    )

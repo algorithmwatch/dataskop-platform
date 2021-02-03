@@ -95,10 +95,13 @@ TODO
 
 ### Staging
 
+Using the docker-compose of the production environment of `Django-Cookie-Cutter` for our staging invironment.
+For our production, we are using Dokku.
+
 ```bash
-docker-compose -f staging.yml run --rm django python manage.py migrate
-docker-compose -f staging.yml run --rm django python manage.py createsuperuser
-docker-compose -f staging.yml --env-file .envs/.staging/.django up
+docker-compose -f production.yml run --rm django python manage.py migrate
+docker-compose -f production.yml run --rm django python manage.py createsuperuser
+docker-compose -f production.yml --env-file .envs/.staging/.django up
 ```
 
 Protect the staging enviroment with basic auth.
@@ -113,6 +116,11 @@ Here an example on how to deploy with Docker-Compose and systemd.
 
 Some more details in the [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+
+```bash
+cd /etc/systemd/system
+vim goliath-staging.service
+```
 
 ```
 [Unit]
@@ -129,11 +137,16 @@ StandardOutput=file:/var/log/goli.log
 StandardError=file:/var/log/goli_error.log
 
 WorkingDirectory=/root/code/goliath/
-ExecStart=/usr/bin/docker-compose -f staging.yml --env-file .envs/.staging/.django up -d
-ExecStop=/usr/bin/docker-compose -f staging.yml down
+ExecStart=/usr/bin/docker-compose -f production.yml --env-file .envs/.staging/.django up -d
+ExecStop=/usr/bin/docker-compose -f production.yml down
 
 [Install]
 WantedBy=multi-user.target
+```
+
+```bash
+systemctl daemon-reload
+systemctl enable goliath-staging.service
 ```
 
 ##### Commands

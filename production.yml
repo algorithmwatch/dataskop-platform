@@ -2,7 +2,6 @@ version: "3"
 
 volumes:
   production_postgres_data: {}
-  production_postgres_data_backups: {}
   production_traefik: {}
 
 services:
@@ -10,14 +9,19 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
+      args:
+        - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
     image: goliath_production_django
     depends_on:
       - postgres
       - redis
+    # using the staging enviroment since we are actually staging with Docker compose
     env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+      - ./.envs/.staging/.django
+      - ./.envs/.staging/.postgres
     command: /start
+    volumes:
+      - /var/goliath_backups/:/backups
 
   postgres:
     build:
@@ -26,9 +30,8 @@ services:
     image: goliath_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
     env_file:
-      - ./.envs/.production/.postgres
+      - ./.envs/.staging/.postgres
 
   traefik:
     build:
