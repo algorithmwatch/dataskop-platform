@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
@@ -62,7 +63,8 @@ class TimeStampMixin(models.Model):
 class Status(models.TextChoices):
     WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
     WAITING_USER_VERIFIED = "UV", "Waiting user verification"
-    WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until email sent"
+    WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
+    WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
     WAITING_RESPONSE = "WR", "Waiting for response"
     WAITING_USER_INPUT = "WU", "Waiting for user input"
     CLOSED_NEGATIVE = "CN", "Closed, given up"
@@ -94,6 +96,7 @@ class CaseType(TimeStampMixin):
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
     )
     entities = models.ManyToManyField("Entity")
+    needs_approval = models.BooleanField(default=False)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -121,6 +124,13 @@ class Case(TimeStampMixin):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     selected_entities = models.ManyToManyField("Entity")
     answers_text = models.TextField(null=True, blank=True)
+    approved_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="approved_cases",
+    )
 
     history = HistoricalRecords()
 
@@ -131,6 +141,11 @@ class Case(TimeStampMixin):
         return sorted(
             list(self.receivedmessage_set.all()) + list(self.sentmessage_set.all()),
             key=lambda x: x.sent_at,
+        )
+
+    def is_sane(self):
+        return EmailAddress.objects.filter(user=self.user, verified=True).exists() and (
+            not self.case_type.needs_approval or self.approved_by is not None
         )
 
 

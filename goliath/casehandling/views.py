@@ -4,9 +4,9 @@ from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.utils.crypto import get_random_string
 from django.utils.html import format_html
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import UpdateView
@@ -21,6 +21,36 @@ from .models import Case, CaseType, Status
 User = get_user_model()
 
 
+def get_user_for_case(request, answers):
+    """
+    Create a new user or return current logged in user
+    """
+    is_logged_in = request.user.is_authenticated
+    if is_logged_in:
+        user = request.user
+    else:
+        # need to create a new, unverified user
+        # https://stackoverflow.com/q/29147550/4028896
+
+        first_name, last_name, email = (
+            answers["awfirstnamequestion"],
+            answers["awlastnamequestion"],
+            answers["awemailquestion"],
+        )
+        user = User.objects.create_user(
+            first_name=first_name, last_name=last_name, email=email
+        )
+        # cleaned version
+        email = user.email
+
+        EmailAddress.objects.create(
+            user=user, email=email, primary=True, verified=False
+        )
+
+        send_magic_link(user, email, "magic_registration")
+    return user, is_logged_in
+
+
 class CaseTypeList(ListView):
     model = CaseType
 
@@ -30,50 +60,39 @@ class CaseCreate(View):
         case_type = get_object_or_404(CaseType, pk=case_type)
         answers = json.loads(request.POST["answers"])
         text = request.POST["text"]
+        user, is_logged_in = get_user_for_case(request, answers)
 
-        is_logged_in = request.user.is_authenticated
-        if is_logged_in:
-            user = self.request.user
+        if not is_logged_in:
+            status = Status.WAITING_USER_VERIFIED
+        elif case_type.needs_approval:
+            status = Status.WAITING_CASE_VERIFIED
         else:
-            # need to create a new, unverified user
-            # https://stackoverflow.com/q/29147550/4028896
+            # this will send the initial email via Signal
+            status = Status.WAITING_INITIAL_EMAIL_SENT
 
-            first_name, last_name, email = (
-                answers["awfirstnamequestion"],
-                answers["awlastnamequestion"],
-                answers["awemailquestion"],
-            )
-            user = User.objects.create_user(
-                first_name=first_name, last_name=last_name, email=email
-            )
-            # cleaned version
-            email = user.email
-
-            EmailAddress.objects.create(
-                user=user, email=email, primary=True, verified=False
-            )
-
-            send_magic_link(user, email, "magic_registration")
-
-        status = (
-            Status.WAITING_INITIAL_EMAIL_SENT
-            if is_logged_in
-            else Status.WAITING_USER_VERIFIED
-        )
-
-        new_email = get_random_string(4).lower() + "@" + settings.DEFAULT_EMAIL_DOMAIN
-
-        case = Case.objects.create(
-            case_type=case_type,
-            email=new_email,
-            answers_text=text,
-            user=user,
-            answers=answers,
-            status=status,
-        )
+        # try 20 times to generate unique email for this case and then give up
+        # increase the number of digits for each try
+        while True:
+            error_count = 0
+            try:
+                case = Case.objects.create(
+                    case_type=case_type,
+                    email=user.gen_case_email(error_count + 1),
+                    answers_text=text,
+                    user=user,
+                    answers=answers,
+                    status=status,
+                )
+                break
+            except IntegrityError as e:
+                if "unique constraint" in e.args:
+                    error_count += 1
+                    if error_count > 20:
+                        raise e
+        # FIXME
         case.selected_entities.add(*case_type.entities.all())
 
-        # is this enough?
+        # FIXME
         if is_logged_in:
             return JsonResponse({"url": case.get_absolute_url()})
         else:

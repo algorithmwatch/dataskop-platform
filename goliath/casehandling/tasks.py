@@ -13,7 +13,11 @@ def send_initial_emails(case, subject, content):
     """
     send initial email to entity of case type
     """
-    to_emails = case.entities.email
+
+    if not case.is_sane():
+        raise ValueError("can't send email because the case is broken")
+
+    to_emails = case.selected_entities.values("email")
     was_error = False
 
     for to_email in to_emails:
