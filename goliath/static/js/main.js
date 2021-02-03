@@ -84,7 +84,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
   function afterRenderQuestion(sender, options) {
     // make button visibile when preview gets rendered
     if (options.question.name === "previewhtml") {
-      $(".aw-completebutton").removeClass("aw-hidden");
+      $(".aw-completebutton").removeClass("invisible");
     }
 
     setTimeout(function () {
@@ -166,9 +166,9 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigation: { complete: "btn aw-hidden aw-completebutton" },
+      navigation: { complete: "btn invisible aw-completebutton" },
       question: {
-        mainRoot: "sv_q sv_qstn fade-in",
+        mainRoot: "sv_q sv_qstn",
       },
     },
   });

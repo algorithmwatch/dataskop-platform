@@ -17,7 +17,7 @@
     {% compress css %}
     <!-- This file stores project-specific CSS -->
 
-    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" />
 
     {% endcompress %} {% endblock %}
   </head>
@@ -68,7 +68,7 @@
 
     <!-- place project specific Javascript in this file -->
     {% compress js %}
-    <script src="{% static 'js/project.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
     {% endcompress %} {% endblock javascript %}
     {% block morejs %} {% endblock %}
   </body>
