@@ -1,3 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import "./fonts";
+
+  body {
+    // Activates nicer "l" and German "sz" in Inter font
+    font-feature-settings: "cv05", "cv07";
+  }
+
+  hr {
+    // @apply border-black my-4;
+    // @apply dark:border-gray-800;
+  }
+}
+
 .aw-casetype-item img {
   max-height: 10rem;
   object-fit: cover;
@@ -41,10 +59,6 @@ input[type="radio"]:checked {
   background-color: white;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer components {
   .sv_q_title {
     @apply inline-block box-border border-4 my-2 p-2;
@@ -86,20 +100,5 @@ input[type="radio"]:checked {
 
   .previewhtml {
     @apply border-2 border-gray-500 p-3 my-3;
-  }
-}
-
-@layer base {
-  h1 {
-    @apply text-2xl py-3;
-  }
-  h2 {
-    @apply text-xl py-2;
-  }
-  h3 {
-    @apply text-lg;
-  }
-  a {
-    @apply text-blue-600;
   }
 }
