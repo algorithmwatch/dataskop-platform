@@ -10,6 +10,7 @@ from django.contrib.postgres.search import (
 )
 from django.db import models
 from django.db.models import F
+from django.urls import reverse
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
@@ -30,8 +31,6 @@ class SearchExpertnalSupportQuerySet(models.QuerySet):
         qs = qs.annotate(rank=SearchRank(F("search_vector"), search_query)).order_by(
             "-rank"
         )
-
-        print(search_text)
 
         if highlight:
             qs = qs.annotate(
@@ -105,7 +104,7 @@ class CaseType(TimeStampMixin):
         return self.name
 
     def get_absolute_url(self):
-        return f"/neu/{self.pk}/"
+        return reverse("new-wizzard", args=(self.pk,))
 
 
 class Case(TimeStampMixin):
@@ -126,7 +125,7 @@ class Case(TimeStampMixin):
     history = HistoricalRecords()
 
     def get_absolute_url(self):
-        return f"/anliegen/{self.pk}/"
+        return reverse("cases-detail", args=(self.pk,))
 
     def all_messages(self):
         return sorted(

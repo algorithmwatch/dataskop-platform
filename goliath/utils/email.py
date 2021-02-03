@@ -10,7 +10,7 @@ from sesame.utils import get_query_string
 
 def send_anymail_email(to_email, text_content, html_content=None, **kwargs):
     """
-    Sending genericl email with anymail + returns id & status
+    Sending generic email with anymail + returns id & status
     """
     context = {"message": text_content, "current_site": Site.objects.get_current()}
 
