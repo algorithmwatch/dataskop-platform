@@ -1,0 +1,27 @@
+.sv-q-col-1 {
+  display: flex !important;
+}
+
+.sv_row {
+  background-color: white;
+}
+.sv_q_title {
+  @apply inline-block box-border border-4 my-2 p-2;
+}
+
+.sv_q_radiogroup,
+.sv_nav {
+  @apply flex justify-end;
+}
+
+.sv_nav input {
+  @apply p-2;
+}
+
+.sv_q_radiogroup_label span:nth-child(4) {
+  @apply inline-block box-border border-4 my-2 p-2;
+}
+
+.sv_q_text_root {
+  @apply float-right box-border border-4 my-2 p-2 mr-4;
+}
