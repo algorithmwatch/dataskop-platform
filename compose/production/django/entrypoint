@@ -1,8 +1,11 @@
 #!/bin/bash
 
-set -o errexit
-set -o pipefail
-set -o nounset
+# Setting those option make the current shell to exit if there is an error.
+# Since we are sourcing this file to get the DATABASE_URL in the ENV variable, we do not want the child processes to end.
+# So we are not using it right now.
+# set -o errexit
+# set -o pipefail
+# set -o nounset
 
 # N.B. If only .env files supported variable expansion...
 export CELERY_BROKER_URL="${REDIS_URL}"
