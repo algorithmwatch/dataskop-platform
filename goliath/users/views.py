@@ -9,6 +9,8 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
 
+from goliath.casehandling.models import Case
+
 from ..utils.email import send_magic_link
 from .forms import MagicLinkLoginForm, MagicLinkSignupForm
 
@@ -125,6 +127,11 @@ class MagicLinkVerifyEmail(View):
             email_address.verified = True
             email_address.set_as_primary(conditional=True)
             email_address.save()
+
+            # change status, trigger email sending etc.
+            for c in Case.objects.filter(user=user):
+                c.user_verified_afterwards()
+
             login(request, user)
         else:
             raise PermissionDenied

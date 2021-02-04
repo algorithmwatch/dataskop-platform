@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -43,9 +44,38 @@ class HistoryDeletedFilterMixin(object):
     list_filter = (HistoryDeletedFilter,)
 
 
-class CaseAdmin(
-    RemoveAdminAddButtonMixin, HistoryDeletedFilterMixin, SimpleHistoryAdmin
-):
+class ApprovalFilter(admin.SimpleListFilter):
+    """
+    Instances deleted with django-simple-history are not shown it admin view.
+    Make them visible via a list filter.
+    """
+
+    title = _("approval")
+    parameter_name = "approval"
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.model = model
+
+    def lookups(self, request, model_admin):
+        return (
+            ("needs_approval", _("needs approval")),
+            ("was_approved", _("was approved")),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == "needs_approval":
+            return queryset.filter(
+                Q(case_type__needs_approval=True) & Q(approved_by=None)
+            )
+        if self.value() == "was_approved":
+            return queryset.filter(
+                Q(case_type__needs_approval=True) & ~Q(approved_by=None)
+            )
+        return queryset
+
+
+class CaseAdmin(RemoveAdminAddButtonMixin, SimpleHistoryAdmin):
     list_display = [
         "id",
         "created_at",
@@ -60,6 +90,15 @@ class CaseAdmin(
         "user__last_name",
         "user__email",
     ]
+    list_filter = (ApprovalFilter, HistoryDeletedFilter)
+    actions = ["aprove_case"]
+    view_on_site = False
+
+    def aprove_case(self, request, queryset):
+        for case in queryset:
+            case.approve_case(user=request.user)
+
+    aprove_case.short_description = "Mark selected cases as approved"
 
 
 class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
@@ -68,6 +107,7 @@ class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
         "created_at",
         "name",
     ]
+    view_on_site = False
 
 
 class EntityAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):

@@ -143,10 +143,35 @@ class Case(TimeStampMixin):
             key=lambda x: x.sent_at,
         )
 
+    def is_approved(self):
+        return not self.case_type.needs_approval or self.approved_by is not None
+
+    def is_user_verified(self):
+        return EmailAddress.objects.filter(user=self.user, verified=True).exists()
+
     def is_sane(self):
-        return EmailAddress.objects.filter(user=self.user, verified=True).exists() and (
-            not self.case_type.needs_approval or self.approved_by is not None
-        )
+        return self.is_user_verified() and self.is_approved()
+
+    def user_verified_afterwards(self):
+        """
+        change status and thus trigger email sending (see tasks.py)
+        """
+        if self.is_approved():
+            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+        else:
+            self.status = Status.WAITING_CASE_APPROVED
+        self.save()
+
+    def approve_case(self, user):
+        """
+        change status and thus trigger email sending (see tasks.py)
+        """
+        self.approved_by = user
+        if self.is_user_verified():
+            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+        else:
+            self.status = Status.WAITING_USER_VERIFIED
+        self.save()
 
 
 class Message(TimeStampMixin):

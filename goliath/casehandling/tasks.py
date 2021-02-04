@@ -17,7 +17,7 @@ def send_initial_emails(case, subject, content):
     if not case.is_sane():
         raise ValueError("can't send email because the case is broken")
 
-    to_emails = case.selected_entities.values("email")
+    to_emails = case.selected_entities.values_list("email", flat=True)
     was_error = False
 
     for to_email in to_emails:

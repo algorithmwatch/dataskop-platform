@@ -65,7 +65,7 @@ class CaseCreate(View):
         if not is_logged_in:
             status = Status.WAITING_USER_VERIFIED
         elif case_type.needs_approval:
-            status = Status.WAITING_CASE_VERIFIED
+            status = Status.WAITING_CASE_APPROVED
         else:
             # this will send the initial email via Signal
             status = Status.WAITING_INITIAL_EMAIL_SENT
