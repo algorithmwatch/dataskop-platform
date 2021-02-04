@@ -20,6 +20,10 @@
   @import "./surveyjs";
 }
 
+@layer utilities {
+  @import "./utilities";
+}
+
 .aw-casetype-item img {
   max-height: 10rem;
   object-fit: cover;

@@ -1,3 +1,11 @@
+import * as $ from 'jquery';
+import 'survey-jquery/survey.jquery.js'
+import { Model } from 'survey-jquery'
+
+// export for others scripts to use
+window.$ = $;
+
+
 function addUserToJson(surveyJSON) {
   var lastPageIndex = surveyJSON.pages.length - 1;
   var lastPage = surveyJSON.pages[lastPageIndex];
@@ -137,7 +145,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
 
   // Survey.StylesManager.applyTheme();
 
-  var survey = new Survey.Model(surveyJSON);
+  var survey = new Model(surveyJSON);
 
   survey.locale = "de";
   // survey.showProgressBar = "top";
