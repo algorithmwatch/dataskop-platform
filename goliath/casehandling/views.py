@@ -4,7 +4,7 @@ from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.html import format_html
@@ -72,23 +72,26 @@ class CaseCreate(View):
 
         # try 20 times to generate unique email for this case and then give up
         # increase the number of digits for each try
+        error_count = 0
         while True:
-            error_count = 0
             try:
-                case = Case.objects.create(
-                    case_type=case_type,
-                    email=user.gen_case_email(error_count + 1),
-                    answers_text=text,
-                    user=user,
-                    answers=answers,
-                    status=status,
-                )
+                # Nest the already atomic transaction to let the database safely fail.
+                with transaction.atomic():
+                    case = Case.objects.create(
+                        case_type=case_type,
+                        email=user.gen_case_email(error_count + 1),
+                        answers_text=text,
+                        user=user,
+                        answers=answers,
+                        status=status,
+                    )
                 break
             except IntegrityError as e:
-                if "unique constraint" in e.args:
+                if "unique constraint" in e.args[0]:
                     error_count += 1
                     if error_count > 20:
                         raise e
+
         # FIXME
         case.selected_entities.add(*case_type.entities.all())
 

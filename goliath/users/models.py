@@ -1,4 +1,3 @@
-import random
 import string
 
 from django.conf import settings
@@ -59,9 +58,7 @@ class User(AbstractUser):
         return (
             self.first_name
             + self.last_name
-            + get_random_string(
-                random.randint(1, num_digits), allowed_chars=string.digits
-            )
+            + get_random_string(num_digits, allowed_chars=string.digits)
             + "@"
             + settings.DEFAULT_EMAIL_DOMAIN
         ).lower()
