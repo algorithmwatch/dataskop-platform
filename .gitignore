@@ -277,9 +277,6 @@ goliath/media/
 .envs/*
 
 
-goliath/static/css/project*
-goliath/static/js/project.min.js
-goliath/static/js/vendors.js
-goliath/static/js/vendors.min.js
+goliath/static/**/*
 .vscode
 deploy.sh
