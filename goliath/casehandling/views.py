@@ -62,7 +62,10 @@ class CaseCreate(View):
         text = request.POST["text"]
         user, is_logged_in = get_user_for_case(request, answers)
 
-        if not is_logged_in:
+        if (
+            not is_logged_in
+            or not EmailAddress.objects.filter(user=user, verified=True).exists()
+        ):
             status = Status.WAITING_USER_VERIFIED
         elif case_type.needs_approval:
             status = Status.WAITING_CASE_APPROVED
