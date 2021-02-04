@@ -12,7 +12,8 @@ def send_anymail_email(to_email, text_content, html_content=None, **kwargs):
     """
     Sending generic email with anymail + returns id & status
     """
-    context = {"message": text_content, "current_site": Site.objects.get_current()}
+    print(text_content)
+    context = {"content": text_content, "current_site": Site.objects.get_current()}
 
     body_text = render_to_string(
         "account/email/generic_message.txt",
@@ -20,7 +21,7 @@ def send_anymail_email(to_email, text_content, html_content=None, **kwargs):
     )
 
     if html_content is not None:
-        context["message"] = html_content
+        context["content"] = html_content
 
     body_html = render_to_string(
         "account/email/generic_message.html",
