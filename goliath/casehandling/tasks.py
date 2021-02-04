@@ -9,10 +9,12 @@ from .models import Case, ReceivedMessage, SentMessage, Status
 
 
 @celery_app.task()
-def send_initial_emails(case, subject, content):
+def send_initial_emails(case):
     """
     send initial email to entity of case type
     """
+    subject = "New Case"
+    content = case.answers_text
 
     if not case.is_sane():
         raise ValueError("can't send email because the case is broken")
@@ -61,7 +63,17 @@ def send_initial_emails(case, subject, content):
 def send_notifical_email(to_email, from_email, subject, content):
     """Notify user about incoming new email"""
     send_anymail_email(
-        to_email, subject=subject, text_content=content, from_emai=from_email
+        to_email, subject=subject, text_content=content, from_email=from_email
+    )
+
+
+@celery_app.task()
+def send_admin_notification_email(subject, content):
+    to_email = settings.ADMIN_NOTIFICATION_EMAIL
+    from_email = settings.DEFAULT_FROM_EMAIL
+    """Notify user about incoming new email"""
+    send_anymail_email(
+        to_email, subject=subject, text_content=content, from_email=from_email
     )
 
 

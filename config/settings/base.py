@@ -354,3 +354,6 @@ AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
 AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
 # store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)
+ADMIN_NOTIFICATION_EMAIL = env.str(
+    "ADMIN_NOTIFICATION_EMAIL", "notification@example.com"
+)

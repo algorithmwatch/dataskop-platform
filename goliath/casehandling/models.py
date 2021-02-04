@@ -158,6 +158,10 @@ class Case(TimeStampMixin):
         """
         if self.is_approved():
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            # avoid circular imports
+            from .tasks import send_initial_emails
+
+            send_initial_emails(self)
         else:
             self.status = Status.WAITING_CASE_APPROVED
         self.save()
@@ -169,6 +173,10 @@ class Case(TimeStampMixin):
         self.approved_by = user
         if self.is_user_verified():
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            # avoid circular imports
+            from .tasks import send_initial_emails
+
+            send_initial_emails(self)
         else:
             self.status = Status.WAITING_USER_VERIFIED
         self.save()
