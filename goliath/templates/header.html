@@ -1,13 +1,41 @@
-{% load static i18n compress %}
+{% load static i18n compress menu_tags %}
+
+{% primary_menu True as primary_menu_mobile %}
+{% primary_menu False as primary_menu_desktop %}
+{% user_menu as menu_user %}
 
 <header role="banner" class="pt-4 px-4">
 
   {# Logo #}
   <div>
-    <img class="w-32" src="{% static 'img/logo.svg' %}" alt="">
+    <a href="/"><img class="w-32" src="{% static 'img/logo.svg' %}" alt=""></a>
   </div>
 
   {# Mobile menu #}
+  <div x-data="{ mobileMenuOpen: false }">
+    <button type="button" @click="mobileMenuOpen = true"><i class="fas fa-bars"></i></button>
+
+    <nav
+      class="transform top-0 -right-64 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
+      :class="mobileMenuOpen ? '-translate-x-64' : 'translate-x-0'"
+    >
+      {# Close button #}
+      <button type="button" class="text-2xl absolute top-2.5 right-4" @click="mobileMenuOpen = false"><i class="fas fa-times"></i></button>
+
+      <ul class="mt-16 divide-y divide-gray-400">
+        {% for menu_item in primary_menu_mobile %}
+          <li class="{% if menu_item.is_user_menu %}bg-gray-600 text-white border-white{% endif %}"><a href="{{ menu_item.url }}" class="block w-full px-4 py-4">{{ menu_item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    {# Mobile nav background overlay #}
+    <div
+      class="absolute inset-0 w-full h-full z-20 bg-black bg-opacity-40 transition-all"
+      x-show="mobileMenuOpen === true"
+      @click="mobileMenuOpen = false"></div>
+
+  </div>
 
 
 </header>

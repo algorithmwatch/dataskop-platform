@@ -21,7 +21,7 @@ module.exports = {
       current: 'currentColor',
 
       black: '#111111',
-      white: '#fcfcfc',
+      white: '#fff',
       // primary: colors.indigo['700'],
 
       gray: {
