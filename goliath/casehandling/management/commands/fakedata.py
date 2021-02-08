@@ -164,7 +164,7 @@ class Command(BaseCommand):
         cases = []
         for _ in range(options["case"]):
             ct = random.choice(case_types)
-            u = random.choice(people)
+            u = random.choice(list(User.objects.filter(is_staff=True)))
             status = random.choice(Status.choices)[0]
 
             # choosen all entities
