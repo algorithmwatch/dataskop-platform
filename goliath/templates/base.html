@@ -9,67 +9,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="The Goliath project by AlgorithmWatch" />
     <meta name="author" content="AlgorithmWatch" />
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+    <link rel="icon" href="{% static 'img/favicons/favicon.ico' %}" />
 
-    {% block css %} {% block morecss %} {% endblock %}
-
-    <!-- Your stuff: Third-party CSS libraries go here -->
-    {% compress css %}
-    <!-- This file stores project-specific CSS -->
-
-    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-
-    {% endcompress %} {% endblock %}
+    {# Global css #}
+    <link href="{% static 'main.css' %}" rel="stylesheet" />
+    {% block extra_css %}{% endblock %}
   </head>
 
   <body>
-    <div>
-      {% include "navbar.html" %}
 
-      <main style="min-height: 30rem;">
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    {% include "header.html" %}
 
-          {% if messages %} {% for message in messages %}
-          {% if message.tags == "error" %}
-            {% include "message.html" with message=message color="red" %}
-          {% elif message.tags == "info" %}
-            {% include "message.html" with message=message color="blue" %}
-          {% elif message.tags == "success" %}
-            {% include "message.html" with message=message color="green" %}
-          {% endif %}
-          {% endfor %} {% endif %}
+    <main style="min-height: 30rem;">
+      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
 
-        {% block content %}
-          <!-- Replace with your content -->
-          <div class="px-4 py-6 sm:px-0">
-            <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">Replace content block.</div>
-          </div>
-          <!-- /End replace -->
-        {% endblock content %}
+        {% if messages %} {% for message in messages %}
+        {% if message.tags == "error" %}
+          {% include "message.html" with message=message color="red" %}
+        {% elif message.tags == "info" %}
+          {% include "message.html" with message=message color="blue" %}
+        {% elif message.tags == "success" %}
+          {% include "message.html" with message=message color="green" %}
+        {% endif %}
+        {% endfor %} {% endif %}
+
+      {% block content %}
+        <!-- Replace with your content -->
+        <div class="px-4 py-6 sm:px-0">
+          <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">Replace content block.</div>
         </div>
-      </main>
-  </div>
-    <!-- /container -->
+        <!-- /End replace -->
+      {% endblock content %}
+      </div>
+    </main>
 
-    <!-- FIXME: Make Modal work for Tailwind -->
-    {% block modal %}{% endblock modal %}
 
     {% include "footer.html" %}
 
-    <!-- Javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
+    {# Global Javascript #}
+    <script src="{% static 'main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 
-    <!-- Vendor dependencies bundled as one file-->
-    {% compress js %}
-    <script src="{% static 'js/vendors.js' %}"></script>
-    {% endcompress %} {% block morejslibs %} {% endblock %}
-
-    <!-- place project specific Javascript in this file -->
-    {% compress js %}
-    <script src="{% static 'js/project.js' %}"></script>
-    {% endcompress %} {% endblock javascript %}
-    {% block morejs %} {% endblock %}
   </body>
 </html>

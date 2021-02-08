@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import "./fonts";
+
+  body {
+    @apply text-brown-1000;
+    // Activates nicer "l" and German "sz" in Inter font
+    font-feature-settings: "cv05", "cv07";
+  }
+
+  hr {
+    // @apply border-brown-1000 my-4;
+    // @apply dark:border-brown-800;
+  }
+}
+
+@layer components {
+  @import "./components/form";
+  @import "./components/surveyjs";
+}
+
+@layer utilities {
+  @import "./utilities";
+}
+
+.aw-casetype-item img {
+  max-height: 10rem;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+// .main-container {
+//   min-height: calc(100vh - 260px);
+// }
+
+input[type="radio"] {
+  visibility: hidden;
+}
+input[type="radio"]:checked {
+  visibility: visible !important;
+}
+
+// @layer components {
+
+// .btn {
+// }
+
+// .unverified {
+// }
+
+// .textinput,
+// .emailinput {
+// }
+
+// .survey-container {
+// }
+
+// .previewhtml {
+// }
+// }

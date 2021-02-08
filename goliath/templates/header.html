@@ -1,0 +1,76 @@
+{% load static i18n compress menu_tags %}
+
+{% primary_menu True as primary_menu_mobile %}
+{% primary_menu False as primary_menu_desktop %}
+{% user_menu as dropdown_user_menu %}
+
+{% with request.user.is_authenticated as user_is_authenticated %}
+
+  <header role="banner" class="pt-4 px-4 flex justify-between">
+
+    {# Logo #}
+    <div>
+      <a href="/"><img class="w-32" src="{% static 'img/logo.svg' %}" alt=""></a>
+    </div>
+
+    {# Mobile menu #}
+    <div x-data="{ mobileMenuOpen: false }" class="md:hidden">
+      <button type="button" class="btn btn--large pr-2" @click="mobileMenuOpen = true"><i class="icon fas fa-bars"></i></button>
+
+      <nav
+        class="transform top-0 -right-64 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
+        :class="mobileMenuOpen ? '-translate-x-64' : 'translate-x-0'"
+      >
+        {# Close button #}
+        <button type="button" class="btn btn--large absolute top-2.5 right-2" @click="mobileMenuOpen = false"><i class="icon fas fa-times"></i></button>
+
+        <ul class="mt-16 divide-y divide-brown-400">
+          {% for menu_item in primary_menu_mobile %}
+            <li class="{% if menu_item.is_user_menu %}bg-brown-600 text-white border-white{% endif %}"><a href="{{ menu_item.url }}" class="block w-full p-4">{{ menu_item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      {# Mobile nav background overlay #}
+      <div
+        class="absolute inset-0 w-full h-full z-20 bg-black bg-opacity-40 transition-all"
+        x-show="mobileMenuOpen === true"
+        @click="mobileMenuOpen = false"></div>
+
+    </div>
+
+    {# Desktop menu #}
+    <nav {% if user_is_authenticated %}x-data="{ userMenuOpen: false }"{% endif %} class="hidden md:block">
+      <ul class="flex content-center space-x-8">
+        {% for menu_item in primary_menu_desktop %}
+          <li><a href="{{ menu_item.url }}" class="btn btn--regular {% if menu_item.is_button %}btn--primary{% else %}btn--text px-0{% endif %}">{{ menu_item.label }}</a></li>
+        {% endfor %}
+
+        {# User menu trigger #}
+        {% if user_is_authenticated %}
+          <li>
+            <button type="button" class="flex items-center space-x-1 py-2 pr-2 hover:text-brown-900 focus:outline-none focus:text-brown-900" @click="userMenuOpen = !userMenuOpen">
+              <i class="text-2xl fas fa-user-circle"></i>
+              <i class="text-base fas fa-chevron-down"></i>
+            </button>
+          </li>
+        {% endif %}
+      </ul>
+
+      {# User menu dropdown #}
+      {% if user_is_authenticated %}
+        <div class="relative" x-show="userMenuOpen" @click.away="userMenuOpen = false">
+          <div class="absolute right-0 top-2">
+            <ul class="py-1 px-4 border border-brown-1000 rounded-lg divide-y divide-brown-300">
+              {% for menu_item in dropdown_user_menu %}
+                <li class=""><a href="{{ menu_item.url }}" class="btn btn--regular btn--text px-2">{{ menu_item.label }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+    </nav>
+
+
+  </header>
+{% endwith %}

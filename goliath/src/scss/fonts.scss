@@ -1,0 +1,40 @@
+$inter-font-path: '../fonts/inter/export';
+
+$unicode-ranges: (
+  "latin": "U+0000-007a,U+00A0-00FF,U+2010-2027,U+20AC,U+2192,U+2764",
+  "latin-ext": "U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF"
+);
+
+
+@mixin makeFont($name, $weight: 400, $style: normal, $range: false) {
+  @font-face {
+    font-family: 'Inter';
+    font-style: $style;
+    font-weight: $weight;
+    font-display: swap;
+    @if $range {
+      src: local("Inter #{$name}"), local("Inter-#{$name}"),
+        url("#{$inter-font-path}/Inter-#{$name}-#{$range}.woff2") format("woff2"),
+        url("#{$inter-font-path}/Inter-#{$name}-#{$range}.woff") format("woff");
+      unicode-range: unquote(map-get($unicode-ranges, $range));
+    } @else {
+      src: local("Inter #{$name}"), local("Inter-#{$name}"),
+        url("#{$inter-font-path}/Inter-#{$name}.woff2") format("woff2"),
+        url("#{$inter-font-path}/Inter-#{$name}.woff") format("woff");
+    }
+  }
+}
+
+@include makeFont('Regular', $range: "latin");
+@include makeFont('Italic', $style: italic, $range: "latin");
+@include makeFont('SemiBold', $weight: 600, $range: "latin");
+@include makeFont('Bold', $weight: 700, $range: "latin");
+// @include makeFont('ExtraBold', $weight: 800, $range: "latin");
+// @include makeFont('Black', $weight: 900, $range: "latin");
+
+@include makeFont('Regular', $range: "latin-ext");
+@include makeFont('Italic', $style: italic, $range: "latin-ext");
+@include makeFont('SemiBold', $weight: 600, $range: "latin-ext");
+@include makeFont('Bold', $weight: 700, $range: "latin-ext");
+// @include makeFont('ExtraBold', $weight: 800, $range: "latin-ext");
+// @include makeFont('Black', $weight: 900, $range: "latin-ext");

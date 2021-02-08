@@ -1,9 +1,8 @@
 {% load static i18n compress %}
 
-<!-- FIXME: make it work -->
-<!-- This example requires Tailwind CSS v2.0+ -->
 <div>
   {% with url_name=request.resolver_match.url_name %}
+
   <nav class="bg-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
@@ -16,7 +15,7 @@
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <a href="{% url 'home' %}" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Goliath</a>
               <a href="{% url 'new' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Neues Anliegen</a>
-              <a href="{% url 'about' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Über uns</a>
+              {% comment %} <a href="{% url 'about' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Über uns</a> {% endcomment %}
 
               <!-- TODO: mobile -->
               {% if request.user.is_authenticated %}
