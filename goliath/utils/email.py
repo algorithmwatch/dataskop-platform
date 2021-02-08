@@ -8,12 +8,20 @@ from django.utils.http import urlquote
 from sesame.utils import get_query_string
 
 
-def send_anymail_email(to_email, text_content, html_content=None, **kwargs):
+def send_anymail_email(
+    to_email, text_content, ctaLink=None, ctaLabel=None, html_content=None, **kwargs
+):
     """
     Sending generic email with anymail + returns id & status
+
+    Optional cta link (for text email) and cta button (for HTML email).
     """
-    print(text_content)
-    context = {"content": text_content, "current_site": Site.objects.get_current()}
+
+    content = text_content
+    if ctaLink is not None:
+        content += "\n\n" + ctaLink
+
+    context = {"content": content, "current_site": Site.objects.get_current()}
 
     body_text = render_to_string(
         "account/email/generic_message.txt",
@@ -22,6 +30,18 @@ def send_anymail_email(to_email, text_content, html_content=None, **kwargs):
 
     if html_content is not None:
         context["content"] = html_content
+
+        if ctaLink is not None:
+            if ctaLabel is None:
+                ctaLabel = ctaLink
+
+            context["content"] += (
+                '<div style="margin-top: 100px"><a href='
+                + ctaLink
+                + ">"
+                + ctaLabel
+                + "</a></div>"
+            )
 
     body_html = render_to_string(
         "account/email/generic_message.html",

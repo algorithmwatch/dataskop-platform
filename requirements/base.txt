@@ -11,7 +11,7 @@ django-celery-beat==2.0.0  # https://github.com/celery/django-celery-beat
 flower==0.9.5  # https://github.com/mher/flower
 psycopg2==2.8.6  # https://github.com/psycopg/psycopg2
 markdown==3.3.3  # https://github.com/Python-Markdown/markdown
-
+email_reply_parser==0.5.12  # https://github.com/zapier/email-reply-parser
 
 # Django
 # ------------------------------------------------------------------------------

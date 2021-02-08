@@ -166,7 +166,7 @@ Create a simple deployment script:
 
 ```bash
 rsync -avz . awlab2:~/code/goliath
-ssh awlab2 "cd code/goliath && docker-compose -f staging.yml up --detach --build django && docker-compose -f staging.yml run --rm django python manage.py migrate"
+ssh awlab2 "cd code/goliath && docker-compose -f production.yml up --detach --build django && docker-compose -f production.yml run --rm django python manage.py migrate"
 ```
 
 ### Production

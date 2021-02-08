@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from .models import (
+    AutoreplyKeyword,
     Case,
     CaseType,
     Entity,
@@ -135,12 +136,17 @@ class ExternalSupportAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
     ]
 
 
+class AutoreplyKeywordAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
+    view_on_site = False
+
+
 admin.site.register(Entity, EntityAdmin)
 admin.site.register(CaseType, CaseTypeAdmin)
 admin.site.register(Case, CaseAdmin)
 admin.site.register(ExternalSupport, ExternalSupportAdmin)
 admin.site.register(ReceivedMessage, MessageAdmin)
 admin.site.register(SentMessage, MessageAdmin)
+admin.site.register(AutoreplyKeyword, AutoreplyKeywordAdmin)
 
 # TODO: put into seperate app
 

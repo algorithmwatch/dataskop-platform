@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from email_reply_parser import EmailReplyParser
 
 from config import celery_app
 
@@ -16,13 +17,15 @@ def send_initial_emails(case):
     subject = "New Case"
     content = case.answers_text
 
-    if not case.is_sane():
-        raise ValueError("can't send email because the case is broken")
+    assert case.is_sane(), "can't send email because the case is broken"
 
-    to_emails = case.selected_entities.values_list("email", flat=True)
+    to_emails = list(case.selected_entities.values_list("email", flat=True))
+    assert len(to_emails) > 0, "at least one entity needs to be selected"
+
     was_error = False
 
     for to_email in to_emails:
+        print("sending to", to_email)
         from_email = case.email
 
         esp_message_id, esp_message_status = send_anymail_email(
@@ -60,10 +63,15 @@ def send_initial_emails(case):
 
 
 @celery_app.task()
-def send_notifical_email(to_email, from_email, subject, content):
+def send_new_message_notification(to_email, link):
     """Notify user about incoming new email"""
     send_anymail_email(
-        to_email, subject=subject, text_content=content, from_email=from_email
+        to_email,
+        "Sie haben eine neue Antwort erhalten.",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        subject="Neue Antwort",
+        ctaLink=link,
+        ctaLabel="zur Antwort",
     )
 
 
@@ -71,7 +79,6 @@ def send_notifical_email(to_email, from_email, subject, content):
 def send_admin_notification_email(subject, content):
     to_email = settings.ADMIN_NOTIFICATION_EMAIL
     from_email = settings.DEFAULT_FROM_EMAIL
-    """Notify user about incoming new email"""
     send_anymail_email(
         to_email, subject=subject, text_content=content, from_email=from_email
     )
@@ -89,11 +96,19 @@ def persist_inbound_email(message):
             to_address = x
             break
 
-    msg = ReceivedMessage.objects.create(
+    case_found = case is not None
+    parsed_content = EmailReplyParser.parse_reply(message.text)
+    is_autoreply = None
+    if case_found:
+        is_autoreply = case.case_type.is_message_autoreply(parsed_content)
+
+    ReceivedMessage.objects.create(
         case=case,
         from_email=message.envelope_sender,
         to_email=to_address,
         content=message.text,
+        parsed_content=parsed_content,
+        is_autoreply=is_autoreply,
         html=message.html,
         subject=message.subject,
         sent_at=message.date,
@@ -109,12 +124,14 @@ def persist_inbound_email(message):
         cc_addresses=[str(x) for x in message.cc],
     )
 
-    if case is not None:
-        send_notifical_email(
-            case.user.email,
-            settings.DEFAULT_FROM_EMAIL,
-            "Neue Antwort auf Goliath",
-            "Hallo, Sie haben eine neue E-Mai auf Goliath.\n\n"
-            + settings.URL_ORIGIN
-            + case.get_absolute_url(),
+    if case is not None and not is_autoreply:
+        send_new_message_notification(
+            case.user.email, settings.URL_ORIGIN + case.get_absolute_url()
         )
+
+
+def send_admin_waiting_approval_case():
+    send_admin_notification_email(
+        "Neuer Fall benötigt eine Freigabe",
+        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
+    )

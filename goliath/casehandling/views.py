@@ -17,6 +17,7 @@ from django_tables2 import SingleTableMixin, Table
 from ..utils.email import send_magic_link
 from .forms import CaseStatusForm
 from .models import Case, CaseType, Status
+from .tasks import send_admin_waiting_approval_case, send_initial_emails
 
 User = get_user_model()
 
@@ -97,6 +98,11 @@ class CaseCreate(View):
 
         # FIXME
         case.selected_entities.add(*case_type.entities.all())
+
+        if case.status == Status.WAITING_INITIAL_EMAIL_SENT:
+            send_initial_emails(case)
+        elif case.case_type.needs_approval:
+            send_admin_waiting_approval_case()
 
         # FIXME
         if is_logged_in:

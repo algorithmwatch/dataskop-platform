@@ -11,6 +11,7 @@ from django.contrib.postgres.search import (
 )
 from django.db import models
 from django.db.models import F
+from django.db.models.base import Model
 from django.urls import reverse
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
@@ -89,6 +90,13 @@ class Entity(TimeStampMixin):
         return self.name
 
 
+class AutoreplyKeyword(models.Model):
+    text_caseinsensitiv = models.TextField()
+
+    def __str__(self):
+        return str(self.text_caseinsensitiv)
+
+
 class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
@@ -97,6 +105,7 @@ class CaseType(TimeStampMixin):
     )
     entities = models.ManyToManyField("Entity")
     needs_approval = models.BooleanField(default=False)
+    autoreply_keywords = models.ManyToManyField("AutoreplyKeyword")
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -108,6 +117,12 @@ class CaseType(TimeStampMixin):
 
     def get_absolute_url(self):
         return reverse("new-wizzard", args=(self.pk,))
+
+    def is_message_autoreply(self, message):
+        for keyword in self.autoreply_keywords.all():
+            if keyword.text_caseinsensitiv.lower() in message.lower():
+                return True
+        return False
 
 
 class Case(TimeStampMixin):
@@ -213,6 +228,8 @@ class ReceivedMessage(Message):
     spam_score = models.FloatField()
     to_addresses = ArrayField(models.TextField())
     cc_addresses = ArrayField(models.TextField(), null=True, blank=True)
+    is_autoreply = models.BooleanField(null=True)
+    parsed_content = models.TextField()
     history = HistoricalRecords()
 
 

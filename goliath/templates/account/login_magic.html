@@ -10,7 +10,7 @@
 
 <h1>{% trans "Sign In" %}</h1>
 
-<form class="login" method="post" action="{% url 'account_login' %}">
+<form class="login" method="post" action="{% url 'account_login_magic' %}">
   {% csrf_token %}
   {{ form|crispy }}
   <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
