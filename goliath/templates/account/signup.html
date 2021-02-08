@@ -14,8 +14,19 @@
 <h1>{% trans "Sign Up" %}</h1>
 
 
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
+</form>
+
+
 <div class="registration-providers">
-    <a class="btn block" href="{% url 'account_signup_email' %}">Mit E-Mail registrieren</a>
+  <div class="login-or">{% trans 'or' %}</div>
     <a class="btn block" href="{% provider_login_url 'twitter' %}">Mit Twitter registrieren</a>
     <a class="btn block" href="{% provider_login_url 'google' %}">Mit Google registrieren</a>
     <a class="btn block" href="{% provider_login_url 'facebook' %}">Mit Facbook registrieren</a>

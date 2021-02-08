@@ -33,6 +33,9 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
 
 
 def magic_link_signup_view(request):
+    """
+    Disables for now, can't register with magic link.
+    """
     if request.method == "POST":
         form = MagicLinkSignupForm(request.POST)
         if form.is_valid():
@@ -88,7 +91,7 @@ def magic_link_login_view(request):
     else:
         form = MagicLinkLoginForm()
 
-    return render(request, "account/login.html", {"form": form})
+    return render(request, "account/login_magic.html", {"form": form})
 
 
 class MagicLinkLoginEmail(View):

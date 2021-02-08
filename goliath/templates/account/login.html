@@ -20,6 +20,7 @@
 <div class="login-or">{% trans 'or' %}</div>
 <br/>
 
+<a class="btn block" href="{% url 'account_login_magic' %}">Mit Magic-Link anmelden</a>
 <a class="btn block" href="{% provider_login_url 'twitter' %}">Mit Twitter anmelden</a>
 <a class="btn block" href="{% provider_login_url 'google' %}">Mit Google anmelden</a>
 <a class="btn block" href="{% provider_login_url 'facebook' %}">Mit Facbook anmelden</a>

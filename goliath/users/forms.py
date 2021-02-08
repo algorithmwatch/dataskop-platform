@@ -10,8 +10,8 @@ User = get_user_model()
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields["first_name"] = forms.CharField(required=True)
-        self.fields["last_name"] = forms.CharField(required=True)
+        self.fields["first_name"] = forms.CharField(required=True, label="Vorname")
+        self.fields["last_name"] = forms.CharField(required=True, label="Nachname")
 
 
 class MagicLinkSignupForm(forms.Form):

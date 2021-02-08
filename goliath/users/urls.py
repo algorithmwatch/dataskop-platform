@@ -1,5 +1,4 @@
 from django.urls import include, path, re_path
-from rest_framework import routers
 
 from goliath.users.views import (
     MagicLinkLoginEmail,
@@ -21,16 +20,14 @@ urlpatterns = [
         name="magic_login",
     ),
     path(
-        "account/signup/email/",
-        magic_link_signup_view,
-        name="account_signup_email",
-    ),
-    # overriding allauth specific login page
-    path(
-        "account/login/",
+        "account/login/magic/",
         magic_link_login_view,
-        name="account_login",
+        name="account_login_magic",
     ),
-    # hacking simple account page here
+    # path(
+    #     "account/signup/email/",
+    #     magic_link_signup_view,
+    #     name="account_signup_email",
+    # ),
     path("account/", UserUpdate.as_view(), name="account_index"),
 ]
