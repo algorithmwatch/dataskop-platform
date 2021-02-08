@@ -35,6 +35,19 @@ module.exports = {
         800: '#4e4e4e',
         900: '#383838',
       },
+
+      brown: {
+        100: '#EAE9E6',
+        200: '#D6D3CE',
+        300: '#C1BEB5',
+        400: '#ADA89D',
+        500: '#989284',
+        600: '#837C6B',
+        700: '#6F6653',
+        800: '#5A513A',
+        900: '#463B22',
+        1000: '#312509', // text
+      },
     },
     fontFamily: {
       sans: ['Inter', 'sans-serif'],
@@ -55,7 +68,10 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      margin: ['last', 'first'],
+      padding: ['last', 'first'],
+    },
   },
   plugins: [],
 }

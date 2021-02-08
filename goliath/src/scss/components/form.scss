@@ -1,8 +1,8 @@
 .text-input {
   @apply appearance-none block py-2 px-4 leading-5;
-  @apply border border-transparent bg-gray-100 text-gray-900;
-  @apply placeholder-gray-400;
-  @apply focus:outline-none focus:bg-white focus:ring focus:ring-gray-400;
+  @apply border border-transparent bg-brown-100 text-brown-900;
+  @apply placeholder-brown-400;
+  @apply focus:outline-none focus:bg-white focus:ring focus:ring-brown-400;
 }
 
 .select-input {
@@ -21,7 +21,7 @@
   @apply inline-flex items-center justify-center;
   @apply no-underline;
   @apply border border-transparent;
-  @apply font-sans font-semibold leading-5;
+  @apply font-sans leading-5;
   @apply bg-transparent;
   @apply focus:outline-none;
 
@@ -48,15 +48,19 @@
   /*
     Style
   */
-  &--black {
-    @apply text-white border-black bg-black;
-    @apply hover:bg-gray-900;
+  &--primary {
+    @apply rounded-full;
+    @apply font-semibold text-white border-brown-1000 bg-brown-1000;
+    @apply hover:bg-brown-900;
+  }
+  &--text {
+    @apply font-bold text-brown-1000 hover:text-brown-900;
   }
   &--outline {
-    @apply text-black border-black;
-    @apply hover:border-gray-700 hover:bg-gray-100;
+    @apply text-brown-1000 border-brown-1000;
+    @apply hover:border-brown-700 hover:bg-brown-100;
   }
   &--disabled {
-    @apply cursor-default text-gray-300 border-gray-300;
+    @apply cursor-default text-brown-300 border-brown-300;
   }
 }
