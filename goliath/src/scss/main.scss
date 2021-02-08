@@ -6,7 +6,6 @@
   @import "./fonts";
 
   body {
-    @apply text-brown-1000;
     // Activates nicer "l" and German "sz" in Inter font
     font-feature-settings: "cv05", "cv07";
   }

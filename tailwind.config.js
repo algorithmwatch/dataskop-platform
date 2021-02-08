@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
   purge: {
     content: [
@@ -22,7 +24,6 @@ module.exports = {
 
       black: '#111111',
       white: '#fff',
-      // primary: colors.indigo['700'],
 
       gray: {
         100: '#e9e9e9',
@@ -47,6 +48,45 @@ module.exports = {
         800: '#5A513A',
         900: '#463B22',
         1000: '#312509', // text
+      },
+
+      green: {
+        100: '#E7EEED',
+        200: '#D0DEDC',
+        300: '#B9CECB',
+        400: '#A2BDBA',
+        500: '#8BADA8',
+        600: '#759D97',
+        700: '#618984',
+        800: '#51726E',
+        900: '#415C58',
+        1000: '#314542',
+      },
+
+      red: {
+        100: '#FDE1D7',
+        200: '#FBC5B2',
+        300: '#F9A98D',
+        400: '#F78D68',
+        500: '#F67242',
+        600: '#F4561D',
+        700: '#DF430B',
+        800: '#BA3809',
+        900: '#952D07',
+        1000: '#6F2106',
+      },
+
+      blue: {
+        100: '#E4EDF5',
+        200: '#C1D6E8',
+        300: '#9FBFDB',
+        400: '#7CA8CF',
+        500: '#5A91C2',
+        600: '#4079AD',
+        700: '#33618A',
+        800: '#264968',
+        900: '#1A3145',
+        1000: '#0D1823',
       },
     },
     fontFamily: {
@@ -73,5 +113,32 @@ module.exports = {
       padding: ['last', 'first'],
     },
   },
-  plugins: [],
+  plugins: [
+
+    // error-, info- success- classes
+    plugin(function({ addUtilities, theme }) {
+      const newUtilities = {
+        '.error-bg': {
+          'background-color': theme('colors.red.200'),
+        },
+        '.error-text': {
+          'color': theme('colors.red.900'),
+        },
+        '.info-bg': {
+          'background-color': theme('colors.blue.200'),
+        },
+        '.info-text': {
+          'color': theme('colors.blue.900'),
+        },
+        '.success-bg': {
+          'background-color': theme('colors.green.200'),
+        },
+        '.success-text': {
+          'color': theme('colors.green.900'),
+        },
+      }
+
+      addUtilities(newUtilities)
+    })
+  ],
 }
