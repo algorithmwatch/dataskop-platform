@@ -1,4 +1,13 @@
 .page-wrap {
-  @apply lg:max-w-screen-lg lg:mx-auto;
-  @apply xl:max-w-screen-xl;
+  &-wide {
+    @apply w-full;
+    @apply max-w-3.5xl mx-auto;
+  }
+  &-tide {
+    @apply w-full;
+    @apply max-w-3xl mx-auto;
+  }
+  &-spacing {
+    @apply px-4;
+  }
 }
