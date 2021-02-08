@@ -1,0 +1,62 @@
+.text-input {
+  @apply appearance-none block py-2 px-4 leading-5;
+  @apply border border-transparent bg-gray-100 text-gray-900;
+  @apply placeholder-gray-400;
+  @apply focus:outline-none focus:bg-white focus:ring focus:ring-gray-400;
+}
+
+.select-input {
+  @apply appearance-none pr-5;
+  @apply bg-transparent bg-no-repeat;
+  @apply border-b border-current;
+  @apply leading-7;
+  @apply text-current font-bold;
+  @apply focus:outline-none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path fill="%23111111" d="M18,9V10.5L12,16.5L6,10.5V9H18M12,13.67L14.67,11H9.33L12,13.67Z" /></svg>');
+  background-position: calc(100% + 3px) center;
+}
+
+.btn {
+  @apply cursor-pointer;
+  @apply inline-flex items-center justify-center;
+  @apply no-underline;
+  @apply border border-transparent;
+  @apply font-sans font-semibold leading-5;
+  @apply bg-transparent;
+  @apply focus:outline-none;
+
+  // &--icon-left .icon {
+  //   @apply inline-flex w-5 h-5 -ml-1 mr-1;
+  // }
+  &--strech {
+    @apply w-full;
+  }
+
+  /*
+    Size
+  */
+  &--small {
+    @apply text-sm py-2 px-4;
+  }
+  &--regular {
+    @apply text-base py-2 px-4;
+  }
+  &--large {
+    @apply text-lg py-2.5 px-4;
+  }
+
+  /*
+    Style
+  */
+  &--black {
+    @apply text-white border-black bg-black;
+    @apply hover:bg-gray-900;
+  }
+  &--outline {
+    @apply text-black border-black;
+    @apply hover:border-gray-700 hover:bg-gray-100;
+  }
+  &--disabled {
+    @apply cursor-default text-gray-300 border-gray-300;
+  }
+}
