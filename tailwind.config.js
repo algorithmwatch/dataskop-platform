@@ -25,6 +25,19 @@ module.exports = {
       black: '#111111',
       white: '#fff',
 
+      // error: {
+      //   light: '#FBC5B2', // red 200
+      //   dark: '#952D07', // red 900
+      // },
+      // info: {
+      //   light: '#C1D6E8',
+      //   dark: '#1A3145',
+      // },
+      // success: {
+      //   light: '#D0DEDC',
+      //   dark: '#415C58',
+      // },
+
       gray: {
         100: '#e9e9e9',
         200: '#d3d3d3',
@@ -113,32 +126,5 @@ module.exports = {
       padding: ['last', 'first'],
     },
   },
-  plugins: [
-
-    // error-, info- success- classes
-    plugin(function({ addUtilities, theme }) {
-      const newUtilities = {
-        '.error-bg': {
-          'background-color': theme('colors.red.200'),
-        },
-        '.error-text': {
-          'color': theme('colors.red.900'),
-        },
-        '.info-bg': {
-          'background-color': theme('colors.blue.200'),
-        },
-        '.info-text': {
-          'color': theme('colors.blue.900'),
-        },
-        '.success-bg': {
-          'background-color': theme('colors.green.200'),
-        },
-        '.success-text': {
-          'color': theme('colors.green.900'),
-        },
-      }
-
-      addUtilities(newUtilities)
-    })
-  ],
+  plugins: [],
 }
