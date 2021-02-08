@@ -60,7 +60,7 @@ def primary_menu(context, mobile=True):
         return result
 
     else:
-        return [
+        site_menu = [
             {
                 "label": "Dashboard",
                 "url": "/dashboard.html",
@@ -69,11 +69,18 @@ def primary_menu(context, mobile=True):
                 "label": "Über uns",
                 "url": "/ueber-uns.html",
             },
-            {
-                "label": "Unding melden",
-                "url": "/neu/",
-            },
         ]
+
+        report_button = {"label": "Unding melden", "url": "/neu/", "is_button": True}
+
+        if request.user.is_authenticated:
+            result = site_menu
+        else:
+            result = site_menu + create_user_menu(False)
+
+        result.append(report_button)
+
+        return result
 
 
 @register.simple_tag(takes_context=True)
