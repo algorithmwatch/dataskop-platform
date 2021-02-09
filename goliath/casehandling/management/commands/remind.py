@@ -24,4 +24,4 @@ class Command(BaseCommand):
             )
         else:
             emails_sent = Case.objects.remind_users()
-        self.stdout.write("sent " + str(emails_sent) + " emails")
+        self.stdout.write(self.style.SUCCESS("sent " + str(emails_sent) + " emails"))

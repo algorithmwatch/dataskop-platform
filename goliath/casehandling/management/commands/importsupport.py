@@ -28,5 +28,7 @@ class Command(BaseCommand):
         ExternalSupport.objects.sync_search()
 
         self.stdout.write(
-            "created " + str(len(entries)) + " external support providers"
+            self.style.SUCCESS(
+                "created " + str(len(entries)) + " external support providers"
+            )
         )
