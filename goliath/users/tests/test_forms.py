@@ -1,35 +1,47 @@
 import pytest
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.test.client import RequestFactory
 
-from goliath.users.forms import UserCreationForm
+from goliath.users.forms import CustomSignupForm
 from goliath.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
 
 class TestUserCreationForm:
-    def test_clean_username(self):
+    def test_clean_email(self):
         # A user with proto_user params does not exist yet.
         proto_user = UserFactory.build()
 
-        form = UserCreationForm(
+        # mock a request via https://stackoverflow.com/a/65018715/4028896
+        mocked_request = RequestFactory().get("/")
+        middleware = SessionMiddleware()
+        middleware.process_request(mocked_request)
+        mocked_request.session.save()
+
+        form = CustomSignupForm(
             {
-                "username": proto_user.username,
+                "email": proto_user.email,
+                "first_name": proto_user.first_name,
+                "last_name": proto_user.last_name,
                 "password1": proto_user._password,
                 "password2": proto_user._password,
             }
         )
 
         assert form.is_valid()
-        assert form.clean_username() == proto_user.username
+        assert form.clean_email() == proto_user.email
 
         # Creating a user.
-        form.save()
+        form.save(mocked_request)
 
         # The user with proto_user params already exists,
         # hence cannot be created.
-        form = UserCreationForm(
+        form = CustomSignupForm(
             {
-                "username": proto_user.username,
+                "email": proto_user.email,
+                "first_name": proto_user.first_name,
+                "last_name": proto_user.last_name,
                 "password1": proto_user._password,
                 "password2": proto_user._password,
             }
@@ -37,4 +49,4 @@ class TestUserCreationForm:
 
         assert not form.is_valid()
         assert len(form.errors) == 1
-        assert "username" in form.errors
+        assert "email" in form.errors
