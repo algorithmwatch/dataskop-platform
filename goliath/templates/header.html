@@ -6,7 +6,7 @@
 
 {% with request.user.is_authenticated as user_is_authenticated %}
 
-  <header role="banner" class="py-2 sm:py-4 md:pt-6 px-4 flex justify-between">
+  <header role="banner" class="py-2 sm:py-4 md:pt-6 px-4 flex justify-between page-wrap-wide">
 
     {# Logo #}
     <div class="flex">
@@ -18,7 +18,7 @@
       <button type="button" class="btn btn--large pr-2" @click="mobileMenuOpen = true"><i class="icon fas fa-bars"></i></button>
 
       <nav
-        class="transform top-0 -right-64 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
+        class="transform top-0 -right-64 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-50"
         :class="mobileMenuOpen ? '-translate-x-64' : 'translate-x-0'"
       >
         {# Close button #}
@@ -59,7 +59,7 @@
 
       {# User menu dropdown #}
       {% if user_is_authenticated %}
-        <div class="relative" x-show="userMenuOpen" @click.away="userMenuOpen = false">
+        <div class="relative z-50" x-show="userMenuOpen" @click.away="userMenuOpen = false">
           <div class="absolute right-0 top-2">
             <ul class="py-1 px-4 z-30 bg-white border border-brown-1000 rounded-lg divide-y divide-brown-300">
               {% for menu_item in dropdown_user_menu %}
