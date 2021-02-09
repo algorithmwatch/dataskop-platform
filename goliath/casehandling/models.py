@@ -14,7 +14,6 @@ from django.contrib.postgres.search import (
 )
 from django.db import models
 from django.db.models import F
-from django.db.models.base import Model
 from django.urls import reverse
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
@@ -137,11 +136,12 @@ class CaseManager(models.Manager):
         for case in self.filter(status=Status.WAITING_USER_INPUT):
             last_action_date = None
             if case.history.all().count() == 0:
+                # ther is history, the object was never updated since creation
                 last_action_date = case.created_at
             else:
-                prev_case = case
+                # getting the most recent version (in the history)
+                prev_case = case.history.first()
                 while True:
-                    prev_case = prev_case.history.most_recent()
                     if prev_case is None:
                         # there is no history
                         break
@@ -149,8 +149,11 @@ class CaseManager(models.Manager):
                         # no status changed, go further back
                         last_action_date = prev_case.history_date
                         break
+                    # iterate through the all the history item
+                    prev_case = prev_case.prev_record
+
             if last_action_date is not None:
-            # there was a status change
+                # there was a status change
                 if not date_within_margin(last_action_date, margin):
                     # and there was no status update for at least $margin time
                     case.send_reminder()
