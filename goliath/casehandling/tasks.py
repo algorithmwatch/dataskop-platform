@@ -124,10 +124,8 @@ def persist_inbound_email(message):
         cc_addresses=[str(x) for x in message.cc],
     )
 
-    if case is not None and not is_autoreply:
-        send_new_message_notification(
-            case.user.email, settings.URL_ORIGIN + case.get_absolute_url()
-        )
+    if case is not None:
+        case.handle_incoming_email(is_autoreply)
 
 
 def send_admin_waiting_approval_case():

@@ -196,6 +196,17 @@ class Case(TimeStampMixin):
             self.status = Status.WAITING_USER_VERIFIED
         self.save()
 
+    def handle_incoming_email(self, is_autoreply):
+        if is_autoreply:
+            pass
+        else:
+            from .tasks import send_new_message_notification
+
+            send_new_message_notification(
+                self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
+            )
+            self.status = Status.WAITING_USER_INPUT
+            self.save()
 
 class Message(TimeStampMixin):
     from_email = models.EmailField()
