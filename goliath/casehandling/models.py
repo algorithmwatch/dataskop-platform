@@ -130,13 +130,16 @@ class CaseType(TimeStampMixin):
 
 
 class CaseManager(models.Manager):
-    def remind_users(self, margin=datetime.timedelta(days=7)):
+    def remind_users(self, margin=datetime.timedelta(days=7), max_reminders=2):
+        """
+        Iterate over all user and check if they should get a reminder.
+        Default: remind after 7 days, then remind again after 7 days and stop.
+        """
 
-        emails_sent = 0
-        for case in self.filter(status=Status.WAITING_USER_INPUT):
+        def _get_last_action_date(case):
             last_action_date = None
             if case.history.all().count() == 0:
-                # ther is history, the object was never updated since creation
+                # there is no history, the object was never updated since creation
                 last_action_date = case.created_at
             else:
                 # getting the most recent version (in the history)
@@ -151,7 +154,16 @@ class CaseManager(models.Manager):
                         break
                     # iterate through the all the history item
                     prev_case = prev_case.prev_record
+            return last_action_date
 
+        emails_sent = 0
+        for case in self.filter(
+            status=Status.WAITING_USER_INPUT, sent_reminders__lt=max_reminders
+        ):
+            if case.last_reminder_sent_at is not None and date_within_margin(case.last_reminder_sent_at, margin):
+                continue
+
+            last_action_date = _get_last_action_date(case)
             if last_action_date is not None:
                 # there was a status change
                 if not date_within_margin(last_action_date, margin):
@@ -182,6 +194,8 @@ class Case(TimeStampMixin):
         blank=True,
         related_name="approved_cases",
     )
+    sent_reminders = models.IntegerField(default=0)
+    last_reminder_sent_at = models.DateTimeField(null=True, blank=True)
 
     history = HistoricalRecords()
     objects = CaseManager()
@@ -251,6 +265,9 @@ class Case(TimeStampMixin):
         send_reminder_notification(
             self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
         )
+        self.last_reminder_sent_at = datetime.datetime.now()
+        self.sent_reminders += 1
+        self.save()
 
 
 class Message(TimeStampMixin):
