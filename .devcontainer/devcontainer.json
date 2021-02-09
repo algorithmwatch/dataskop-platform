@@ -31,19 +31,24 @@
         "source.organizeImports": true
       }
     },
-    // yaml
-    "yaml.format.enable": true,
-    // CSS and co.
-    "editor.quickSuggestions": {
-      "strings": true
-    },
     "editor.codeActionsOnSave": {
       "source.fixAll.stylelint": true
     },
-    "css.validate": false,
+    // yaml
+    "yaml.format.enable": true,
+    // CSS and co.
     "less.validate": false,
     "scss.validate": false,
-    "stylelint.enable": true
+    "stylelint.enable": true,
+
+    // tailwind intellisense config
+    "css.validate": false,
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "tailwindCSS.includeLanguages": {
+      "django-html": "html"
+		}
   },
   "extensions": [
     "ms-python.python",

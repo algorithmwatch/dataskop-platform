@@ -2,7 +2,7 @@ import 'alpinejs'
 import '../scss/main.scss'
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faBars, faTimes, faUserCircle, faChevronDown
+  faBars, faTimes, faUserCircle, faChevronDown,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(

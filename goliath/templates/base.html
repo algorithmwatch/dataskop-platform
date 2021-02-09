@@ -16,33 +16,15 @@
     {% block extra_css %}{% endblock %}
   </head>
 
-  <body>
+  <body class="text-brown-1000 {% block body_class %}{% endblock %}">
 
     {% include "header.html" %}
 
-    <main style="min-height: 30rem;">
-      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    {% include "messages.html" %}
 
-        {% if messages %} {% for message in messages %}
-        {% if message.tags == "error" %}
-          {% include "message.html" with message=message color="red" %}
-        {% elif message.tags == "info" %}
-          {% include "message.html" with message=message color="blue" %}
-        {% elif message.tags == "success" %}
-          {% include "message.html" with message=message color="green" %}
-        {% endif %}
-        {% endfor %} {% endif %}
-
-      {% block content %}
-        <!-- Replace with your content -->
-        <div class="px-4 py-6 sm:px-0">
-          <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">Replace content block.</div>
-        </div>
-        <!-- /End replace -->
-      {% endblock content %}
-      </div>
+    <main class="{% block content_class %}{% endblock %}">
+      {% block content %}{% endblock %}
     </main>
-
 
     {% include "footer.html" %}
 

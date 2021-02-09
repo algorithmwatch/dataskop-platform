@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
   purge: {
     content: [
@@ -22,7 +24,19 @@ module.exports = {
 
       black: '#111111',
       white: '#fff',
-      // primary: colors.indigo['700'],
+
+      // error: {
+      //   light: '#FBC5B2', // red 200
+      //   dark: '#952D07', // red 900
+      // },
+      // info: {
+      //   light: '#C1D6E8',
+      //   dark: '#1A3145',
+      // },
+      // success: {
+      //   light: '#D0DEDC',
+      //   dark: '#415C58',
+      // },
 
       gray: {
         100: '#e9e9e9',
@@ -47,6 +61,45 @@ module.exports = {
         800: '#5A513A',
         900: '#463B22',
         1000: '#312509', // text
+      },
+
+      green: {
+        100: '#E7EEED',
+        200: '#D0DEDC',
+        300: '#B9CECB',
+        400: '#A2BDBA',
+        500: '#8BADA8',
+        600: '#759D97',
+        700: '#618984',
+        800: '#51726E',
+        900: '#415C58',
+        1000: '#314542',
+      },
+
+      red: {
+        100: '#FDE1D7',
+        200: '#FBC5B2',
+        300: '#F9A98D',
+        400: '#F78D68',
+        500: '#F67242',
+        600: '#F4561D',
+        700: '#DF430B',
+        800: '#BA3809',
+        900: '#952D07',
+        1000: '#6F2106',
+      },
+
+      blue: {
+        100: '#E4EDF5',
+        200: '#C1D6E8',
+        300: '#9FBFDB',
+        400: '#7CA8CF',
+        500: '#5A91C2',
+        600: '#4079AD',
+        700: '#33618A',
+        800: '#264968',
+        900: '#1A3145',
+        1000: '#0D1823',
       },
     },
     fontFamily: {

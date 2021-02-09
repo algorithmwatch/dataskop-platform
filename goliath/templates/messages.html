@@ -1,0 +1,26 @@
+{% if messages %}
+  {% for message in messages %}
+    <template x-if="messageClosed === false" x-data="{ messageClosed: false }">
+      <div class="page-wrap-wide page-wrap-space mb-4">
+        <div
+          role="alert"
+          class="
+            relative
+            rounded-xl
+            font-semibold
+            p-6
+            {% if message.tags == "error" %}
+              bg-red-100 text-red-900
+            {% elif message.tags == "info" %}
+              bg-blue-100 text-blue-900
+            {% elif message.tags == "success" %}
+              bg-green-100 text-green-900
+            {% endif %}
+          ">
+          <button type="button" class="text-xl p-2 focus:outline-none absolute top-1 right-2" @click="messageClosed = true"><i class="icon fas fa-times"></i></button>
+          <p>{{ message }}</p>
+        </div>
+      </div>
+    </template>
+  {% endfor %}
+{% endif %}
