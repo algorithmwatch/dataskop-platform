@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import signals
-from factory.django import DjangoModelFactory
 
 from goliath.casehandling.models import (
     Case,
@@ -16,73 +15,16 @@ from goliath.casehandling.models import (
     SentMessage,
     Status,
 )
+from goliath.casehandling.tests.factories import (
+    CaseFactory,
+    CaseTypeFactory,
+    EntityFactory,
+    ReceivedMessageFactory,
+    SentMessageFactory,
+)
+from goliath.users.tests.factories import UserFactory
 
 User = get_user_model()
-
-
-class UserFactory(DjangoModelFactory):
-    class Meta:
-        model = User
-
-    first_name = factory.Faker("name", locale="de")
-    last_name = factory.Faker("name", locale="de")
-    email = factory.Faker("email", locale="de")
-
-
-class EntityFactory(DjangoModelFactory):
-    class Meta:
-        model = Entity
-
-    name = factory.Faker("company", locale="de")
-    email = factory.Faker("company_email", locale="de")
-    description = factory.Faker("text", locale="de")
-    url = factory.Faker("url", locale="de")
-
-
-class CaseTypeFactory(DjangoModelFactory):
-    class Meta:
-        model = CaseType
-
-    name = factory.Faker("catch_phrase", locale="de")
-    description = factory.Faker("text", locale="de")
-    questions = "{}"
-
-
-class CaseFactory(DjangoModelFactory):
-    class Meta:
-        model = Case
-
-    answers_text = factory.Faker("text")
-    email = factory.Faker("company_email", locale="de")
-    questions = "{}"
-    answers = "{}"
-
-
-class SentMessageFactory(DjangoModelFactory):
-    class Meta:
-        model = SentMessage
-
-    from_email = factory.Faker("email", locale="de")
-    to_email = factory.Faker("company_email", locale="de")
-    subject = factory.Faker("sentence")
-    content = factory.Faker("text")
-    sent_at = factory.Faker("date_this_year")
-
-
-class ReceivedMessageFactory(DjangoModelFactory):
-    class Meta:
-        model = ReceivedMessage
-
-    from_email = factory.Faker("company_email", locale="de")
-    to_email = factory.Faker("email", locale="de")
-    subject = factory.Faker("sentence")
-    content = factory.Faker("text")
-    sent_at = factory.Faker("date_this_year")
-    received_at = factory.Faker("date_this_year")
-    from_display_name = factory.Faker("company", locale="de")
-    from_display_email = factory.Faker("company_email", locale="de")
-    spam_score = factory.Faker("pyfloat")
-    to_addresses = [factory.Faker("email")]
 
 
 class Command(BaseCommand):
@@ -179,3 +121,4 @@ class Command(BaseCommand):
                     ReceivedMessageFactory(case=c)
 
             cases.append(c)
+        self.stdout.write(self.style.SUCCESS("done"))
