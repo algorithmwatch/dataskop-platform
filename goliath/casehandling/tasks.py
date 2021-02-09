@@ -76,6 +76,19 @@ def send_new_message_notification(to_email, link):
 
 
 @celery_app.task()
+def send_reminder_notification(to_email, link):
+    """Notify user about incoming new email"""
+    send_anymail_email(
+        to_email,
+        "Bitten setzen Sie den Status",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        subject="Bitten setzen Sie den Status",
+        ctaLink=link,
+        ctaLabel="zur Antwort",
+    )
+
+
+@celery_app.task()
 def send_admin_notification_email(subject, content):
     to_email = settings.ADMIN_NOTIFICATION_EMAIL
     from_email = settings.DEFAULT_FROM_EMAIL

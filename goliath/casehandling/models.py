@@ -1,4 +1,7 @@
+import datetime
+
 from allauth.account.models import EmailAddress
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
@@ -16,6 +19,8 @@ from django.urls import reverse
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
+
+from ..utils.time import date_within_margin
 
 User = get_user_model()
 
@@ -125,6 +130,34 @@ class CaseType(TimeStampMixin):
         return False
 
 
+class CaseManager(models.Manager):
+    def remind_users(self, margin=datetime.timedelta(days=7)):
+
+        emails_sent = 0
+        for case in self.filter(status=Status.WAITING_USER_INPUT):
+            last_action_date = None
+            if case.history.all().count() == 0:
+                last_action_date = case.created_at
+            else:
+                prev_case = case
+                while True:
+                    prev_case = prev_case.history.most_recent()
+                    if prev_case is None:
+                        # there is no history
+                        break
+                    if prev_case.status == case.status:
+                        # no status changed, go further back
+                        last_action_date = prev_case.history_date
+                        break
+            if last_action_date is not None:
+            # there was a status change
+                if not date_within_margin(last_action_date, margin):
+                    # and there was no status update for at least $margin time
+                    case.send_reminder()
+                    emails_sent += 1
+        return emails_sent
+
+
 class Case(TimeStampMixin):
     questions = models.JSONField(null=True)
     answers = models.JSONField(null=True)
@@ -148,6 +181,7 @@ class Case(TimeStampMixin):
     )
 
     history = HistoricalRecords()
+    objects = CaseManager()
 
     def get_absolute_url(self):
         return reverse("cases-detail", args=(self.pk,))
@@ -207,6 +241,14 @@ class Case(TimeStampMixin):
             )
             self.status = Status.WAITING_USER_INPUT
             self.save()
+
+    def send_reminder(self):
+        from .tasks import send_reminder_notification
+
+        send_reminder_notification(
+            self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
+        )
+
 
 class Message(TimeStampMixin):
     from_email = models.EmailField()
