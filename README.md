@@ -34,7 +34,12 @@ To run Django management comannds:
 
 [Not supporting IE 11 because of Tailwind v2](https://tailwindcss.com/docs/browser-support), but IE 11 usage is [dropping fast](https://gs.statcounter.com/browser-market-share/desktop/germany/#monthly-201812-202012).
 
-When adapting the `package.json` I had problems with the Docker container. Removing the volume `/app/node_modules` building the image, then adding the volume, then building again fixed this. (`docker-compose -f local.yml build node`)
+There are sometimes problems with the data volume to store the `node_modules`.
+You can delete all volumes like in order to force Docker to re-create all volumes.
+
+```
+docker-compose down --volumes
+```
 
 ### Test coverage
 
