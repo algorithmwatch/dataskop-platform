@@ -1,8 +1,26 @@
+.input-label {
+  @apply block font-semibold mb-1;
+}
+
 .text-input {
-  @apply appearance-none block py-2 px-4 leading-5;
+  @apply rounded;
+  @apply appearance-none block;
   @apply border border-transparent bg-brown-100 text-brown-900;
   @apply placeholder-brown-400;
   @apply focus:outline-none focus:bg-white focus:ring focus:ring-brown-400;
+
+  /*
+    Size
+  */
+  &--small {
+    @apply text-sm py-2 px-4;
+  }
+  &--regular {
+    @apply text-base py-2 px-4;
+  }
+  &--large {
+    @apply text-lg py-2.5 px-4;
+  }
 }
 
 .select-input {
@@ -21,14 +39,14 @@
   @apply inline-flex items-center justify-center;
   @apply no-underline;
   @apply border border-transparent;
-  @apply font-sans leading-5;
+  @apply font-sans;
   @apply bg-transparent;
   @apply focus:outline-none;
 
   // &--icon-left .icon {
   //   @apply inline-flex w-5 h-5 -ml-1 mr-1;
   // }
-  &--strech {
+  &--stretch {
     @apply w-full;
   }
 
@@ -57,7 +75,8 @@
     @apply font-bold text-brown-1000 hover:text-brown-900;
   }
   &--outline {
-    @apply text-brown-1000 border-brown-1000;
+    @apply rounded-full;
+    @apply font-semibold text-brown-1000 border-brown-1000;
     @apply hover:border-brown-700 hover:bg-brown-100;
   }
   &--disabled {

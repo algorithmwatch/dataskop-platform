@@ -28,6 +28,7 @@ django-filter==2.4.0  # https://github.com/carltongibson/django-filter
 django-simple-history==2.12.0  # https://github.com/jazzband/django-simple-history
 django-markupfield==2.0.0  # https://github.com/jamesturk/django-markupfield
 django-taggit==1.3.0  # https://github.com/jazzband/django-taggit
+django-widget-tweaks==1.4.8 # https://github.com/jazzband/django-widget-tweaks
 
 # user & auth
 django-allauth==0.43.0  # https://github.com/pennersr/django-allauth

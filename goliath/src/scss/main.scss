@@ -15,9 +15,8 @@
   @import "./components/form";
 }
 
-@layer utilities {
-  @import "./utilities";
-}
+// @layer utilities {
+// }
 
 .aw-casetype-item img {
   max-height: 10rem;
@@ -37,4 +36,5 @@ input[type="radio"]:checked {
   visibility: visible !important;
 }
 
+@import "./utilities";
 @import "./components/surveyjs";

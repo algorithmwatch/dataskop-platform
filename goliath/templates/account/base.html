@@ -2,8 +2,10 @@
 
 {% block title %}{% block head_title %}{% endblock head_title %}{% endblock title %}
 
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
 {% block content %}
-<div class="w-6/12 mx-auto">
+<div class="mt-8 lg:mt-10">
   {% block inner %}{% endblock %}
 </div>
 {% endblock %}
