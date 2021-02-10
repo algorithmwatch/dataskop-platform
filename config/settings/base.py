@@ -329,11 +329,6 @@ ACCOUNT_SESSION_REMEMBER = True
 # magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
 SESAME_MAX_AGE = 300
 
-# django-compressor
-# ------------------------------------------------------------------------------
-# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
-INSTALLED_APPS += ["compressor"]
-STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
