@@ -139,7 +139,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
 
   const constructLetterText = (function (userName) {
     return function () {
-      var text = "";
+      var text = "Sehr geehrte Damen und Herren,\n\n";
       var values = window.awsurvey.getPlainData();
       // user name was provided by the setupSurvey
       for (var i = 0; i < values.length; i++) {
@@ -153,7 +153,8 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
           continue;
         }
 
-        if (values[i].name == "awemailquestion") continue;
+        if (["awemailquestion", "awentitycheckbox"].includes(values[i].name))
+          continue;
 
         if (values[i].value != null) text += values[i].value + "\n";
       }
