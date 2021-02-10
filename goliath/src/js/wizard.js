@@ -50,30 +50,37 @@ function addUserToJson(surveyJSON) {
 }
 
 // via https://surveyjs.io/Examples/Library?id=survey-editprevious&platform=jQuery&theme=modern#content-js
+// save storage with specific name of case id
+function Storage(storageName) {
+  function loadState(survey) {
+    var storageSt = window.localStorage.getItem(storageName) || "";
+    var res = {};
+    if (storageSt) res = JSON.parse(storageSt);
 
-var storageName = "aw-goliath-storage";
+    if (res.data) survey.data = res.data;
+  }
 
-function loadState(survey) {
-  var storageSt = window.localStorage.getItem(storageName) || "";
-  var res = {};
-  if (storageSt) res = JSON.parse(storageSt);
+  function saveState(survey) {
+    var res = {
+      data: survey.data,
+    };
+    window.localStorage.setItem(storageName, JSON.stringify(res));
+  }
 
-  if (res.data) survey.data = res.data;
-}
-
-function saveState(survey) {
-  var res = {
-    data: survey.data,
+  function removeState() {
+    window.localStorage.removeItem(storageName);
+  }
+  return {
+    loadState,
+    saveState,
+    removeState,
   };
-  window.localStorage.setItem(storageName, JSON.stringify(res));
-}
-
-function removeState() {
-  window.localStorage.removeItem(storageName);
 }
 
 function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
   if (newUser) surveyJSON = addUserToJson(surveyJSON);
+
+  window.awstorage = Storage("aw-goliath-storage-" + casetypeId);
 
   function sendDataToServer(survey, options) {
     if (options.isCompleteOnTrigger) {
@@ -85,13 +92,13 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
     // jQuery does some wild preprocessing with JSONs so turn it into string
     var body = {
       answers: JSON.stringify(survey.data),
-      text: window.finalText,
+      text: window.awfinalText,
       csrfmiddlewaretoken: csrfToken,
     };
 
     $.post("/neu/" + casetypeId + "/", body)
       .done(function (successData) {
-        removeState();
+        window.awstorage.removeState();
         window.location.replace(successData.url);
       })
       .fail(function () {
@@ -114,7 +121,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
   function afterRenderQuestion(sender, options) {
     // make button visibile when preview gets rendered
     if (options.question.name === "previewhtml") {
-      $(".aw-completebutton").removeClass("invisible");
+      $(".aw-completebutton").removeClass("hidden");
     }
 
     setTimeout(function () {
@@ -132,20 +139,20 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
 
   // survejs changed the values right before completing.
   // So check if the complete button was clicked to prevent chaning the preview text ect.
-  window.isCompleting = false;
+  window.awisCompleting = false;
   function beforeComplete() {
-    window.isCompleting = true;
+    window.awisCompleting = true;
     return true;
   }
 
   function surveyValueChanged(sender, options) {
-    if (options.name != "previewhtml" && window.isCompleting === false) {
-      window.finalText = constructLetterText();
+    if (options.name != "previewhtml" && window.awisCompleting === false) {
+      window.awfinalText = constructLetterText();
       window.awsurvey.getQuestionByName("previewhtml").html =
         "<div class='previewhtml'><h2>Vorschau</h2>" +
-        "<p>" +
-        window.finalText +
-        "</p></div>";
+        "<div><p>" +
+        window.awfinalText +
+        "</p></div><div><p>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
     }
 
     var el = document.getElementById(options.name);
@@ -159,7 +166,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
   survey.locale = "de";
   survey.showPreviewBeforeComplete = true;
   survey.completedHtml = "<p>Bitte einen kurzen Augenblick warten...</p>";
-  survey.completeText = "Anliegen melden & versenden";
+  survey.completeText = "Abschließen";
 
   // https://surveyjs.io/Documentation/Library?id=SurveyModel#questionsOnPageMode
   survey.questionsOnPageMode = "singlePage";
@@ -169,14 +176,14 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
 
   // persist state every time a new question gets rendered
   survey.onAfterRenderQuestion.add(function (survey, options) {
-    saveState(survey);
+    window.awstorage.saveState(survey);
   });
 
   window.awsurvey = survey;
 
   // load the initial state if available
   // TODO: if the survey was almost complete, the previewtext + button are not shown
-  loadState(window.awsurvey);
+  window.awstorage.loadState(window.awsurvey);
 
   // what classes to customize
   // https://surveyjs.io/Examples/Library/?id=survey-customcss&platform=jQuery&theme=modern#content-docs
@@ -188,10 +195,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigation: { complete: "btn--primary invisible aw-completebutton" },
-      question: {
-        mainRoot: "sv_q sv_qstn",
-      },
+      navigation: { complete: "btn--primary hidden aw-completebutton" },
     },
   });
 }
