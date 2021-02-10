@@ -49,6 +49,32 @@ function addUserToJson(surveyJSON) {
   return surveyJSON;
 }
 
+function addEntityChooseToJson(surveyJSON, entities) {
+  var entityQuestion = {
+    type: "checkbox",
+    choices: entities.map((x) => {
+      return { value: x[0], text: x[1] };
+    }),
+    visible: true,
+    name: "awentitycheckbox",
+    title: "An wen richtet sich die Anfrage?",
+  };
+
+  // search for first visible question, hide it, make it visible when
+  // entity choosing was done
+  for (let i = 0; i < surveyJSON.pages[0].elements.length; i++) {
+    let x = surveyJSON.pages[0].elements[i];
+    if (!("visible" in x) || x.visible) {
+      x.visible = false;
+      x.visibleIf = "{awentitycheckbox} notempty";
+      break;
+    }
+  }
+
+  surveyJSON.pages[0].elements.unshift(entityQuestion);
+  return surveyJSON;
+}
+
 // via https://surveyjs.io/Examples/Library?id=survey-editprevious&platform=jQuery&theme=modern#content-js
 // save storage with specific name of case id
 function Storage(storageName) {
@@ -77,8 +103,10 @@ function Storage(storageName) {
   };
 }
 
-function setupSurvey(casetypeId, surveyJSON, csrfToken, userName) {
+function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
+  if (entities.length > 1)
+    surveyJSON = addEntityChooseToJson(surveyJSON, entities);
 
   window.awstorage = Storage("aw-goliath-storage-" + casetypeId);
 

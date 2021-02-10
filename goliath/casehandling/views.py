@@ -112,7 +112,18 @@ class CaseCreate(View):
 
     def get(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
-        return render(request, "casehandling/case_new.html", {"case_type": case_type})
+        import json
+
+        return render(
+            request,
+            "casehandling/case_new.html",
+            {
+                "case_type": case_type,
+                "entities_values": json.dumps(
+                    list(case_type.entities.values_list("id", "name"))
+                ),
+            },
+        )
 
 
 class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
