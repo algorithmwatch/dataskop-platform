@@ -124,6 +124,17 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
       $(".aw-completebutton").removeClass("hidden");
     }
 
+    var questionType = options.question.getType();
+
+    // remove previously added next button
+    $(".aw-survey-next-button").remove();
+    if (questionType === "text") {
+      // add next button
+      $(options.htmlElement).append(
+        '<div class="text-right clear-both aw-survey-next-button"><btn class="btn btn--regular btn--primary">weiter</btn></div>'
+      );
+    }
+
     setTimeout(function () {
       options.htmlElement.scrollIntoView({
         behavior: "smooth",

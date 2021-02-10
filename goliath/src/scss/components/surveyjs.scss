@@ -25,3 +25,7 @@
 .sv_q_text_root {
   @apply float-right box-border border-4 my-2 p-2 mr-4;
 }
+
+.sv_q_erbox {
+  @apply text-right;
+}
