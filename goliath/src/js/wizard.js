@@ -77,8 +77,8 @@ function Storage(storageName) {
   };
 }
 
-function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
-  if (newUser) surveyJSON = addUserToJson(surveyJSON);
+function setupSurvey(casetypeId, surveyJSON, csrfToken, userName) {
+  if (userName === null) surveyJSON = addUserToJson(surveyJSON);
 
   window.awstorage = Storage("aw-goliath-storage-" + casetypeId);
 
@@ -109,14 +109,30 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
       });
   }
 
-  function constructLetterText() {
-    var text = "";
-    var values = window.awsurvey.getPlainData();
-    for (var i = 0; i < values.length; i++) {
-      if (values[i].value != null) text += values[i].value + " ";
-    }
-    return text;
-  }
+  const constructLetterText = (function (userName) {
+    return function () {
+      var text = "";
+      var values = window.awsurvey.getPlainData();
+      // user name was provided by the setupSurvey
+      for (var i = 0; i < values.length; i++) {
+        if (values[i].name == "awfirstnamequestion") {
+          userName = values[i].value;
+          continue;
+        }
+
+        if (values[i].name == "awlastnamequestion") {
+          userName += " " + values[i].value;
+          continue;
+        }
+
+        if (values[i].name == "awemailquestion") continue;
+
+        if (values[i].value != null) text += values[i].value + "\n";
+      }
+      text += "\nMit freudlichen Grüßen\n\n" + userName;
+      return text;
+    };
+  })(userName);
 
   function afterRenderQuestion(sender, options) {
     // make button visibile when preview gets rendered
@@ -161,7 +177,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
       window.awfinalText = constructLetterText();
       window.awsurvey.getQuestionByName("previewhtml").html =
         "<div class='previewhtml'><h2>Vorschau</h2>" +
-        "<div><p>" +
+        "<div><p class='whitespace-pre-wrap border-4 p-2'>" +
         window.awfinalText +
         "</p></div><div><p>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
     }

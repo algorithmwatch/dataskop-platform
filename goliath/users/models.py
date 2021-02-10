@@ -51,6 +51,10 @@ class User(AbstractUser):
 
     objects = CustomUserManager()
 
+    @property
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
+
     def get_absolute_url(self):
         return reverse("account_index")
 

@@ -21,9 +21,9 @@
   var True = true;
   var False = false;
   {% if user.is_authenticated %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", false);
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", user.full_name);
   {% else %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", true);
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null);
   {% endif %}
   </script>
 {% endblock %}
