@@ -18,7 +18,6 @@
 
 @layer components {
   @import "./components/form";
-  @import "./components/surveyjs";
 }
 
 @layer utilities {
@@ -61,3 +60,5 @@ input[type="radio"]:checked {
 // .previewhtml {
 // }
 // }
+
+@import "./components/surveyjs";
