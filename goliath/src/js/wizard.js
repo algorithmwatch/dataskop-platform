@@ -188,7 +188,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, newUser) {
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigation: { complete: "btn invisible aw-completebutton" },
+      navigation: { complete: "btn--primary invisible aw-completebutton" },
       question: {
         mainRoot: "sv_q sv_qstn",
       },
