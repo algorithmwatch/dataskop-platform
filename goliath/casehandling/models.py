@@ -107,9 +107,9 @@ class CaseType(TimeStampMixin):
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
     )
-    entities = models.ManyToManyField("Entity")
+    entities = models.ManyToManyField("Entity", blank=True)
     needs_approval = models.BooleanField(default=False)
-    autoreply_keywords = models.ManyToManyField("AutoreplyKeyword")
+    autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -160,7 +160,9 @@ class CaseManager(models.Manager):
         for case in self.filter(
             status=Status.WAITING_USER_INPUT, sent_reminders__lt=max_reminders
         ):
-            if case.last_reminder_sent_at is not None and date_within_margin(case.last_reminder_sent_at, margin):
+            if case.last_reminder_sent_at is not None and date_within_margin(
+                case.last_reminder_sent_at, margin
+            ):
                 continue
 
             last_action_date = _get_last_action_date(case)
@@ -185,7 +187,7 @@ class Case(TimeStampMixin):
         "CaseType", on_delete=models.SET_NULL, null=True, blank=True
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    selected_entities = models.ManyToManyField("Entity")
+    selected_entities = models.ManyToManyField("Entity", blank=True)
     answers_text = models.TextField(null=True, blank=True)
     approved_by = models.ForeignKey(
         User,
