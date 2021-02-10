@@ -9,16 +9,16 @@
 {% block inner %}
 
   <div class="max-w-xs mx-auto text-center">
-    <h1 class="hl-2xl lg:hl-3xl">{% trans "Sign In" %}</h1>
+    <h1 class="hl-2xl mb-6">{% trans "Sign In" %}</h1>
 
     <form class="space-y-4 text-left" method="post" action="{% url 'account_login' %}">
       {% csrf_token %}
 
-      <div class="">
+      <div>
         {{ form.login|add_label_class:"input-label" }}
         {{ form.login|add_class:"text-input text-input--regular w-full" }}
       </div>
-      <div class="">
+      <div>
         {{ form.password|add_label_class:"input-label" }}
         {{ form.password|add_class:"text-input text-input--regular w-full" }}
         <div class="text-right mt-1 text-sm">
@@ -34,7 +34,9 @@
         {% endfor %}
       {% endif %}
 
-      <button class="btn btn--regular btn--primary btn--stretch" type="submit">{% trans "Sign In" %}</button>
+      <div class="pt-2">
+        <button class="btn btn--regular btn--primary btn--stretch" type="submit">{% trans "Sign In" %}</button>
+      </div>
     </form>
 
     <div class="my-6 relative">

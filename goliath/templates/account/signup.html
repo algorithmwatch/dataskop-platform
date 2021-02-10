@@ -1,41 +1,72 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load crispy_forms_tags %}
+{% load widget_tweaks %}
 {% load socialaccount %}
 {% providers_media_js %}
 
-{% include "socialaccount/snippets/login_extra.html" %}
-
+{% comment %} {% include "socialaccount/snippets/login_extra.html" %} {% endcomment %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block inner %}
-<h1>{% trans "Sign Up" %}</h1>
 
+  <div class="max-w-xs mx-auto text-center">
+    <h1 class="hl-2xl mb-6">{% trans "Sign Up" %}</h1>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
+    <form class="space-y-4 text-left" id="signup_form" method="post" action="{% url 'account_signup' %}">
+      {% csrf_token %}
 
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
-</form>
+      <div>
+        {{ form.email|add_label_class:"input-label" }}
+        {{ form.email|add_class:"text-input text-input--regular w-full" }}
+      </div>
+      <div>
+        {{ form.password|add_label_class:"input-label" }}
+        {{ form.password|add_class:"text-input text-input--regular w-full" }}
+      </div>
+      <div>
+        {{ form.first_name|add_label_class:"input-label" }}
+        {{ form.first_name|add_class:"text-input text-input--regular w-full" }}
+      </div>
+      <div>
+        {{ form.last_name|add_label_class:"input-label" }}
+        {{ form.last_name|add_class:"text-input text-input--regular w-full" }}
+      </div>
 
+      {% if form.errors %}
+        {% for error in form.non_field_errors %}
+          <div class="text-red-700">
+            <strong>{{ error|escape }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
 
-<div class="registration-providers">
-  <div class="login-or">{% trans 'or' %}</div>
-    <a class="btn block" href="{% provider_login_url 'twitter' %}">Mit Twitter registrieren</a>
-    <a class="btn block" href="{% provider_login_url 'google' %}">Mit Google registrieren</a>
-    <a class="btn block" href="{% provider_login_url 'facebook' %}">Mit Facbook registrieren</a>
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
 
-  <div class="login-or">{% trans 'or' %}</div>
-</div>
+      <div class="pt-2.5">
+        <button class="btn btn--regular btn--primary btn--stretch" type="submit">{% trans "Sign Up" %}</button>
+      </div>
+    </form>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+    <div class="my-6 relative">
+      <span class="z-20 block relative"><span class="bg-white px-10">{% trans 'oder' %}</span></span>
+      <span class="z-10 block absolute top-1/2 w-full h-0.5 bg-brown-100"></span>
+    </div>
 
+    <div class="space-y-4 registration-providers">
+      <a class="btn btn--regular btn--outline btn--stretch" href="{% provider_login_url 'twitter' %}">{% trans 'Mit Twitter registrieren' %}</a>
+      <a class="btn btn--regular btn--outline btn--stretch" href="{% provider_login_url 'google' %}">{% trans 'Mit Google registrieren' %}</a>
+      <a class="btn btn--regular btn--outline btn--stretch" href="{% provider_login_url 'facebook' %}">{% trans 'Mit Facbook registrieren' %}</a>
+    </div>
+
+    <div class="mt-6 text-sm">
+      {% blocktrans %}Sie haben bereits einen Account?<br>Dann <a class="underline hover:no-underline" href="{{ login_url }}">hier entlang</a>.{% endblocktrans %}
+    </div>
+
+  </div>
 
 {% endblock %}
 
