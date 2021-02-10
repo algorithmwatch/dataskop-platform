@@ -160,7 +160,9 @@ class CaseManager(models.Manager):
         for case in self.filter(
             status=Status.WAITING_USER_INPUT, sent_reminders__lt=max_reminders
         ):
-            if case.last_reminder_sent_at is not None and date_within_margin(case.last_reminder_sent_at, margin):
+            if case.last_reminder_sent_at is not None and date_within_margin(
+                case.last_reminder_sent_at, margin
+            ):
                 continue
 
             last_action_date = _get_last_action_date(case)
@@ -199,6 +201,21 @@ class Case(TimeStampMixin):
 
     history = HistoricalRecords()
     objects = CaseManager()
+
+    @property
+    def print_status(self):
+        if self.status in (
+            Status.WAITING_USER_INPUT,
+            Status.WAITING_USER_VERIFIED,
+        ):
+            return "0_open"
+        if self.status in (
+            Status.CLOSED_NEGATIVE,
+            Status.CLOSED_POSITIVE,
+            Status.CLOSED_MIXED,
+        ):
+            return "2_closed"
+        return "1_waiting"
 
     def get_absolute_url(self):
         return reverse("cases-detail", args=(self.pk,))

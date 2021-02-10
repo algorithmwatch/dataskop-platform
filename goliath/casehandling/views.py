@@ -1,18 +1,14 @@
 import json
 
 from allauth.account.models import EmailAddress
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.utils.html import format_html
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import UpdateView
-from django_filters import FilterSet
-from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin, Table
+from django.views.generic.list import ListView
 
 from ..utils.email import send_magic_link
 from .forms import CaseStatusForm
@@ -147,30 +143,9 @@ class CaseDetailAndUpdate(View):
         return view(request, *args, **kwargs)
 
 
-class CaseFilter(FilterSet):
-    # filter by "entities"
-    class Meta:
-        model = Case
-        fields = ["case_type", "status"]
-
-
-class CaseTable(Table):
-    # TODO: proper templates
-    class Meta:
-        model = Case
-        template_name = "django_tables2/bootstrap.html"
-        exclude = ("questions", "answers", "email", "answers_text", "user")
-
-    def render_id(self, value):
-        return format_html('<a href="/anliegen/{}/">{}</a>', value, value)
-
-
-class CaseList(LoginRequiredMixin, SingleTableMixin, FilterView):
+class CaseList(LoginRequiredMixin, ListView):
     model = Case
-    table_class = CaseTable
     template_name = "casehandling/case_list.html"
-
-    filterset_class = CaseFilter
 
     def get_queryset(self):
         """
