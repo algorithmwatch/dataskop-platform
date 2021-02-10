@@ -4,7 +4,9 @@
   {{flatpage.title}}
 {% endblock %}
 
+{% block content_class %}page-wrap-prose page-wrap-space prose-content{% endblock %}
+
 {% block content %}
-  {{flatpage.goliathflatpage.content}}
+  {{ flatpage.goliathflatpage.content|safe }}
   {{flatpage.goliathflatpage.markdown_content.rendered|safe}}
 {% endblock content %}
