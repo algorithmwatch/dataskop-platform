@@ -91,9 +91,13 @@ class CaseCreate(View):
                     error_count += 1
                     if error_count > 20:
                         raise e
-
-        # FIXME
-        case.selected_entities.add(*case_type.entities.all())
+        # if the user selected entities, we may need need to send the email to more than 1 entity
+        if "awentitycheckbox" in answers:
+            entity_ids = answers["awentitycheckbox"]
+            case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
+        else:
+            case.selected_entities.add(case_type.entities.first())
+            assert case_type.entities.all().count() == 1
 
         if case.status == Status.WAITING_INITIAL_EMAIL_SENT:
             send_initial_emails(case)
@@ -108,7 +112,18 @@ class CaseCreate(View):
 
     def get(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
-        return render(request, "casehandling/case_new.html", {"case_type": case_type})
+        import json
+
+        return render(
+            request,
+            "casehandling/case_new.html",
+            {
+                "case_type": case_type,
+                "entities_values": json.dumps(
+                    list(case_type.entities.values_list("id", "name"))
+                ),
+            },
+        )
 
 
 class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):

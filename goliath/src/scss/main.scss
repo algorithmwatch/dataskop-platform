@@ -36,5 +36,23 @@ input[type="radio"]:checked {
   visibility: visible !important;
 }
 
-@import "./utilities";
+// @layer components {
+
+// .btn {
+// }
+
+// .unverified {
+// }
+
+// .textinput,
+// .emailinput {
+// }
+
+// .survey-container {
+// }
+
+// .previewhtml {
+// }
+// }
+
 @import "./components/surveyjs";

@@ -17,13 +17,13 @@
 {% block extra_js %}
   <script src="{% static 'wizard.js' %}"></script>
   <script>
-  // lol @ Django's JSON handling
+  var entities = {{entities_values|safe}};
   var True = true;
   var False = false;
   {% if user.is_authenticated %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", false);
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", entities);
   {% else %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", true);
+    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null, entities);
   {% endif %}
   </script>
 {% endblock %}
