@@ -1,9 +1,11 @@
+import datetime
 import json
 
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView, View
@@ -179,4 +181,45 @@ class HomePageView(TemplateView):
         context["featured_case_types"] = CaseType.objects.filter(
             order__isnull=False
         ).order_by("order")
+        return context
+
+
+class DashboardPageView(TemplateView):
+    template_name = "pages/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # `print_status` is a propery of the model and thus we can't use the ORM's filter functions
+        now = datetime.datetime.now()
+        time_open_cases = [
+            now - x.created_at
+            for x in Case.objects.all()
+            if x.print_status != "3_closed"
+        ]
+        context["num_open_cases"] = len(time_open_cases)
+        context["avg_time_open_cases"] = (
+            sum(time_open_cases, datetime.timedelta(0, 0)).days / len(time_open_cases)
+            if len(time_open_cases) > 0
+            else 0
+        )
+
+        time_closed_cases = [
+            now - x.created_at
+            for x in Case.objects.all()
+            if x.print_status == "3_closed"
+        ]
+        context["num_closed_cases"] = len(time_closed_cases)
+        context["avg_time_closed_cases"] = (
+            sum(time_closed_cases, datetime.timedelta(0, 0)).days
+            / len(time_closed_cases)
+            if len(time_closed_cases) > 0
+            else 0
+        )
+
+        # most used case types
+        context["top_case_types"] = CaseType.objects.annotate(
+            total=Count("case")
+        ).order_by("-total")[:3]
+
         return context

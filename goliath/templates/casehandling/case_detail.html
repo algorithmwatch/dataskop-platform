@@ -30,6 +30,8 @@
 
 {% crispy form %}
 
+{% load comments %}
+
 
 {% for m in case.all_messages %}
 <div class="card mb-3">
@@ -40,7 +42,22 @@
     <h5 class="card-title">{{m.subject}}</h5>
     <p class="card-text">{{m.content}}</p>
   </div>
-</div>
+  {% get_comment_count for m as comment_count %}
+  {{comment_count}}
+  {% render_comment_list for m %}
+
+  {% get_comment_form for m as form %}
+  <form action="{% comment_form_target %}" method="POST">
+  {% csrf_token %}
+  {{ form.comment }}
+  {{ form.honeypot }}
+  {{ form.content_type }}
+  {{ form.object_pk }}
+  {{ form.timestamp }}
+  {{ form.security_hash }}
+  <input type="hidden" name="next" value="{{ case.get_absolute_url }}" />
+  <input type="submit" value="Add comment" id="id_submit" />
+  </form>
 {% endfor %}
 
 
