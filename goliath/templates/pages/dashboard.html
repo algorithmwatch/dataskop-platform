@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Start{% endblock %}
+
+
+{% block content %}
+<div class="box-border md:box-content border-4">
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti repellat, obcaecati unde est quasi numquam facilis, possimus illum veniam doloribus quos modi dolor in voluptatum quibusdam consequuntur aliquam omnis ab?
+</div>
+
+<div>
+{{num_open_cases}} ongoing
+{{avg_time_open_cases}} Tage
+</div>
+
+<div>
+{{num_closed_cases}} closed
+{{avg_time_closed_cases}} Tage
+</div>
+
+{% for ct in  top_case_types %}
+  {{ct.name}}
+  {{ct.total}}
+{% endfor %}
+
+{% endblock content %}
