@@ -1,18 +1,14 @@
 import json
 
 from allauth.account.models import EmailAddress
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.utils.html import format_html
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import UpdateView
-from django_filters import FilterSet
-from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin, Table
+from django.views.generic.list import ListView
 
 from ..utils.email import send_magic_link
 from .forms import CaseStatusForm
@@ -95,9 +91,13 @@ class CaseCreate(View):
                     error_count += 1
                     if error_count > 20:
                         raise e
-
-        # FIXME
-        case.selected_entities.add(*case_type.entities.all())
+        # if the user selected entities, we may need need to send the email to more than 1 entity
+        if "awentitycheckbox" in answers:
+            entity_ids = answers["awentitycheckbox"]
+            case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
+        else:
+            case.selected_entities.add(case_type.entities.first())
+            assert case_type.entities.all().count() == 1
 
         if case.status == Status.WAITING_INITIAL_EMAIL_SENT:
             send_initial_emails(case)
@@ -112,7 +112,18 @@ class CaseCreate(View):
 
     def get(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
-        return render(request, "casehandling/case_new.html", {"case_type": case_type})
+        import json
+
+        return render(
+            request,
+            "casehandling/case_new.html",
+            {
+                "case_type": case_type,
+                "entities_values": json.dumps(
+                    list(case_type.entities.values_list("id", "name"))
+                ),
+            },
+        )
 
 
 class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
@@ -147,30 +158,9 @@ class CaseDetailAndUpdate(View):
         return view(request, *args, **kwargs)
 
 
-class CaseFilter(FilterSet):
-    # filter by "entities"
-    class Meta:
-        model = Case
-        fields = ["case_type", "status"]
-
-
-class CaseTable(Table):
-    # TODO: proper templates
-    class Meta:
-        model = Case
-        template_name = "django_tables2/bootstrap.html"
-        exclude = ("questions", "answers", "email", "answers_text", "user")
-
-    def render_id(self, value):
-        return format_html('<a href="/anliegen/{}/">{}</a>', value, value)
-
-
-class CaseList(LoginRequiredMixin, SingleTableMixin, FilterView):
+class CaseList(LoginRequiredMixin, ListView):
     model = Case
-    table_class = CaseTable
     template_name = "casehandling/case_list.html"
-
-    filterset_class = CaseFilter
 
     def get_queryset(self):
         """

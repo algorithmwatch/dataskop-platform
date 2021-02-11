@@ -1,15 +1,33 @@
 {% extends "base.html" %}
 
-{% load render_table from django_tables2 %}
-
 {% block title %}Anliegen {% endblock %}
 
 {% block content %}
-    <h2>Andere Anliegen</h2>
-    <form method="get">
-      {{ filter.form.as_p }}
-      <input type="submit" />
-    </form>
+  <h2>Andere Anliegen</h2>
 
-    {% render_table table 'django_tables2/bootstrap.html' %}
+  {% regroup object_list|dictsort:"print_status" by print_status as case_status_list %}
+
+  <ul>
+    {% for case_status in case_status_list %}
+        {% if case_status.grouper == '0_open' %}
+        Offen
+        {% elif case_status.grouper == '1_waiting' %}
+        Warten
+        {% else %}
+        Abgeschlossen
+        {% endif %}
+        <ul>
+            {% for case in case_status.list %}
+              <li>{{ case.created_at|date }}: {{ case.case_type.name }}</li>
+              <a href="{{case.get_absolute_url}}">Link</a>
+            {% empty %}
+            kein Fall
+            {% endfor %}
+        </ul>
+        </li>
+    {% endfor %}
+    </ul>
+
+
+
 {% endblock %}
