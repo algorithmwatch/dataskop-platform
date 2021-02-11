@@ -244,6 +244,11 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   // what classes to customize
   // https://surveyjs.io/Examples/Library/?id=survey-customcss&platform=jQuery&theme=modern#content-docs
 
+  $(".survey-reset").click(() => {
+    window.awstorage.removeState();
+    location.reload();
+  });
+
   $(".survey-inner").Survey({
     model: window.awsurvey,
     onAfterRenderQuestion: afterRenderQuestion,
