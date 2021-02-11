@@ -1,15 +1,23 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Start{% endblock %}
 
+{% block body_class %}bg-blue-100{% endblock %}
+{% block content_class %}{% endblock %}
 
 {% block content %}
-<div class="box-border md:box-content border-4">
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti repellat, obcaecati unde est quasi numquam facilis, possimus illum veniam doloribus quos modi dolor in voluptatum quibusdam consequuntur aliquam omnis ab?
-</div>
 
-{% for c in  featured_case_types %}
-  {{c.name}}
-{% endfor %}
+  <div class="page-wrap-wide page-wrap-space prose-content">
 
+  </div>
+
+  {% for c in  featured_case_types %}
+    {{c.name}}
+  {% endfor %}
+
+
+  {% comment %} <div
+    style="background-image: url({% static 'img/decision_tree.svg' %})"
+    class="absolute w-full h-full bg-cover"></div> {% endcomment %}
 {% endblock content %}

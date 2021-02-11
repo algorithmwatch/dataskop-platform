@@ -4,6 +4,7 @@ module.exports = {
   purge: {
     content: [
       './goliath/templates/**/*.html',
+      './goliath/src/js/**/*.js',
     ],
 
     // These options are passed through directly to PurgeCSS
