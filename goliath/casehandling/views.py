@@ -7,6 +7,7 @@ from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
@@ -168,3 +169,14 @@ class CaseList(LoginRequiredMixin, ListView):
         """
         qs = Case.objects.filter(user=self.request.user)
         return qs
+
+
+class HomePageView(TemplateView):
+    template_name = "pages/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["featured_case_types"] = CaseType.objects.filter(
+            order__isnull=False
+        ).order_by("order")
+        return context

@@ -2,12 +2,13 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 
 from .api_views import ExternalSupportViewSet
-from .views import CaseCreate, CaseDetailAndUpdate, CaseList, CaseTypeList
+from .views import CaseCreate, CaseDetailAndUpdate, CaseList, CaseTypeList, HomePageView
 
 router = routers.DefaultRouter()
 router.register(r"externalsupport", ExternalSupportViewSet, basename="externalsupport")
 
 urlpatterns = [
+    path("", HomePageView.as_view(), name="home"),
     path("api/", include(router.urls)),
     path("neu/", view=CaseTypeList.as_view(), name="new"),
     path("neu/<int:case_type>/", view=CaseCreate.as_view(), name="new-wizzard"),

@@ -110,6 +110,8 @@ class CaseType(TimeStampMixin):
     entities = models.ManyToManyField("Entity", blank=True)
     needs_approval = models.BooleanField(default=False)
     autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
+    order = models.FloatField(null=True, blank=True)
+    icon_name = models.CharField(max_length=255)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
