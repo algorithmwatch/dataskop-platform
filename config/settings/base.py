@@ -70,6 +70,7 @@ DJANGO_APPS = [
     "django.contrib.admin",
     "django.forms",
     "django.contrib.flatpages",
+    "django_comments",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",

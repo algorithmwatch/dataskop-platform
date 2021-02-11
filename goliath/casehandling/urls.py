@@ -23,4 +23,5 @@ urlpatterns = [
     path("anliegen/", view=CaseList.as_view(), name="cases"),
     path("anliegen/<int:pk>/", view=CaseDetailAndUpdate.as_view(), name="cases-detail"),
     re_path(r"^anymail/", include("anymail.urls")),
+    re_path(r"^comments/", include("django_comments.urls")),
 ]
