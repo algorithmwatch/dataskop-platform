@@ -1,0 +1,162 @@
+{
+  "pages": [
+    {
+      "name": "page1",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "question13",
+          "title": "Hallo! Hier können wir Ihnen helfen, Ihren Fall wegen Fehlern bei der Gesichtserkennung beim BSI (Bundesamt für Sicherheit in der Informationstechnik) zu melden. Das BSI zertifiziert die Fotoautomaten.",
+          "choices": [
+            {
+              "value": "Okay",
+              "text": "weiter"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "name": "question1",
+          "visible": false,
+          "visibleIf": "{question13} notempty",
+          "title": "Bitte geben Sie uns den Ort an, auf den sich ihr Fall bezieht.",
+          "isRequired": true
+        },
+        {
+          "type": "radiogroup",
+          "name": "question2",
+          "visibleIf": "{question1} notempty",
+          "title": "Haben Sie auch die Postleitzahl parat?",
+          "choices": [
+            {
+              "value": "item1",
+              "text": "ja, klar"
+            },
+            {
+              "value": "item2",
+              "text": "nein, leider nicht"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "name": "question3",
+          "visibleIf": "{question2} = 'item1'",
+          "title": "Wunderbar, dann tragen Sie die bitte hier ein. ",
+          "inputType": "number",
+          "min": "10000",
+          "max": "99999",
+          "step": 1
+        },
+        {
+          "type": "radiogroup",
+          "name": "question4",
+          "visibleIf": "{question2} = 'item2' or {question3} notempty",
+          "title": "Vielen Dank. Verraten Sie uns doch, wo der Automat stand. Falls sich z.B. die Ausländerbehörde innerhalb des Bezirksamtes befindet, wählen Sie Bezirksamt aus.",
+          "choices": [
+            {
+              "value": "item1",
+              "text": "Bezirksamt / Bürgeramt / Bürgerbüro"
+            },
+            {
+              "value": "item2",
+              "text": "Fahrerlaubnisbehörde"
+            },
+            {
+              "value": "item3",
+              "text": "Ausländerbehörde"
+            },
+            {
+              "value": "item4",
+              "text": "die Behörde ist nicht in der Auswahl"
+            }
+          ],
+          "hasOther": true,
+          "otherText": "der Automat befindet sich nicht innerhalb einer Behörde"
+        },
+        {
+          "type": "text",
+          "name": "question6",
+          "visibleIf": "{question4} = 'item4'",
+          "title": "Okay. Um welche Behörde handelt es sich?"
+        },
+        {
+          "type": "text",
+          "name": "question5",
+          "visibleIf": "{question4} = 'other'",
+          "title": "Beschreiben Sie uns kurz, wo der Automat aufgestellt ist. "
+        },
+        {
+          "type": "text",
+          "name": "question7",
+          "visibleIf": "{question4} notempty",
+          "title": "Können Sie uns sagen, wann Sie den Automaten benutzt haben?",
+          "inputType": "date",
+          "min": "2010-01-01",
+          "max": "2030-01-01"
+        },
+        {
+          "type": "radiogroup",
+          "name": "question8",
+          "visibleIf": "{question7} notempty",
+          "title": "Konnten Sie den Hersteller bzw. Anbieter des Automaten erkennen?",
+          "choices": [
+            {
+              "value": "item1",
+              "text": "Fotofix"
+            },
+            {
+              "value": "item2",
+              "text": "DiBiKo-DiBiDat "
+            },
+            {
+              "value": "item3",
+              "text": "Speedmetrics"
+            },
+            {
+              "value": "item4",
+              "text": "ein anderer Hersteller"
+            }
+          ],
+          "hasOther": true,
+          "otherText": "weiß ich nicht"
+        },
+        {
+          "type": "text",
+          "name": "question9",
+          "visibleIf": "{question8} = 'item4'",
+          "title": "Welcher Hersteller ist das?"
+        },
+        {
+          "type": "radiogroup",
+          "name": "question10",
+          "visibleIf": "{question8} = 'item1' or {question8} = 'item2' or {question8} = 'item3' or {question8} = 'other' or {question9} notempty",
+          "title": "Vielen Dank! Wir erstellen nun eine Vorschau Ihres Anliegens. Im nächsten Schritt können Sie Ihre Angaben noch einmal überprüfen.",
+          "choices": [
+            {
+              "value": "item1",
+              "text": "weiter"
+            }
+          ]
+        },
+        {
+          "type": "html",
+          "name": "question11Wir erstellen nun eine Vorschau Ihres Anliegens. Im nächsten Schritt können Sie Ihre Angaben nocheinmal überprüfen.",
+          "visibleIf": "{question8} notempty"
+        }
+      ]
+    },
+    {
+      "name": "page2",
+      "elements": [
+        {
+          "type": "html",
+          "name": "previewhtml",
+          "visible": false,
+          "visibleIf": "{question10} notempty",
+          "html": "ich möchte Sie bitten, zu folgendem Fall Stellung zu nehmen. Ich habe einen Fotoautomaten für biometrische Passfotos benutzt, der mein Gesicht nicht erkannt hat. Es besteht die Vermutung, dass dieser Fotoautomat vom BSI zertifiziert ist (Zertifikat BSI-DSZ-CC-0985-2018).\n\nDer Fotoautomat steht in {{#if question3}} {{question3}} {{/if}} {{question1}}.\n\n{{#if question8 }}\n{{#if question9}}\nMarke: {{question9}}\n{{else}}\nMarke: {{question8}}\n{{/if}}\n{{/if}}\n\n{{#if question5}}\nOrt des Automats: {{question5}}\n{{else}}\n{{#if question6}}\nDer Automat befindet sich in folgender Behörde: {{question6}}\n{{else}}\nOrt des Automats: {{question4}}\n{{/if}}\n{{/if}}\n\n{{#if question7}}\nIch habe den Automaten am: {{question7}} gesehen.\n{{/if}}\n"
+        }
+      ]
+    }
+  ]
+}

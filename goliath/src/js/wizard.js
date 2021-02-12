@@ -140,6 +140,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   const constructLetterText = (function (userName) {
     return function () {
       var text = "Sehr geehrte Damen und Herren,\n\n";
+      var context = {};
       var values = window.awsurvey.getPlainData();
       // user name was provided by the setupSurvey
       for (var i = 0; i < values.length; i++) {
@@ -156,8 +157,15 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
         if (["awemailquestion", "awentitycheckbox"].includes(values[i].name))
           continue;
 
-        if (values[i].value != null) text += values[i].value + "\n";
+        if (values[i].value != null) {
+          context[values[i].name] = values[i].value;
+        }
       }
+
+      var template = Handlebars.compile(
+        window.awsurvey.getQuestionByName("previewhtml").html
+      );
+      text += template(context);
       text += "\nMit freudlichen Grüßen\n\n" + userName;
       return text;
     };
@@ -204,13 +212,8 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   function surveyValueChanged(sender, options) {
     if (options.name != "previewhtml" && window.awisCompleting === false) {
       window.awfinalText = constructLetterText();
-      window.awsurvey.getQuestionByName("previewhtml").html =
-        "<div class='previewhtml'><h2>Vorschau</h2>" +
-        "<div><p class='whitespace-pre-wrap border-4 p-2'>" +
-        window.awfinalText +
-        "</p></div><div><p>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
+      console.log(window.awfinalText);
     }
-
     var el = document.getElementById(options.name);
     if (el) {
       el.value = options.value;
