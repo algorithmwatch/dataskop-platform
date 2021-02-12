@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Start{% endblock %}
 
@@ -8,16 +8,81 @@
 
 {% block content %}
 
-  <div class="page-wrap-wide page-wrap-space prose-content">
+  <div class="h-90vh px-2 mt-4 flex items-center justify-center text-center">
+
+    <div>
+      <div class="max-w-2xl mx-auto px-4 py-6 xs:px-10 xs:py-10 md:px-14 md:py-12 lg:px-20 lg:py-12 rounded-3xl bg-white bg-opacity-80">
+        <h1 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Automatische<br> Entscheidungen anfechten' %}</h1>
+        <p>{% trans 'Herzlich Willkommen bei unding.de. Hier können Sie Fälle melden, bei denen Computer entschieden haben – und gegen die Sie Einspruch einlegen wollen.' %}</p>
+        <div class="mt-4 xs:mt-6 flex flex-col xs:flex-row items-center justify-center space-y-2 xs:space-y-0 xs:space-x-3">
+          <a href="#" class="btn btn--regular btn--primary">{% trans 'Unding melden' %}</a>
+          <a href="#" class="btn btn--regular btn--outline">{% trans 'Mehr erfahren' %}</a>
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-center">
+        <div class="bg-white bg-opacity-60 rounded-xl px-4 py-3">
+          <div class="mb-3 text-xs leading-none">Ein Projekt von</div>
+          <img class="block w-40 mx-auto" src="/static/img/aw-logo.svg" alt="AlgorithmWatch logo" />
+        </div>
+      </div>
+
+    </div>
+
 
   </div>
 
-  {% for c in  featured_case_types %}
-    {{c.name}}
-  {% endfor %}
 
-
-  {% comment %} <div
+  {# decision tree background image #}
+  <div
     style="background-image: url({% static 'img/decision_tree.svg' %})"
-    class="absolute w-full h-full bg-cover"></div> {% endcomment %}
+    class="absolute -inset-x-0 -top-14 -z-10 w-full h-screen bg-no-repeat bg-top bg-auto"></div>
+
+
+  <div class="px-2 page-wrap-wide text-center">
+
+    <div>
+      <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Unding melden' %}</h2>
+      <p>Wählen Sie eine Kategorie aus. Im Anschluss beschreiben Sie das Unding genauer.</p>
+    </div>
+
+    <div class="mt-8 w-max mx-auto grid gap-4 lg:gap-6 justify-items-center sm:grid-cols-2 md:grid-cols-3">
+      {% for case in  featured_case_types %}
+
+        <a href="{{ case.get_absolute_url }}">
+          <div class="
+            w-240
+            {% comment %} mx-auto {% endcomment %}
+            px-5 py-6
+            bg-white border border-brown-1000
+            rounded-t-2xl rounded-bl-2xl
+            flex flex-col items-center
+          ">
+
+            {# Icon #}
+            {% if case.icon_name %}
+              <div class="rounded-full text-3xl bg-orange-100 w-16 h-16 flex items-center justify-center">
+                <i class="{{ case.icon_name }}"></i>
+              </div>
+            {% endif %}
+
+            {# Name #}
+            <div class="font-bold text-lg leading-6 mt-3">{{ case.name }}</div>
+
+            {# Border #}
+            <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
+
+            {# Short title #}
+            <div class="italic">Hier kommt der Untertitel</div>
+          </div>
+        </a>
+
+      {% endfor %}
+    </div>
+
+  </div>
+
+
+
+
 {% endblock content %}

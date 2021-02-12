@@ -54,13 +54,13 @@
     Size
   */
   &--small {
-    @apply text-sm py-2 px-4;
+    @apply text-sm py-2 px-6;
   }
   &--regular {
-    @apply text-base py-2 px-4;
+    @apply text-base py-2 px-6;
   }
   &--large {
-    @apply text-lg py-2.5 px-4;
+    @apply text-lg py-2.5 px-6;
   }
 
   /*

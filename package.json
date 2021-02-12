@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-brands-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "alpinejs": "^2.8.0",
     "inter-ui": "^3.15.0",

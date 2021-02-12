@@ -13,6 +13,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     screens: {
+      xs: '425px',
       sm: '640px',
       md: '768px',
       lg: '1024px',
@@ -77,6 +78,19 @@ module.exports = {
         1000: '#314542',
       },
 
+      orange: {
+        100: '#F4E4CE',
+        200: '#ECD0A9',
+        300: '#E4BB84',
+        400: '#DBA760',
+        500: '#D3933B',
+        600: '#B87C29',
+        700: '#936321',
+        800: '#6E4A19',
+        900: '#4A3110',
+        1000: '#251908',
+      },
+
       red: {
         100: '#FDE1D7',
         200: '#FBC5B2',
@@ -119,7 +133,18 @@ module.exports = {
       // extrabold: '800',
       // black: '900',
     },
-    extend: {},
+    extend: {
+      zIndex: {
+        '-10': '-10',
+       },
+       height: {
+        '80vh': '80vh',
+        '90vh': '90vh',
+      },
+      width: {
+        '240': '15rem',
+      }
+    },
   },
   variants: {
     extend: {
