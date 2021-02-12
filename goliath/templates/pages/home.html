@@ -8,10 +8,10 @@
 
 {% block content %}
 
-  <div class="h-90vh px-2 mt-4 flex items-center justify-center text-center">
+  <div class="relative h-90vh px-2 my-6 flex flex-col items-center justify-center text-center" style="max-height: 900px">
 
     <div>
-      <div class="max-w-2xl mx-auto px-4 py-6 xs:px-10 xs:py-10 md:px-14 md:py-12 lg:px-20 lg:py-12 rounded-3xl bg-white bg-opacity-80">
+      <div class="max-w-lg md:max-w-2xl mx-auto px-4 py-6 xs:px-10 xs:py-10 md:px-14 md:py-12 lg:px-20 lg:py-12 rounded-3xl bg-white bg-opacity-80">
         <h1 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Automatische<br> Entscheidungen anfechten' %}</h1>
         <p>{% trans 'Herzlich Willkommen bei unding.de. Hier können Sie Fälle melden, bei denen Computer entschieden haben – und gegen die Sie Einspruch einlegen wollen.' %}</p>
         <div class="mt-4 xs:mt-6 flex flex-col xs:flex-row items-center justify-center space-y-2 xs:space-y-0 xs:space-x-3">
@@ -29,6 +29,9 @@
 
     </div>
 
+    <a href="#section-1" type="button" class="smooth-scroll mt-12 p-4 focus:outline-none transition duration-150 transform hover:translate-y-2 hover:text-brown-400 focus:text-current">
+      <i class="text-base fas fa-chevron-down"></i>
+    </a>
 
   </div>
 
@@ -36,17 +39,17 @@
   {# decision tree background image #}
   <div
     style="background-image: url({% static 'img/decision_tree.svg' %})"
-    class="absolute -inset-x-0 -top-14 -z-10 w-full h-screen bg-no-repeat bg-top bg-auto"></div>
+    class="absolute -inset-x-0 -top-0 -z-10 w-full h-screen bg-no-repeat bg-top -mt-4 bg-cover xl:bg-1300px opacity-80"></div>
 
 
-  <div class="px-2 page-wrap-wide text-center">
+  <div id="section-1" class="px-2 page-wrap-wide text-center">
 
     <div>
       <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Unding melden' %}</h2>
       <p>Wählen Sie eine Kategorie aus. Im Anschluss beschreiben Sie das Unding genauer.</p>
     </div>
 
-    <div class="mt-8 w-max mx-auto grid gap-4 lg:gap-6 justify-items-center sm:grid-cols-2 md:grid-cols-3">
+    <div class="mt-8 w-max mx-auto grid gap-4 lg:gap-8 justify-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {% for case in  featured_case_types %}
 
         <a href="{{ case.get_absolute_url }}">

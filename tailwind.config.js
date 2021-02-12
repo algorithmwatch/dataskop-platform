@@ -137,9 +137,12 @@ module.exports = {
       zIndex: {
         '-10': '-10',
        },
-       height: {
+      height: {
         '80vh': '80vh',
         '90vh': '90vh',
+      },
+      backgroundSize: {
+        '1300px': '1300px'
       },
       width: {
         '240': '15rem',

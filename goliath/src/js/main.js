@@ -31,3 +31,20 @@ library.add(
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-i2svg
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-watch
 dom.watch()
+
+
+function initSmoothAnchorLinkScroll () {
+  // src: https://stackoverflow.com/a/7717572/5732518
+  const elements = document.querySelectorAll('a[href^="#"].smooth-scroll')
+  elements.forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector(anchor.getAttribute('href'))
+        .scrollIntoView({
+          behavior: 'smooth'
+        })
+    })
+  });
+}
+
+initSmoothAnchorLinkScroll()

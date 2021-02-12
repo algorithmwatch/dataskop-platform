@@ -39,7 +39,7 @@
   @apply inline-flex items-center justify-center;
   @apply no-underline;
   @apply border border-transparent;
-  @apply font-sans;
+  @apply font-sans whitespace-nowrap;
   @apply bg-transparent;
   @apply focus:outline-none;
 
