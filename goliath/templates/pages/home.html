@@ -8,7 +8,7 @@
 
 {% block content %}
 
-  <div class="relative h-90vh px-2 my-12 flex flex-col items-center justify-center text-center" style="max-height: 900px">
+  <div class="relative h-90vh px-4 my-12 flex flex-col items-center justify-center text-center" style="max-height: 900px">
 
     <div>
       <div class="max-w-lg md:max-w-2xl mx-auto px-4 py-6 xs:px-10 xs:py-10 md:px-14 md:py-12 lg:px-20 lg:py-12 rounded-3xl bg-white bg-opacity-80">
@@ -29,9 +29,9 @@
 
     </div>
 
-    <a href="#section-1" type="button" class="smooth-scroll mt-12 p-4 focus:outline-none transition duration-150 transform hover:translate-y-2 hover:text-brown-400 focus:text-current">
-      <i class="text-base fas fa-chevron-down"></i>
-    </a>
+    {% comment %} <a href="#section-1" type="button" class="smooth-scroll mt-4 p-4 focus:outline-none transition duration-150 transform hover:translate-y-2 hover:text-brown-400 focus:text-current">
+      <i class="text-xl fas fa-chevron-circle-down"></i>
+    </a> {% endcomment %}
 
   </div>
 
@@ -42,97 +42,113 @@
     class="absolute -inset-x-0 -top-0 -z-10 w-full h-screen bg-no-repeat bg-top -mt-4 bg-cover xl:bg-1300px opacity-80"></div>
 
 
-  <div id="section-1" class="px-2 page-wrap-wide text-center">
+  <div class="bg-white py-12 lg:py-16">
+    <div id="section-1" class="px-2 page-wrap-wide text-center">
 
-    <div>
-      <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Unding melden' %}</h2>
-      <p>Wählen Sie eine Kategorie aus. Im Anschluss beschreiben Sie das Unding genauer.</p>
-    </div>
+      <div>
+        <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Unding melden' %}</h2>
+        <p class="text-lg">Wählen Sie eine Kategorie aus. Im Anschluss beschreiben Sie das Unding genauer.</p>
+      </div>
 
 
-    <div
-      x-data="{ selectedCase: null }"
-      class="mt-8 mx-auto"
-      :class="{
-          'w-max grid gap-4 lg:gap-8 justify-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': selectedCase === null,
-          'w-full max-w-3xl': selectedCase !== null
-      }"
-    >
-      {% for case in  featured_case_types %}
-        <div
-          class="
-            bg-white border border-brown-1000
-            rounded-t-2xl rounded-bl-2xl
-          "
-          x-show="selectedCase === null || selectedCase === '{{ case.id }}'"
-          :class="{ 'w-240': selectedCase === null, 'w-full': selectedCase === '{{ case.id }}' }"
-        >
+      <div
+        x-data="{ selectedCase: null }"
+        class="mt-10 mx-auto"
+        :class="{
+            'w-max grid gap-4 lg:gap-8 justify-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': selectedCase === null,
+            'w-full max-w-3xl': selectedCase !== null
+        }"
+      >
+        {% for case in  featured_case_types %}
           <div
-            class="flex flex-col items-center px-5 py-6 cursor-pointer"
-            x-show="selectedCase !== '{{ case.id }}'"
-            @click.stop="selectedCase = '{{ case.id }}'"
+            class="
+              bg-white border border-brown-1000
+              rounded-t-2xl rounded-bl-2xl
+            "
+            x-show="selectedCase === null || selectedCase === '{{ case.id }}'"
+            :class="{ 'w-240': selectedCase === null, 'w-full': selectedCase === '{{ case.id }}' }"
           >
-            {# Icon #}
-            {% if case.icon_name %}
-              <div
-                class="text-3xl flex items-center justify-center rounded-full bg-orange-100 w-16 h-16"
-              >
-                <i class="{{ case.icon_name }}"></i>
-              </div>
-            {% endif %}
-
-            {# Name #}
-            <div class="font-bold text-lg leading-6 mt-3">{{ case.name }}</div>
-
-            {# Border #}
-            <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
-
-            {# Short title #}
-            <div class="italic">Hier kommt der Untertitel</div>
-          </div>
-
-          {# Case description visible when selected #}
-          <div
-            class="relative flex flex-col items-center px-4 sm:px-8 py-10"
-            x-show="selectedCase === '{{ case.id }}'">
-
-                        {# Icon #}
-            {% if case.icon_name %}
-              <div
-                class="text-3xl flex items-center justify-center"
-              >
-                <i class="{{ case.icon_name }}"></i>
-              </div>
-            {% endif %}
-
-            {# Name #}
-            <div class="font-bold text-lg leading-6 my-4">{{ case.name }}</div>
-
-            <div>
-              {{ case.description }}
-            </div>
-            <div class="mt-6">
-              <a href="{{ case.get_absolute_url }}" class="btn btn--regular btn--primary">{% trans 'Unding melden' %}</a>
-            </div>
-
-            {# Close button #}
-            <button
-              type="button"
-              class="p-4 absolute right-1 top-0 text-lg text-brown-800 hover:opacity-80"
-              x-show="selectedCase === '{{ case.id }}'"
-              @click="selectedCase = null"
+            <div
+              class="flex flex-col items-center px-5 py-6 cursor-pointer"
+              x-show="selectedCase !== '{{ case.id }}'"
+              @click.stop="selectedCase = '{{ case.id }}'"
             >
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+              {# Icon #}
+              {% if case.icon_name %}
+                <div
+                  class="text-3xl flex items-center justify-center rounded-full bg-orange-100 w-16 h-16"
+                >
+                  <i class="{{ case.icon_name }}"></i>
+                </div>
+              {% endif %}
 
+              {# Name #}
+              <div class="font-bold text-lg leading-6 mt-3">{{ case.name }}</div>
+
+              {# Border #}
+              <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
+
+              {# Short title #}
+              <div class="italic">Hier kommt der Untertitel</div>
+            </div>
+
+            {# Case description visible when selected #}
+            <div
+              class="relative flex flex-col items-center px-4 sm:px-8 py-10"
+              x-show="selectedCase === '{{ case.id }}'">
+
+                          {# Icon #}
+              {% if case.icon_name %}
+                <div
+                  class="text-3xl flex items-center justify-center"
+                >
+                  <i class="{{ case.icon_name }}"></i>
+                </div>
+              {% endif %}
+
+              {# Name #}
+              <div class="font-bold text-xl leading-6 my-4">{{ case.name }}</div>
+
+              <div>
+                {{ case.description }}
+              </div>
+              <div class="mt-6">
+                <a href="{{ case.get_absolute_url }}" class="btn btn--regular btn--primary">{% trans 'Unding melden' %}</a>
+              </div>
+
+              {# Close button #}
+              <button
+                type="button"
+                class="p-4 absolute right-1 top-0 text-lg text-brown-800 hover:opacity-80"
+                x-show="selectedCase === '{{ case.id }}'"
+                @click="selectedCase = null"
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
   </div>
 
+  <div class="bg-orange-200 py-12 lg:py-16">
+    <div id="ueber-uns" class="px-2 page-wrap-wide text-center">
 
-  <div class="h-96"></div>
+      <div>
+        <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Das ist ein Unding' %}</h2>
+        <p class="text-lg">
+          Immer mehr Dinge in unserem Alltag werden automatisiert entschieden.
+          Stellen Sie sich vor, dass Navis so viel Verkehr vor Ihrer Tür entlang schicken, dass Sie nicht mehr sicheren Fußes über die Straße kommen. Dass Fotoautomaten in Behörden ihr Gesicht nicht erfassen, weil die Ihre Hautfarbe nicht richtig erkennen. Oder Sie einen Vertrag nicht bekommen, weil der Computer errechnet hat Sie seien nicht kreditwürdig. Was für Undinger!
+        </p>
+      </div>
+
+    </div>
+
+    <div class="h-96"></div>
+  </div>
+
 
 
 

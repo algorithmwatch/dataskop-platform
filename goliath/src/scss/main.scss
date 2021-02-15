@@ -9,25 +9,15 @@
     // Activates nicer "l" and German "sz" in Inter font
     font-feature-settings: "cv05", "cv07";
   }
+
+  hr {
+    @apply border-brown-400 my-5;
+  }
 }
 
 @layer components {
   @import "./components/form";
 }
-
-// @layer utilities {
-// }
-
-.aw-casetype-item img {
-  max-height: 10rem;
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-}
-
-// .main-container {
-//   min-height: calc(100vh - 260px);
-// }
 
 input[type="radio"] {
   visibility: hidden;
@@ -36,23 +26,5 @@ input[type="radio"]:checked {
   visibility: visible !important;
 }
 
-// @layer components {
-
-// .btn {
-// }
-
-// .unverified {
-// }
-
-// .textinput,
-// .emailinput {
-// }
-
-// .survey-container {
-// }
-
-// .previewhtml {
-// }
-// }
 @import "./utilities";
 @import "./components/surveyjs";

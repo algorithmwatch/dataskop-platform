@@ -49,10 +49,6 @@
     @apply font-semibold text-lg lg:text-xl;
   }
 
-  hr {
-    @apply border-brown-400 my-10;
-  }
-
   blockquote {
     @apply text-2xl italic;
     @apply my-10 pl-6;
