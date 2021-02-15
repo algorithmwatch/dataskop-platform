@@ -9,6 +9,7 @@ from .views import (
     CaseTypeList,
     DashboardPageView,
     HomePageView,
+    preview_letter_text,
 )
 
 router = routers.DefaultRouter()
@@ -17,11 +18,14 @@ router.register(r"externalsupport", ExternalSupportViewSet, basename="externalsu
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("dashboard/", DashboardPageView.as_view(), name="dashboard"),
-    path("api/", include(router.urls)),
     path("neu/", view=CaseTypeList.as_view(), name="new"),
     path("neu/<int:case_type>/", view=CaseCreate.as_view(), name="new-wizzard"),
     path("anliegen/", view=CaseList.as_view(), name="cases"),
     path("anliegen/<int:pk>/", view=CaseDetailAndUpdate.as_view(), name="cases-detail"),
+    path(
+        "falltyp-text/<int:pk>/", view=preview_letter_text, name="casetype-letter-text"
+    ),
     re_path(r"^anymail/", include("anymail.urls")),
     re_path(r"^comments/", include("django_comments.urls")),
+    path("api/", include(router.urls)),
 ]

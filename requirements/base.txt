@@ -50,3 +50,7 @@ factory-boy==3.0.1  # https://github.com/FactoryBoy/factory_boy
 
 # anymail only really used in production but
 django-anymail[mailjet]==8.1  # https://github.com/anymail/django-anymail
+
+
+# temporaly install dev version of clean-text
+git+git://github.com/jfilter/clean-text.git#egg=clean-text

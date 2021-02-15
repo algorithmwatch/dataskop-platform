@@ -14,6 +14,7 @@ from django.contrib.postgres.search import (
 )
 from django.db import models
 from django.db.models import F
+from django.template import Context, Template
 from django.urls import reverse
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
@@ -112,6 +113,7 @@ class CaseType(TimeStampMixin):
     autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
     order = models.FloatField(null=True, blank=True)
     icon_name = models.CharField(max_length=255)
+    letter_template = models.TextField(null=True, blank=True)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -130,9 +132,31 @@ class CaseType(TimeStampMixin):
                 return True
         return False
 
+    def render_letter(self, answers: dict, username: str):
+        tpl = Template(self.letter_template)
+        answers["username"] = username
+        text = str(tpl.render(Context(answers))).strip()
+
+        import cleantext
+
+        print(text)
+        text = cleantext.clean(
+            text,
+            lower=False,
+            lang="de",
+            no_line_breaks=False,
+            keep_two_line_breaks=True,
+        )
+        print(text)
+        return text
+
 
 class CaseManager(models.Manager):
-    def remind_users(self, margin=datetime.timedelta(days=7), max_reminders=2):
+    def remind_users(
+        self,
+        margin: datetime.timedelta = datetime.timedelta(days=7),
+        max_reminders: int = 2,
+    ):
         """
         Iterate over all user and check if they should get a reminder.
         Default: remind after 7 days, then remind again after 7 days and stop.

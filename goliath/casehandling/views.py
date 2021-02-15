@@ -6,8 +6,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
@@ -223,3 +225,12 @@ class DashboardPageView(TemplateView):
         ).order_by("-total")[:3]
 
         return context
+
+
+@require_POST
+@csrf_exempt
+def preview_letter_text(request, pk):
+    ct = get_object_or_404(CaseType, pk=pk)
+    answers = json.loads(request.POST["answers"])
+    username = request.POST["username"]
+    return HttpResponse(ct.render_letter(answers, username), content_type="text/plain")
