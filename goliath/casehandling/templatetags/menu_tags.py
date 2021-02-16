@@ -33,7 +33,10 @@ def create_user_menu(is_authenticated):
 
 @register.simple_tag(takes_context=True)
 def primary_menu(context, mobile=True):
-    request = context["request"]
+    request = context.get("request", None)
+
+    if not request:
+        return []
 
     if mobile is True:
         site_menu = [
@@ -85,6 +88,9 @@ def primary_menu(context, mobile=True):
 
 @register.simple_tag(takes_context=True)
 def user_menu(context):
-    request = context["request"]
+    request = context.get("request", None)
+
+    if not request:
+        return []
 
     return create_user_menu(request.user.is_authenticated is True)
