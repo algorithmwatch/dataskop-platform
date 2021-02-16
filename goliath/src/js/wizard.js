@@ -144,6 +144,21 @@ function getAnswers() {
   return context;
 }
 
+// radio groups with a single item: a next button, make them visually identical to other next buttons
+function chanageToNextButton(element) {
+  const children = $(element).find(".sv_q_radiogroup_label");
+  if (children.length !== 1) return;
+  // there is only one radio group icon
+
+  // but is a next button
+  const childrenSpan = $(element).find(
+    ".sv_q_radiogroup_label span[title='weiter']"
+  );
+  if (childrenSpan.length !== 1) return;
+
+  childrenSpan.addClass("btn btn--regular btn--primary aw-survey-next-button");
+}
+
 function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
   if (entities.length > 1)
@@ -218,6 +233,9 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
       $(options.htmlElement).append(
         '<div class="text-right clear-both aw-survey-next-button"><btn class="btn btn--regular btn--primary">weiter</btn></div>'
       );
+    }
+    if (questionType == "radiogroup") {
+      chanageToNextButton(options.htmlElement);
     }
 
     setTimeout(function () {
