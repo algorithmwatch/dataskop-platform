@@ -1,33 +1,54 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Anliegen {% endblock %}
+{% block title %}Anliegen{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 
 {% block content %}
-  <h2>Andere Anliegen</h2>
+  <h1 class="hl-2xl mb-6">{% trans 'Meine Anliegen' %}</h1>
+  <p class="text-lg">Hier eine Übersicht aller Anliegen, die Sie gemeldet haben.</p>
+  <hr>
 
   {% regroup object_list|dictsort:"print_status" by print_status as case_status_list %}
 
-  <ul>
     {% for case_status in case_status_list %}
-        {% if case_status.grouper == '0_open' %}
-        Offen
-        {% elif case_status.grouper == '1_waiting' %}
-        Warten
-        {% else %}
-        Abgeschlossen
-        {% endif %}
-        <ul>
-            {% for case in case_status.list %}
-              <li>{{ case.created_at|date }}: {{ case.case_type.name }}</li>
+      <div class="mb-6">
+        <h2 class="text-lg font-bold text-brown-800 mb-2">{% spaceless %}
+          {% if case_status.grouper == '0_open' %}
+            Offen
+          {% elif case_status.grouper == '1_waiting' %}
+            Warten
+          {% else %}
+            Abgeschlossen
+          {% endif %}
+        {% endspaceless %}</h2>
+
+        <div class="w-max grid gap-4 lg:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {% for case in case_status.list %}
+
+            <div
+              class="sm:w-72 p-4 border border-brown-400 rounded-xl"
+            >
+              {# Icon #}
+              {% if case.icon_name %}
+                <div
+                  class="flex items-center justify-center rounded-full bg-brown-200"
+                >
+                  <i class="{{ case.icon_name }}"></i>
+                </div>
+              {% endif %}
+
+              {{ case.created_at|date }}: {{ case.case_type.name }}
               <a href="{{case.get_absolute_url}}">Link</a>
-            {% empty %}
+            </div>
+
+          {% empty %}
             kein Fall
-            {% endfor %}
-        </ul>
-        </li>
+          {% endfor %}
+
+        </div>
+      </div>
     {% endfor %}
-    </ul>
-
-
 
 {% endblock %}
