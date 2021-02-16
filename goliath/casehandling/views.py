@@ -61,8 +61,8 @@ class CaseCreate(View):
     def post(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
         answers = json.loads(request.POST["answers"])
-        text = request.POST["text"]
         user, is_logged_in = get_user_for_case(request, answers)
+        text = case_type.render_letter(answers, user.full_name)
 
         if (
             not is_logged_in

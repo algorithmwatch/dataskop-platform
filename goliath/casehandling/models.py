@@ -1,5 +1,6 @@
 import datetime
 
+import cleantext
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -137,9 +138,7 @@ class CaseType(TimeStampMixin):
         answers["username"] = username
         text = str(tpl.render(Context(answers))).strip()
 
-        import cleantext
-
-        print(text)
+        # print(text)
         text = cleantext.clean(
             text,
             lower=False,
@@ -147,7 +146,7 @@ class CaseType(TimeStampMixin):
             no_line_breaks=False,
             keep_two_line_breaks=True,
         )
-        print(text)
+        # print(text)
         return text
 
 

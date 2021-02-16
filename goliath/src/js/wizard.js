@@ -103,6 +103,34 @@ function Storage(storageName) {
   };
 }
 
+function getAnswers() {
+  var context = {};
+  var values = window.awsurvey.getPlainData();
+  // user name was provided by the setupSurvey
+  for (var i = 0; i < values.length; i++) {
+    console.log(values[i].name);
+    console.log(values[i].value);
+    // if (values[i].name == "awfirstnamequestion") {
+    //   userName = values[i].value;
+    //   continue;
+    // }
+
+    // if (values[i].name == "awlastnamequestion") {
+    //   userName += " " + values[i].value;
+    //   continue;
+    // }
+
+    // if (["awemailquestion", "awentitycheckbox"].includes(values[i].name))
+    //   continue;
+
+    if (values[i].value != null) {
+      context[values[i].name] = values[i].displayValue || values[i].value;
+    }
+  }
+
+  return context;
+}
+
 function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
   if (entities.length > 1)
@@ -119,8 +147,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
 
     // jQuery does some wild preprocessing with JSONs so turn it into string
     var body = {
-      answers: JSON.stringify(survey.data),
-      text: window.awfinalText,
+      answers: JSON.stringify(getAnswers()),
       csrfmiddlewaretoken: csrfToken,
     };
 
@@ -139,36 +166,10 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
 
   const constructLetterText = (function (userName, casetypeId) {
     return function () {
-      var context = {};
-      var values = window.awsurvey.getPlainData();
-      // user name was provided by the setupSurvey
-      for (var i = 0; i < values.length; i++) {
-        console.log(values[i].name);
-        console.log(values[i].value);
-        if (values[i].name == "awfirstnamequestion") {
-          userName = values[i].value;
-          continue;
-        }
-
-        if (values[i].name == "awlastnamequestion") {
-          userName += " " + values[i].value;
-          continue;
-        }
-
-        if (["awemailquestion", "awentitycheckbox"].includes(values[i].name))
-          continue;
-
-        if (values[i].value != null) {
-          context[values[i].name] = values[i].displayValue || values[i].value;
-        }
-      }
-
-      console.log(context);
-
+      const context = getAnswers();
       var body = {
         answers: JSON.stringify(context),
         username: userName,
-        csrfmiddlewaretoken: csrfToken,
       };
 
       $.post("/falltyp-text/" + casetypeId + "/", body).done(function (
