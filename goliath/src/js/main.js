@@ -7,7 +7,7 @@ import {
   // case types:
   faTruck, faBuilding, faPersonBooth, faTachometerAlt
 } from '@fortawesome/free-solid-svg-icons'
-import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { faGoogle, faTwitter, faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons'
 
 /*
   Case types icons
@@ -22,6 +22,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
   faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus,
+  faTwitter, faFacebook, faInstagram,
 
   // case type icons:
   faTruck, faBuilding, faPersonBooth, faTachometerAlt, faGoogle
