@@ -49,6 +49,20 @@ function addUserToJson(surveyJSON) {
   return surveyJSON;
 }
 
+function getQuestionType(questionOptions, surveyJSON) {
+  const type = questionOptions.question.getType();
+  const name = questionOptions.htmlElement.name;
+  let inputType = null;
+  surveyJSON.pages.forEach((page) => {
+    page.elements.forEach((ele) => {
+      if (ele.name === name && "inputType" in ele) {
+        inputType = ele.inputType;
+      }
+    });
+  });
+  return [type, inputType];
+}
+
 function addEntityChooseToJson(surveyJSON, entities) {
   var entityQuestion = {
     type: "checkbox",
@@ -108,8 +122,6 @@ function getAnswers() {
   var values = window.awsurvey.getPlainData();
   // user name was provided by the setupSurvey
   for (var i = 0; i < values.length; i++) {
-    console.log(values[i].name);
-    console.log(values[i].value);
     // if (values[i].name == "awfirstnamequestion") {
     //   userName = values[i].value;
     //   continue;
@@ -180,8 +192,6 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
           "<div><p class='whitespace-pre-wrap border-4 p-2'>" +
           successData +
           "</p></div><div><p>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
-
-        console.log(successData);
       });
     };
   })(userName, casetypeId);
@@ -192,11 +202,17 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
       $(".aw-completebutton").removeClass("hidden");
     }
 
-    var questionType = options.question.getType();
+    const [questionType, questionInputType] = getQuestionType(
+      options,
+      surveyJSON
+    );
 
     // remove previously added next button
     $(".aw-survey-next-button").remove();
-    if (questionType === "text") {
+    if (
+      questionType === "text" &&
+      (questionInputType === null || questionInputType !== "date")
+    ) {
       // add next button
       $(options.htmlElement).append(
         '<div class="text-right clear-both aw-survey-next-button"><btn class="btn btn--regular btn--primary">weiter</btn></div>'
