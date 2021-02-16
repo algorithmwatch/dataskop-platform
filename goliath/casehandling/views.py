@@ -2,6 +2,7 @@ import datetime
 import json
 
 from allauth.account.models import EmailAddress
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
@@ -16,7 +17,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from ..utils.email import send_magic_link
-from .forms import CaseStatusForm
+from .forms import CaseStatusForm, get_admin_form_preview
 from .models import Case, CaseType, Status
 from .tasks import send_admin_waiting_approval_case, send_initial_emails
 
@@ -117,7 +118,6 @@ class CaseCreate(View):
 
     def get(self, request, case_type):
         case_type = get_object_or_404(CaseType, pk=case_type)
-        import json
 
         return render(
             request,
@@ -225,6 +225,29 @@ class DashboardPageView(TemplateView):
         ).order_by("-total")[:3]
 
         return context
+
+
+@staff_member_required
+def admin_preview_letter_view(request, pk):
+    ct = get_object_or_404(CaseType, pk=pk)
+
+    AdminPreviewForm = get_admin_form_preview(ct)
+    letter_text = None
+
+    if request.method == "POST":
+        form = AdminPreviewForm(request.POST)
+        if form.is_valid():
+            letter_text = ct.render_letter(
+                dict(form.cleaned_data), form.cleaned_data["username"]
+            )
+    else:
+        form = AdminPreviewForm()
+
+    return render(
+        request,
+        "casehandling/casetype_preview_letter.html",
+        {"form": form, "letter_text": letter_text, "case_type": ct},
+    )
 
 
 @require_POST
