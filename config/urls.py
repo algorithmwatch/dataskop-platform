@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.flatpages import views
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -13,8 +13,13 @@ urlpatterns = [
     path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
     path("", include("goliath.users.urls")),
-    path("", include("django.contrib.flatpages.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# ensure flatpage catchall does not break append slash middleware
+urlpatterns += [
+    re_path(r"^(?P<url>.*/)$", views.flatpage),
+]
 
 # hardcode urls for important flat pages
 urlpatterns += [
