@@ -34,11 +34,12 @@ To run Django management comannds:
 
 [Not supporting IE 11 because of Tailwind v2](https://tailwindcss.com/docs/browser-support), but IE 11 usage is [dropping fast](https://gs.statcounter.com/browser-market-share/desktop/germany/#monthly-201812-202012).
 
-There are sometimes problems with the data volume to store the `node_modules`.
-You can delete all volumes like in order to force Docker to re-create all volumes.
+There are sometimes problems with the data volume of the `node_modules` folder.
+Delete the volume in order to recreate it.
 
-```
-docker-compose down --volumes
+```bash
+docker-compose -f local.yml down
+docker volume rm goliath_local_node_modules
 ```
 
 ### Test coverage
