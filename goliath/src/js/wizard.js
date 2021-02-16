@@ -136,7 +136,8 @@ function getAnswers() {
     //   continue;
 
     if (values[i].value != null) {
-      context[values[i].name] = values[i].displayValue || values[i].value;
+      context[values[i].name.replace("-", "_")] =
+        values[i].displayValue || values[i].value;
     }
   }
 

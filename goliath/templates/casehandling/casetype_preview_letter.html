@@ -1,0 +1,15 @@
+
+<h1>Admin Vorschau für Brief / Template</h1>
+
+<form action="/vorschau/{{case_type.pk}}/" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit">
+</form>
+
+<hr>
+
+<div style="white-space: pre-wrap">{{letter_text}}</div>
+
+<hr>
+
