@@ -53,4 +53,5 @@ django-anymail[mailjet]==8.1  # https://github.com/anymail/django-anymail
 
 
 # temporaly install dev version of clean-text
+unidecode
 git+git://github.com/jfilter/clean-text.git#egg=clean-text
