@@ -260,20 +260,24 @@ class Case(TimeStampMixin):
             return "2_closed"
         return "1_waiting"
 
+    @property
     def all_messages(self):
         return sorted(
             list(self.receivedmessage_set.all()) + list(self.sentmessage_set.all()),
             key=lambda x: x.sent_at,
         )
 
+    @property
     def is_approved(self):
         return not self.case_type.needs_approval or self.approved_by is not None
 
+    @property
     def is_user_verified(self):
         return EmailAddress.objects.filter(user=self.user, verified=True).exists()
 
+    @property
     def is_sane(self):
-        return self.is_user_verified() and self.is_approved()
+        return self.is_user_verified and self.is_approved
 
     def user_verified_afterwards(self):
         """
@@ -299,7 +303,8 @@ class Case(TimeStampMixin):
             # avoid circular imports
             from .tasks import send_initial_emails
 
-            send_initial_emails(self)
+            if len(self.all_messages) == 0:
+                send_initial_emails(self)
         else:
             self.status = Status.WAITING_USER_VERIFIED
         self.save()

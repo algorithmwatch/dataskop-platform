@@ -14,7 +14,7 @@ def test_factories():
     assert cte2.entities.all().count() == 3
 
     c = OngoingCaseFactory(ongoing=4)
-    assert len(c.all_messages()) == 5
+    assert len(c.all_messages == 5
     assert c.user.email is not None
 
 
