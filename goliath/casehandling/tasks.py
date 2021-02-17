@@ -146,3 +146,10 @@ def send_admin_waiting_approval_case():
         "Neuer Fall benötigt eine Freigabe",
         settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
     )
+
+
+def send_admin_new_comment():
+    send_admin_notification_email(
+        "Neuer Kommentar",
+        settings.URL_ORIGIN + "/admin/django_comments/comment/",
+    )
