@@ -307,7 +307,7 @@ class Case(TimeStampMixin):
             return
 
         self.approved_by = user
-        if self.is_user_verified():
+        if self.is_user_verified:
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails

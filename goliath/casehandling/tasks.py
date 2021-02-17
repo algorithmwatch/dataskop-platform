@@ -17,10 +17,14 @@ def send_initial_emails(case):
     subject = "New Case"
     content = case.answers_text
 
-    assert case.is_sane(), "can't send email because the case is broken"
+    assert (
+        case.is_sane
+    ), f"can't send email because the case is broken, case id: {case.id}"
 
     to_emails = list(case.selected_entities.values_list("email", flat=True))
-    assert len(to_emails) > 0, "at least one entity needs to be selected"
+    assert (
+        len(to_emails) > 0
+    ), f"at least one entity needs to be selected, case id: {case.id}"
 
     was_error = False
 
