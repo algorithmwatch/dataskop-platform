@@ -20,9 +20,13 @@ urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("dashboard/", DashboardPageView.as_view(), name="dashboard"),
     path("neu/", view=CaseTypeList.as_view(), name="new"),
-    path("neu/<int:case_type>/", view=CaseCreate.as_view(), name="new-wizzard"),
+    path("neu/<str:slug>/<int:pk>/", view=CaseCreate.as_view(), name="new-wizzard"),
     path("anliegen/", view=CaseList.as_view(), name="cases"),
-    path("anliegen/<int:pk>/", view=CaseDetailAndUpdate.as_view(), name="cases-detail"),
+    path(
+        "anliegen/<str:slug>/<int:pk>/",
+        view=CaseDetailAndUpdate.as_view(),
+        name="cases-detail",
+    ),
     path(
         "falltyp-text/<int:pk>/", view=preview_letter_text, name="casetype-letter-text"
     ),

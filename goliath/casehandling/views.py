@@ -59,8 +59,8 @@ class CaseTypeList(ListView):
 
 
 class CaseCreate(View):
-    def post(self, request, case_type):
-        case_type = get_object_or_404(CaseType, pk=case_type)
+    def post(self, request, pk, slug):
+        case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
         user, is_logged_in = get_user_for_case(request, answers)
         text = case_type.render_letter(answers, user.full_name)
@@ -116,8 +116,8 @@ class CaseCreate(View):
         else:
             return JsonResponse({"url": case.get_absolute_url()})
 
-    def get(self, request, case_type):
-        case_type = get_object_or_404(CaseType, pk=case_type)
+    def get(self, request, pk, slug):
+        case_type = get_object_or_404(CaseType, pk=pk)
 
         return render(
             request,
