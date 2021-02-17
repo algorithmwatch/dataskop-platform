@@ -117,7 +117,6 @@ class CaseType(TimeStampMixin):
     letter_template = models.TextField(null=True, blank=True)
     tags = TaggableManager()
 
-
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
         excluded_fields=["_description_rendered", "description_markup_type"]
@@ -139,16 +138,12 @@ class CaseType(TimeStampMixin):
         tpl = Template(self.letter_template)
         answers["username"] = username
         text = str(tpl.render(Context(answers))).strip()
-
-        # print(text)
-        text = cleantext.clean(
+        text = cleantext.normalize_whitespace(
             text,
-            lower=False,
-            lang="de",
+            strip_lines=True,
             no_line_breaks=False,
             keep_two_line_breaks=True,
         )
-        # print(text)
         return text
 
 
