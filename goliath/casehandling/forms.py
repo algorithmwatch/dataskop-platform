@@ -20,13 +20,13 @@ def get_admin_form_preview(ct):
     context_variables = [
         x.strip().lower()
         for x in context_variables
-        if x.strip().lower() not in ["if", "else", "endif", "for", "endfor"]
+        if x.strip().lower() not in ["if", "else", "endif", "for", "endfor", "elif"]
     ]
 
     # remove all expressions, only keep variables
     context_variables = [x.split("==")[0].split("!=")[0] for x in context_variables]
     context_variables = [
-        re.sub(r"^(if|for) ", "", x).strip() for x in context_variables
+        re.sub(r"^(if|for|elif) ", "", x).strip() for x in context_variables
     ]
 
     # make unique

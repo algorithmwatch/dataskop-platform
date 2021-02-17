@@ -1,5 +1,6 @@
 import datetime
 import json
+import traceback
 
 from allauth.account.models import EmailAddress
 from django.contrib.admin.views.decorators import staff_member_required
@@ -111,7 +112,6 @@ class CaseCreateView(View):
         elif case.case_type.needs_approval:
             send_admin_waiting_approval_case()
 
-        # FIXME
         if is_logged_in:
             return JsonResponse(
                 {
@@ -257,6 +257,7 @@ def admin_preview_letter_view(request, pk):
 
     AdminPreviewForm = get_admin_form_preview(ct)
     letter_text = None
+    render_error_message = None
 
     if request.method == "POST":
         form = AdminPreviewForm(request.POST)
@@ -264,14 +265,29 @@ def admin_preview_letter_view(request, pk):
             username = (
                 form.cleaned_data["username"] if "username" in form.cleaned_data else ""
             )
-            letter_text = ct.render_letter(dict(form.cleaned_data), username)
+            try:
+                letter_text = ct.render_letter(dict(form.cleaned_data), username)
+            except Exception as e:
+                render_error_message = str(e)
+
+                render_error_message += "\n\n".join(
+                    traceback.format_exception(
+                        etype=type(e), value=e, tb=e.__traceback__
+                    )
+                )
+
     else:
         form = AdminPreviewForm()
 
     return render(
         request,
         "casehandling/casetype_preview_letter.html",
-        {"form": form, "letter_text": letter_text, "case_type": ct},
+        {
+            "form": form,
+            "letter_text": letter_text,
+            "case_type": ct,
+            "error": render_error_message,
+        },
     )
 
 
