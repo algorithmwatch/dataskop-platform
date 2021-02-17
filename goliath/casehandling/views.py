@@ -237,9 +237,10 @@ def admin_preview_letter_view(request, pk):
     if request.method == "POST":
         form = AdminPreviewForm(request.POST)
         if form.is_valid():
-            letter_text = ct.render_letter(
-                dict(form.cleaned_data), form.cleaned_data["username"]
+            username = (
+                form.cleaned_data["username"] if "username" in form.cleaned_data else ""
             )
+            letter_text = ct.render_letter(dict(form.cleaned_data), username)
     else:
         form = AdminPreviewForm()
 
@@ -255,5 +256,5 @@ def admin_preview_letter_view(request, pk):
 def preview_letter_text(request, pk):
     ct = get_object_or_404(CaseType, pk=pk)
     answers = json.loads(request.POST["answers"])
-    username = request.POST["username"]
+    username = request.POST["username"] if "username" in request.POST else ""
     return HttpResponse(ct.render_letter(answers, username), content_type="text/plain")
