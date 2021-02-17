@@ -4,13 +4,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django_comments.signals import comment_was_posted
 
 from .models import Case, ReceivedMessage, Status
-from .tasks import (
-    persist_inbound_email,
-    send_admin_notification_email,
-    send_initial_emails,
-)
+from .tasks import persist_inbound_email, send_admin_new_comment, send_initial_emails
 
 User = get_user_model()
 
@@ -29,3 +26,8 @@ def handle_email_confirmed(request, email_address, **kwargs):
 
     for c in Case.objects.filter(user=user):
         c.user_verified_afterwards()
+
+
+@receiver(comment_was_posted)
+def post_comment(**kwargs):
+    send_admin_new_comment()
