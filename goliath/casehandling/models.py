@@ -283,6 +283,10 @@ class Case(TimeStampMixin):
         """
         change status and thus trigger email sending (see tasks.py)
         """
+        # if the emails were already sent, don't do anything
+        if len(self.all_messages) > 0:
+            return
+
         if self.is_approved():
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
@@ -297,14 +301,18 @@ class Case(TimeStampMixin):
         """
         change status and thus trigger email sending (see tasks.py)
         """
+
+        # if the emails were already sent, don't do anything
+        if len(self.all_messages) > 0:
+            return
+
         self.approved_by = user
         if self.is_user_verified():
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails
 
-            if len(self.all_messages) == 0:
-                send_initial_emails(self)
+            send_initial_emails(self)
         else:
             self.status = Status.WAITING_USER_VERIFIED
         self.save()
