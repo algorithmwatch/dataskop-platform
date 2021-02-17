@@ -42,15 +42,15 @@ def primary_menu(context, mobile=True):
         site_menu = [
             {
                 "label": "Unding melden",
-                "url": "/neu/",
-            },
-            {
-                "label": "Dashboard",
-                "url": "/dashboard.html",
+                "url": "/neu",
             },
             {
                 "label": "Über uns",
-                "url": "/ueber-uns.html",
+                "url": "/ueber",
+            },
+            {
+                "label": "FAQ",
+                "url": "/faq",
             },
         ]
 
@@ -65,12 +65,12 @@ def primary_menu(context, mobile=True):
     else:
         site_menu = [
             {
-                "label": "Dashboard",
-                "url": "/dashboard.html",
-            },
-            {
                 "label": "Über uns",
                 "url": "/ueber-uns.html",
+            },
+            {
+                "label": "FAQ",
+                "url": "/faq",
             },
         ]
 

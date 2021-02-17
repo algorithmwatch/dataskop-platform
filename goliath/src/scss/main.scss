@@ -28,3 +28,41 @@ input[type="radio"]:checked {
 
 @import "./utilities";
 @import "./components/surveyjs";
+
+// logo eyes
+.unding-eyes {
+  animation-delay: 0s;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
+  animation-name: unding-eyes-flash;
+  animation-timing-function: steps(3, end);
+}
+@keyframes unding-eyes-flash {
+  0% {
+    opacity: 1;
+  }
+  49% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0;
+  }
+  98% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

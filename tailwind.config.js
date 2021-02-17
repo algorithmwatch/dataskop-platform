@@ -8,7 +8,9 @@ module.exports = {
     ],
 
     // These options are passed through directly to PurgeCSS
-    options: {}
+    options: {
+      safelist: ['animate-bounce'],
+    }
   },
   darkMode: false, // or 'media' or 'class'
   theme: {

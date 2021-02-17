@@ -2,63 +2,65 @@
 
 {% block title %}Anliegen #{{case.id}}{% endblock %}
 
+{% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
+
 {% block content %}
-<h2>Anliegen #{{case.id}}</h2>
+  <h2>Anliegen #{{case.id}}</h2>
 
-<table class="table">
-  <tbody>
-    <tr>
-      <th scope="row">Status</th>
-      <td>{{case.get_status_display}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Case Type</th>
-      <td>{{case.case_type}}</td>
-    </tr>
-    <tr>
-      <th scope="row">User</th>
-      <td>{{case.user}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Email</th>
-      <td>{{case.email}}</td>
-    </tr>
-  </tbody>
-</table>
+  <table>
+    <tbody>
+      <tr>
+        <th scope="row">Status</th>
+        <td>{{case.get_status_display}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Case Type</th>
+        <td>{{case.case_type}}</td>
+      </tr>
+      <tr>
+        <th scope="row">User</th>
+        <td>{{case.user}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{case.email}}</td>
+      </tr>
+    </tbody>
+  </table>
 
-{% load crispy_forms_tags %}
+  {% load crispy_forms_tags %}
 
-{% crispy form %}
+  {% crispy form %}
 
-{% load comments %}
+  {% load comments %}
 
 
-{% for m in case.all_messages %}
-<div class="card mb-3">
-  <div class="card-header">
-    {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">{{m.subject}}</h5>
-    <p class="card-text">{{m.content}}</p>
-  </div>
-  {% get_comment_count for m as comment_count %}
-  {{comment_count}}
-  {% render_comment_list for m %}
+  {% for m in case.all_messages %}
+    <div class="card mb-3">
+      <div class="card-header">
+        {{m.sent_at}}: from {{m.from_email}} to {{m.to_email}}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{m.subject}}</h5>
+        <p class="card-text">{{m.content}}</p>
+      </div>
+      {% get_comment_count for m as comment_count %}
+      {{comment_count}}
+      {% render_comment_list for m %}
 
-  {% get_comment_form for m as form %}
-  <form action="{% comment_form_target %}" method="POST">
-  {% csrf_token %}
-  {{ form.comment }}
-  {{ form.honeypot }}
-  {{ form.content_type }}
-  {{ form.object_pk }}
-  {{ form.timestamp }}
-  {{ form.security_hash }}
-  <input type="hidden" name="next" value="{{ case.get_absolute_url }}" />
-  <input type="submit" value="Add comment" id="id_submit" />
-  </form>
-{% endfor %}
+      {% get_comment_form for m as form %}
+      <form action="{% comment_form_target %}" method="POST">
+        {% csrf_token %}
+        {{ form.comment }}
+        {{ form.honeypot }}
+        {{ form.content_type }}
+        {{ form.object_pk }}
+        {{ form.timestamp }}
+        {{ form.security_hash }}
+        <input type="hidden" name="next" value="{{ case.get_absolute_url }}" />
+        <input type="submit" value="Add comment" id="id_submit" />
+      </form>
+  {% endfor %}
 
 
 {% endblock %}

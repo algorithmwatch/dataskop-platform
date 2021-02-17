@@ -18,7 +18,7 @@
           {% if case_status.grouper == '0_open' %}
             Offen
           {% elif case_status.grouper == '1_waiting' %}
-            Warten
+            Warten auf Antwort
           {% else %}
             Abgeschlossen
           {% endif %}
@@ -28,23 +28,52 @@
           {% for case in case_status.list %}
 
             <div
-              class="sm:w-72 p-4 border border-brown-400 rounded-xl"
+              class="
+                flex flex-col justify-between+
+                sm:w-72 p-4 border border-brown-400 rounded-xl
+              "
             >
-              {# Icon #}
-              {% if case.icon_name %}
-                <div
-                  class="flex items-center justify-center rounded-full bg-brown-200"
-                >
-                  <i class="{{ case.icon_name }}"></i>
-                </div>
-              {% endif %}
+              {# tags #}
+              <div>
+                {% for tag in case.case_type.tags.all %}
+                  <span class="rounded-full bg-brown-100 px-2.5 py-1 text-sm">{{ tag }}</span>
+                {% endfor %}
+              </div>
 
-              {{ case.created_at|date }}: {{ case.case_type.name }}
-              <a href="{{case.get_absolute_url}}">Link</a>
+
+              <div class="space-y-2.5 divide-y divide-brown-200">
+                {# case title #}
+                <div class="hl-xl leading-tight pt-2.5">
+                  {{ case.case_type.name }}
+                </div>
+
+                {# message #}
+                <div class="pt-2.5 font-serif text-brown-800 h-40">
+                  {% with case.all_messages|first as first_message %}
+                    {{ first_message.content|truncatechars:200 }}
+                  {% endwith %}
+                </div>
+
+                {# recipient(s) #}
+                <div class="pt-2.5 border-t border-brown-400 font-semibold">
+                  {% for entity in case.selected_entities.all %}
+                    <div>{{ entity.name }}</div>
+                  {% endfor %}
+                </div>
+
+                {# date #}
+                <div class="pt-2.5 border-t border-brown-400">
+                  {{ case.created_at|date }}
+                </div>
+
+                <div class="pt-4">
+                  <a class="btn btn--regular btn--outline btn--stretch" href="{{case.get_absolute_url}}">{% trans 'Ansehen' %}</a>
+                </div>
+              </div>
             </div>
 
           {% empty %}
-            kein Fall
+            {% comment %} kein Fall {% endcomment %}
           {% endfor %}
 
         </div>
