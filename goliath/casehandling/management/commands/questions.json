@@ -4,151 +4,111 @@
       "name": "page1",
       "elements": [
         {
-          "type": "radiogroup",
           "name": "q-intro",
+          "type": "radiogroup",
           "title": "Hallo! Hier können wir Ihnen helfen, Ihren Fall wegen Fehlern bei der Gesichtserkennung beim BSI (Bundesamt für Sicherheit in der Informationstechnik) zu melden. Das BSI zertifiziert die Fotoautomaten.",
-          "choices": [
-            {
-              "value": "Okay",
-              "text": "weiter"
-            }
-          ]
+          "choices": [{ "text": "weiter", "value": "Okay" }]
         },
         {
-          "type": "text",
           "name": "q-ort",
+          "type": "text",
+          "title": "Bitte geben Sie uns den Ort an, auf den sich ihr Fall bezieht.",
           "visible": false,
           "visibleIf": "{q-intro} notempty",
-          "title": "Bitte geben Sie uns den Ort an, auf den sich ihr Fall bezieht.",
           "isRequired": true
         },
         {
-          "type": "radiogroup",
           "name": "q-plz-intro",
-          "visibleIf": "{q-ort} notempty",
+          "type": "radiogroup",
           "title": "Haben Sie auch die Postleitzahl parat?",
           "choices": [
-            {
-              "value": "item1",
-              "text": "ja, klar"
-            },
-            {
-              "value": "item2",
-              "text": "nein, leider nicht"
-            }
-          ]
+            { "text": "ja, klar", "value": "item1" },
+            { "text": "nein, leider nicht", "value": "item2" }
+          ],
+          "visibleIf": "{q-ort} notempty"
         },
         {
-          "type": "text",
+          "max": "99999",
+          "min": "10000",
           "name": "q-plz",
-          "visibleIf": "{q-plz-intro} = 'item1'",
+          "step": 1,
+          "type": "text",
           "title": "Wunderbar, dann tragen Sie die bitte hier ein. ",
           "inputType": "number",
-          "min": "10000",
-          "max": "99999",
-          "step": 1
+          "visibleIf": "{q-plz-intro} = 'item1'"
         },
         {
-          "type": "radiogroup",
           "name": "q-ort-automat",
-          "visibleIf": "{q-plz-intro} = 'item2' or {q-plz} notempty",
+          "type": "radiogroup",
           "title": "Vielen Dank. Verraten Sie uns doch, wo der Automat stand. Falls sich z.B. die Ausländerbehörde innerhalb des Bezirksamtes befindet, wählen Sie Bezirksamt aus.",
           "choices": [
+            { "text": "Bezirksamt / Bürgeramt / Bürgerbüro", "value": "item1" },
+            { "text": "Fahrerlaubnisbehörde", "value": "item2" },
+            { "text": "Ausländerbehörde", "value": "item3" },
             {
-              "value": "item1",
-              "text": "Bezirksamt / Bürgeramt / Bürgerbüro"
+              "text": "die Behörde ist nicht in der Auswahl",
+              "value": "item4"
             },
             {
-              "value": "item2",
-              "text": "Fahrerlaubnisbehörde"
-            },
-            {
-              "value": "item3",
-              "text": "Ausländerbehörde"
-            },
-            {
-              "value": "item4",
-              "text": "die Behörde ist nicht in der Auswahl"
-            },
-            {
-              "value": "item5",
-              "text": "der Automat befindet sich nicht innerhalb einer Behörde"
+              "text": "der Automat befindet sich nicht innerhalb einer Behörde",
+              "value": "item5"
             }
-          ]
+          ],
+          "visibleIf": "{q-plz-intro} = 'item2' or {q-plz} notempty"
         },
         {
-          "type": "text",
           "name": "q-ort-automat-behoerde",
-          "visibleIf": "{q-ort-automat} = 'item4'",
-          "title": "Okay. Um welche Behörde handelt es sich?"
+          "type": "text",
+          "title": "Okay. Um welche Behörde handelt es sich?",
+          "visibleIf": "{q-ort-automat} = 'item4'"
         },
         {
-          "type": "text",
           "name": "q-ort-automat-keine-behoerde",
-          "visibleIf": "{q-ort-automat} = 'item5'",
-          "title": "Beschreiben Sie uns kurz, wo der Automat aufgestellt ist. "
-        },
-        {
-          "type": "radiogroup",
-          "name": "q-datum-intro",
-          "visibleIf": "{q-ort-automat} = 'item1' or {q-ort-automat} = 'item2' or {q-ort-automat} = 'item3' or {q-ort-automat-behoerde} notempty or {q-ort-automat-keine-behoerde} notempty",
-          "title": "Können Sie uns sagen, wann Sie den Automaten benutzt haben?",
-          "choices": ["ja", "nein"]
-        },
-        {
           "type": "text",
+          "title": "Beschreiben Sie uns kurz, wo der Automat aufgestellt ist. ",
+          "visibleIf": "{q-ort-automat} = 'item5'"
+        },
+        {
+          "name": "q-datum-intro",
+          "type": "radiogroup",
+          "title": "Können Sie uns sagen, wann Sie den Automaten benutzt haben?",
+          "choices": ["ja", "nein"],
+          "visibleIf": "{q-ort-automat} = 'item1' or {q-ort-automat} = 'item2' or {q-ort-automat} = 'item3' or {q-ort-automat-behoerde} notempty or {q-ort-automat-keine-behoerde} notempty"
+        },
+        {
+          "max": "2030-01-01",
+          "min": "2010-01-01",
           "name": "q-datum",
-          "visibleIf": "{q-datum-intro} = 'ja'",
+          "type": "text",
           "title": "Datum",
           "inputType": "date",
-          "min": "2010-01-01",
-          "max": "2030-01-01"
+          "visibleIf": "{q-datum-intro} = 'ja'"
         },
         {
-          "type": "radiogroup",
           "name": "q-hersteller",
-          "visibleIf": "{q-datum} notempty or {q-datum-intro} = 'nein'",
+          "type": "radiogroup",
           "title": "Konnten Sie den Hersteller bzw. Anbieter des Automaten erkennen?",
           "choices": [
-            {
-              "value": "item1",
-              "text": "Fotofix"
-            },
-            {
-              "value": "item2",
-              "text": "DiBiKo-DiBiDat "
-            },
-            {
-              "value": "item3",
-              "text": "Speedmetrics"
-            },
-            {
-              "value": "item4",
-              "text": "ein anderer Hersteller"
-            },
-            {
-              "value": "item5",
-              "text": "weiß ich nicht"
-            }
-          ]
+            { "text": "Fotofix", "value": "item1" },
+            { "text": "DiBiKo-DiBiDat ", "value": "item2" },
+            { "text": "Speedmetrics", "value": "item3" },
+            { "text": "ein anderer Hersteller", "value": "item4" },
+            { "text": "weiß ich nicht", "value": "item5" }
+          ],
+          "visibleIf": "{q-datum} notempty or {q-datum-intro} = 'nein'"
         },
         {
-          "type": "text",
           "name": "q-hersteller-genau",
-          "visibleIf": "{q-hersteller} = 'item4'",
-          "title": "Welcher Hersteller ist das?"
+          "type": "text",
+          "title": "Welcher Hersteller ist das?",
+          "visibleIf": "{q-hersteller} = 'item4'"
         },
         {
-          "type": "radiogroup",
           "name": "q-outro",
-          "visibleIf": "{q-hersteller} = 'item1' or {q-hersteller} = 'item2' or {q-hersteller} = 'item3' or {q-hersteller} = 'other' or {q-hersteller-genau} notempty",
+          "type": "radiogroup",
           "title": "Vielen Dank! Wir erstellen nun eine Vorschau Ihres Anliegens. Im nächsten Schritt können Sie Ihre Angaben noch einmal überprüfen.",
-          "choices": [
-            {
-              "value": "item1",
-              "text": "weiter"
-            }
-          ]
+          "choices": [{ "text": "weiter", "value": "item1" }],
+          "visibleIf": "{q-hersteller} = 'item1' or {q-hersteller} = 'item2' or {q-hersteller} = 'item3' or {q-hersteller} = 'other' or {q-hersteller-genau} notempty"
         }
       ]
     },
@@ -156,8 +116,8 @@
       "name": "page2",
       "elements": [
         {
-          "type": "html",
           "name": "previewhtml",
+          "type": "html",
           "visible": false,
           "visibleIf": "{q-outro} notempty"
         }
