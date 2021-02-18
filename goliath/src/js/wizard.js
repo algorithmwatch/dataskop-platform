@@ -265,6 +265,7 @@ function setupSurvey(
       chanageToNextButton(options.htmlElement);
     }
 
+
     setTimeout(function () {
       options.htmlElement.scrollIntoView({
         behavior: "smooth",
@@ -294,6 +295,10 @@ function setupSurvey(
     if (el) {
       el.value = options.value;
     }
+
+    // remove non-checked values
+    const $el = $('#' + options.question.id)
+    $el.find('.sv-q-col-1').not('.checked').remove()
   }
 
   // setting up the survey & setting some appropiate values
@@ -375,7 +380,7 @@ function setupSurvey(
         // "itemChecked": "checked",
         // "itemInline": "sv_q_radiogroup_inline",
         "label": "wizard-radio-label",
-        // "labelChecked": "",
+        "labelChecked": "wizard-radio-group-checked",
         "itemControl": "wizard-radio-button",
         // "itemDecorator": "sv-hidden",
         // "controlLabel": "testclass3",
