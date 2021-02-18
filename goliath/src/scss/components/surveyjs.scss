@@ -21,7 +21,7 @@
 }
 
 // style here chat message of single choice / radio groups
-.sv_q_radiogroup_label span:nth-child(4),
+.sv_q_radiogroup_label span:nth-child(4):not(.aw-survey-next-button),
 .sv_q_checkbox_label {
   @apply inline-block box-border border-4 my-2 p-2 bg-blue-300;
 }
