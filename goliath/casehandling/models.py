@@ -239,7 +239,9 @@ class Case(TimeStampMixin):
     objects = CaseManager()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.case_type.name)
+        self.slug = (
+            "nocasetype" if self.case_type is None else slugify(self.case_type.name)
+        )
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
