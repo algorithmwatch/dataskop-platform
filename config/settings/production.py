@@ -152,8 +152,3 @@ ANYMAIL = {
 }
 
 
-# https://django-dbbackup.readthedocs.io/en/master/configuration.html
-INSTALLED_APPS += ["dbbackup"]
-DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-DBBACKUP_STORAGE_OPTIONS = {"location": "/backups/"}
-DBBACKUP_GPG_RECIPIENT = env("GPG_KEY_NAME")
