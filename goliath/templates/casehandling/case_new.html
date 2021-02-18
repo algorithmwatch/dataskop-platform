@@ -3,16 +3,26 @@
 
 {% block title %}{{case_type.name}} - Neues Anliegen{% endblock %}
 
-{% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
 {% block content %}
-  <h1>Neues Anliegen</h2>
-  <h2>{{case_type.name}}</h3>
-  <p>{{case_type.description}}</p>
-  <div class="survey-container">
-    <div><btn class="survey-reset btn btn--primary">zurücksetzen</btn></div>
-    <div class="survey-inner">
+  <div class="rounded-xl bg-blue-100">
+
+    <div class="p-8 lg:p-10">
+      <h1 class="hl-2xl mb-6">{{case_type.name}}</h1>
+      <p class="text-lg">{{case_type.description}}</p>
     </div>
+
+    <div class="p-4">
+      <button type="button" class="survey-reset btn btn--small btn--outline">Neustarten</button>
+    </div>
+
+    <div class="survey-container px-4 pb-4">
+
+      <div class="survey-inner"></div>
+
+    </div>
+
   </div>
 {% endblock %}
 

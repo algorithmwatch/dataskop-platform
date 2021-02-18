@@ -89,6 +89,22 @@ function addEntityChooseToJson(surveyJSON, entities) {
   return surveyJSON;
 }
 
+function addAdditionalProps (surveyJSON) {
+  const pages = surveyJSON.pages
+
+  for (let i = 0, l = pages.length; i < l; i++) {
+    const elements = pages[i].elements
+    if (elements) {
+      for (let x = 0, l2 = elements.length; x < l2; x++) {
+        elements[x].minWidth = '0'
+        elements[x].size = ''
+      }
+    }
+  }
+
+  return surveyJSON
+}
+
 // via https://surveyjs.io/Examples/Library?id=survey-editprevious&platform=jQuery&theme=modern#content-js
 // save storage with specific name of case id
 function Storage(storageName) {
@@ -146,16 +162,17 @@ function getAnswers() {
 
 // radio groups with a single item: a next button, make them visually identical to other next buttons
 function chanageToNextButton(element) {
-  const children = $(element).find(".sv_q_radiogroup_label");
+  const children = $(element).find(".wizard-radio-label");
   if (children.length !== 1) return;
   // there is only one radio group icon
 
   // but is a next button
   const childrenSpan = $(element).find(
-    ".sv_q_radiogroup_label span[title='weiter']"
+    ".wizard-radio-label span[title='weiter']"
   );
   if (childrenSpan.length !== 1) return;
 
+  children.removeClass('wizard-radio-label')
   childrenSpan.addClass("btn btn--regular btn--primary aw-survey-next-button");
 }
 
@@ -170,6 +187,8 @@ function setupSurvey(
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
   if (entities.length > 1)
     surveyJSON = addEntityChooseToJson(surveyJSON, entities);
+
+  surveyJSON = addAdditionalProps(surveyJSON)
 
   window.awstorage = Storage("aw-goliath-storage-" + casetypeId);
 
@@ -231,6 +250,7 @@ function setupSurvey(
     );
 
     // remove previously added next button
+    $(".aw-survey-next-button").parents('.wizard-answers-container').remove();
     $(".aw-survey-next-button").remove();
     if (
       questionType === "text" &&
@@ -238,7 +258,7 @@ function setupSurvey(
     ) {
       // add next button
       $(options.htmlElement).append(
-        '<div class="text-right clear-both aw-survey-next-button"><btn class="btn btn--regular btn--primary">weiter</btn></div>'
+        '<div class="mt-4 text-right clear-both aw-survey-next-button"><button type="button" class="btn btn--regular btn--primary">weiter</button></div>'
       );
     }
     if (questionType == "radiogroup") {
@@ -316,6 +336,54 @@ function setupSurvey(
     onValueChanged: surveyValueChanged,
     css: {
       navigation: { complete: "btn--primary hidden aw-completebutton" },
+      row: "wizard-row",
+      question: {
+        "mainRoot": "wizard-question-container",
+        // "flowRoot": "sv_q_flow sv_qstn",
+        "header": "wizard-question",
+        // "headerLeft": "title-left",
+        "content": "wizard-answers-container",
+        // "contentLeft": "content-left",
+        // "titleLeftRoot": "sv_qstn_left",
+        // "title": "",
+        // "titleExpandable": "sv_q_title_expandable",
+        // "number": "sv_q_num",
+        // "description": "small",
+        // "descriptionUnderInput": "small",
+        // "requiredText": "sv_q_required_text",
+        // "comment": "form-control",
+        // "required": "",
+        // "titleRequired": "",
+        // "hasError": "has-error",
+        // "indent": 20,
+        // "formGroup": "form-group"
+      },
+      panel: {
+        // "title": "sv_p_title",
+        // "titleExpandable": "sv_p_title_expandable",
+        // "titleOnError": "",
+        // "icon": "sv_panel_icon",
+        // "iconExpanded": "sv_expanded",
+        "container": "wizard-container",
+        // "footer": "sv_p_footer",
+        // "number": "sv_q_num",
+        // "requiredText": "sv_q_required_text"
+      },
+      radiogroup: {
+        // "root": "sv_qcbc form-inline",
+        // "item": "radio",
+        // "itemChecked": "checked",
+        // "itemInline": "sv_q_radiogroup_inline",
+        "label": "wizard-radio-label",
+        // "labelChecked": "",
+        "itemControl": "wizard-radio-button",
+        // "itemDecorator": "sv-hidden",
+        // "controlLabel": "testclass3",
+        // "materialDecorator": "circle",
+        // "other": "sv_q_radiogroup_other form-control",
+        // "clearButton": "sv_q_radiogroup_clear button",
+        // "column": "sv_q_select_column"
+      },
     },
   });
 }
