@@ -1,7 +1,5 @@
 import re
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 from django.forms import CharField, Form, ModelForm
 
 from .models import Case
@@ -11,10 +9,6 @@ class CaseStatusForm(ModelForm):
     class Meta:
         model = Case
         fields = ["status"]
-
-    helper = FormHelper()
-    helper.add_input(Submit("submit", "Submit", css_class="btn-primary"))
-    helper.form_method = "POST"
 
 
 def get_admin_form_preview(ct):
@@ -26,13 +20,13 @@ def get_admin_form_preview(ct):
     context_variables = [
         x.strip().lower()
         for x in context_variables
-        if x.strip().lower() not in ["if", "else", "endif", "for", "endfor"]
+        if x.strip().lower() not in ["if", "else", "endif", "for", "endfor", "elif"]
     ]
 
     # remove all expressions, only keep variables
     context_variables = [x.split("==")[0].split("!=")[0] for x in context_variables]
     context_variables = [
-        re.sub(r"^(if|for) ", "", x).strip() for x in context_variables
+        re.sub(r"^(if|for|elif) ", "", x).strip() for x in context_variables
     ]
 
     # make unique

@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db.models import CharField
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -53,19 +54,18 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        return self.first_name + ' ' + self.last_name
+        return self.first_name + " " + self.last_name
 
     def get_absolute_url(self):
         return reverse("account_index")
 
     def gen_case_email(self, num_digits):
         return (
-            self.first_name
-            + self.last_name
+            slugify(self.first_name + self.last_name).replace("-", "")
             + get_random_string(num_digits, allowed_chars=string.digits)
             + "@"
             + settings.DEFAULT_EMAIL_DOMAIN
-        ).lower()
+        )
 
 
 User._meta.get_field("email")._unique = True

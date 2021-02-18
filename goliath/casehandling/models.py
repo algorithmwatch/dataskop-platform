@@ -17,6 +17,8 @@ from django.db import models
 from django.db.models import F
 from django.template import Context, Template
 from django.urls import reverse
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
@@ -105,6 +107,9 @@ class AutoreplyKeyword(models.Model):
 
 class CaseType(TimeStampMixin):
     name = models.CharField(max_length=255)
+    slug = models.SlugField(
+        default="", editable=False, max_length=255, null=False, blank=False
+    )
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
@@ -122,11 +127,15 @@ class CaseType(TimeStampMixin):
         excluded_fields=["_description_rendered", "description_markup_type"]
     )
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("new-wizzard", args=(self.pk,))
+        return reverse("new-wizzard", kwargs={"pk": self.pk, "slug": self.slug})
 
     def is_message_autoreply(self, message):
         for keyword in self.autoreply_keywords.all():
@@ -198,6 +207,9 @@ class CaseManager(models.Manager):
 
 
 class Case(TimeStampMixin):
+    slug = models.SlugField(
+        default="", editable=False, max_length=255, null=False, blank=False
+    )
     questions = models.JSONField(null=True)
     answers = models.JSONField(null=True)
     email = models.EmailField(unique=True)
@@ -220,9 +232,18 @@ class Case(TimeStampMixin):
     )
     sent_reminders = models.IntegerField(default=0)
     last_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
+    post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
     history = HistoricalRecords()
     objects = CaseManager()
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.case_type.name)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("cases-detail", kwargs={"pk": self.pk, "slug": self.slug})
 
     @property
     def print_status(self):
@@ -239,28 +260,33 @@ class Case(TimeStampMixin):
             return "2_closed"
         return "1_waiting"
 
-    def get_absolute_url(self):
-        return reverse("cases-detail", args=(self.pk,))
-
+    @property
     def all_messages(self):
         return sorted(
             list(self.receivedmessage_set.all()) + list(self.sentmessage_set.all()),
             key=lambda x: x.sent_at,
         )
 
+    @property
     def is_approved(self):
         return not self.case_type.needs_approval or self.approved_by is not None
 
+    @property
     def is_user_verified(self):
         return EmailAddress.objects.filter(user=self.user, verified=True).exists()
 
+    @property
     def is_sane(self):
-        return self.is_user_verified() and self.is_approved()
+        return self.is_user_verified and self.is_approved
 
     def user_verified_afterwards(self):
         """
         change status and thus trigger email sending (see tasks.py)
         """
+        # if the emails were already sent, don't do anything
+        if len(self.all_messages) > 0:
+            return
+
         if self.is_approved():
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
@@ -275,8 +301,13 @@ class Case(TimeStampMixin):
         """
         change status and thus trigger email sending (see tasks.py)
         """
+
+        # if the emails were already sent, don't do anything
+        if len(self.all_messages) > 0:
+            return
+
         self.approved_by = user
-        if self.is_user_verified():
+        if self.is_user_verified:
             self.status = Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails

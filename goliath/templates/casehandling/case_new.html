@@ -23,9 +23,9 @@
   var True = true;
   var False = false;
   {% if user.is_authenticated %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", entities);
+    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", entities);
   {% else %}
-    window.setupSurvey({{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null, entities);
+    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null, entities);
   {% endif %}
   </script>
 {% endblock %}

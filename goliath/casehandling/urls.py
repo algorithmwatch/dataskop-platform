@@ -3,14 +3,16 @@ from rest_framework import routers
 
 from .api_views import ExternalSupportViewSet
 from .views import (
-    CaseCreate,
-    CaseDetailAndUpdate,
-    CaseList,
-    CaseTypeList,
+    CaseCreateView,
+    CaseDetailAndUpdateView,
+    CaseListView,
+    CaseSuccessView,
+    CaseTypeListView,
+    CaseVerifyEmailView,
     DashboardPageView,
     HomePageView,
     admin_preview_letter_view,
-    preview_letter_text,
+    preview_letter_text_view,
 )
 
 router = routers.DefaultRouter()
@@ -19,12 +21,28 @@ router.register(r"externalsupport", ExternalSupportViewSet, basename="externalsu
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("dashboard/", DashboardPageView.as_view(), name="dashboard"),
-    path("neu/", view=CaseTypeList.as_view(), name="new"),
-    path("neu/<int:case_type>/", view=CaseCreate.as_view(), name="new-wizzard"),
-    path("anliegen/", view=CaseList.as_view(), name="cases"),
-    path("anliegen/<int:pk>/", view=CaseDetailAndUpdate.as_view(), name="cases-detail"),
+    path("neu/", view=CaseTypeListView.as_view(), name="new"),
+    path("neu/<str:slug>/<int:pk>/", view=CaseCreateView.as_view(), name="new-wizzard"),
     path(
-        "falltyp-text/<int:pk>/", view=preview_letter_text, name="casetype-letter-text"
+        "erfolg/<str:slug>/<int:pk>/",
+        view=CaseSuccessView.as_view(),
+        name="post-wizzard-success",
+    ),
+    path(
+        "email-bestaetigen/",
+        view=CaseVerifyEmailView.as_view(),
+        name="post-wizzard-email",
+    ),
+    path("anliegen/", view=CaseListView.as_view(), name="cases"),
+    path(
+        "anliegen/<str:slug>/<int:pk>/",
+        view=CaseDetailAndUpdateView.as_view(),
+        name="cases-detail",
+    ),
+    path(
+        "falltyp-text/<int:pk>/",
+        view=preview_letter_text_view,
+        name="casetype-letter-text",
     ),
     path(
         "vorschau/<int:pk>/",

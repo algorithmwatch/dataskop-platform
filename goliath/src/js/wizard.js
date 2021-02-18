@@ -159,7 +159,14 @@ function chanageToNextButton(element) {
   childrenSpan.addClass("btn btn--regular btn--primary aw-survey-next-button");
 }
 
-function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
+function setupSurvey(
+  casetypeSlug,
+  casetypeId,
+  surveyJSON,
+  csrfToken,
+  userName,
+  entities
+) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
   if (entities.length > 1)
     surveyJSON = addEntityChooseToJson(surveyJSON, entities);
@@ -179,7 +186,7 @@ function setupSurvey(casetypeId, surveyJSON, csrfToken, userName, entities) {
       csrfmiddlewaretoken: csrfToken,
     };
 
-    $.post("/neu/" + casetypeId + "/", body)
+    $.post("/neu/" + casetypeSlug + "/" + casetypeId + "/", body)
       .done(function (successData) {
         window.awstorage.removeState();
         window.location.replace(successData.url);

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{case_type.name}} - Neues Anliegen{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
+
+{% block content %}
+  <h1>Glückwunsch, dies das</h2>
+
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Update">
+  </form>
+
+{% endblock %}
+

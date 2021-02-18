@@ -1,5 +1,6 @@
 import datetime
 import json
+import traceback
 
 from allauth.account.models import EmailAddress
 from django.contrib.admin.views.decorators import staff_member_required
@@ -9,6 +10,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView, View
@@ -54,13 +56,13 @@ def get_user_for_case(request, answers):
     return user, is_logged_in
 
 
-class CaseTypeList(ListView):
+class CaseTypeListView(ListView):
     model = CaseType
 
 
-class CaseCreate(View):
-    def post(self, request, case_type):
-        case_type = get_object_or_404(CaseType, pk=case_type)
+class CaseCreateView(View):
+    def post(self, request, pk, slug):
+        case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
         user, is_logged_in = get_user_for_case(request, answers)
         text = case_type.render_letter(answers, user.full_name)
@@ -110,14 +112,26 @@ class CaseCreate(View):
         elif case.case_type.needs_approval:
             send_admin_waiting_approval_case()
 
-        # FIXME
         if is_logged_in:
-            return JsonResponse({"url": case.get_absolute_url()})
+            return JsonResponse(
+                {
+                    "url": reverse(
+                        "post-wizzard-success",
+                        kwargs={"slug": case.slug, "pk": case.pk},
+                    )
+                }
+            )
         else:
-            return JsonResponse({"url": case.get_absolute_url()})
+            return JsonResponse(
+                {
+                    "url": reverse(
+                        "post-wizzard-email",
+                    )
+                }
+            )
 
-    def get(self, request, case_type):
-        case_type = get_object_or_404(CaseType, pk=case_type)
+    def get(self, request, pk, slug):
+        case_type = get_object_or_404(CaseType, pk=pk)
 
         return render(
             request,
@@ -153,7 +167,7 @@ class CaseDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class CaseDetailAndUpdate(View):
+class CaseDetailAndUpdateView(View):
     def get(self, request, *args, **kwargs):
         view = CaseDetailView.as_view()
         return view(request, *args, **kwargs)
@@ -163,7 +177,7 @@ class CaseDetailAndUpdate(View):
         return view(request, *args, **kwargs)
 
 
-class CaseList(LoginRequiredMixin, ListView):
+class CaseListView(LoginRequiredMixin, ListView):
     model = Case
     template_name = "casehandling/case_list.html"
 
@@ -173,6 +187,16 @@ class CaseList(LoginRequiredMixin, ListView):
         """
         qs = Case.objects.filter(user=self.request.user)
         return qs
+
+
+class CaseSuccessView(LoginRequiredMixin, UpdateView):
+    model = Case
+    fields = ["is_contactable", "post_creation_hint"]
+    template_name = "casehandling/case_success.html"
+
+
+class CaseVerifyEmailView(TemplateView):
+    template_name = "casehandling/case_email.html"
 
 
 class HomePageView(TemplateView):
@@ -233,6 +257,7 @@ def admin_preview_letter_view(request, pk):
 
     AdminPreviewForm = get_admin_form_preview(ct)
     letter_text = None
+    render_error_message = None
 
     if request.method == "POST":
         form = AdminPreviewForm(request.POST)
@@ -240,20 +265,35 @@ def admin_preview_letter_view(request, pk):
             username = (
                 form.cleaned_data["username"] if "username" in form.cleaned_data else ""
             )
-            letter_text = ct.render_letter(dict(form.cleaned_data), username)
+            try:
+                letter_text = ct.render_letter(dict(form.cleaned_data), username)
+            except Exception as e:
+                render_error_message = str(e)
+
+                render_error_message += "\n\n".join(
+                    traceback.format_exception(
+                        etype=type(e), value=e, tb=e.__traceback__
+                    )
+                )
+
     else:
         form = AdminPreviewForm()
 
     return render(
         request,
         "casehandling/casetype_preview_letter.html",
-        {"form": form, "letter_text": letter_text, "case_type": ct},
+        {
+            "form": form,
+            "letter_text": letter_text,
+            "case_type": ct,
+            "error": render_error_message,
+        },
     )
 
 
 @require_POST
 @csrf_exempt
-def preview_letter_text(request, pk):
+def preview_letter_text_view(request, pk):
     ct = get_object_or_404(CaseType, pk=pk)
     answers = json.loads(request.POST["answers"])
     username = request.POST["username"] if "username" in request.POST else ""

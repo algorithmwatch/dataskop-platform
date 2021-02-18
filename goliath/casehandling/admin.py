@@ -105,6 +105,7 @@ class CaseAdmin(RemoveAdminAddButtonMixin, SimpleHistoryAdmin):
 class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
     list_display = [
         "id",
+        "slug",
         "created_at",
         "name",
     ]
