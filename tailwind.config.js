@@ -155,6 +155,9 @@ module.exports = {
     extend: {
       margin: ['last', 'first'],
       padding: ['last', 'first'],
+      ringColor: ['hover', 'active'],
+      ringWidth: ['hover', 'active'],
+      ringOpacity: ['hover', 'active'],
     },
   },
   plugins: [
