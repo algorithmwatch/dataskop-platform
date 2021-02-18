@@ -356,17 +356,18 @@ ADMIN_NOTIFICATION_EMAIL = env.str(
 )
 
 
-# https://django-dbbackup.readthedocs.io/en/master/configuration.html
-INSTALLED_APPS += ["dbbackup"]
+if env("S3_ENDPOINT", default=None) is not None:
+    # https://django-dbbackup.readthedocs.io/en/master/configuration.html
+    INSTALLED_APPS += ["dbbackup"]
 
-DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-DBBACKUP_STORAGE_OPTIONS = {
-    "endpoint_url": env("S3_ENDPOINT"),
-    "access_key": env("S3_ACCESS"),
-    "secret_key": env("S3_SECRET"),
-    "region_name": env("S3_REGION"),
-    "bucket_name": env("S3_BUCKET"),
-}
+    DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    DBBACKUP_STORAGE_OPTIONS = {
+        "endpoint_url": env("S3_ENDPOINT"),
+        "access_key": env("S3_ACCESS"),
+        "secret_key": env("S3_SECRET"),
+        "region_name": env("S3_REGION"),
+        "bucket_name": env("S3_BUCKET"),
+    }
 
-if env("GPG_KEY_NAME", default=None) is not None:
-    DBBACKUP_GPG_RECIPIENT = env("GPG_KEY_NAME")
+    if env("GPG_KEY_NAME", default=None) is not None:
+        DBBACKUP_GPG_RECIPIENT = env("GPG_KEY_NAME")
