@@ -22,7 +22,9 @@ class CaseTypeFactory(DjangoModelFactory):
     class Meta:
         model = CaseType
 
-    name = factory.Faker("catch_phrase", locale="de")
+    title = factory.Faker("catch_phrase", locale="de")
+    claim = factory.Faker("catch_phrase", locale="de")
+    short_description = factory.Faker("catch_phrase", locale="de")
     description = factory.Faker("text", locale="de")
     questions = "{}"
 

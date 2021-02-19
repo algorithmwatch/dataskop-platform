@@ -107,7 +107,7 @@ class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
         "id",
         "slug",
         "created_at",
-        "name",
+        "title",
     ]
     view_on_site = False
 

@@ -55,10 +55,12 @@ class AutoreplyKeyword(models.Model):
 
 
 class CaseType(TimeStampMixin):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=50)
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
     )
+    claim = models.CharField(max_length=100, null=True, blank=False)
+    short_description = models.CharField(max_length=500, null=True, blank=False)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
@@ -77,11 +79,11 @@ class CaseType(TimeStampMixin):
     )
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     def get_absolute_url(self):
         return reverse("new-wizzard", kwargs={"pk": self.pk, "slug": self.slug})
@@ -152,7 +154,7 @@ class Case(TimeStampMixin):
 
     def save(self, *args, **kwargs):
         self.slug = (
-            "nocasetype" if self.case_type is None else slugify(self.case_type.name)
+            "nocasetype" if self.case_type is None else slugify(self.case_type.title)
         )
         super().save(*args, **kwargs)
 
