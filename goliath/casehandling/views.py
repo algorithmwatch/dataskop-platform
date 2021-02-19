@@ -21,7 +21,10 @@ from django.views.generic.list import ListView
 from ..utils.email import send_magic_link
 from .forms import CaseStatusForm, get_admin_form_preview
 from .models import Case, CaseType
-from .tasks import send_admin_waiting_approval_case, send_initial_emails
+from .tasks import (
+    send_admin_notification_waiting_approval_case,
+    send_initial_emails_to_entities,
+)
 
 User = get_user_model()
 
@@ -108,7 +111,7 @@ class CaseCreateView(View):
             assert case_type.entities.all().count() == 1
 
         if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
-            send_initial_emails(case)
+            send_initial_emails_to_entities(case)
         elif case.case_type.needs_approval:
             send_admin_waiting_approval_case()
 

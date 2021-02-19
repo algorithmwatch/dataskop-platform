@@ -10,7 +10,7 @@ from .models import Case, ReceivedMessage, SentMessage
 
 
 @celery_app.task()
-def send_initial_emails(case):
+def send_initial_emails_to_entities(case):
     """
     send initial email to entity of case type
     """
@@ -67,7 +67,7 @@ def send_initial_emails(case):
 
 
 @celery_app.task()
-def send_new_message_notification(to_email, link):
+def send_user_notification_new_message(to_email, link):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
@@ -80,7 +80,7 @@ def send_new_message_notification(to_email, link):
 
 
 @celery_app.task()
-def send_reminder_user_notification(to_email, link):
+def send_user_notification_reminder(to_email, link):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
@@ -98,6 +98,20 @@ def send_admin_notification_email(subject, content):
     from_email = settings.DEFAULT_FROM_EMAIL
     send_anymail_email(
         to_email, subject=subject, text_content=content, from_email=from_email
+    )
+
+
+def send_admin_notification_waiting_approval_case():
+    send_admin_notification_email(
+        "Neuer Fall benötigt eine Freigabe",
+        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
+    )
+
+
+def send_admin_notification_new_comment():
+    send_admin_notification_email(
+        "Neuer Kommentar",
+        settings.URL_ORIGIN + "/admin/django_comments/comment/",
     )
 
 
@@ -143,17 +157,3 @@ def persist_inbound_email(message):
 
     if case is not None:
         case.handle_incoming_email(is_autoreply)
-
-
-def send_admin_waiting_approval_case():
-    send_admin_notification_email(
-        "Neuer Fall benötigt eine Freigabe",
-        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
-    )
-
-
-def send_admin_new_comment():
-    send_admin_notification_email(
-        "Neuer Kommentar",
-        settings.URL_ORIGIN + "/admin/django_comments/comment/",
-    )

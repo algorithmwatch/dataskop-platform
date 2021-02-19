@@ -39,10 +39,10 @@ class CaseManager(models.Manager):
         emails_sent = 0
         for case in self.filter(
             status=self.model.Status.WAITING_USER_INPUT,
-            sent_reminders__lt=max_reminders,
+            sent_user_reminders__lt=max_reminders,
         ):
-            if case.last_reminder_sent_at is not None and date_within_margin(
-                case.last_reminder_sent_at, margin
+            if case.last_user_reminder_sent_at is not None and date_within_margin(
+                case.last_user_reminder_sent_at, margin
             ):
                 continue
 

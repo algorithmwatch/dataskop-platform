@@ -140,8 +140,8 @@ class Case(TimeStampMixin):
         blank=True,
         related_name="approved_cases",
     )
-    sent_reminders = models.IntegerField(default=0)
-    last_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    sent_user_reminders = models.IntegerField(default=0)
+    last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
@@ -202,9 +202,9 @@ class Case(TimeStampMixin):
         if self.is_approved():
             self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
-            from .tasks import send_initial_emails
+            from .tasks import send_initial_emails_to_entities
 
-            send_initial_emails(self)
+            send_initial_emails_to_entities(self)
         else:
             self.status = self.Status.WAITING_CASE_APPROVED
         self.save()
@@ -222,9 +222,9 @@ class Case(TimeStampMixin):
         if self.is_user_verified:
             self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
-            from .tasks import send_initial_emails
+            from .tasks import send_initial_emails_to_entities
 
-            send_initial_emails(self)
+            send_initial_emails_to_entities(self)
         else:
             self.status = self.Status.WAITING_USER_VERIFIED
         self.save()
@@ -233,22 +233,22 @@ class Case(TimeStampMixin):
         if is_autoreply:
             pass
         else:
-            from .tasks import send_new_message_notification
+            from .tasks import send_user_notification_new_message
 
-            send_new_message_notification(
+            send_user_notification_new_message(
                 self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
             )
             self.status = self.Status.WAITING_USER_INPUT
             self.save()
 
     def send_reminder_user(self):
-        from .tasks import send_reminder_user_notification
+        from .tasks import send_user_notification_reminder
 
-        send_reminder_user_notification(
+        send_user_notification_reminder(
             self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
         )
-        self.last_reminder_sent_at = datetime.datetime.now()
-        self.sent_reminders += 1
+        self.last_user_reminder_sent_at = datetime.datetime.now()
+        self.sent_user_reminders += 1
         self.save()
 
 
