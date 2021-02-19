@@ -146,7 +146,7 @@ class Case(TimeStampMixin):
     last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     sent_entities_reminders = models.IntegerField(default=0)
     last_entities_reminder_sent_at = models.DateTimeField(null=True, blank=True)
-    is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
+    is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
     history = HistoricalRecords()
@@ -286,6 +286,10 @@ class Case(TimeStampMixin):
         # can't use F expression because django-simple-history does not support it
         self.sent_entities_reminders += 1
         self.save()
+
+
+class MultiCase(models.Model):
+    cases = models.ManyToManyField("Case", blank=True)
 
 
 class Message(TimeStampMixin):
