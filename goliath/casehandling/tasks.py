@@ -6,7 +6,7 @@ from email_reply_parser import EmailReplyParser
 from config import celery_app
 
 from ..utils.email import send_anymail_email
-from .models import Case, ReceivedMessage, SentMessage, Status
+from .models import Case, ReceivedMessage, SentMessage
 
 
 @celery_app.task()
@@ -59,10 +59,10 @@ def send_initial_emails(case):
         )
 
     if was_error:
-        case.status = Status.WAITING_EMAIL_ERROR
+        case.status = Case.Status.WAITING_EMAIL_ERROR
     else:
         # all good, waiting for response
-        case.status = Status.WAITING_RESPONSE
+        case.status = Case.Status.WAITING_RESPONSE
     case.save()
 
 

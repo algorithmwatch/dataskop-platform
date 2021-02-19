@@ -6,15 +6,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (
-    SearchHeadline,
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-    SearchVectorField,
-)
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.db.models import F
 from django.template import Context, Template
 from django.urls import reverse
 from django.utils.text import slugify
@@ -23,42 +16,10 @@ from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 
-from ..utils.time import date_within_margin
+from .managers import CaseManager
+from .search import SearchExpertnalSupportQuerySet
 
 User = get_user_model()
-
-
-class SearchExpertnalSupportQuerySet(models.QuerySet):
-    def search(self, search_text, highlight=True):
-        if search_text is None:
-            return self
-
-        search_query = SearchQuery(
-            search_text, config="german", search_type="websearch"
-        )
-
-        qs = self.filter(search_vector=search_query)
-        qs = qs.annotate(rank=SearchRank(F("search_vector"), search_query)).order_by(
-            "-rank"
-        )
-
-        if highlight:
-            qs = qs.annotate(
-                name_highlighted=SearchHeadline(
-                    "name", search_query, config="german", highlight_all=True
-                ),
-                description_highlighted=SearchHeadline(
-                    "description", search_query, config="german", highlight_all=True
-                ),
-            )
-
-        return qs
-
-    def sync_search(self):
-        self.update(
-            search_vector=SearchVector("name", weight="A", config="german")
-            + SearchVector("description", weight="B", config="german")
-        )
 
 
 class TimeStampMixin(models.Model):
@@ -67,18 +28,6 @@ class TimeStampMixin(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Status(models.TextChoices):
-    WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
-    WAITING_USER_VERIFIED = "UV", "Waiting user verification"
-    WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
-    WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
-    WAITING_RESPONSE = "WR", "Waiting for response"
-    WAITING_USER_INPUT = "WU", "Waiting for user input"
-    CLOSED_NEGATIVE = "CN", "Closed, given up"
-    CLOSED_POSITIVE = "CP", "Closed, case resolved"
-    CLOSED_MIXED = "CM", "Closed, mixed feelings"
 
 
 class Entity(TimeStampMixin):
@@ -156,57 +105,18 @@ class CaseType(TimeStampMixin):
         return text
 
 
-class CaseManager(models.Manager):
-    def remind_users(
-        self,
-        margin: datetime.timedelta = datetime.timedelta(days=7),
-        max_reminders: int = 2,
-    ):
-        """
-        Iterate over all user and check if they should get a reminder.
-        Default: remind after 7 days, then remind again after 7 days and stop.
-        """
-
-        def _get_last_action_date(case):
-            last_action_date = None
-            if case.history.all().count() == 0:
-                # there is no history, the object was never updated since creation
-                last_action_date = case.created_at
-            else:
-                # getting the most recent version (in the history)
-                prev_case = case.history.first()
-                while True:
-                    if prev_case is None:
-                        # there is no history
-                        break
-                    if prev_case.status == case.status:
-                        # no status changed, go further back
-                        last_action_date = prev_case.history_date
-                        break
-                    # iterate through the all the history item
-                    prev_case = prev_case.prev_record
-            return last_action_date
-
-        emails_sent = 0
-        for case in self.filter(
-            status=Status.WAITING_USER_INPUT, sent_reminders__lt=max_reminders
-        ):
-            if case.last_reminder_sent_at is not None and date_within_margin(
-                case.last_reminder_sent_at, margin
-            ):
-                continue
-
-            last_action_date = _get_last_action_date(case)
-            if last_action_date is not None:
-                # there was a status change
-                if not date_within_margin(last_action_date, margin):
-                    # and there was no status update for at least $margin time
-                    case.send_reminder_user()
-                    emails_sent += 1
-        return emails_sent
-
-
 class Case(TimeStampMixin):
+    class Status(models.TextChoices):
+        WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
+        WAITING_USER_VERIFIED = "UV", "Waiting user verification"
+        WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
+        WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
+        WAITING_RESPONSE = "WR", "Waiting for response"
+        WAITING_USER_INPUT = "WU", "Waiting for user input"
+        CLOSED_NEGATIVE = "CN", "Closed, given up"
+        CLOSED_POSITIVE = "CP", "Closed, case resolved"
+        CLOSED_MIXED = "CM", "Closed, mixed feelings"
+
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
     )
@@ -250,14 +160,14 @@ class Case(TimeStampMixin):
     @property
     def print_status(self):
         if self.status in (
-            Status.WAITING_USER_INPUT,
-            Status.WAITING_USER_VERIFIED,
+            self.Status.WAITING_USER_INPUT,
+            self.Status.WAITING_USER_VERIFIED,
         ):
             return "0_open"
         if self.status in (
-            Status.CLOSED_NEGATIVE,
-            Status.CLOSED_POSITIVE,
-            Status.CLOSED_MIXED,
+            self.Status.CLOSED_NEGATIVE,
+            self.Status.CLOSED_POSITIVE,
+            self.Status.CLOSED_MIXED,
         ):
             return "2_closed"
         return "1_waiting"
@@ -290,13 +200,13 @@ class Case(TimeStampMixin):
             return
 
         if self.is_approved():
-            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails
 
             send_initial_emails(self)
         else:
-            self.status = Status.WAITING_CASE_APPROVED
+            self.status = self.Status.WAITING_CASE_APPROVED
         self.save()
 
     def approve_case(self, user):
@@ -310,13 +220,13 @@ class Case(TimeStampMixin):
 
         self.approved_by = user
         if self.is_user_verified:
-            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails
 
             send_initial_emails(self)
         else:
-            self.status = Status.WAITING_USER_VERIFIED
+            self.status = self.Status.WAITING_USER_VERIFIED
         self.save()
 
     def handle_incoming_email(self, is_autoreply):
@@ -328,7 +238,7 @@ class Case(TimeStampMixin):
             send_new_message_notification(
                 self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
             )
-            self.status = Status.WAITING_USER_INPUT
+            self.status = self.Status.WAITING_USER_INPUT
             self.save()
 
     def send_reminder_user(self):

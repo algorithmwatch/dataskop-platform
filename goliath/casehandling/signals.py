@@ -6,7 +6,7 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django_comments.signals import comment_was_posted
 
-from .models import Case, ReceivedMessage, Status
+from .models import Case, ReceivedMessage
 from .tasks import persist_inbound_email, send_admin_new_comment, send_initial_emails
 
 User = get_user_model()

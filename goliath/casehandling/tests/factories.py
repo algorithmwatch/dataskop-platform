@@ -5,7 +5,7 @@ from factory.django import DjangoModelFactory
 
 from goliath.users.tests.factories import UserFactory
 
-from ..models import Case, CaseType, Entity, ReceivedMessage, SentMessage, Status
+from ..models import Case, CaseType, Entity, ReceivedMessage, SentMessage
 
 
 class EntityFactory(DjangoModelFactory):
@@ -55,7 +55,7 @@ class CaseFactory(DjangoModelFactory):
 class OngoingCaseFactory(CaseFactory):
     user = factory.SubFactory(UserFactory)
     status = factory.LazyAttribute(
-        lambda o: random.choice(Status.choices)[0]
+        lambda o: random.choice(Case.Status.choices)[0]
         if o.force_status is None
         else o.force_status
     )

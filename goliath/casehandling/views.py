@@ -20,7 +20,7 @@ from django.views.generic.list import ListView
 
 from ..utils.email import send_magic_link
 from .forms import CaseStatusForm, get_admin_form_preview
-from .models import Case, CaseType, Status
+from .models import Case, CaseType
 from .tasks import send_admin_waiting_approval_case, send_initial_emails
 
 User = get_user_model()
@@ -71,12 +71,12 @@ class CaseCreateView(View):
             not is_logged_in
             or not EmailAddress.objects.filter(user=user, verified=True).exists()
         ):
-            status = Status.WAITING_USER_VERIFIED
+            status = Case.Status.WAITING_USER_VERIFIED
         elif case_type.needs_approval:
-            status = Status.WAITING_CASE_APPROVED
+            status = Case.Status.WAITING_CASE_APPROVED
         else:
             # this will send the initial email via Signal
-            status = Status.WAITING_INITIAL_EMAIL_SENT
+            status = Case.Status.WAITING_INITIAL_EMAIL_SENT
 
         # try 20 times to generate unique email for this case and then give up
         # increase the number of digits for each try
@@ -107,7 +107,7 @@ class CaseCreateView(View):
             case.selected_entities.add(case_type.entities.first())
             assert case_type.entities.all().count() == 1
 
-        if case.status == Status.WAITING_INITIAL_EMAIL_SENT:
+        if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
             send_initial_emails(case)
         elif case.case_type.needs_approval:
             send_admin_waiting_approval_case()

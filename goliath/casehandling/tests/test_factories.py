@@ -1,6 +1,6 @@
 import pytest
 
-from ..models import Status
+from ..models import Case
 from .factories import CaseTypeFactoryWithEntitiesFactory, OngoingCaseFactory
 
 pytestmark = pytest.mark.django_db
@@ -20,7 +20,7 @@ def test_factories():
 
 def test_factories_status():
     ctes = OngoingCaseFactory.create_batch(
-        20, ongoing=4, force_status=Status.WAITING_USER_INPUT
+        20, ongoing=4, force_status=Case.Status.WAITING_USER_INPUT
     )
     for c in ctes:
-        assert c.status == Status.WAITING_USER_INPUT
+        assert c.status == Case.Status.WAITING_USER_INPUT
