@@ -14,7 +14,7 @@
     <form method="post" class="mt-8">
       {% csrf_token %}
 
-      <div class="flex items-center mx-auto max-w-md mb-6 p-4 border border-blue-200 rounded-xl text-blue-700">
+      <div class="flex items-center mx-auto max-w-md mb-8 p-4 border border-blue-300 rounded-xl text-blue-700">
         <div class="text-left">Dürfen wir Sie kontaktieren, um Ihnen Fragen zu Ihrem Fall zu stellen?</div>
         <div class="flex items-center ml-5">
           {{ form.is_contactable|add_class:"test" }}
@@ -22,16 +22,23 @@
         </div>
       </div>
 
-      <div class="mx-auto max-w-md mb-4">
+      <div class="mx-auto max-w-md mb-3">
         {% render_field form.post_creation_hint rows="3" placeholder="Haben Sie noch Hinweise etc., die Sie uns mitteilen möchten?" class="text-input text-input--regular border border-brown-1000 bg-white w-full" %}
       </div>
 
       <button type="submit" class="btn btn--regular btn--primary" value="Update">Feedback senden</button>
     </form>
 
-    <div class="mt-8">
-      <h2>Sagen Sie es weiter</h2>
+    <div class="mt-8 mx-auto max-w-md">
+      <h2 class="hl-lg mb-2.5">Sagen Sie es weiter</h2>
+      <div class="text-4xl flex justify-center">
+          <a href="#" class="mr-4 hover:text-brown-800"><i class="fab fa-twitter-square"></i></a>
+          <a href="#" class="hover:text-brown-80/0"><i class="fab fa-facebook-square"></i></a>
+      </div>
+    </div>
 
+    <div class="mt-8 text-sm">
+      <a href="/" class="underline hover:no-underline">Zurück zur Startseite</a>
     </div>
 
   </div>
