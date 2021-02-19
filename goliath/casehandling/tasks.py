@@ -6,11 +6,11 @@ from email_reply_parser import EmailReplyParser
 from config import celery_app
 
 from ..utils.email import send_anymail_email
-from .models import Case, ReceivedMessage, SentMessage, Status
+from .models import Case, ReceivedMessage, SentMessage
 
 
 @celery_app.task()
-def send_initial_emails(case):
+def send_initial_emails_to_entities(case):
     """
     send initial email to entity of case type
     """
@@ -59,15 +59,15 @@ def send_initial_emails(case):
         )
 
     if was_error:
-        case.status = Status.WAITING_EMAIL_ERROR
+        case.status = Case.Status.WAITING_EMAIL_ERROR
     else:
         # all good, waiting for response
-        case.status = Status.WAITING_RESPONSE
+        case.status = Case.Status.WAITING_RESPONSE
     case.save()
 
 
 @celery_app.task()
-def send_new_message_notification(to_email, link):
+def send_user_notification_new_message(to_email, link):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
@@ -80,15 +80,26 @@ def send_new_message_notification(to_email, link):
 
 
 @celery_app.task()
-def send_reminder_notification(to_email, link):
-    """Notify user about incoming new email"""
+def send_user_notification_reminder(to_email, link):
+    """Remind user about open case"""
     send_anymail_email(
         to_email,
-        "Bitten setzen Sie den Status",
+        "Bitte setzen Sie den Status",
         from_email=settings.DEFAULT_FROM_EMAIL,
-        subject="Bitten setzen Sie den Status",
+        subject="Bitte setzen Sie den Status",
         ctaLink=link,
         ctaLabel="zur Antwort",
+    )
+
+
+@celery_app.task()
+def send_entity_notification_reminder(to_email, from_email):
+    """Remind user about open case"""
+    send_anymail_email(
+        to_email,
+        "Bitte Antworten Sie auf unsere Anfrage",
+        from_email=from_email,
+        subject="Bitte Antworten Sie auf unsere Anfrage",
     )
 
 
@@ -98,6 +109,20 @@ def send_admin_notification_email(subject, content):
     from_email = settings.DEFAULT_FROM_EMAIL
     send_anymail_email(
         to_email, subject=subject, text_content=content, from_email=from_email
+    )
+
+
+def send_admin_notification_waiting_approval_case():
+    send_admin_notification_email(
+        "Neuer Fall benötigt eine Freigabe",
+        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
+    )
+
+
+def send_admin_notification_new_comment():
+    send_admin_notification_email(
+        "Neuer Kommentar",
+        settings.URL_ORIGIN + "/admin/django_comments/comment/",
     )
 
 
@@ -143,17 +168,3 @@ def persist_inbound_email(message):
 
     if case is not None:
         case.handle_incoming_email(is_autoreply)
-
-
-def send_admin_waiting_approval_case():
-    send_admin_notification_email(
-        "Neuer Fall benötigt eine Freigabe",
-        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
-    )
-
-
-def send_admin_new_comment():
-    send_admin_notification_email(
-        "Neuer Kommentar",
-        settings.URL_ORIGIN + "/admin/django_comments/comment/",
-    )

@@ -5,7 +5,7 @@ from factory.django import DjangoModelFactory
 
 from goliath.users.tests.factories import UserFactory
 
-from ..models import Case, CaseType, Entity, ReceivedMessage, SentMessage, Status
+from ..models import Case, CaseType, Entity, ReceivedMessage, SentMessage
 
 
 class EntityFactory(DjangoModelFactory):
@@ -22,7 +22,9 @@ class CaseTypeFactory(DjangoModelFactory):
     class Meta:
         model = CaseType
 
-    name = factory.Faker("catch_phrase", locale="de")
+    title = factory.Faker("catch_phrase", locale="de")
+    claim = factory.Faker("catch_phrase", locale="de")
+    short_description = factory.Faker("catch_phrase", locale="de")
     description = factory.Faker("text", locale="de")
     questions = "{}"
 
@@ -55,7 +57,7 @@ class CaseFactory(DjangoModelFactory):
 class OngoingCaseFactory(CaseFactory):
     user = factory.SubFactory(UserFactory)
     status = factory.LazyAttribute(
-        lambda o: random.choice(Status.choices)[0]
+        lambda o: random.choice(Case.Status.choices)[0]
         if o.force_status is None
         else o.force_status
     )

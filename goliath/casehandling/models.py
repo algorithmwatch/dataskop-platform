@@ -6,15 +6,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (
-    SearchHeadline,
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-    SearchVectorField,
-)
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.db.models import F
 from django.template import Context, Template
 from django.urls import reverse
 from django.utils.text import slugify
@@ -23,42 +16,10 @@ from markupfield.fields import MarkupField
 from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 
-from ..utils.time import date_within_margin
+from .managers import CaseManager
+from .search import SearchExpertnalSupportQuerySet
 
 User = get_user_model()
-
-
-class SearchExpertnalSupportQuerySet(models.QuerySet):
-    def search(self, search_text, highlight=True):
-        if search_text is None:
-            return self
-
-        search_query = SearchQuery(
-            search_text, config="german", search_type="websearch"
-        )
-
-        qs = self.filter(search_vector=search_query)
-        qs = qs.annotate(rank=SearchRank(F("search_vector"), search_query)).order_by(
-            "-rank"
-        )
-
-        if highlight:
-            qs = qs.annotate(
-                name_highlighted=SearchHeadline(
-                    "name", search_query, config="german", highlight_all=True
-                ),
-                description_highlighted=SearchHeadline(
-                    "description", search_query, config="german", highlight_all=True
-                ),
-            )
-
-        return qs
-
-    def sync_search(self):
-        self.update(
-            search_vector=SearchVector("name", weight="A", config="german")
-            + SearchVector("description", weight="B", config="german")
-        )
 
 
 class TimeStampMixin(models.Model):
@@ -67,18 +28,6 @@ class TimeStampMixin(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Status(models.TextChoices):
-    WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
-    WAITING_USER_VERIFIED = "UV", "Waiting user verification"
-    WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
-    WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
-    WAITING_RESPONSE = "WR", "Waiting for response"
-    WAITING_USER_INPUT = "WU", "Waiting for user input"
-    CLOSED_NEGATIVE = "CN", "Closed, given up"
-    CLOSED_POSITIVE = "CP", "Closed, case resolved"
-    CLOSED_MIXED = "CM", "Closed, mixed feelings"
 
 
 class Entity(TimeStampMixin):
@@ -106,10 +55,12 @@ class AutoreplyKeyword(models.Model):
 
 
 class CaseType(TimeStampMixin):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=50)
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
     )
+    claim = models.CharField(max_length=100, null=True, blank=False)
+    short_description = models.CharField(max_length=500, null=True, blank=False)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
@@ -128,11 +79,11 @@ class CaseType(TimeStampMixin):
     )
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     def get_absolute_url(self):
         return reverse("new-wizzard", kwargs={"pk": self.pk, "slug": self.slug})
@@ -156,57 +107,18 @@ class CaseType(TimeStampMixin):
         return text
 
 
-class CaseManager(models.Manager):
-    def remind_users(
-        self,
-        margin: datetime.timedelta = datetime.timedelta(days=7),
-        max_reminders: int = 2,
-    ):
-        """
-        Iterate over all user and check if they should get a reminder.
-        Default: remind after 7 days, then remind again after 7 days and stop.
-        """
-
-        def _get_last_action_date(case):
-            last_action_date = None
-            if case.history.all().count() == 0:
-                # there is no history, the object was never updated since creation
-                last_action_date = case.created_at
-            else:
-                # getting the most recent version (in the history)
-                prev_case = case.history.first()
-                while True:
-                    if prev_case is None:
-                        # there is no history
-                        break
-                    if prev_case.status == case.status:
-                        # no status changed, go further back
-                        last_action_date = prev_case.history_date
-                        break
-                    # iterate through the all the history item
-                    prev_case = prev_case.prev_record
-            return last_action_date
-
-        emails_sent = 0
-        for case in self.filter(
-            status=Status.WAITING_USER_INPUT, sent_reminders__lt=max_reminders
-        ):
-            if case.last_reminder_sent_at is not None and date_within_margin(
-                case.last_reminder_sent_at, margin
-            ):
-                continue
-
-            last_action_date = _get_last_action_date(case)
-            if last_action_date is not None:
-                # there was a status change
-                if not date_within_margin(last_action_date, margin):
-                    # and there was no status update for at least $margin time
-                    case.send_reminder()
-                    emails_sent += 1
-        return emails_sent
-
-
 class Case(TimeStampMixin):
+    class Status(models.TextChoices):
+        WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
+        WAITING_USER_VERIFIED = "UV", "Waiting user verification"
+        WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
+        WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
+        WAITING_RESPONSE = "WR", "Waiting for response"
+        WAITING_USER_INPUT = "WU", "Waiting for user input"
+        CLOSED_NEGATIVE = "CN", "Closed, given up"
+        CLOSED_POSITIVE = "CP", "Closed, case resolved"
+        CLOSED_MIXED = "CM", "Closed, mixed feelings"
+
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
     )
@@ -230,9 +142,11 @@ class Case(TimeStampMixin):
         blank=True,
         related_name="approved_cases",
     )
-    sent_reminders = models.IntegerField(default=0)
-    last_reminder_sent_at = models.DateTimeField(null=True, blank=True)
-    is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
+    sent_user_reminders = models.IntegerField(default=0)
+    last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    sent_entities_reminders = models.IntegerField(default=0)
+    last_entities_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
     history = HistoricalRecords()
@@ -240,7 +154,7 @@ class Case(TimeStampMixin):
 
     def save(self, *args, **kwargs):
         self.slug = (
-            "nocasetype" if self.case_type is None else slugify(self.case_type.name)
+            "nocasetype" if self.case_type is None else slugify(self.case_type.title)
         )
         super().save(*args, **kwargs)
 
@@ -250,14 +164,14 @@ class Case(TimeStampMixin):
     @property
     def print_status(self):
         if self.status in (
-            Status.WAITING_USER_INPUT,
-            Status.WAITING_USER_VERIFIED,
+            self.Status.WAITING_USER_INPUT,
+            self.Status.WAITING_USER_VERIFIED,
         ):
             return "0_open"
         if self.status in (
-            Status.CLOSED_NEGATIVE,
-            Status.CLOSED_POSITIVE,
-            Status.CLOSED_MIXED,
+            self.Status.CLOSED_NEGATIVE,
+            self.Status.CLOSED_POSITIVE,
+            self.Status.CLOSED_MIXED,
         ):
             return "2_closed"
         return "1_waiting"
@@ -290,13 +204,13 @@ class Case(TimeStampMixin):
             return
 
         if self.is_approved():
-            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
-            from .tasks import send_initial_emails
+            from .tasks import send_initial_emails_to_entities
 
-            send_initial_emails(self)
+            send_initial_emails_to_entities(self)
         else:
-            self.status = Status.WAITING_CASE_APPROVED
+            self.status = self.Status.WAITING_CASE_APPROVED
         self.save()
 
     def approve_case(self, user):
@@ -310,35 +224,67 @@ class Case(TimeStampMixin):
 
         self.approved_by = user
         if self.is_user_verified:
-            self.status = Status.WAITING_INITIAL_EMAIL_SENT
+            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
-            from .tasks import send_initial_emails
+            from .tasks import send_initial_emails_to_entities
 
-            send_initial_emails(self)
+            send_initial_emails_to_entities(self)
         else:
-            self.status = Status.WAITING_USER_VERIFIED
+            self.status = self.Status.WAITING_USER_VERIFIED
         self.save()
 
     def handle_incoming_email(self, is_autoreply):
         if is_autoreply:
             pass
         else:
-            from .tasks import send_new_message_notification
+            from .tasks import send_user_notification_new_message
 
-            send_new_message_notification(
+            send_user_notification_new_message(
                 self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
             )
-            self.status = Status.WAITING_USER_INPUT
+            self.status = self.Status.WAITING_USER_INPUT
             self.save()
 
-    def send_reminder(self):
-        from .tasks import send_reminder_notification
+    @property
+    def last_action_at(self):
+        last_action_date = None
+        if self.history.all().count() == 0:
+            # there is no history, the object was never updated since creation
+            last_action_date = self.created_at
+        else:
+            # getting the most recent version (in the history)
+            prev_case = self.history.first()
+            while True:
+                if prev_case is None:
+                    # there is no history
+                    break
+                if prev_case.status == self.status:
+                    # no status changed, go further back
+                    last_action_date = prev_case.history_date
+                    break
+                # iterate through the all the history item
+                prev_case = prev_case.prev_record
+        return last_action_date
 
-        send_reminder_notification(
+    def send_user_reminder(self):
+        from .tasks import send_user_notification_reminder
+
+        send_user_notification_reminder(
             self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
         )
-        self.last_reminder_sent_at = datetime.datetime.now()
-        self.sent_reminders += 1
+        self.last_user_reminder_sent_at = datetime.datetime.now()
+        self.sent_user_reminders += 1
+        self.save()
+
+    def send_entities_reminder(self):
+        from .tasks import send_entity_notification_reminder
+
+        for e in self.selected_entities.all():
+            send_entity_notification_reminder(e.email, self.email)
+
+        self.last_entities_reminder_sent_at = datetime.datetime.now()
+        # can't use F expression because django-simple-history does not support it
+        self.sent_entities_reminders += 1
         self.save()
 
 

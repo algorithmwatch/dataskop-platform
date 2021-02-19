@@ -6,8 +6,12 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django_comments.signals import comment_was_posted
 
-from .models import Case, ReceivedMessage, Status
-from .tasks import persist_inbound_email, send_admin_new_comment, send_initial_emails
+from .models import Case, ReceivedMessage
+from .tasks import (
+    persist_inbound_email,
+    send_admin_notification_new_comment,
+    send_initial_emails_to_entities,
+)
 
 User = get_user_model()
 
@@ -30,4 +34,4 @@ def handle_email_confirmed(request, email_address, **kwargs):
 
 @receiver(comment_was_posted)
 def post_comment(**kwargs):
-    send_admin_new_comment()
+    send_admin_notification_new_comment()
