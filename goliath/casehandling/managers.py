@@ -12,10 +12,9 @@ class CaseManager(models.Manager):
         max_reminders: int = 2,
     ):
         """
-        Iterate over all user and check if they should get a reminder.
+        Iterate over all case and check if the user should get a reminder.
         Default: remind after 7 days, then remind again after 7 days and stop.
         """
-
         emails_sent = 0
         for case in self.filter(
             status=self.model.Status.WAITING_USER_INPUT,
@@ -41,10 +40,9 @@ class CaseManager(models.Manager):
         max_reminders: int = 2,
     ):
         """
-        Iterate over all user and check if they should get a reminder.
+        Iterate over all cases and check if the entities should get a reminder.
         Default: remind after 7 days, then remind again after 7 days and stop.
         """
-
         emails_sent = 0
         for case in self.filter(
             status=self.model.Status.WAITING_RESPONSE,

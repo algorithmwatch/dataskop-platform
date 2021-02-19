@@ -113,7 +113,7 @@ class CaseCreateView(View):
         if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
             send_initial_emails_to_entities(case)
         elif case.case_type.needs_approval:
-            send_admin_waiting_approval_case()
+            send_admin_notification_waiting_approval_case()
 
         if is_logged_in:
             return JsonResponse(
