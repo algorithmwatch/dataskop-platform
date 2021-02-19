@@ -54,7 +54,9 @@
   @apply focus:ring-orange-200;
 }
 
-.sv_q_title {
+.sv_nav {
+  @apply text-right;
+  @apply max-w-3xl mx-auto;
 }
 
 // .sv_row {

@@ -1,17 +1,39 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static widget_tweaks %}
 
 {% block title %}{{case_type.name}} - Neues Anliegen{% endblock %}
 
-{% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
 {% block content %}
-  <h1>Glückwunsch, dies das</h2>
+  <div class="rounded-xl bg-blue-100 p-8 lg:p-12 text-center">
 
-    <form method="post">{% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Update">
-  </form>
+    <h1 class="hl-2xl mb-4">🎉<br>Ihr Fall wurde gemeldet!</h1>
+    <p class="text-lg max-w-lg mx-auto">Jetzt warten wir auf Rückmeldung. Sobald sich etwas tut geben wir Ihnen per Mail Bescheid.</p>
 
+    <form method="post" class="mt-8">
+      {% csrf_token %}
+
+      <div class="flex items-center mx-auto max-w-md mb-6 p-4 border border-blue-200 rounded-xl text-blue-700">
+        <div class="text-left">Dürfen wir Sie kontaktieren, um Ihnen Fragen zu Ihrem Fall zu stellen?</div>
+        <div class="flex items-center ml-5">
+          {{ form.is_contactable|add_class:"test" }}
+          <label class="input-label ml-2 mb-0" for="id_is_contactable">Ja</label>
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-md mb-4">
+        {% render_field form.post_creation_hint rows="3" placeholder="Haben Sie noch Hinweise etc., die Sie uns mitteilen möchten?" class="text-input text-input--regular border border-brown-1000 bg-white w-full" %}
+      </div>
+
+      <button type="submit" class="btn btn--regular btn--primary" value="Update">Feedback senden</button>
+    </form>
+
+    <div class="mt-8">
+      <h2>Sagen Sie es weiter</h2>
+
+    </div>
+
+  </div>
 {% endblock %}
 

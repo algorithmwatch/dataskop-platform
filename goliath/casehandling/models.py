@@ -232,7 +232,7 @@ class Case(TimeStampMixin):
     )
     sent_reminders = models.IntegerField(default=0)
     last_reminder_sent_at = models.DateTimeField(null=True, blank=True)
-    is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
+    is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
     history = HistoricalRecords()

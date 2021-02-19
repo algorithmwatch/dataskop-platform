@@ -113,7 +113,9 @@ function Storage(storageName) {
     var res = {};
     if (storageSt) res = JSON.parse(storageSt);
 
-    if (res.data) survey.data = res.data;
+    if (res.data) {
+      survey.data = res.data
+    }
   }
 
   function saveState(survey) {
@@ -230,15 +232,16 @@ function setupSurvey(
         successData
       ) {
         window.awsurvey.getQuestionByName("previewhtml").html =
-          "<div class='previewhtml'><h2>Vorschau</h2>" +
-          "<div><p class='whitespace-pre-wrap border-4 p-2'>" +
+          "<div class='previewhtml'><div class='hl-lg mt-4 mb-2 ml-4'>Vorschau:</div>" +
+          "<div><p class='whitespace-pre-wrap rounded-xl border-2 border-dashed border-orange-200 bg-white px-4 py-5 md:py-6 md:px-6 font-serif'>" +
           successData +
-          "</p></div><div><p>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
+          "</p></div><div><p class='mt-4 ml-4'>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
       });
     };
   })(userName, casetypeId);
 
   function afterRenderQuestion(sender, options) {
+
     // make button visibile when preview gets rendered
     if (options.question.name === "previewhtml") {
       $(".aw-completebutton").removeClass("hidden");
@@ -252,6 +255,7 @@ function setupSurvey(
     // remove previously added next button
     $(".aw-survey-next-button").parents('.wizard-answers-container').remove();
     $(".aw-survey-next-button").remove();
+
     if (
       questionType === "text" &&
       (questionInputType === null || questionInputType !== "date")
@@ -340,7 +344,7 @@ function setupSurvey(
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigation: { complete: "btn--primary hidden aw-completebutton" },
+      navigation: { complete: "btn btn--primary btn--regular hidden aw-completebutton" },
       row: "wizard-row",
       question: {
         "mainRoot": "wizard-question-container",
