@@ -59,8 +59,8 @@ class CaseType(TimeStampMixin):
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
     )
-    claim = models.CharField(max_length=100, null=True, blank=False)
-    short_description = models.CharField(max_length=500, null=True, blank=False)
+    claim = models.CharField(max_length=100, null=True, blank=True)
+    short_description = models.CharField(max_length=500, null=True, blank=True)
     description = MarkupField(default_markup_type="markdown", blank=True, null=True)
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
@@ -203,7 +203,7 @@ class Case(TimeStampMixin):
         if len(self.all_messages) > 0:
             return
 
-        if self.is_approved():
+        if self.is_approved:
             self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
             # avoid circular imports
             from .tasks import send_initial_emails_to_entities

@@ -6,7 +6,6 @@ from allauth.account.models import EmailAddress
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError, transaction
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -18,45 +17,14 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
-from ..utils.email import send_magic_link
 from .forms import CaseStatusForm, get_admin_form_preview
-from .models import Case, CaseType
+from .models import Case, CaseType, MultiCase
 from .tasks import (
     send_admin_notification_waiting_approval_case,
     send_initial_emails_to_entities,
 )
 
 User = get_user_model()
-
-
-def get_user_for_case(request, answers):
-    """
-    Create a new user or return current logged in user
-    """
-    is_logged_in = request.user.is_authenticated
-    if is_logged_in:
-        user = request.user
-    else:
-        # need to create a new, unverified user
-        # https://stackoverflow.com/q/29147550/4028896
-
-        first_name, last_name, email = (
-            answers["awfirstnamequestion"],
-            answers["awlastnamequestion"],
-            answers["awemailquestion"],
-        )
-        user = User.objects.create_user(
-            first_name=first_name, last_name=last_name, email=email
-        )
-        # cleaned version
-        email = user.email
-
-        EmailAddress.objects.create(
-            user=user, email=email, primary=True, verified=False
-        )
-
-        send_magic_link(user, email, "magic_registration")
-    return user, is_logged_in
 
 
 class CaseTypeListView(ListView):
@@ -67,8 +35,8 @@ class CaseCreateView(View):
     def post(self, request, pk, slug):
         case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
-        user, is_logged_in = get_user_for_case(request, answers)
-        text = case_type.render_letter(answers, user.full_name)
+        user, is_logged_in = User.objects.get_or_create_user(request, answers)
+        answers_text = case_type.render_letter(answers, user.full_name)
 
         if (
             not is_logged_in
@@ -81,40 +49,38 @@ class CaseCreateView(View):
             # this will send the initial email via Signal
             status = Case.Status.WAITING_INITIAL_EMAIL_SENT
 
-        # try 20 times to generate unique email for this case and then give up
-        # increase the number of digits for each try
-        error_count = 0
-        while True:
-            try:
-                # Nest the already atomic transaction to let the database safely fail.
-                with transaction.atomic():
-                    case = Case.objects.create(
-                        case_type=case_type,
-                        email=user.gen_case_email(error_count + 1),
-                        answers_text=text,
-                        user=user,
-                        answers=answers,
-                        status=status,
-                    )
-                break
-            except IntegrityError as e:
-                if "unique constraint" in e.args[0]:
-                    error_count += 1
-                    if error_count > 20:
-                        raise e
+        # NB: currently we choose all entities by default.
+        # Initially we thought that we add
+
         # if the user selected entities, we may need need to send the email to more than 1 entity
-        if "awentitycheckbox" in answers:
-            entity_ids = answers["awentitycheckbox"]
-            case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
-        else:
-            case.selected_entities.add(case_type.entities.first())
-            assert case_type.entities.all().count() == 1
+        # if "awentitycheckbox" in answers:
+        #     entity_ids = answers["awentitycheckbox"]
+        #     case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
+        # else:
 
-        if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
-            send_initial_emails_to_entities(case)
-        elif case.case_type.needs_approval:
-            send_admin_notification_waiting_approval_case()
+        mc, case = None, None
+        if case_type.entities.count() > 1:
+            mc = MultiCase.objects.create()
 
+        # create new cases for all entities
+        for ent in case_type.entities.all():
+            case = Case.objects.create_case_with_email(
+                user,
+                status=status,
+                answers_text=answers_text,
+                case_type=case_type,
+            )
+            case.selected_entities.add(ent)
+
+            if mc is not None:
+                mc.cases.add(case)
+
+            if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
+                send_initial_emails_to_entities(case)
+            elif case.case_type.needs_approval:
+                send_admin_notification_waiting_approval_case()
+
+        # just use last case for success page for now
         if is_logged_in:
             return JsonResponse(
                 {

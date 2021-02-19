@@ -63,10 +63,10 @@ function getQuestionType(questionOptions, surveyJSON) {
   return [type, inputType];
 }
 
-function addEntityChooseToJson(surveyJSON, entities) {
+function addEntityChooseToJson(surveyJSON, chooseEntities) {
   var entityQuestion = {
     type: "checkbox",
-    choices: entities.map((x) => {
+    choices: chooseEntities.map((x) => {
       return { value: x[0], text: x[1] };
     }),
     visible: true,
@@ -89,20 +89,20 @@ function addEntityChooseToJson(surveyJSON, entities) {
   return surveyJSON;
 }
 
-function addAdditionalProps (surveyJSON) {
-  const pages = surveyJSON.pages
+function addAdditionalProps(surveyJSON) {
+  const pages = surveyJSON.pages;
 
   for (let i = 0, l = pages.length; i < l; i++) {
-    const elements = pages[i].elements
+    const elements = pages[i].elements;
     if (elements) {
       for (let x = 0, l2 = elements.length; x < l2; x++) {
-        elements[x].minWidth = '0'
-        elements[x].size = ''
+        elements[x].minWidth = "0";
+        elements[x].size = "";
       }
     }
   }
 
-  return surveyJSON
+  return surveyJSON;
 }
 
 // via https://surveyjs.io/Examples/Library?id=survey-editprevious&platform=jQuery&theme=modern#content-js
@@ -114,7 +114,7 @@ function Storage(storageName) {
     if (storageSt) res = JSON.parse(storageSt);
 
     if (res.data) {
-      survey.data = res.data
+      survey.data = res.data;
     }
   }
 
@@ -174,7 +174,7 @@ function chanageToNextButton(element) {
   );
   if (childrenSpan.length !== 1) return;
 
-  children.removeClass('wizard-radio-label')
+  children.removeClass("wizard-radio-label");
   childrenSpan.addClass("btn btn--regular btn--primary aw-survey-next-button");
 }
 
@@ -184,13 +184,14 @@ function setupSurvey(
   surveyJSON,
   csrfToken,
   userName,
-  entities
+  chooseEntities
 ) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
-  if (entities.length > 1)
-    surveyJSON = addEntityChooseToJson(surveyJSON, entities);
+  // currently not needed
+  if (chooseEntities.length > 1)
+    surveyJSON = addEntityChooseToJson(surveyJSON, chooseEntities);
 
-  surveyJSON = addAdditionalProps(surveyJSON)
+  surveyJSON = addAdditionalProps(surveyJSON);
 
   window.awstorage = Storage("aw-goliath-storage-" + casetypeId);
 
@@ -241,7 +242,6 @@ function setupSurvey(
   })(userName, casetypeId);
 
   function afterRenderQuestion(sender, options) {
-
     // make button visibile when preview gets rendered
     if (options.question.name === "previewhtml") {
       $(".aw-completebutton").removeClass("hidden");
@@ -253,7 +253,7 @@ function setupSurvey(
     );
 
     // remove previously added next button
-    $(".aw-survey-next-button").parents('.wizard-answers-container').remove();
+    $(".aw-survey-next-button").parents(".wizard-answers-container").remove();
     $(".aw-survey-next-button").remove();
 
     if (
@@ -268,7 +268,6 @@ function setupSurvey(
     if (questionType == "radiogroup") {
       chanageToNextButton(options.htmlElement);
     }
-
 
     setTimeout(function () {
       options.htmlElement.scrollIntoView({
@@ -301,8 +300,8 @@ function setupSurvey(
     }
 
     // remove non-checked values
-    const $el = $('#' + options.question.id)
-    $el.find('.sv-q-col-1').not('.checked').remove()
+    const $el = $("#" + options.question.id);
+    $el.find(".sv-q-col-1").not(".checked").remove();
   }
 
   // setting up the survey & setting some appropiate values
@@ -344,14 +343,16 @@ function setupSurvey(
     onCompleting: beforeComplete,
     onValueChanged: surveyValueChanged,
     css: {
-      navigation: { complete: "btn btn--primary btn--regular hidden aw-completebutton" },
+      navigation: {
+        complete: "btn btn--primary btn--regular hidden aw-completebutton",
+      },
       row: "wizard-row",
       question: {
-        "mainRoot": "wizard-question-container",
+        mainRoot: "wizard-question-container",
         // "flowRoot": "sv_q_flow sv_qstn",
-        "header": "wizard-question",
+        header: "wizard-question",
         // "headerLeft": "title-left",
-        "content": "wizard-answers-container",
+        content: "wizard-answers-container",
         // "contentLeft": "content-left",
         // "titleLeftRoot": "sv_qstn_left",
         // "title": "",
@@ -373,7 +374,7 @@ function setupSurvey(
         // "titleOnError": "",
         // "icon": "sv_panel_icon",
         // "iconExpanded": "sv_expanded",
-        "container": "wizard-container",
+        container: "wizard-container",
         // "footer": "sv_p_footer",
         // "number": "sv_q_num",
         // "requiredText": "sv_q_required_text"
@@ -383,9 +384,9 @@ function setupSurvey(
         // "item": "radio",
         // "itemChecked": "checked",
         // "itemInline": "sv_q_radiogroup_inline",
-        "label": "wizard-radio-label",
-        "labelChecked": "wizard-radio-group-checked",
-        "itemControl": "wizard-radio-button",
+        label: "wizard-radio-label",
+        labelChecked: "wizard-radio-group-checked",
+        itemControl: "wizard-radio-button",
         // "itemDecorator": "sv-hidden",
         // "controlLabel": "testclass3",
         // "materialDecorator": "circle",

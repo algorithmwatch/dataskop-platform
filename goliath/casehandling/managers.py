@@ -1,11 +1,29 @@
 import datetime
 
-from django.db import models
+from django.db import IntegrityError, models, transaction
 
 from ..utils.time import date_within_margin
 
 
 class CaseManager(models.Manager):
+    def create_case_with_email(self, user, **kwargs):
+        # try 20 times to generate unique email for this case and then give up
+        # increase the number of digits for each try
+        error_count = 0
+        while True:
+            try:
+                # Nest the already atomic transaction to let the database safely fail.
+                with transaction.atomic():
+                    case = self.create(
+                        email=user.gen_case_email(error_count + 1), user=user, **kwargs
+                    )
+                return case
+            except IntegrityError as e:
+                if "unique constraint" in e.args[0]:
+                    error_count += 1
+                    if error_count > 20:
+                        raise e
+
     def remind_users(
         self,
         margin: datetime.timedelta = datetime.timedelta(days=7),
