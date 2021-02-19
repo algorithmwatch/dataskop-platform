@@ -142,6 +142,8 @@ class Case(TimeStampMixin):
     )
     sent_user_reminders = models.IntegerField(default=0)
     last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    sent_entities_reminders = models.IntegerField(default=0)
+    last_entities_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     is_contactable = models.BooleanField(_("Kontaktierbar"), null=True, blank=True)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
@@ -241,7 +243,28 @@ class Case(TimeStampMixin):
             self.status = self.Status.WAITING_USER_INPUT
             self.save()
 
-    def send_reminder_user(self):
+    @property
+    def last_action_at(self):
+        last_action_date = None
+        if self.history.all().count() == 0:
+            # there is no history, the object was never updated since creation
+            last_action_date = self.created_at
+        else:
+            # getting the most recent version (in the history)
+            prev_case = self.history.first()
+            while True:
+                if prev_case is None:
+                    # there is no history
+                    break
+                if prev_case.status == self.status:
+                    # no status changed, go further back
+                    last_action_date = prev_case.history_date
+                    break
+                # iterate through the all the history item
+                prev_case = prev_case.prev_record
+        return last_action_date
+
+    def send_user_reminder(self):
         from .tasks import send_user_notification_reminder
 
         send_user_notification_reminder(
@@ -249,6 +272,17 @@ class Case(TimeStampMixin):
         )
         self.last_user_reminder_sent_at = datetime.datetime.now()
         self.sent_user_reminders += 1
+        self.save()
+
+    def send_entities_reminder(self):
+        from .tasks import send_entity_notification_reminder
+
+        for e in self.selected_entities.all():
+            send_entity_notification_reminder(e.email, self.email)
+
+        self.last_entities_reminder_sent_at = datetime.datetime.now()
+        # can't use F expression because django-simple-history does not support it
+        self.sent_entities_reminders += 1
         self.save()
 
 

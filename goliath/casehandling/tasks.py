@@ -81,14 +81,25 @@ def send_user_notification_new_message(to_email, link):
 
 @celery_app.task()
 def send_user_notification_reminder(to_email, link):
-    """Notify user about incoming new email"""
+    """Remind user about open case"""
     send_anymail_email(
         to_email,
-        "Bitten setzen Sie den Status",
+        "Bitte setzen Sie den Status",
         from_email=settings.DEFAULT_FROM_EMAIL,
-        subject="Bitten setzen Sie den Status",
+        subject="Bitte setzen Sie den Status",
         ctaLink=link,
         ctaLabel="zur Antwort",
+    )
+
+
+@celery_app.task()
+def send_entity_notification_reminder(to_email, from_email):
+    """Remind user about open case"""
+    send_anymail_email(
+        to_email,
+        "Bitte Antworten Sie auf unsere Anfrage",
+        from_email=from_email,
+        subject="Bitte Antworten Sie auf unsere Anfrage",
     )
 
 
