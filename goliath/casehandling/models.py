@@ -201,7 +201,7 @@ class CaseManager(models.Manager):
                 # there was a status change
                 if not date_within_margin(last_action_date, margin):
                     # and there was no status update for at least $margin time
-                    case.send_reminder()
+                    case.send_reminder_user()
                     emails_sent += 1
         return emails_sent
 
@@ -331,10 +331,10 @@ class Case(TimeStampMixin):
             self.status = Status.WAITING_USER_INPUT
             self.save()
 
-    def send_reminder(self):
-        from .tasks import send_reminder_notification
+    def send_reminder_user(self):
+        from .tasks import send_reminder_user_notification
 
-        send_reminder_notification(
+        send_reminder_user_notification(
             self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
         )
         self.last_reminder_sent_at = datetime.datetime.now()

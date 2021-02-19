@@ -80,7 +80,7 @@ def send_new_message_notification(to_email, link):
 
 
 @celery_app.task()
-def send_reminder_notification(to_email, link):
+def send_reminder_user_notification(to_email, link):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
