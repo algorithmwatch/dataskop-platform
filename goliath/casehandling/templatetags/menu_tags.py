@@ -22,11 +22,11 @@ def create_user_menu(is_authenticated):
         if is_authenticated is True
         else [
             {"label": "Login", "url": reverse("account_login"), "is_user_menu": True},
-            {
-                "label": "Registrieren",
-                "url": reverse("account_signup"),
-                "is_user_menu": True,
-            },
+            # {
+            #     "label": "Registrieren",
+            #     "url": reverse("account_signup"),
+            #     "is_user_menu": True,
+            # },
         ]
     )
 
@@ -45,7 +45,7 @@ def primary_menu(context, mobile=True):
                 "url": "/neu",
             },
             {
-                "label": "Über uns",
+                "label": "Über",
                 "url": "/ueber",
             },
             {
@@ -65,8 +65,8 @@ def primary_menu(context, mobile=True):
     else:
         site_menu = [
             {
-                "label": "Über uns",
-                "url": "/ueber-uns.html",
+                "label": "Über",
+                "url": "/ueber",
             },
             {
                 "label": "FAQ",
