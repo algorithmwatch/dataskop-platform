@@ -5,7 +5,8 @@ import traceback
 from allauth.account.models import EmailAddress
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -18,11 +19,8 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from .forms import CaseStatusForm, get_admin_form_preview
-from .models import Case, CaseType, MultiCase
-from .tasks import (
-    send_admin_notification_waiting_approval_case,
-    send_initial_emails_to_entities,
-)
+from .models import Case, CaseType, PostCaseCreation
+from .tasks import send_admin_notification_waiting_approval_case
 
 User = get_user_model()
 
@@ -46,7 +44,6 @@ class CaseCreateView(View):
         elif case_type.needs_approval:
             status = Case.Status.WAITING_CASE_APPROVED
         else:
-            # this will send the initial email via Signal
             status = Case.Status.WAITING_INITIAL_EMAIL_SENT
 
         # NB: currently we choose all entities by default.
@@ -58,9 +55,7 @@ class CaseCreateView(View):
         #     case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
         # else:
 
-        mc, case = None, None
-        if case_type.entities.count() > 1:
-            mc = MultiCase.objects.create()
+        postCC = PostCaseCreation.objects.create(user=user, case_type=case_type)
 
         # create new cases for all entities
         for ent in case_type.entities.all():
@@ -69,16 +64,14 @@ class CaseCreateView(View):
                 status=status,
                 answers_text=answers_text,
                 case_type=case_type,
+                post_cc=postCC,
             )
             case.selected_entities.add(ent)
 
-            if mc is not None:
-                mc.cases.add(case)
-
-            if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
-                send_initial_emails_to_entities(case)
-            elif case.case_type.needs_approval:
-                send_admin_notification_waiting_approval_case()
+        if status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
+            postCC.send_all_initial_emails()
+        elif case_type.needs_approval:
+            send_admin_notification_waiting_approval_case()
 
         # just use last case for success page for now
         if is_logged_in:
@@ -86,7 +79,7 @@ class CaseCreateView(View):
                 {
                     "url": reverse(
                         "post-wizzard-success",
-                        kwargs={"slug": case.slug, "pk": case.pk},
+                        kwargs={"pk": postCC.pk},
                     )
                 }
             )
@@ -114,7 +107,7 @@ class CaseCreateView(View):
         )
 
 
-class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
+class CaseStatusUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
     Adapted from https://docs.djangoproject.com/en/3.1/topics/class-based-views/mixins/
     """
@@ -125,6 +118,10 @@ class CaseStatusUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
 
 
 class CaseDetailView(LoginRequiredMixin, DetailView):
@@ -158,10 +155,20 @@ class CaseListView(LoginRequiredMixin, ListView):
         return qs
 
 
-class CaseSuccessView(LoginRequiredMixin, UpdateView):
-    model = Case
+class CaseSuccessView(
+    SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixin, UpdateView
+):
+    model = PostCaseCreation
     fields = ["is_contactable", "post_creation_hint"]
     template_name = "casehandling/case_success.html"
+    success_message = "Vielen Dank"
+
+    def get_success_url(self):
+        return self.get_object().cases.first().get_absolute_url()
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
 
 
 class CaseVerifyEmailView(TemplateView):

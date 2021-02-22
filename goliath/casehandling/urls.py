@@ -24,7 +24,7 @@ urlpatterns = [
     path("neu/", view=CaseTypeListView.as_view(), name="new"),
     path("neu/<str:slug>/<int:pk>/", view=CaseCreateView.as_view(), name="new-wizzard"),
     path(
-        "erfolg/<str:slug>/<int:pk>/",
+        "erfolg/<int:pk>/",
         view=CaseSuccessView.as_view(),
         name="post-wizzard-success",
     ),
