@@ -146,8 +146,6 @@ class Case(TimeStampMixin):
     last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     sent_entities_reminders = models.IntegerField(default=0)
     last_entities_reminder_sent_at = models.DateTimeField(null=True, blank=True)
-    is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
-    post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
 
     history = HistoricalRecords()
     objects = CaseManager()
@@ -288,8 +286,17 @@ class Case(TimeStampMixin):
         self.save()
 
 
-class MultiCase(models.Model):
+class PostCaseCreation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    case_type = models.ForeignKey(
+        "CaseType", on_delete=models.SET_NULL, null=True, blank=True
+    )
     cases = models.ManyToManyField("Case", blank=True)
+    is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
+    post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse("post-wizzard-success", kwargs={"pk": self.pk})
 
 
 class Message(TimeStampMixin):
