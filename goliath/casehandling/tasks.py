@@ -19,7 +19,7 @@ def send_initial_emails_to_entities(postCC):
     num_mails = 0
     all_success = True
     for case in postCC.cases.all():
-        subject = "New Case"
+        subject = case.answers_subject
         content = case.answers_text
 
         assert (
@@ -101,11 +101,11 @@ def send_initial_emails_to_entities(postCC):
 
 
 @celery_app.task()
-def send_user_notification_new_message(to_email, link):
+def send_user_notification_new_message(to_email, link, text):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
-        "Sie haben eine neue Antwort erhalten.",
+        text,
         from_email=settings.DEFAULT_FROM_EMAIL,
         subject="Neue Antwort",
         ctaLink=link,
