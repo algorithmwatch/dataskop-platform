@@ -70,7 +70,10 @@ class CaseType(TimeStampMixin):
     autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
     order = models.FloatField(null=True, blank=True)
     icon_name = models.CharField(max_length=255)
+    letter_subject_custom_template = models.TextField(null=True, blank=True)
     letter_template = models.TextField(null=True, blank=True)
+    user_notification_custom_text = models.TextField(null=True, blank=True)
+
     tags = TaggableManager()
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
@@ -94,10 +97,19 @@ class CaseType(TimeStampMixin):
                 return True
         return False
 
+    def render_letter_subject(self, case):
+        if self.letter_subject_custom_template:
+            subject_text = Template(self.letter_subject_custom_template).render(
+                Context(self)
+            )
+            return cleantext.normalize_whitespace(subject_text, no_line_breaks=True)
+        else:
+            return f'Neuer Fall von "{self.title}" auf Unding.de #{case.id}'
+
     def render_letter(self, answers: dict, username: str):
-        tpl = Template(self.letter_template)
+        tpl_letter = Template(self.letter_template)
         answers["username"] = username
-        text = str(tpl.render(Context(answers))).strip()
+        text = str(tpl_letter.render(Context(answers)))
         text = cleantext.normalize_whitespace(
             text,
             strip_lines=True,
@@ -134,6 +146,7 @@ class Case(TimeStampMixin):
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     selected_entities = models.ManyToManyField("Entity", blank=True)
+    answers_subject = models.CharField(max_length=255, null=True, blank=True)
     answers_text = models.TextField(null=True, blank=True)
     approved_by = models.ForeignKey(
         User,
@@ -161,6 +174,10 @@ class Case(TimeStampMixin):
         self.slug = (
             "nocasetype" if self.case_type is None else slugify(self.case_type.title)
         )
+        self.answers_text = self.case_type.render_letter(
+            self.answers, self.user.full_name
+        )
+
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -206,8 +223,13 @@ class Case(TimeStampMixin):
         else:
             from .tasks import send_user_notification_new_message
 
+            text = "Sie haben eine neue Antwort erhalten."
+
+            if self.case_type.user_notification_custom_text:
+                text = self.case_type.user_notification_custom_text
+
             send_user_notification_new_message(
-                self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
+                self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text
             )
             self.status = self.Status.WAITING_USER_INPUT
             self.save()
@@ -350,6 +372,11 @@ class ReceivedMessage(Message):
     is_autoreply = models.BooleanField(null=True)
     parsed_content = models.TextField()
     history = HistoricalRecords()
+
+
+class UserReplyChoice(models.Model):
+    subject = models.CharField(max_length=255)
+    content = models.TextField()
 
 
 class ExternalSupport(TimeStampMixin):
