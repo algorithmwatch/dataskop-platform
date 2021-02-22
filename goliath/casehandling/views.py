@@ -34,7 +34,6 @@ class CaseCreateView(View):
         case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
         user, is_logged_in = User.objects.get_or_create_user(request, answers)
-        answers_text = case_type.render_letter(answers, user.full_name)
 
         if (
             not is_logged_in
@@ -62,9 +61,9 @@ class CaseCreateView(View):
             case = Case.objects.create_case_with_email(
                 user,
                 status=status,
-                answers_text=answers_text,
                 case_type=case_type,
                 post_cc=postCC,
+                answers=answers,
             )
             case.selected_entities.add(ent)
 
