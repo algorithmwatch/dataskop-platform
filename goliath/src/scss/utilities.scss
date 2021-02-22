@@ -104,3 +104,14 @@
     }
   }
 }
+
+.donor-aside-box {
+  @apply w-72 mb-6 font-bold space-y-2;
+  img {
+    @apply block;
+  }
+  @screen xl {
+    @apply absolute right-4 top-24;
+    @apply w-56;
+  }
+}

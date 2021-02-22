@@ -4,9 +4,11 @@
   {{flatpage.title}}
 {% endblock %}
 
-{% block content_class %}page-wrap-prose page-wrap-space prose-content{% endblock %}
+{% block content_class %}page-wrap-wide relative{% endblock %}
 
 {% block content %}
-  {{ flatpage.goliathflatpage.content|safe }}
-  {{flatpage.goliathflatpage.markdown_content.rendered|safe}}
+  <div class="page-wrap-prose page-wrap-space prose-content">
+    {{ flatpage.goliathflatpage.content|safe }}
+    {{flatpage.goliathflatpage.markdown_content.rendered|safe}}
+  </div>
 {% endblock content %}
