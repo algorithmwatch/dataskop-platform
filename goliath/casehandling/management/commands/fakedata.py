@@ -13,7 +13,6 @@ from goliath.casehandling.models import (
     Entity,
     ReceivedMessage,
     SentMessage,
-    Status,
 )
 from goliath.casehandling.tests.factories import (
     CaseFactory,
@@ -107,7 +106,7 @@ class Command(BaseCommand):
         for _ in range(options["case"]):
             ct = random.choice(case_types)
             u = random.choice(list(User.objects.filter(is_staff=True)))
-            status = random.choice(Status.choices)[0]
+            status = random.choice(Case.Status.choices)[0]
 
             # choosen all entities
             c = CaseFactory(case_type=ct, user=u, status=status)

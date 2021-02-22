@@ -60,7 +60,7 @@
             'w-full max-w-3xl': selectedCase !== null
         }"
       >
-        {% for case in  featured_case_types %}
+        {% for case in featured_case_types %}
           <div
             class="
               bg-white border border-brown-1000
@@ -84,13 +84,13 @@
               {% endif %}
 
               {# Name #}
-              <div class="font-bold text-lg leading-6 mt-3">{{ case.name }}</div>
+              <div class="font-bold text-lg leading-6 mt-3">{{ case.title }}</div>
 
               {# Border #}
               <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
 
               {# Short title #}
-              <div class="italic">Hier kommt der Untertitel</div>
+              <div class="italic">{{ case.claim }}</div>
             </div>
 
             {# Case description visible when selected #}
@@ -98,7 +98,7 @@
               class="relative flex flex-col items-center px-4 sm:px-8 py-10"
               x-show="selectedCase === '{{ case.id }}'">
 
-                          {# Icon #}
+              {# Icon #}
               {% if case.icon_name %}
                 <div
                   class="text-3xl flex items-center justify-center"
@@ -108,10 +108,10 @@
               {% endif %}
 
               {# Name #}
-              <div class="font-bold text-xl leading-6 my-4">{{ case.name }}</div>
+              <div class="font-bold text-xl leading-6 my-4">{{ case.title }}</div>
 
               <div>
-                {{ case.description }}
+                {{ case.short_description }}
               </div>
               <div class="mt-6">
                 <a href="{{ case.get_absolute_url }}" class="btn btn--regular btn--primary">{% trans 'Unding melden' %}</a>
