@@ -244,7 +244,7 @@ DEFAULT_EMAIL_DOMAIN = env("DEFAULT_EMAIL_DOMAIN", default="example.com")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default=f"Goliath <noreply@{DEFAULT_EMAIL_DOMAIN}>"
+    "DJANGO_DEFAULT_FROM_EMAIL", default=f"Unding <noreply@{DEFAULT_EMAIL_DOMAIN}>"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
