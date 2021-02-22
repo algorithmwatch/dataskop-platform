@@ -326,7 +326,7 @@ function setupSurvey(
 
   // load the initial state if available
   // TODO: if the survey was almost complete, the previewtext + button are not shown
-  window.awstorage.loadState(window.awsurvey);
+  // window.awstorage.loadState(window.awsurvey);
 
   // what classes to customize
   // https://surveyjs.io/Examples/Library/?id=survey-customcss&platform=jQuery&theme=modern#content-docs
