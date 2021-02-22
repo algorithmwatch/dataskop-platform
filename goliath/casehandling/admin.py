@@ -96,8 +96,13 @@ class CaseAdmin(RemoveAdminAddButtonMixin, SimpleHistoryAdmin):
     view_on_site = False
 
     def aprove_case(self, request, queryset):
+        done_ids = set()
+        # prevent calling approve case multiple times
         for case in queryset:
-            case.approve_case(user=request.user)
+            post_cc_pk = case.post_cc.pk
+            if not post_cc_pk in done_ids:
+                case.post_cc.approve_case(user=request.user)
+                done_ids.add(post_cc_pk)
 
     aprove_case.short_description = "Mark selected cases as approved"
 
@@ -105,7 +110,6 @@ class CaseAdmin(RemoveAdminAddButtonMixin, SimpleHistoryAdmin):
 class CaseTypeAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
     list_display = [
         "id",
-        "slug",
         "created_at",
         "title",
     ]

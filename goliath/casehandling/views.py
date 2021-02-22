@@ -20,10 +20,7 @@ from django.views.generic.list import ListView
 
 from .forms import CaseStatusForm, get_admin_form_preview
 from .models import Case, CaseType, PostCaseCreation
-from .tasks import (
-    send_admin_notification_waiting_approval_case,
-    send_initial_emails_to_entities,
-)
+from .tasks import send_admin_notification_waiting_approval_case
 
 User = get_user_model()
 
@@ -47,7 +44,6 @@ class CaseCreateView(View):
         elif case_type.needs_approval:
             status = Case.Status.WAITING_CASE_APPROVED
         else:
-            # this will send the initial email via Signal
             status = Case.Status.WAITING_INITIAL_EMAIL_SENT
 
         # NB: currently we choose all entities by default.
@@ -59,10 +55,7 @@ class CaseCreateView(View):
         #     case.selected_entities.add(*case_type.entities.filter(pk__in=entity_ids))
         # else:
 
-        postCC, case = (
-            PostCaseCreation.objects.create(user=user, case_type=case_type),
-            None,
-        )
+        postCC = PostCaseCreation.objects.create(user=user, case_type=case_type)
 
         # create new cases for all entities
         for ent in case_type.entities.all():
@@ -71,16 +64,14 @@ class CaseCreateView(View):
                 status=status,
                 answers_text=answers_text,
                 case_type=case_type,
+                post_cc=postCC,
             )
             case.selected_entities.add(ent)
 
-            # add all the information
-            postCC.cases.add(case)
-
-            if case.status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
-                send_initial_emails_to_entities(case)
-            elif case.case_type.needs_approval:
-                send_admin_notification_waiting_approval_case()
+        if status == Case.Status.WAITING_INITIAL_EMAIL_SENT:
+            postCC.send_all_initial_emails()
+        elif case_type.needs_approval:
+            send_admin_notification_waiting_approval_case()
 
         # just use last case for success page for now
         if is_logged_in:

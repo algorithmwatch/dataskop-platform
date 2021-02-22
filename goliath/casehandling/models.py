@@ -146,6 +146,13 @@ class Case(TimeStampMixin):
     last_user_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     sent_entities_reminders = models.IntegerField(default=0)
     last_entities_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    post_cc = models.ForeignKey(
+        "PostCaseCreation",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="cases",
+    )
 
     history = HistoricalRecords()
     objects = CaseManager()
@@ -192,44 +199,6 @@ class Case(TimeStampMixin):
     @property
     def is_sane(self):
         return self.is_user_verified and self.is_approved
-
-    def user_verified_afterwards(self):
-        """
-        change status and thus trigger email sending (see tasks.py)
-        """
-        # if the emails were already sent, don't do anything
-        if len(self.all_messages) > 0:
-            return
-
-        if self.is_approved:
-            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
-            # avoid circular imports
-            from .tasks import send_initial_emails_to_entities
-
-            send_initial_emails_to_entities(self)
-        else:
-            self.status = self.Status.WAITING_CASE_APPROVED
-        self.save()
-
-    def approve_case(self, user):
-        """
-        change status and thus trigger email sending (see tasks.py)
-        """
-
-        # if the emails were already sent, don't do anything
-        if len(self.all_messages) > 0:
-            return
-
-        self.approved_by = user
-        if self.is_user_verified:
-            self.status = self.Status.WAITING_INITIAL_EMAIL_SENT
-            # avoid circular imports
-            from .tasks import send_initial_emails_to_entities
-
-            send_initial_emails_to_entities(self)
-        else:
-            self.status = self.Status.WAITING_USER_VERIFIED
-        self.save()
 
     def handle_incoming_email(self, is_autoreply):
         if is_autoreply:
@@ -291,12 +260,60 @@ class PostCaseCreation(models.Model):
     case_type = models.ForeignKey(
         "CaseType", on_delete=models.SET_NULL, null=True, blank=True
     )
-    cases = models.ManyToManyField("Case", blank=True)
     is_contactable = models.BooleanField(_("Kontaktierbar"), default=False)
     post_creation_hint = models.TextField(_("Hinweis"), null=True, blank=True)
+    sent_initial_emails_at = models.DateTimeField(null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("post-wizzard-success", kwargs={"pk": self.pk})
+
+    def send_all_initial_emails(self):
+        from .tasks import send_initial_emails_to_entities
+
+        send_initial_emails_to_entities(self)
+
+    def user_verified_afterwards(self):
+        """
+        change status and thus trigger email sending (see tasks.py)
+        """
+        # if the emails were already sent, don't do anything
+
+        send_emails = False
+        for case in self.cases.all():
+            if len(case.all_messages) > 0:
+                return
+
+            if case.is_approved:
+                case.status = case.Status.WAITING_INITIAL_EMAIL_SENT
+                send_emails = True
+            else:
+                case.status = case.Status.WAITING_CASE_APPROVED
+            case.save()
+
+        if send_emails:
+            self.send_all_initial_emails()
+
+    def approve_case(self, user):
+        """
+        change status and thus trigger email sending (see tasks.py)
+        """
+
+        send_emails = False
+        for case in self.cases.all():
+            # if the emails were already sent, don't do anything
+            if len(case.all_messages) > 0:
+                return
+
+            case.approved_by = user
+            if case.is_user_verified:
+                case.status = case.Status.WAITING_INITIAL_EMAIL_SENT
+                send_emails = True
+            else:
+                case.status = case.Status.WAITING_USER_VERIFIED
+            case.save()
+
+        if send_emails:
+            self.send_all_initial_emails()
 
 
 class Message(TimeStampMixin):

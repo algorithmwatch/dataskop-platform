@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.urls import reverse
 from email_reply_parser import EmailReplyParser
 
 from config import celery_app
@@ -10,60 +11,93 @@ from .models import Case, ReceivedMessage, SentMessage
 
 
 @celery_app.task()
-def send_initial_emails_to_entities(case):
+def send_initial_emails_to_entities(postCC):
     """
     send initial email to entity of case type
     """
-    subject = "New Case"
-    content = case.answers_text
 
-    assert (
-        case.is_sane
-    ), f"can't send email because the case is broken, case id: {case.id}"
+    num_mails = 0
+    all_success = True
+    for case in postCC.cases.all():
+        subject = "New Case"
+        content = case.answers_text
 
-    to_emails = list(case.selected_entities.values_list("email", flat=True))
-    assert (
-        len(to_emails) > 0
-    ), f"at least one entity needs to be selected, case id: {case.id}"
+        assert (
+            case.is_sane
+        ), f"can't send email because the case is broken, case id: {case.id}"
 
-    was_error = False
+        to_emails = list(case.selected_entities.values_list("email", flat=True))
+        assert (
+            len(to_emails) > 0
+        ), f"at least one entity needs to be selected, case id: {case.id}"
 
-    for to_email in to_emails:
-        print("sending to", to_email)
-        from_email = case.email
+        was_error = False
 
-        esp_message_id, esp_message_status = send_anymail_email(
-            to_email,
-            subject=subject,
-            from_email=from_email,
-            text_content=content,
+        for to_email in to_emails:
+            print("sending to", to_email)
+            from_email = case.email
+
+            esp_message_id, esp_message_status = send_anymail_email(
+                to_email,
+                subject=subject,
+                from_email=from_email,
+                text_content=content,
+            )
+
+            error_message = None
+            if esp_message_status not in ("sent", "queued"):
+                error_message = esp_message_status
+
+            if error_message is not None:
+                was_error = True
+
+            SentMessage.objects.create(
+                case=case,
+                to_email=to_email,
+                from_email=from_email,
+                subject=subject,
+                content=content,
+                esp_message_id=esp_message_id,
+                esp_message_status=esp_message_status,
+                error_message=error_message,
+                sent_at=datetime.datetime.utcnow(),
+            )
+
+        if was_error:
+            case.status = Case.Status.WAITING_EMAIL_ERROR
+        else:
+            # all good, waiting for response
+            case.status = Case.Status.WAITING_RESPONSE
+        case.save()
+        num_mails += 1
+        if all_success:
+            all_success = not was_error
+
+    if all_success:
+        text = f"wir haben {num_mails} Nachrichten versandt."
+        ctaLabel = "zu den Fällen"
+        ctaLink = reverse("cases")
+        if num_mails == 1:
+            text = "wir haben eine Nachricht versandt."
+            ctaLink = postCC.cases.first().get_absolute_url()
+
+        send_anymail_email(
+            postCC.user.email,
+            text,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            subject="E-Mails erfolgreich versandt",
+            ctaLink=ctaLink,
+            ctaLabel=ctaLabel,
         )
 
-        error_message = None
-        if esp_message_status not in ("sent", "queued"):
-            error_message = esp_message_status
+        postCC.sent_initial_emails_at = datetime.datetime.utcnow()
+        postCC.save()
 
-        if error_message is not None:
-            was_error = True
-
-        SentMessage.objects.create(
-            case=case,
-            to_email=to_email,
-            from_email=from_email,
-            subject=subject,
-            content=content,
-            esp_message_id=esp_message_id,
-            esp_message_status=esp_message_status,
-            error_message=error_message,
-            sent_at=datetime.datetime.utcnow(),
-        )
-
-    if was_error:
-        case.status = Case.Status.WAITING_EMAIL_ERROR
     else:
-        # all good, waiting for response
-        case.status = Case.Status.WAITING_RESPONSE
-    case.save()
+        # something went wrong, notify admins
+        send_admin_notification_email(
+            "error sending email", f"checkout postcc: {postCC.pk}"
+        )
 
 
 @celery_app.task()

@@ -6,12 +6,8 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django_comments.signals import comment_was_posted
 
-from .models import Case, ReceivedMessage
-from .tasks import (
-    persist_inbound_email,
-    send_admin_notification_new_comment,
-    send_initial_emails_to_entities,
-)
+from .models import PostCaseCreation, ReceivedMessage
+from .tasks import persist_inbound_email, send_admin_notification_new_comment
 
 User = get_user_model()
 
@@ -28,7 +24,7 @@ def handle_email_confirmed(request, email_address, **kwargs):
     """
     user = User.objects.get(email=email_address.email)
 
-    for c in Case.objects.filter(user=user):
+    for c in PostCaseCreation.objects.filter(user=user):
         c.user_verified_afterwards()
 
 
