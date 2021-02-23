@@ -340,7 +340,8 @@ class PostCaseCreation(models.Model):
 
 class Message(TimeStampMixin):
     from_email = models.EmailField()
-    to_email = models.EmailField()
+    # can be null to store emails that belong to no case (not sure what to do with those)
+    to_email = models.EmailField(null=True, blank=True)
     subject = models.CharField(max_length=255)
     content = models.TextField()
     case = models.ForeignKey("Case", on_delete=models.SET_NULL, null=True, blank=True)
