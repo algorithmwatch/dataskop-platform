@@ -2,7 +2,7 @@ import 'alpinejs'
 import '../scss/main.scss'
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus,
+  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown,
 
   // case types:
   faTruck, faBuilding, faPersonBooth, faTachometerAlt
@@ -21,7 +21,7 @@ import { faGoogle, faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebo
 */
 
 library.add(
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus,
+  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown,
   faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebookSquare,
 
   // case type icons:
