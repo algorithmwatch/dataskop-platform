@@ -31,6 +31,7 @@ django-widget-tweaks==1.4.8 # https://github.com/jazzband/django-widget-tweaks
 # user & auth
 django-allauth==0.43.0  # https://github.com/pennersr/django-allauth
 django-sesame[ua]==2.2  # https://github.com/aaugustin/django-sesame
+django-ratelimit==3.0.1 #  https://github.com/jsocol/django-ratelimit
 
 # Django REST Framework
 djangorestframework==3.12.1  # https://github.com/encode/django-rest-framework
