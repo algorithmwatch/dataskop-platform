@@ -1,3 +1,6 @@
+# Only for deployment /w Dokku
+# Check out compose/local/django/Dockerfile for the dev Dockerfile.
+
 FROM node:12-stretch-slim as client-builder
 
 WORKDIR /app
@@ -8,8 +11,6 @@ RUN npm run build
 
 # Python build stage
 FROM python:3.8-slim-buster
-
-ARG GPG_PUBLIC_KEY_URL
 
 ENV PYTHONUNBUFFERED 1
 
@@ -36,27 +37,6 @@ COPY ./requirements /requirements
 RUN pip install --no-cache-dir -r /requirements/production.txt \
     && rm -rf /requirements
 
-COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
-
-
-COPY --chown=django:django ./compose/production/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-COPY --chown=django:django ./compose/production/django/celery/worker/start /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
-
-
-COPY --chown=django:django ./compose/production/django/celery/beat/start /start-celerybeat
-RUN sed -i 's/\r$//g' /start-celerybeat
-RUN chmod +x /start-celerybeat
-
-
-COPY ./compose/production/django/celery/flower/start /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
 COPY --from=client-builder --chown=django:django /app /app
 
 
