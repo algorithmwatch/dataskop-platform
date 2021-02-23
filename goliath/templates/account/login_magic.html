@@ -2,8 +2,6 @@
 
 {% load i18n %}
 {% load account socialaccount %}
-{% load crispy_forms_tags %}
-
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block inner %}
@@ -12,7 +10,7 @@
 
 <form class="login" method="post" action="{% url 'account_login_magic' %}">
   {% csrf_token %}
-  {{ form|crispy }}
+  {{ form }}
   <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
 </form>
 {% endblock %}
