@@ -62,7 +62,7 @@ COPY --from=client-builder --chown=django:django /app /app
 
 USER django
 
-RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import
+RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import || true
 
 WORKDIR /app
 
