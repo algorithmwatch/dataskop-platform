@@ -11,12 +11,14 @@ from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from ratelimit.decorators import ratelimit
 
 from .forms import CaseStatusForm, get_admin_form_preview
 from .models import Case, CaseType, PostCaseCreation
@@ -30,6 +32,14 @@ class CaseTypeListView(ListView):
 
 
 class CaseCreateView(View):
+    @method_decorator(
+        ratelimit(
+            group="create_case",
+            key="user_or_ip",
+            rate="casehandling.ratelimits.per_user",
+            method="POST",
+        )
+    )
     def post(self, request, pk, slug):
         case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
