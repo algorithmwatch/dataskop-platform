@@ -4,24 +4,24 @@ Pillow==8.0.0  # https://github.com/python-pillow/Pillow
 rcssmin==1.0.6  # https://github.com/ndparker/rcssmin
 argon2-cffi==20.1.0  # https://github.com/hynek/argon2_cffi
 whitenoise==5.2.0  # https://github.com/evansd/whitenoise
-redis==3.5.3  # https://github.com/andymccurdy/redis-py
+markdown==3.3.3  # https://github.com/Python-Markdown/markdown
+
+# db & cache
 hiredis==1.1.0  # https://github.com/redis/hiredis-py
+redis==3.5.3  # https://github.com/andymccurdy/redis-py
+psycopg2==2.8.6  # https://github.com/psycopg/psycopg2
+django-redis==4.12.1  # https://github.com/jazzband/django-redis
+
+# celery
 celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
 django-celery-beat==2.0.0  # https://github.com/celery/django-celery-beat
 flower==0.9.5  # https://github.com/mher/flower
-psycopg2==2.8.6  # https://github.com/psycopg/psycopg2
-markdown==3.3.3  # https://github.com/Python-Markdown/markdown
-email_reply_parser==0.5.12  # https://github.com/zapier/email-reply-parser
 
 # Django
-# ------------------------------------------------------------------------------
 django==3.1.5  # pyup: < 3.2  # https://www.djangoproject.com/
-django-environ==0.4.5  # https://github.com/joke2k/django-environ
-django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
-django-redis==4.12.1  # https://github.com/jazzband/django-redis
 django-contrib-comments==2.0.0 # https://github.com/django/django-contrib-comments
-
-# goliath-specific
+django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
+django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-filter==2.4.0  # https://github.com/carltongibson/django-filter
 django-simple-history==2.12.0  # https://github.com/jazzband/django-simple-history
 django-markupfield==2.0.0  # https://github.com/jamesturk/django-markupfield
@@ -41,20 +41,19 @@ django-cors-headers==3.5.0  # https://github.com/adamchainz/django-cors-headers
 django-dbbackup==3.3.0 # https://github.com/django-dbbackup/django-dbbackup
 django-storages[boto3]==1.11.1  # https://github.com/jschneier/django-storages
 
-# Misc
-# ------------------------------------------------------------------------------
-
 # import data
 airtable-python-wrapper==0.15.1  # https://github.com/gtalarico/airtable-python-wrapper
 tqdm==4.56.0  # https://github.com/tqdm/tqdm
 
-# to generate fake data
+# generate fake data
 factory-boy==3.0.1  # https://github.com/FactoryBoy/factory_boy
 
-# anymail only really used in production but
+# anymail only really used in production but keep it here to make imports work
 django-anymail[mailjet]==8.1  # https://github.com/anymail/django-anymail
 
+# text processing
+email_reply_parser==0.5.12  # https://github.com/zapier/email-reply-parser
 
-# temporaly install dev version of clean-text
+# temporaly install dev version of clean-text for cleaning newlines
 unidecode
 git+git://github.com/jfilter/clean-text.git#egg=clean-text
