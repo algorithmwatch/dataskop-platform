@@ -6,9 +6,6 @@ RUN npm install && npm cache clean --force
 COPY . /app
 RUN npm run build
 
-# use staging WSGI file instead of production
-RUN mv /app/config/wsgi_staging.py /app/config/wsgi.py
-
 # Python build stage
 FROM python:3.8-slim-buster
 
@@ -65,7 +62,7 @@ COPY --from=client-builder --chown=django:django /app /app
 
 USER django
 
-RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import
+RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import || true
 
 WORKDIR /app
 

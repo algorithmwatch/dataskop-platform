@@ -1,4 +1,5 @@
-# Only used for deployment with Dokku
+# Only for deployment /w Dokku
+# Check out compose/local/django/Dockerfile for the dev Dockerfile.
 
 FROM node:12-stretch-slim as client-builder
 
@@ -15,11 +16,15 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
   # dependencies for building Python packages
-  && apt-get install -y build-essential \
+  && apt-get install -y build-essential git \
   # psycopg2 dependencies
   && apt-get install -y libpq-dev \
   # Translations dependencies
   && apt-get install -y gettext \
+  # for encrypting backup
+  && apt-get install -y gnupg curl \
+  # needed by django-dbbackup to dump postgres
+  && apt-get install -y postgresql-client \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -34,9 +39,9 @@ RUN pip install --no-cache-dir -r /requirements/production.txt \
 
 COPY --from=client-builder --chown=django:django /app /app
 
-# override Heroku Procfile with Dokku procfile
-ADD dokku/* /app/
 
 USER django
+
+ADD dokku/* /app/
 
 WORKDIR /app
