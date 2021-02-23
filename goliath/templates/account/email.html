@@ -41,7 +41,7 @@
           {% endfor %}
           </ul>
 
-          <div class="form-group flex space-x-3">
+          <div class="flex space-x-3">
             <button class="btn btn--small btn--outline" type="submit" name="action_primary" >{% trans 'Make Primary' %}</button>
             <button class="btn btn--small btn--outline" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
             <button class="btn btn--small btn--outline" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
@@ -79,8 +79,6 @@
         });
       }
     })();
-
-    $('.form-group').removeClass('row');
   </script>
 {% endblock %}
 
