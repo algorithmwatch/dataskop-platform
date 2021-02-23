@@ -26,7 +26,7 @@ class CaseTypeFactory(DjangoModelFactory):
     claim = factory.Faker("catch_phrase", locale="de")
     short_description = factory.Faker("catch_phrase", locale="de")
     description = factory.Faker("text", locale="de")
-    questions = "{}"
+    questions = {}
 
 
 class CaseTypeFactoryWithEntitiesFactory(CaseTypeFactory):
@@ -50,8 +50,8 @@ class CaseFactory(DjangoModelFactory):
 
     answers_text = factory.Faker("text")
     email = factory.Faker("company_email", locale="de")
-    questions = "{}"
-    answers = "{}"
+    questions = {}
+    answers = {}
 
 
 class OngoingCaseFactory(CaseFactory):
