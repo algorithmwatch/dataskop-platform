@@ -4,4 +4,6 @@ Deployment with https://dokku.com/
 
 ## Configuration
 
-- specify the location of the Dockerfile: https://dokku.com/docs/deployment/methods/dockerfiles/#build-time-configuration-variables
+We are using a custom nginx.conf.sigil. When updating Dokku, make sure to check if the most recent default nginx base is used.
+
+- https://dokku.com/docs/configuration/nginx/
