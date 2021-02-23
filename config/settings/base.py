@@ -73,7 +73,6 @@ DJANGO_APPS = [
     "django_comments",
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
     "widget_tweaks",
     "allauth",
     "allauth.account",
@@ -85,7 +84,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "django_tables2",
     "django_filters",
     "simple_history",
     "markupfield",

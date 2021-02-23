@@ -1,7 +1,6 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load crispy_forms_tags %}
 {% load socialaccount %}
 {% providers_media_js %}
 
@@ -15,7 +14,7 @@
 
 <form class="signup" method="post" action="{% url 'account_signup_email' %}">
   {% csrf_token %}
-  {{ form|crispy }}
+  {{ form }}
   <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
 </form>
 
