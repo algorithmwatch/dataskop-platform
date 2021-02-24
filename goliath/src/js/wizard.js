@@ -222,6 +222,9 @@ function setupSurvey(
       });
   }
 
+  const completeText =
+    'Wenn Sie "Abschließen" wählen, wird dieses Schreiben in Ihrem Namen übermittelt. Wir schicken Ihnen dann eine Bestätigung per E-Mail. Gegebenenfalls müssen Sie noch Ihre Anmeldung bei Unding bestätigen. Bitte schauen Sie dafür in Ihr E-mail-Postfach.';
+
   const constructLetterText = (function (userName, casetypeId) {
     return function () {
       const context = getAnswers();
@@ -237,7 +240,9 @@ function setupSurvey(
           "<div class='previewhtml'><div class='hl-lg mt-4 mb-2 ml-4'>Vorschau:</div>" +
           "<div><p class='whitespace-pre-wrap rounded-xl border-2 border-dashed border-orange-200 bg-white px-4 py-5 md:py-6 md:px-6 font-serif'>" +
           successData +
-          "</p></div><div><p class='mt-4 ml-4'>Wenn Sie auf Abschließen clicken, passiert das und das.</p></div></div>";
+          "</p></div><div><p class='mt-4 ml-4'>" +
+          completeText +
+          "</p></div></div>";
       });
     };
   })(userName, casetypeId);
