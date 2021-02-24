@@ -10,6 +10,15 @@
     <meta name="description" content="Unding viele Grüße von Lorenz" />
     <meta name="author" content="AlgorithmWatch" />
 
+
+    {# Open Graph #}
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    {% comment %} <meta property="og:title" content="{% block title %}{% endblock %} - Unding" /> {% endcomment %}
+    <meta property="og:description" content="Automatische Entscheidungen anfechten" />
+    <meta property="og:site_name" content="Unding" />
+    <meta property="og:image" content="https://unding.de/static/img/ogimage.png" />
+
+
     {# Favicon #}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicons/favicon-32x32.png' %}">
