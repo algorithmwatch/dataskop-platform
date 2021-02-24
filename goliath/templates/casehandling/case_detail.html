@@ -148,8 +148,10 @@
 
 
   {# Reaction container #}
-  <form action="palceholder" x-data="{ currentScreen: 'start', new_status: null }">
-    <input type="hidden" name="new_status" x-bind:value="new_status" />
+  <form id='aw-status-update-form' method="POST" action="{{ request.get_full_path }}" x-data="{ currentScreen: 'start', new_status: null } ">
+    {% csrf_token %}
+
+    <input type="hidden" name="status" x-bind:value="new_status" />
 
     <div class="text-center rounded-xl mb-8 p-4 border border-brown-1000 max-w-prose mx-auto">
 
@@ -164,10 +166,10 @@
       <div x-show="currentScreen === 'rating'">
         <div class="hl-xl mb-3">Sind Sie zufrieden mit der Antwort?</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CP'">
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CP'; setTimeout(function() {document.getElementById('aw-status-update-form').submit()}, 1000)">
             Ja
           </button>
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CN'">
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CN'; setTimeout(function() {document.getElementById('aw-status-update-form').submit()}, 1000)">
             Nein
           </button>
         </div>
@@ -181,7 +183,7 @@
         <div class="hl-xl mb-3">Was möchten Sie als nächstes tun?</div>
         <div class="mb-4">Erwarten Sie noch eine Antwort? Dann klicken Sie auf "Weiter warten".<br>Möchten Sie eine Nachricht an den Empfänger senden oder das Unding-Team kontaktieren? Dann wählen Sie die letztere Option.</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'WR' ">Weiter warten</button>
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'WR'; setTimeout(function() {document.getElementById('aw-status-update-form').submit()}, 1000)">Weiter warten</button>
           <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'react_options'">Auf die letzte Nachricht reagieren</button>
         </div>
       </div>
