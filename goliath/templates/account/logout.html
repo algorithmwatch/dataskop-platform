@@ -17,6 +17,12 @@
   <button class="btn btn-danger" type="submit">{% trans 'Sign Out' %}</button>
 </form>
 
+<!-- auto submit on page load -->
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      document.getElementsByTagName("form")[0].submit()
+    })
+</script>
 
 {% endblock %}
 
