@@ -80,7 +80,7 @@ def send_initial_emails_to_entities(postCC):
         ctaLink = reverse("cases")
         if num_mails == 1:
             text = "wir haben eine Nachricht versandt."
-            ctaLink = postCC.cases.first().get_absolute_url()
+            ctaLink = settings.URL_ORIGIN + postCC.cases.first().get_absolute_url()
 
         send_anymail_email(
             postCC.user.email,
@@ -123,7 +123,18 @@ def send_user_notification_reminder(to_email, link):
         from_email=settings.DEFAULT_FROM_EMAIL,
         subject="Bitte setzen Sie den Status",
         ctaLink=link,
-        ctaLabel="zur Antwort",
+    )
+
+
+@celery_app.task()
+def send_user_notification_new_comment(to_email, link):
+    """Inform user about new comment"""
+    send_anymail_email(
+        to_email,
+        "Neuer Kommentar zu Ihrem Fall",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        subject="Neuer Kommentar zu Ihrem Fall",
+        ctaLink=link,
     )
 
 

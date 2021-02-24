@@ -7,7 +7,11 @@ from django.dispatch import receiver
 from django_comments.signals import comment_was_posted
 
 from .models import Case, PostCaseCreation, ReceivedMessage
-from .tasks import persist_inbound_email, send_admin_notification_new_comment
+from .tasks import (
+    persist_inbound_email,
+    send_admin_notification_new_comment,
+    send_user_notification_new_comment,
+)
 
 User = get_user_model()
 
@@ -29,7 +33,15 @@ def handle_email_confirmed(request, email_address, **kwargs):
 
 
 @receiver(comment_was_posted)
-def post_comment(**kwargs):
+def post_comment(sender, instance, request, **kwargs):
+    # was comment posted by staff? if yes: inform user about new comment
+    if instance.user.is_staff:
+        user_email = instance.content_object.user.email
+        link = settings.URL_ORIGIN + instance.content_object.get_absolute_url()
+
+        send_user_notification_new_comment(user_email, link)
+
+    # always inform
     send_admin_notification_new_comment()
 
 
