@@ -174,8 +174,11 @@ class Case(TimeStampMixin):
         self.slug = (
             "nocasetype" if self.case_type is None else slugify(self.case_type.title)
         )
-        self.answers_text = self.case_type.render_letter(
-            self.answers, self.user.full_name
+        # FIXME: hotfix to make factory boy pass
+        self.answers_text = (
+            self.case_type.render_letter(self.answers, self.user.full_name)
+            if self.case_type
+            else ""
         )
 
         super().save(*args, **kwargs)

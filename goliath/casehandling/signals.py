@@ -57,5 +57,10 @@ def post_case_save(sender, instance, created, **kwargs):
     Render the subject here because we need the created case (for the pk).
     """
     if created:
-        instance.answers_subject = instance.case_type.render_letter_subject(instance)
+        # FIXME: hotfix to make factory boy pass
+        instance.answers_subject = (
+            instance.case_type.render_letter_subject(instance)
+            if instance.case_type
+            else ""
+        )
         instance.save()
