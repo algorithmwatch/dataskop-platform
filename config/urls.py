@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import include, path, re_path
 from django.views import defaults as default_views
+from django.views.decorators.cache import cache_control
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -18,12 +19,19 @@ urlpatterns = [
 
 # ensure flatpage catchall does not break append slash middleware
 urlpatterns += [
-    re_path(r"^(?P<url>.*/)$", views.flatpage),
+    re_path(
+        r"^(?P<url>.*/)$", cache_control(max_age=3600, public=True)(views.flatpage)
+    ),
 ]
 
 # hardcode urls for important flat pages
 urlpatterns += [
-    path("ueber-uns/", views.flatpage, {"url": "/uber-uns/"}, name="about"),
+    path(
+        "ueber-uns/",
+        cache_control(max_age=3600, public=True)(views.flatpage),
+        {"url": "/uber-uns/"},
+        name="about",
+    ),
 ]
 
 # API URLS
