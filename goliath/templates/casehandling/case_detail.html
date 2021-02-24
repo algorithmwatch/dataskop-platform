@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load case_status_icon comments %}
+{% load case_status_icon comments widget_tweaks %}
 
 {% block title %}Anliegen #{{case.id}}{% endblock %}
 
@@ -69,40 +69,75 @@
 
     {% with is_incoming_message=message.from_display_email %}
 
-      <div class="rounded-xl mb-8 p-4 border border-brown-1000 max-w-prose mx-auto">
+      <div class="mb-8 max-w-prose mx-auto">
 
-        {# Message header #}
-        <div class="text-sm border-b border-brown-200 pb-2.5">
-          {% if message.from_display_email %}<div><strong>Absender:</strong> {{ message.from_display_name }} ({{ message.from_display_email }})</div>{% endif %}
-          <div><strong>Versandt:</strong> {{ message.sent_at }}</div>
-          {% if message.from_display_email %}<div><strong>Empfangen:</strong> {{ message.received_at }}</div>{% endif %}
-          <div><strong>Betreff:</strong> {{ message.subject }}</div>
+        <div class="rounded-xl p-4 border border-brown-1000 ">
+
+          {# Message header #}
+          <div class="text-sm border-b border-brown-200 pb-2.5">
+            {% if message.from_display_email %}<div><strong>Absender:</strong> {{ message.from_display_name }} ({{ message.from_display_email }})</div>{% endif %}
+            <div><strong>Versandt:</strong> {{ message.sent_at }}</div>
+            {% if message.from_display_email %}<div><strong>Empfangen:</strong> {{ message.received_at }}</div>{% endif %}
+            <div><strong>Betreff:</strong> {{ message.subject }}</div>
+          </div>
+
+          {# Message content #}
+          <div class="mt-2.5 font-serif">
+            {{ message.content }}
+          </div>
+
         </div>
 
-        {# Message content #}
-        <div class="mt-2.5 font-serif">
-          {{ message.content }}
-        </div>
+        {# Comment list #}
+        {% get_comment_count for message as comment_count %}
 
-        {# Message comments #}
-        <div>
-          {% get_comment_count for message as comment_count %}
-          {% comment %} {{comment_count}} {% endcomment %}
-          {% render_comment_list for message %}
-        </div>
+        {% if comment_count > 0 %}
+          {% get_comment_list for message as commen_list %}
+          <div class="mt-2 divide-y divide-brown-200 border-b border-brown-200">
+            {% for comment in commen_list %}
+              {% if comment.is_public %}
+                {# Comment block #}
+                <div class="px-4 py-2">
+                  <a name="c{{ comment.id }}"></a>
 
-      {% comment %} {% get_comment_form for m as form %}
-      <form action="{% comment_form_target %}" method="POST">
-        {% csrf_token %}
-        {{ form.comment }}
-        {{ form.honeypot }}
-        {{ form.content_type }}
-        {{ form.object_pk }}
-        {{ form.timestamp }}
-        {{ form.security_hash }}
-        <input type="hidden" name="next" value="{{ case.get_absolute_url }}" />
-        <input type="submit" value="Add comment" id="id_submit" />
-      </form> {% endcomment %}
+                  {# Author #}
+                  <div class="text-sm truncate">
+                    <span class="font-bold">{{ comment.user_name }}</span> <span class="text-brown-600">•</span> <a href="{{ request.get_full_path }}#c{{ comment.id }}" class="text-brown-600 hover:underline">{{ comment.submit_date|date:'SHORT_DATETIME_FORMAT' }}</a>
+                  </div>
+
+                  {# Comment text #}
+                  <div class="break-words whitespace-pre-wrap">{{ comment.comment }}</div>
+
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {# Write Comment form #}
+        <div x-data="{ showCommentForm: false }">
+          <div class="px-4 pt-2" x-show="showCommentForm === false">
+            <button type="button" class="font-bold text-sm hover:underline" @click="showCommentForm = true">Kommentar schreiben</button>
+          </div>
+
+          {% get_comment_form for message as form %}
+          <form x-show="showCommentForm === true" action="{% comment_form_target %}" method="POST" class="p-4 flex flex-col items-start">
+            {% csrf_token %}
+
+            <div class="font-bold mb-4">Kommentar verfassen</div>
+
+            {% render_field form.comment rows="3" class="text-input text-input--regular w-full mb-4" %}
+            {{ form.content_type }}
+            {{ form.object_pk }}
+            {{ form.timestamp }}
+            {{ form.security_hash }}
+            <input type="hidden" name="next" value="{{ case.get_absolute_url }}" />
+            <div class="flex space-x-2">
+              <button type="button" class="btn btn--small btn--outline" @click="showCommentForm = false">Abbrechen</button>
+              <input type="submit" value="Abschicken" id="id_submit" class="btn btn--small btn--primary" />
+            </div>
+          </form>
+        </div>
 
       </div>
     {% endwith %}
@@ -111,8 +146,8 @@
 
 
   {# Reaction container #}
-  <form action="palceholder" x-data="{ currentScreen: 'start' }">
-    <input type="hidden" name="new_status" value="" />
+  <form action="palceholder" x-data="{ currentScreen: 'start', new_status: null }">
+    <input type="hidden" name="new_status" x-bind:value="new_status" />
 
     <div class="text-center rounded-xl mb-8 p-4 border border-brown-1000 max-w-prose mx-auto">
 
@@ -127,16 +162,16 @@
       <div x-show="currentScreen === 'rating'">
         <div class="hl-xl mb-3">Sind Sie zufrieden mit der Antwort?</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'rating_wait'">
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CP'">
             Ja
           </button>
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'rating_wait'">
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'CN'">
             Nein
           </button>
         </div>
       </div>
 
-      <div x-show="currentScreen === 'rating_wait'">
+      <div x-show="currentScreen === 'please_wait'">
         <p>Einen Moment bitte...</p>
       </div>
 
@@ -144,7 +179,7 @@
         <div class="hl-xl mb-3">Was möchten Sie nächstes tun?</div>
         <div class="mb-4">Erwarten Sie noch eine Antwort? Dann klicken Sie auf "Weiter warten".<br>Möchten Sie eine Nachricht an den Empfänger senden oder das Unding-Team kontaktieren? Dann wählen Sie die letztere Option.</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="">Weiter warten</button>
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'please_wait'; new_status = 'WR' ">Weiter warten</button>
           <button type="button" class="m-1 btn btn--regular btn--outline" @click="currentScreen = 'react_options'">Auf die letzte Nachricht reagieren</button>
         </div>
       </div>
@@ -152,7 +187,7 @@
       <div x-show="currentScreen === 'react_options'">
         <div class="hl-xl mb-3">Was möchten Sie nächstes tun?</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="">Autom. Antworten mit Bitte um Befassung </button>
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="">Autom. Antworten mit Bitte um Befassung</button>
           <button type="button" class="m-1 btn btn--regular btn--outline" @click="">Unding um Kontaktaufnahme bitten</button>
         </div>
       </div>
