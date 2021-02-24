@@ -38,7 +38,9 @@ CACHES = {
     }
 }
 
-
+# Can't restore with db user / roles specific commands in dump, do don't store them in the first place.
+# https://stackoverflow.com/questions/52571599/unable-to-restore-psql-database-from-pg-dump-with-a-different-username
+# https://github.com/django-dbbackup/django-dbbackup/issues/213
 DBBACKUP_CONNECTORS = {"default": {"dump_cmd": "pg_dump --no-acl --no-owner"}}
 
 # SECURITY
