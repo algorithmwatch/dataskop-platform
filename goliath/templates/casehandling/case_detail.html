@@ -82,8 +82,12 @@
           </div>
 
           {# Message content #}
-          <div class="mt-2.5 font-serif">
-            {{ message.content }}
+          <div class="mt-2.5 font-serif whitespace-pre-wrap">
+            {% if message.parsed_body %}
+            {{  message.parsed_body }}
+            {% else %}
+            {{  message.content }}
+            {% endif %}
           </div>
 
         </div>

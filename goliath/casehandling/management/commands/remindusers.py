@@ -20,7 +20,9 @@ class Command(BaseCommand):
         if kwargs["minutes"]:
             self.stdout.write("using provided minutes over the default")
             emails_sent = Case.objects.remind_users(
-                datetime.timedelta(minutes=kwargs["minutes"])
+                datetime.timedelta(
+                    minutes=kwargs["minutes"], max_reminders=100001010101
+                )
             )
         else:
             emails_sent = Case.objects.remind_users()

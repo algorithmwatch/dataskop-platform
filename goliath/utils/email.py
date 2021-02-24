@@ -15,7 +15,8 @@ def send_anymail_email(
     ctaLabel=None,
     html_content=None,
     is_generic=True,
-    **kwargs
+    rest="",
+    **kwargs,
 ):
     """
     Sending generic email with anymail + returns id & status
@@ -36,6 +37,10 @@ def send_anymail_email(
     else:
         # Don't use generic opening + closing of email
         body_text = content
+
+    no_rest = body_text
+    if rest:
+        body_text += "\n" + rest
 
     msg = AnymailMessage(body=body_text, **kwargs, to=[to_email])
 
@@ -71,7 +76,7 @@ def send_anymail_email(
     esp_message_status = None
     if to_email in status.recipients:
         esp_message_status = status.recipients[to_email].status  # e.g., 'queued'
-    return esp_message_id, esp_message_status
+    return esp_message_id, esp_message_status, body_text, no_rest
 
 
 def send_magic_link(user, email, viewname):

@@ -37,7 +37,7 @@ def send_initial_emails_to_entities(postCC):
             print("sending to", to_email)
             from_email = case.email
 
-            esp_message_id, esp_message_status = send_anymail_email(
+            esp_message_id, esp_message_status, sent_text, _ = send_anymail_email(
                 to_email,
                 subject=subject,
                 from_email=from_email,
@@ -57,7 +57,8 @@ def send_initial_emails_to_entities(postCC):
                 to_email=to_email,
                 from_email=from_email,
                 subject=subject,
-                content=content,
+                content=sent_text,
+                last_content=sent_text,
                 esp_message_id=esp_message_id,
                 esp_message_status=esp_message_status,
                 error_message=error_message,
@@ -115,11 +116,11 @@ def send_user_notification_new_message(to_email, link, text):
 
 
 @celery_app.task()
-def send_user_notification_reminder(to_email, link):
+def send_user_notification_reminder(to_email, link, text):
     """Remind user about open case"""
     send_anymail_email(
         to_email,
-        "Bitte setzen Sie den Status",
+        text,
         from_email=settings.DEFAULT_FROM_EMAIL,
         subject="Bitte setzen Sie den Status",
         ctaLink=link,
@@ -139,13 +140,58 @@ def send_user_notification_new_comment(to_email, link):
 
 
 @celery_app.task()
-def send_entity_notification_reminder(to_email, from_email):
-    """Remind user about open case"""
+def send_user_notification_reminder_to_entity(to_email, link, text):
+    """notify user about sent notification to entity"""
     send_anymail_email(
         to_email,
-        "Bitte Antworten Sie auf unsere Anfrage",
+        text,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        subject="Erinnerung verschickt",
+        ctaLink=link,
+    )
+
+
+@celery_app.task()
+def send_entity_notification_reminder(
+    to_email, case, text, subject="Bitte Antworten Sie auf unsere Anfrage"
+):
+    """Remind user about open case"""
+    from_email = case.email
+
+    (
+        esp_message_id,
+        esp_message_status,
+        whole_sent_text,
+        last_content,
+    ) = send_anymail_email(
+        to_email,
+        text,
         from_email=from_email,
-        subject="Bitte Antworten Sie auf unsere Anfrage",
+        subject=subject,
+        rest=case.construct_answer_thread(),
+    )
+
+    error_message = None
+    if esp_message_status not in ("sent", "queued"):
+        error_message = esp_message_status
+
+    if error_message is not None:
+        send_admin_notification_email(
+            "error reminding entity",
+            f"error with sending reminder to entity for case with id:  {case.pk}",
+        )
+
+    SentMessage.objects.create(
+        case=case,
+        to_email=to_email,
+        from_email=from_email,
+        subject=subject,
+        content=whole_sent_text,
+        last_content=last_content,
+        esp_message_id=esp_message_id,
+        esp_message_status=esp_message_status,
+        error_message=error_message,
+        sent_at=datetime.datetime.utcnow(),
     )
 
 

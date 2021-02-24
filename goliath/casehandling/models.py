@@ -72,7 +72,14 @@ class CaseType(TimeStampMixin):
     icon_name = models.CharField(max_length=255)
     letter_subject_custom_template = models.TextField(null=True, blank=True)
     letter_template = models.TextField(null=True, blank=True)
-    user_notification_custom_text = models.TextField(null=True, blank=True)
+    user_notification_new_answer_custom_text = models.TextField(null=True, blank=True)
+    user_notification_reminder_custom_text = models.TextField(null=True, blank=True)
+    entity_notification_reminder_custom_text = models.TextField(null=True, blank=True)
+    user_notification_entity_notification_reminder_custom_text = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Welche Notiz sollen die User erhalten, wenn das Unternehmen erinnert wird zu antworten?",
+    )
 
     tags = TaggableManager()
 
@@ -108,6 +115,10 @@ class CaseType(TimeStampMixin):
 
     def render_letter(self, answers: dict, username: str):
         tpl_letter = Template(self.letter_template)
+
+        if answers is None or type(answers) is str:
+            return ""
+
         answers["username"] = username
         text = str(tpl_letter.render(Context(answers)))
         text = cleantext.normalize_whitespace(
@@ -227,9 +238,8 @@ class Case(TimeStampMixin):
             from .tasks import send_user_notification_new_message
 
             text = "Sie haben eine neue Antwort erhalten."
-
-            if self.case_type.user_notification_custom_text:
-                text = self.case_type.user_notification_custom_text
+            if self.case_type.user_notification_new_answer_custom_text:
+                text = self.case_type.user_notification_new_answer_custom_text
 
             send_user_notification_new_message(
                 self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text
@@ -261,23 +271,81 @@ class Case(TimeStampMixin):
     def send_user_reminder(self):
         from .tasks import send_user_notification_reminder
 
+        text = "Bitte setzen Sie den Status."
+        if self.case_type.user_notification_reminder_custom_text:
+            text = self.case_type.user_notification_reminder_custom_text
+
         send_user_notification_reminder(
-            self.user.email, settings.URL_ORIGIN + self.get_absolute_url()
+            self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text
         )
         self.last_user_reminder_sent_at = datetime.datetime.now()
         self.sent_user_reminders += 1
         self.save()
 
     def send_entities_reminder(self):
-        from .tasks import send_entity_notification_reminder
+        from .tasks import (
+            send_entity_notification_reminder,
+            send_user_notification_reminder_to_entity,
+        )
+
+        text = "Bitte Antworten Sie auf unsere Anfrage."
+        if self.case_type.user_notification_reminder_custom_text:
+            text = self.case_type.user_notification_reminder_custom_text
 
         for e in self.selected_entities.all():
-            send_entity_notification_reminder(e.email, self.email)
+            send_entity_notification_reminder(e.email, self, text)
 
         self.last_entities_reminder_sent_at = datetime.datetime.now()
         # can't use F expression because django-simple-history does not support it
         self.sent_entities_reminders += 1
         self.save()
+
+        notify_text = (
+            "Wir haben das Unternehmen eine Erinnerung geschickt zu antworten."
+        )
+        if self.case_type.user_notification_entity_notification_reminder_custom_text:
+            notify_text = (
+                self.case_type.user_notification_entity_notification_reminder_custom_text
+            )
+
+        send_user_notification_reminder_to_entity(
+            self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), notify_text
+        )
+
+    def construct_answer_thread(self):
+        """
+        https://stackoverflow.com/questions/5420402/reliable-way-to-only-get-the-email-text-excluding-previous-emails
+        """
+        result_text = ""
+        quote_level = 0
+
+        for m in reversed(self.all_messages):
+            intro = "Am " + m.sent_at.strftime("%d.%m.%Y, %H:%M") + " schrieb "
+            if isinstance(m, ReceivedMessage):
+                intro += m.from_display_name + " <" + m.from_display_email
+            else:
+                intro += self.user.full_name + " <" + self.email
+
+            intro += "> folgendes:\n"
+            if quote_level > 0:
+                intro = (">" * quote_level) + " " + intro
+            text = intro
+
+            # important: only increment here to keep the intro one quote level below
+            quote_level += 1
+
+            new_content = (
+                m.parsed_content if isinstance(m, ReceivedMessage) else m.last_content
+            )
+            lines = new_content.splitlines() + ["\n"]
+            lines = [(">" * quote_level) + " " + x for x in lines]
+            text += "\n".join(lines)
+            result_text += text.rstrip() + "\n"
+
+        return result_text
+
+    def sent_message_to_entity(self):
+        pass
 
 
 class PostCaseCreation(models.Model):
@@ -359,6 +427,7 @@ class Message(TimeStampMixin):
 
 
 class SentMessage(Message):
+    last_content = models.TextField()  # only the last part without the whole thread
     esp_message_id = models.CharField(max_length=255, null=True)
     esp_message_status = models.CharField(max_length=255, null=True)
     error_message = models.TextField(blank=True, null=True)
