@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Neues Anliegen{% endblock %}
+{% block title %}Neuer Fall{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 
 {% block content %}
-  <h1 class="hl-2xl mb-6 text-center">{% trans 'Wählen Sie Ihr Anliegen' %}</h1>
-  {% comment %} <p class="text-lg">Hier eine Übersicht aller Anliegen, die Sie gemeldet haben.</p> {% endcomment %}
+  <h1 class="hl-2xl mb-6 text-center">{% trans 'Wählen Sie Ihren Fall' %}</h1>
 
   <div class="w-max grid gap-4 lg:gap-8 justify-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto">
     {% for case_type in object_list %}
