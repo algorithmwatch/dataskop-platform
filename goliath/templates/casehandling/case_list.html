@@ -30,7 +30,7 @@
             <div
               class="
                 flex flex-col justify-between+
-                sm:w-72 p-4 border border-brown-400 rounded-xl
+                sm:w-72 p-4 border border-brown-400 rounded-l-2xl rounded-tr-2xl
               "
             >
               {# tags #}
@@ -48,14 +48,20 @@
                 </div>
 
                 {# case status #}
-                {% comment %} <div>
-                  {% case_status_icon case.status as icon_name %}
-                </div> {% endcomment %}
+                <div class="pt-2.5">
+                  <div class="text-orange-500 font-semibold">{% spaceless %}
+                    {% case_status_icon case.status as icon_name %}
+                    {% if icon_name %}
+                      <i class="mr-1.5 text-orange-500 {{ icon_name }}"></i>
+                    {% endif %}
+                    <span class="">{{ case.get_status_display }}</span>
+                  {% endspaceless %}</div>
+                </div>
 
                 {# message #}
-                <div class="pt-2.5 font-serif text-brown-800 h-40">
+                <div class="pt-2.5 font-serif text-brown-700 h-40">
                   {% with case.all_messages|first as first_message %}
-                    {{ first_message.content|truncatechars:200 }}
+                    {{ first_message.content|truncatechars:190 }}
                   {% endwith %}
                 </div>
 
