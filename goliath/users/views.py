@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
@@ -17,6 +19,7 @@ from .forms import MagicLinkLoginForm, MagicLinkSignupForm
 User = get_user_model()
 
 
+@method_decorator(never_cache, name="dispatch")
 class UserUpdate(LoginRequiredMixin, UpdateView):
     template_name = "account/index.html"
     model = User
@@ -32,6 +35,7 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
         return form
 
 
+@never_cache
 def magic_link_signup_view(request):
     """
     Disables for now, can't register with magic link.
@@ -72,6 +76,7 @@ def magic_link_signup_view(request):
     return render(request, "account/signup_email.html", {"form": form})
 
 
+@never_cache
 def magic_link_login_view(request):
     if request.method == "POST":
         form = MagicLinkLoginForm(request.POST)
@@ -94,6 +99,7 @@ def magic_link_login_view(request):
     return render(request, "account/login_magic.html", {"form": form})
 
 
+@method_decorator(never_cache, name="dispatch")
 class MagicLinkLoginEmail(View):
     def get(self, request):
         """
@@ -112,6 +118,7 @@ class MagicLinkLoginEmail(View):
         return redirect("account_index")
 
 
+@method_decorator(never_cache, name="dispatch")
 class MagicLinkVerifyEmail(View):
     def get(self, request):
         """

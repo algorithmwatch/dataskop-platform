@@ -12,6 +12,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control, never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView, View
@@ -27,6 +28,7 @@ from .tasks import send_admin_notification_waiting_approval_case
 User = get_user_model()
 
 
+@method_decorator(cache_control(max_age=3600, public=True), name="dispatch")
 class CaseTypeListView(ListView):
     model = CaseType
 
@@ -41,6 +43,7 @@ class CaseTypeListView(ListView):
     name="post",
 )
 class CaseCreateView(View):
+    @method_decorator(never_cache)
     def post(self, request, pk, slug):
         case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
@@ -102,6 +105,7 @@ class CaseCreateView(View):
                 }
             )
 
+    @method_decorator(cache_control(max_age=3600, public=True))
     def get(self, request, pk, slug):
         case_type = get_object_or_404(CaseType, pk=pk)
 
@@ -143,6 +147,7 @@ class CaseDetailView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(never_cache, name="dispatch")
 class CaseDetailAndUpdateView(View):
     def get(self, request, *args, **kwargs):
         view = CaseDetailView.as_view()
@@ -153,6 +158,7 @@ class CaseDetailAndUpdateView(View):
         return view(request, *args, **kwargs)
 
 
+@method_decorator(never_cache, name="dispatch")
 class CaseListView(LoginRequiredMixin, ListView):
     model = Case
     template_name = "casehandling/case_list.html"
@@ -165,6 +171,7 @@ class CaseListView(LoginRequiredMixin, ListView):
         return qs
 
 
+@method_decorator(never_cache, name="dispatch")
 class CaseSuccessView(
     SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixin, UpdateView
 ):
@@ -181,10 +188,12 @@ class CaseSuccessView(
         return obj.user == self.request.user
 
 
+@method_decorator(cache_control(max_age=3600, public=True), name="dispatch")
 class CaseVerifyEmailView(TemplateView):
     template_name = "casehandling/case_email.html"
 
 
+@method_decorator(cache_control(max_age=3600, public=True), name="dispatch")
 class HomePageView(TemplateView):
     template_name = "pages/home.html"
 
@@ -196,6 +205,7 @@ class HomePageView(TemplateView):
         return context
 
 
+@method_decorator(cache_control(max_age=3600, public=True), name="dispatch")
 class DashboardPageView(TemplateView):
     template_name = "pages/dashboard.html"
 
@@ -237,6 +247,7 @@ class DashboardPageView(TemplateView):
         return context
 
 
+@never_cache
 @staff_member_required
 def admin_preview_letter_view(request, pk):
     ct = get_object_or_404(CaseType, pk=pk)
@@ -277,6 +288,7 @@ def admin_preview_letter_view(request, pk):
     )
 
 
+@never_cache
 @require_POST
 @csrf_exempt
 def preview_letter_text_view(request, pk):
