@@ -118,10 +118,6 @@ class CaseCreateView(View):
 
 
 class CaseStatusUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
-    """
-    Adapted from https://docs.djangoproject.com/en/3.1/topics/class-based-views/mixins/
-    """
-
     template_name = "casehandling/case_detail.html"
     form_class = CaseStatusForm
     model = Case
@@ -131,11 +127,15 @@ class CaseStatusUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        return obj.user == self.request.user or self.request.user.is_staff
 
 
-class CaseDetailView(LoginRequiredMixin, DetailView):
+class CaseDetailView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     model = Case
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user or self.request.user.is_staff
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
