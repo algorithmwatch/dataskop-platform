@@ -121,15 +121,15 @@ class CaseType(TimeStampMixin):
 
 class Case(TimeStampMixin):
     class Status(models.TextChoices):
-        WAITING_EMAIL_ERROR = "EE", "There was error with sending the email"
-        WAITING_USER_VERIFIED = "UV", "Waiting user verification"
-        WAITING_CASE_APPROVED = "CA", "Waiting admin approval"
-        WAITING_INITIAL_EMAIL_SENT = "ES", "Waiting until initial email sent"
-        WAITING_RESPONSE = "WR", "Waiting for response"
-        WAITING_USER_INPUT = "WU", "Waiting for user input"
-        CLOSED_NEGATIVE = "CN", "Closed, given up"
-        CLOSED_POSITIVE = "CP", "Closed, case resolved"
-        CLOSED_MIXED = "CM", "Closed, mixed feelings"
+        WAITING_EMAIL_ERROR = "EE", "Fehler beim E-Mail-Versandt"
+        WAITING_USER_VERIFIED = "UV", "Warten auf User-Verifizierung"
+        WAITING_CASE_APPROVED = "CA", "Warte auf Admin-Approval"
+        WAITING_INITIAL_EMAIL_SENT = "ES", "E-Mail wird versendet"
+        WAITING_RESPONSE = "WR", "Warten auf Antwort"
+        WAITING_USER_INPUT = "WU", "Handlung erforderlich"
+        CLOSED_NEGATIVE = "CN", "Abgeschlossen"
+        CLOSED_POSITIVE = "CP", "Abgeschlossen"
+        CLOSED_MIXED = "CM", "Abgeschlossen"
 
     slug = models.SlugField(
         default="", editable=False, max_length=255, null=False, blank=False
