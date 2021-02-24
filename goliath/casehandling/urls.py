@@ -33,9 +33,9 @@ urlpatterns = [
         view=CaseVerifyEmailView.as_view(),
         name="post-wizzard-email",
     ),
-    path("anliegen/", view=CaseListView.as_view(), name="cases"),
+    path("fall/", view=CaseListView.as_view(), name="cases"),
     path(
-        "anliegen/<str:slug>/<int:pk>/",
+        "fall/<str:slug>/<int:pk>/",
         view=CaseDetailAndUpdateView.as_view(),
         name="cases-detail",
     ),
