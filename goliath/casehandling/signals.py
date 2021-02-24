@@ -33,11 +33,17 @@ def handle_email_confirmed(request, email_address, **kwargs):
 
 
 @receiver(comment_was_posted)
-def post_comment(sender, instance, request, **kwargs):
+def post_comment(sender, **kwargs):
+    instance = kwargs["comment"]
     # was comment posted by staff? if yes: inform user about new comment
     if instance.user.is_staff:
-        user_email = instance.content_object.user.email
-        link = settings.URL_ORIGIN + instance.content_object.get_absolute_url()
+        user_email = instance.content_object.case.user.email
+        link = (
+            settings.URL_ORIGIN
+            + instance.content_object.case.get_absolute_url()
+            + "#c"
+            + str(instance.pk)
+        )
 
         send_user_notification_new_comment(user_email, link)
 
