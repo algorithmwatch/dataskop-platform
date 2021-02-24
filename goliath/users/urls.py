@@ -4,11 +4,13 @@ from goliath.users.views import (
     MagicLinkLoginEmail,
     MagicLinkVerifyEmail,
     UserUpdate,
+    export_text,
     magic_link_login_view,
     magic_link_signup_view,
 )
 
 urlpatterns = [
+    path("export_text/", export_text, name="export_text"),
     path(
         "magic/registration/",
         MagicLinkVerifyEmail.as_view(),

@@ -4,9 +4,11 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET
 from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
@@ -158,3 +160,19 @@ class MagicLinkVerifyEmail(View):
 
         messages.success(request, "Account erfolgreich verifiziert. Danke!")
         return redirect(redirect_url)
+
+
+@require_GET
+@never_cache
+def export_text(request):
+    user = request.user
+    export_string = ""
+
+    for case in user.case_set.all():
+        for m in case.all_messages:
+            m_text = ", ".join(
+                [f"{k}: {v}" for (k, v) in m.__dict__.items() if k != "_state"]
+            )
+            export_string += m_text + "\n\n"
+
+    return HttpResponse(export_string, content_type="text/plain; charset=UTF-8")

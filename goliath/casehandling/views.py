@@ -14,7 +14,7 @@ from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control, never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView
