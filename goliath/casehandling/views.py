@@ -31,15 +31,16 @@ class CaseTypeListView(ListView):
     model = CaseType
 
 
+@method_decorator(
+    ratelimit(
+        key="user_or_ip",
+        rate="casehandling.ratelimits.per_user",
+        method="POST",
+        block=True,
+    ),
+    name="post",
+)
 class CaseCreateView(View):
-    @method_decorator(
-        ratelimit(
-            group="create_case",
-            key="user_or_ip",
-            rate="casehandling.ratelimits.per_user",
-            method="POST",
-        )
-    )
     def post(self, request, pk, slug):
         case_type = get_object_or_404(CaseType, pk=pk)
         answers = json.loads(request.POST["answers"])
