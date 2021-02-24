@@ -115,20 +115,20 @@
         {% endif %}
 
         {# Write Comment form #}
-        <div x-data="{ showCommentForm: false }">
+        <div x-data="{ showCommentForm: false }" class="comment-section">
           <div class="px-4 pt-2" x-show="showCommentForm === false">
-            <button type="button" class="font-bold text-sm hover:underline hover:text-brown-8000" @click="showCommentForm = true">
+            <button type="button" class="font-bold text-sm hover:underline hover:text-brown-8000 toggle-comment-form-button" @click="showCommentForm = true">
               <i class="fas fa-pencil-alt"></i><span class="ml-1.5">Kommentar schreiben</span>
             </button>
           </div>
 
           {% get_comment_form for message as form %}
-          <form x-show="showCommentForm === true" action="{% comment_form_target %}" method="POST" class="p-4 flex flex-col items-start aw-comment-section">
+          <form x-show="showCommentForm === true" action="{% comment_form_target %}" method="POST" class="p-4 flex flex-col items-start comment-form">
             {% csrf_token %}
 
             <div class="font-bold mb-4">Kommentar verfassen</div>
 
-            {% render_field form.comment rows="3" class="text-input text-input--regular w-full mb-4" %}
+            {% render_field form.comment rows="3" class="comment-form-input text-input text-input--regular w-full mb-4" %}
             {{ form.content_type }}
             {{ form.object_pk }}
             {{ form.timestamp }}
@@ -204,9 +204,28 @@
 
 <script>
   function scrollIntoLastCommentSection() {
+    const commentSections = document.getElementsByClassName('comment-section')
 
-    console.log('xx', document.getElementsByClassName('aw-comment-section'))
-    // [0].scrollIntoView()
+    if (!commentSections.length) {
+      return
+    }
+
+    const lastCommentSection = commentSections[commentSections.length - 1]
+    const toggleCommentFormButton = lastCommentSection.getElementsByClassName('toggle-comment-form-button')[0]
+    const lastCommentForm = lastCommentSection.getElementsByClassName('comment-form')[0]
+    const commentFormInput = lastCommentSection.getElementsByClassName('comment-form-input')[0]
+
+    // toggle form display
+    toggleCommentFormButton.click()
+
+    // scroll form into view
+    setTimeout(function () {
+      lastCommentForm.scrollIntoView({block: "start", behavior: "smooth"})
+    }, 0)
+
+    // do something with the textarea
+    console.warn('textarea', commentFormInput)
+
   }
 </script>
 
