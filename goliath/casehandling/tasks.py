@@ -161,14 +161,17 @@ def send_admin_notification_email(subject, content):
 def send_admin_notification_waiting_approval_case():
     send_admin_notification_email(
         "Neuer Fall benötigt eine Freigabe",
-        settings.URL_ORIGIN + "/admin/casehandling/case/?approval=needs_approval",
+        settings.URL_ORIGIN
+        + "/"
+        + settings.ADMIN_URL
+        + "casehandling/case/?approval=needs_approval",
     )
 
 
 def send_admin_notification_new_comment():
     send_admin_notification_email(
         "Neuer Kommentar",
-        settings.URL_ORIGIN + "/admin/django_comments/comment/",
+        settings.URL_ORIGIN + "/" + settings.ADMIN_URL + "django_comments/comment/",
     )
 
 
