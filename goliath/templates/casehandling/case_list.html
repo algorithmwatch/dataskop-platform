@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n case_status_icon %}
 
 {% block title %}Anliegen{% endblock %}
 
@@ -46,6 +46,11 @@
                 <div class="hl-xl leading-tight pt-2.5">
                   {{ case.case_type.title }}
                 </div>
+
+                {# case status #}
+                {% comment %} <div>
+                  {% case_status_icon case.status as icon_name %}
+                </div> {% endcomment %}
 
                 {# message #}
                 <div class="pt-2.5 font-serif text-brown-800 h-40">
