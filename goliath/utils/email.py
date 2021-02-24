@@ -9,7 +9,13 @@ from sesame.utils import get_query_string
 
 
 def send_anymail_email(
-    to_email, text_content, ctaLink=None, ctaLabel=None, html_content=None, **kwargs
+    to_email,
+    text_content,
+    ctaLink=None,
+    ctaLabel=None,
+    html_content=None,
+    is_generic=True,
+    **kwargs
 ):
     """
     Sending generic email with anymail + returns id & status
@@ -21,13 +27,19 @@ def send_anymail_email(
     if ctaLink is not None:
         content += "\n\n" + ctaLink
 
-    context = {"content": content, "current_site": Site.objects.get_current()}
+    if is_generic:
+        context = {"content": content, "current_site": Site.objects.get_current()}
+        body_text = render_to_string(
+            "account/email/generic_message.txt",
+            context,
+        )
+    else:
+        # Don't use generic opening + closing of email
+        body_text = content
 
-    body_text = render_to_string(
-        "account/email/generic_message.txt",
-        context,
-    )
+    msg = AnymailMessage(body=body_text, **kwargs, to=[to_email])
 
+    # HTML email is optional for now
     if html_content is not None:
         context["content"] = html_content
 
@@ -43,13 +55,13 @@ def send_anymail_email(
                 + "</a></div>"
             )
 
-    body_html = render_to_string(
-        "account/email/generic_message.html",
-        context,
-    )
+        body_html = render_to_string(
+            "account/email/generic_message.html",
+            context,
+        )
 
-    msg = AnymailMessage(body=body_text, **kwargs, to=[to_email])
-    msg.attach_alternative(body_html, "text/html")
+        msg.attach_alternative(body_html, "text/html")
+
     msg.send()
 
     status = msg.anymail_status  # available after sending

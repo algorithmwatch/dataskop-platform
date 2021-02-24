@@ -42,6 +42,7 @@ def send_initial_emails_to_entities(postCC):
                 subject=subject,
                 from_email=from_email,
                 text_content=content,
+                is_generic=False,
             )
 
             error_message = None
