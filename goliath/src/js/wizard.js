@@ -13,7 +13,8 @@ function addUserToJson(surveyJSON) {
     visible: false,
     type: "text",
     name: "awfirstnamequestion",
-    title: "Wie ist dein Vorname?",
+    title:
+      "Ihr Vor- und Nachname wird zur Unterzeichnung der E-mail an das Unternehmen/die Behörde verwendet. Wir empfehlen, Ihren Klarnamen zu verwenden. Wie ist Ihr Vorname?",
     visibleIf: previewhtmlElement.visibleIf,
   };
 
@@ -21,7 +22,7 @@ function addUserToJson(surveyJSON) {
     visible: false,
     type: "text",
     name: "awlastnamequestion",
-    title: "Wie ist dein Nachname?",
+    title: "Wie ist Ihr Nachname?",
     visibleIf: "{awfirstnamequestion} notempty",
   };
 
@@ -29,7 +30,7 @@ function addUserToJson(surveyJSON) {
     visible: false,
     type: "text",
     name: "awemailquestion",
-    title: "Wie ist dein E-Mail-Adresse?",
+    title: "Wie ist Ihre E-Mail-Adresse?",
     visibleIf: "{awlastnamequestion} notempty",
     validators: [
       {
