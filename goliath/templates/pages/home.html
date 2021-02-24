@@ -13,7 +13,7 @@
     <div>
       <div class="max-w-lg md:max-w-2xl mx-auto px-4 py-6 xs:px-6 xs:py-10 md:px-14 md:py-12 lg:px-16 lg:py-12 rounded-3xl bg-white bg-opacity-80">
         <h1 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'Automatische<br> Entscheidungen anfechten' %}</h1>
-        <p class="lg:text-lg">{% trans 'Herzlich Willkommen bei unding.de. Hier können Sie Fälle melden, bei denen Computer entschieden haben – und gegen die Sie Einspruch einlegen wollen.' %}</p>
+        <p class="lg:text-lg">{% trans 'Herzlich Willkommen bei Unding. Hier können Sie Fälle melden, bei denen per Computer automatisch entschieden wurde – wogegen Sie Einspruch einlegen wollen.' %}</p>
         <div class="mt-4 xs:mt-6 flex flex-col xs:flex-row items-center justify-center space-y-2 xs:space-y-0 xs:space-x-3">
           <a href="{% url 'new' %}" class="btn btn--regular btn--primary">{% trans 'Unding melden' %}</a>
           <a href="#ueber" class="smooth-scroll btn btn--regular btn--outline">{% trans 'Mehr erfahren' %}</a>
@@ -129,6 +129,38 @@
             </div>
           </div>
         {% endfor %}
+
+
+        {# Propose case card #}
+        <div
+            x-show="selectedCase === null"
+            class="
+              bg-white border border-brown-1000
+              rounded-t-2xl rounded-bl-2xl
+              w-240
+            "
+          >
+            <a href="/kontakt">
+              <div class="flex flex-col items-center px-5 py-6 cursor-pointer">
+
+                {# Icon #}
+                <div
+                  class="text-3xl flex items-center justify-center rounded-full bg-orange-100 w-16 h-16"
+                >
+                  <i class="fas fa-plus"></i>
+                </div>
+
+                {# Name #}
+                <div class="font-bold text-lg leading-6 mt-3">Nicht dabei?</div>
+
+                {# Border #}
+                <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
+
+                {# Short title #}
+                <div class="italic">Unding vorschlagen</div>
+              </div>
+            </a>
+          </div>
       </div>
 
     </div>

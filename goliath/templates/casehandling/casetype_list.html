@@ -37,8 +37,32 @@
           <div class="italic">{{ case_type.claim }}</div>
         </a>
       </div>
-
     {% endfor %}
+
+    <div
+      class="
+        bg-white border border-brown-1000
+        rounded-t-2xl rounded-bl-2xl
+      "
+    >
+      <a href="/kontakt" class="w-240 flex flex-col items-center text-center px-5 py-6 cursor-pointer">
+        {# Icon #}
+        <div
+          class="text-3xl flex items-center justify-center rounded-full bg-orange-100 w-16 h-16"
+        >
+          <i class="fas fa-plus"></i>
+        </div>
+
+        {# Name #}
+        <div class="font-bold text-lg leading-6 mt-3">Nicht dabei?</div>
+
+        {# Border #}
+        <div class="border-t border-brown-1000 h-px w-28 my-4"></div>
+
+        {# Short title #}
+        <div class="italic">Unding vorschlagen</div>
+      </a>
+    </div>
   </div>
 
 {% endblock %}

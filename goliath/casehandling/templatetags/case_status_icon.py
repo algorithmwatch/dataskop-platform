@@ -11,7 +11,7 @@ def case_status_icon(status):
         "WAITING_EMAIL_ERROR": "fas fa-times",
         "WAITING_USER_VERIFIED": "fas fa-user-clock",
         "WAITING_CASE_APPROVED": "",
-        "WAITING_INITIAL_EMAIL_SENT": "",
+        "WAITING_INITIAL_EMAIL_SENT": "fas fa-paper-plane",
         "WAITING_RESPONSE": "fas fa-clock",
         "WAITING_USER_INPUT": "fas fa-bell",
         "CLOSED_NEGATIVE": "fas fa-thumbs-down",
