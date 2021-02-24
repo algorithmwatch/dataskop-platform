@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n case_status_icon %}
 
-{% block title %}Anliegen{% endblock %}
+{% block title %}Meine Fälle{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 
 {% block content %}
-  <h1 class="hl-2xl mb-6">{% trans 'Meine Anliegen' %}</h1>
-  <p class="text-lg">Hier eine Übersicht aller Anliegen, die Sie gemeldet haben.</p>
+  <h1 class="hl-2xl mb-6">{% trans 'Meine Fälle' %}</h1>
+  <p class="text-lg">Hier eine Übersicht aller Fälle, die Sie gemeldet haben.</p>
   <hr>
 
   {% regroup object_list|dictsort:"print_status" by print_status as case_status_list %}

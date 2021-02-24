@@ -7,7 +7,7 @@ register = template.Library()
 def create_user_menu(is_authenticated):
     return (
         [
-            {"label": "Meine Anliegen", "url": reverse("cases"), "is_user_menu": True},
+            {"label": "Meine Fälle", "url": reverse("cases"), "is_user_menu": True},
             {
                 "label": "Mein Konto",
                 "url": reverse("account_index"),
