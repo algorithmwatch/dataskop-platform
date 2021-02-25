@@ -316,6 +316,7 @@ function setupSurvey(
   survey.showPreviewBeforeComplete = true;
   survey.completedHtml = "<p>Bitte einen kurzen Augenblick warten...</p>";
   survey.completeText = "Abschließen";
+  survey.showQuestionNumbers = "off";
 
   // https://surveyjs.io/Documentation/Library?id=SurveyModel#questionsOnPageMode
   survey.questionsOnPageMode = "singlePage";
