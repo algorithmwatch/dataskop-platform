@@ -2,6 +2,6 @@
 {% load account %}
 {% load i18n %}
 
-{% block content %}{% autoescape off %}Bitte bestätige deine E-Mail-Adresse indem du auf folgenden Link klickst:
+{% block content %}{% autoescape off %}Bitte bestätigen Sie Ihre E-Mail-Adresse indem Sie auf folgenden Link klicken:
 
 {{ activate_url }}{% endautoescape %}{% endblock %}

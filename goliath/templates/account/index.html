@@ -1,13 +1,13 @@
 {% extends "account/base.html" %}
 {% load i18n widget_tweaks %}
 
-{% block head_title %}Dein Account{% endblock %}
+{% block head_title %}Ihr Account{% endblock %}
 
 {% block inner %}
 
   <h1 class="hl-2xl mb-6">{% trans 'Mein Konto' %}</h1>
 
-  <p>Ein Text, der erklärt, wofür welche Daten verwendet werden. Bspw. werden Name & E-Mail dem Empfänger gezeigt?</p>
+  <p>Ihr Name wird in den Anschreiben verwendet, die wir für Sie an Unternehmen und Behörden übersenden.</p>
 
   <div class="space-y-6 divide-y divide-brown-200 mt-6">
     <form class="space-y-4 max-w-xs" id="account-update" method="post" action="{% url 'account_index' %}">

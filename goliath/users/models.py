@@ -79,8 +79,8 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    first_name = CharField(_("First Name"), max_length=255)
-    last_name = CharField("Last Name", max_length=255)
+    first_name = CharField("Vorname", max_length=255)
+    last_name = CharField("Nachname", max_length=255)
 
     objects = CustomUserManager()
 
