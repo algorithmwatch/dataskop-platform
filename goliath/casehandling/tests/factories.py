@@ -1,6 +1,7 @@
 import random
 
 import factory
+import factory.fuzzy
 from factory.django import DjangoModelFactory
 
 from goliath.users.tests.factories import UserFactory
@@ -22,7 +23,7 @@ class CaseTypeFactory(DjangoModelFactory):
     class Meta:
         model = CaseType
 
-    title = factory.Faker("catch_phrase", locale="de")
+    title = factory.fuzzy.FuzzyText(length=15)
     claim = factory.Faker("catch_phrase", locale="de")
     short_description = factory.Faker("catch_phrase", locale="de")
     description = factory.Faker("text", locale="de")
