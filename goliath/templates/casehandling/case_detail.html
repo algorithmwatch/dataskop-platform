@@ -195,7 +195,7 @@
       <div x-show="currentScreen === 'react_options'">
         <div class="hl-xl mb-3">Was möchten Sie als nächstes tun?</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="">Autom. Antworten mit Bitte um Befassung</button>
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="sendAutoreply()">Autom. Antworten mit Bitte um Befassung</button>
           <button type="button" class="m-1 btn btn--regular btn--outline" @click="scrollIntoLastCommentSection()">Unding um Kontaktaufnahme bitten</button>
         </div>
       </div>
@@ -203,6 +203,9 @@
 
     </div>
 
+  </form>
+
+  <form id='aw-sent-auto-form' method="POST" action="{% url 'case-sent-autoreply' case.pk %}" >
   </form>
 
 
@@ -231,6 +234,11 @@
     console.warn('textarea', commentFormInput)
 
   }
+
+  function sendAutoreply() {
+    document.getElementById('aw-sent-auto-form').submit()
+  }
+
 </script>
 
 

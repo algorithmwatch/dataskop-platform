@@ -5,11 +5,13 @@ import traceback
 from allauth.account.models import EmailAddress
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control, never_cache
@@ -119,6 +121,26 @@ class CaseCreateView(View):
                 ),
             },
         )
+
+
+@csrf_exempt
+@never_cache
+@require_POST
+@login_required
+def send_autoreply(request, pk):
+    case = get_object_or_404(Case, pk=pk)
+    if request.user != case.user:
+        raise PermissionDenied()
+
+    # when should it be allowed to send a auto reply
+    # if not case.all_messages[-1].is_reply:
+    #     raise PermissionDenied()
+
+    case.send_auto_reply_message_to_entity()
+    case.status = Case.Status.WAITING_RESPONSE
+    case.save()
+
+    return redirect(case)
 
 
 class CaseStatusUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):

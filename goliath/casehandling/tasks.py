@@ -154,7 +154,7 @@ def send_user_notification_reminder_to_entity(to_email, link, text, subject):
 
 
 @celery_app.task()
-def send_entity_notification_reminder(to_email, case, text, subject):
+def send_entity_message(to_email, case, text, subject):
     """Remind user about open case"""
     from_email = case.email
 
@@ -176,9 +176,9 @@ def send_entity_notification_reminder(to_email, case, text, subject):
         error_message = esp_message_status
 
     if error_message is not None:
-        send_admin_notification_email(
-            "error reminding entity",
-            f"error with sending reminder to entity for case with id:  {case.pk}",
+        raise ValueError(
+            "error message entity"
+            + f"error with sending message to entity for case with id:  {case.pk}"
         )
 
     SentMessage.objects.create(

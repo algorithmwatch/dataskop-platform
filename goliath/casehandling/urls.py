@@ -13,6 +13,7 @@ from .views import (
     HomePageView,
     admin_preview_letter_view,
     preview_letter_text_view,
+    send_autoreply,
 )
 
 router = routers.DefaultRouter()
@@ -39,6 +40,7 @@ urlpatterns = [
         view=CaseDetailAndUpdateView.as_view(),
         name="cases-detail",
     ),
+    path("fall-auto-reply/<int:pk>/", view=send_autoreply, name="case-sent-autoreply"),
     path(
         "falltyp-text/<int:pk>/",
         view=preview_letter_text_view,

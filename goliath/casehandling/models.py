@@ -80,6 +80,8 @@ class CaseType(TimeStampMixin):
         blank=True,
         help_text="Welche Notiz sollen die User erhalten, wenn das Unternehmen erinnert wird zu antworten?",
     )
+    auto_reply_text = models.TextField(null=True, blank=True)
+    auto_reply_subject = models.CharField(max_length=255)
 
     tags = TaggableManager()
 
@@ -290,7 +292,7 @@ class Case(TimeStampMixin):
 
     def send_entities_reminder(self):
         from .tasks import (
-            send_entity_notification_reminder,
+            send_entity_message,
             send_user_notification_reminder_to_entity,
         )
 
@@ -299,7 +301,7 @@ class Case(TimeStampMixin):
             text = self.case_type.user_notification_reminder_custom_text
 
         for e in self.selected_entities.all():
-            send_entity_notification_reminder(
+            send_entity_message(
                 e.email,
                 self,
                 text,
@@ -324,6 +326,16 @@ class Case(TimeStampMixin):
             settings.URL_ORIGIN + self.get_absolute_url(),
             notify_text,
             "Erinnerung verschickt #" + str(self.pk),
+        )
+
+    def send_auto_reply_message_to_entity(self):
+        from .tasks import send_entity_message
+
+        send_entity_message(
+            self.email,
+            self,
+            self.case_type.auto_reply_text,
+            self.case_type.auto_reply_subject + f"#{self.pk}",
         )
 
     def construct_answer_thread(self):
@@ -447,6 +459,9 @@ class SentMessage(Message):
     error_message = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
 
+    @property
+    def is_reply(self):
+        return False
 
 class ReceivedMessage(Message):
     received_at = models.DateTimeField()
@@ -459,6 +474,10 @@ class ReceivedMessage(Message):
     is_autoreply = models.BooleanField(null=True)
     parsed_content = models.TextField()
     history = HistoricalRecords()
+
+    @property
+    def is_reply(self):
+        return True
 
 
 class UserReplyChoice(models.Model):
