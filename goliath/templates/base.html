@@ -7,17 +7,19 @@
     <title>{% block title %}{% endblock %} - Unding</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Unding viele Grüße von Lorenz" />
+    <meta name="description" content="Automatische Entscheidungen anfechten" />
     <meta name="author" content="AlgorithmWatch" />
 
 
     {# Open Graph #}
+    <meta property="og:title" content="Automatische Entscheidungen anfechten">
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     {% comment %} <meta property="og:title" content="{% block title %}{% endblock %} - Unding" /> {% endcomment %}
     <meta property="og:description" content="Automatische Entscheidungen anfechten" />
     <meta property="og:site_name" content="Unding" />
     <meta property="og:image" content="https://unding.de/static/img/ogimage.png" />
-    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:card" content="summary_large_image" />
 
 
     {# Favicon #}
