@@ -317,4 +317,17 @@ def preview_letter_text_view(request, pk):
     ct = get_object_or_404(CaseType, pk=pk)
     answers = json.loads(request.POST["answers"])
     username = request.POST["username"] if "username" in request.POST else ""
+
+    # use data from registration chat if the user is about to get an account
+    if (
+        not username
+        and "awfirstnamequestion" in answers
+        and "awlastnamequestion" in answers
+    ):
+        first_name, last_name = (
+            answers["awfirstnamequestion"],
+            answers["awlastnamequestion"],
+        )
+        username = f"{first_name} {last_name}"
+
     return HttpResponse(ct.render_letter(answers, username), content_type="text/plain")
