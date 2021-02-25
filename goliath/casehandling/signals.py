@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 from anymail.signals import inbound
 from django.conf import settings
@@ -26,8 +27,7 @@ def handle_email_confirmed(request, email_address, **kwargs):
     """
     Used when verifying an email adress via django all auth
     """
-    user = User.objects.get(email=email_address.email)
-
+    user = email_address.user
     for c in PostCaseCreation.objects.filter(user=user):
         c.user_verified_afterwards()
 
