@@ -20,6 +20,13 @@
     <button class="btn btn-primary" type="submit">{% trans 'Confirm' %}</button>
 </form>
 
+<!-- auto submit on page load -->
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    document.getElementsByTagName("form")[0].submit()
+  })
+</script>
+
 {% else %}
 
 {% url 'account_email' as email_url %}
