@@ -247,7 +247,7 @@ class Case(TimeStampMixin):
                 text = self.case_type.user_notification_new_answer_custom_text
 
             send_user_notification_new_message(
-                self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text
+                self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text, f"Neue Antwort #{self.pk}"
             )
             self.status = self.Status.WAITING_USER_INPUT
             self.save()

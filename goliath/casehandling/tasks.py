@@ -104,13 +104,13 @@ def send_initial_emails_to_entities(postCC):
 
 
 @celery_app.task()
-def send_user_notification_new_message(to_email, link, text):
+def send_user_notification_new_message(to_email, link, text, subject):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
         text,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        subject="Neue Antwort",
+        subject=subject,
         ctaLink=link,
         ctaLabel="zur Antwort",
     )
