@@ -87,7 +87,8 @@ def send_initial_emails_to_entities(postCC):
             postCC.user.email,
             text,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            subject="E-Mails erfolgreich versandt",
+            subject="E-Mails erfolgreich versandt"
+            + "".join([f" #{x.pk}" for x in postCC.cases.all()]),
             ctaLink=ctaLink,
             ctaLabel=ctaLabel,
         )
@@ -116,13 +117,13 @@ def send_user_notification_new_message(to_email, link, text):
 
 
 @celery_app.task()
-def send_user_notification_reminder(to_email, link, text):
+def send_user_notification_reminder(to_email, link, text, subject):
     """Remind user about open case"""
     send_anymail_email(
         to_email,
         text,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        subject="Bitte setzen Sie den Status",
+        subject=subject,
         ctaLink=link,
     )
 
@@ -140,21 +141,20 @@ def send_user_notification_new_comment(to_email, link):
 
 
 @celery_app.task()
-def send_user_notification_reminder_to_entity(to_email, link, text):
+def send_user_notification_reminder_to_entity(to_email, link, text, subject):
     """notify user about sent notification to entity"""
+
     send_anymail_email(
         to_email,
         text,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        subject="Erinnerung verschickt",
+        subject=subject,
         ctaLink=link,
     )
 
 
 @celery_app.task()
-def send_entity_notification_reminder(
-    to_email, case, text, subject="Bitte Antworten Sie auf unsere Anfrage"
-):
+def send_entity_notification_reminder(to_email, case, text, subject):
     """Remind user about open case"""
     from_email = case.email
 

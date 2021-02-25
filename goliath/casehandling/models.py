@@ -109,7 +109,10 @@ class CaseType(TimeStampMixin):
             subject_text = Template(self.letter_subject_custom_template).render(
                 Context(self)
             )
-            return cleantext.normalize_whitespace(subject_text, no_line_breaks=True)
+            return (
+                cleantext.normalize_whitespace(subject_text, no_line_breaks=True)
+                + f"#{case.id}"
+            )
         else:
             return f'Neuer Fall von "{self.title}" auf Unding.de #{case.id}'
 
@@ -276,7 +279,10 @@ class Case(TimeStampMixin):
             text = self.case_type.user_notification_reminder_custom_text
 
         send_user_notification_reminder(
-            self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text
+            self.user.email,
+            settings.URL_ORIGIN + self.get_absolute_url(),
+            text,
+            "Bitte setzen Sie den Status #" + str(self.pk),
         )
         self.last_user_reminder_sent_at = datetime.datetime.now()
         self.sent_user_reminders += 1
@@ -293,7 +299,12 @@ class Case(TimeStampMixin):
             text = self.case_type.user_notification_reminder_custom_text
 
         for e in self.selected_entities.all():
-            send_entity_notification_reminder(e.email, self, text)
+            send_entity_notification_reminder(
+                e.email,
+                self,
+                text,
+                "Bitte Antworten Sie auf unsere Anfrage #" + str(self.pk),
+            )
 
         self.last_entities_reminder_sent_at = datetime.datetime.now()
         # can't use F expression because django-simple-history does not support it
@@ -309,7 +320,10 @@ class Case(TimeStampMixin):
             )
 
         send_user_notification_reminder_to_entity(
-            self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), notify_text
+            self.user.email,
+            settings.URL_ORIGIN + self.get_absolute_url(),
+            notify_text,
+            "Erinnerung verschickt #" + str(self.pk),
         )
 
     def construct_answer_thread(self):
