@@ -14,7 +14,7 @@ def create_user_menu(is_authenticated):
                 "is_user_menu": True,
             },
             {
-                "label": "Log out",
+                "label": "Abmelden",
                 "url": reverse("account_logout"),
                 "is_user_menu": True,
             },
