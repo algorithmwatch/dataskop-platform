@@ -122,7 +122,7 @@
         <div x-data="{ showCommentForm: false }" class="comment-section">
           <div class="px-4 pt-2" x-show="showCommentForm === false">
             <button type="button" class="font-bold text-sm hover:underline hover:text-brown-8000 toggle-comment-form-button" @click="showCommentForm = true">
-              <i class="fas fa-pencil-alt"></i><span class="ml-1.5">Kommentar schreiben</span>
+              <i class="fas fa-pencil-alt"></i><span class="ml-1.5">Nachricht an das Unding-Team</span>
             </button>
           </div>
 
@@ -130,7 +130,7 @@
           <form x-show="showCommentForm === true" action="{% comment_form_target %}" method="POST" class="p-4 flex flex-col items-start comment-form">
             {% csrf_token %}
 
-            <div class="font-bold mb-4">Kommentar verfassen</div>
+            <div class="font-bold mb-4">Nachricht an das Unding-Team</div>
 
             {% render_field form.comment rows="3" class="comment-form-input text-input text-input--regular w-full mb-4" %}
             {{ form.content_type }}
@@ -157,6 +157,8 @@
 
     <input type="hidden" name="status" x-bind:value="new_status" />
 
+
+    {# mini wizard #}
     <div class="text-center rounded-xl mb-8 p-4 border border-brown-1000 max-w-prose mx-auto">
 
       <div x-show="currentScreen === 'start'">
@@ -195,17 +197,22 @@
       <div x-show="currentScreen === 'react_options'">
         <div class="hl-xl mb-3">Was möchten Sie als nächstes tun?</div>
         <div class="flex flex-wrap justify-center">
-          <button type="button" class="m-1 btn btn--regular btn--outline" @click="sendAutoreply()">Autom. Antworten mit Bitte um Befassung</button>
+          <button type="button" class="m-1 btn btn--regular btn--outline" @click="showAutoReplyReplyMailPreview()">Autom. Antworten mit Bitte um Befassung</button>
           <button type="button" class="m-1 btn btn--regular btn--outline" @click="scrollIntoLastCommentSection()">Unding um Kontaktaufnahme bitten</button>
         </div>
       </div>
-
-
     </div>
 
   </form>
 
-  <form id='aw-sent-auto-form' method="POST" action="{% url 'case-sent-autoreply' case.pk %}" >
+  <form id="autoreply-form" class="hidden max-w-prose mx-auto" method="POST" action="{% url 'case-sent-autoreply' case.pk %}" >
+
+    <div class="rounded-xl mb-4 p-4 border border-brown-1000 font-serif">
+      Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem For
+    </div>
+
+    <button type="submit" class="btn btn--regular btn--primary">Abschicken</button>
+
   </form>
 
 
@@ -228,15 +235,21 @@
     // scroll form into view
     setTimeout(function () {
       lastCommentForm.scrollIntoView({block: "start", behavior: "smooth"})
-    }, 0)
 
-    // do something with the textarea
-    console.warn('textarea', commentFormInput)
+      // do something with the textarea
+      commentFormInput.focus()
+    }, 0)
 
   }
 
-  function sendAutoreply() {
-    document.getElementById('aw-sent-auto-form').submit()
+  function showAutoReplyReplyMailPreview() {
+    const form = document.getElementById('autoreply-form')
+    form.classList.remove('hidden')
+
+    // scroll form into view
+    setTimeout(function () {
+      form.scrollIntoView({block: "start", behavior: "smooth"})
+    }, 0)
   }
 
 </script>
