@@ -207,8 +207,12 @@
 
   <form id="autoreply-form" class="hidden max-w-prose mx-auto" method="POST" action="{% url 'case-sent-autoreply' case.pk %}" >
 
-    <div class="rounded-xl mb-4 p-4 border border-brown-1000 font-serif">
-      Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem For
+    <div class="font-bold mb-2.5">Senden Sie diese Antwort:</div>
+    <div class="rounded-xl mb-4 p-4 border border-brown-1000">
+      <div class="text-sm border-b border-brown-200 pb-2.5 mb-2.5">
+        <div><strong>Betreff:</strong> {{ case.case_type.auto_reply_subject }}</div>
+      </div>
+      <div class="font-serif whitespace-pre-wrap">{{ case.case_type.auto_reply_text }}</div>
     </div>
 
     <button type="submit" class="btn btn--regular btn--primary">Abschicken</button>
