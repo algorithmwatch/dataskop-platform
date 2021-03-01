@@ -370,3 +370,6 @@ if env("S3_ENDPOINT", default=None) is not None:
 
     if env("GPG_KEY_NAME", default=None) is not None:
         DBBACKUP_GPG_RECIPIENT = env("GPG_KEY_NAME")
+
+
+GOOGLE_VERIFICATION = env.str("GOOGLE_VERIFICATION", "")

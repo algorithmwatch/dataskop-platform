@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n settings_value %}
 <!DOCTYPE html>
 <html lang="de">
   <head>
@@ -23,6 +23,8 @@
     <meta name="twitter:site" content="@_unding">
     <meta name="twitter:image" content="https://unding.de/static/img/ogimage.png" >
 
+    {# Google Search Console etc. #}
+    <meta name="google-site-verification" content="{% settings_value "GOOGLE_VERIFICATION" %}" />
 
     {# Favicon #}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicons/apple-touch-icon.png' %}">
