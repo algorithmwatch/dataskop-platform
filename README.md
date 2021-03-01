@@ -179,11 +179,6 @@ ssh awlab2 "cd code/goliath && docker-compose -f production.yml up --detach --bu
 
 You may as well use the Docker-compose setup from `staging`.
 
-### Heroku
-
-Check out the [cookiecutter-django Heroku
-documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
-
 ### Dokku
 
 Set up a [Dokku application](http://dokku.viewdocs.io/dokku/deployment/application-deployment/), create and link a Postgres DB and a Redis instance, respectivly. Then set up all the environment variables. Finally:
