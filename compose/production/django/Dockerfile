@@ -59,6 +59,7 @@ RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 COPY --from=client-builder --chown=django:django /app /app
 
+RUN chown -R django:django /media
 
 USER django
 

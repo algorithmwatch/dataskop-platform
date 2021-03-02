@@ -39,6 +39,7 @@ RUN pip install --no-cache-dir -r /requirements/production.txt \
 
 COPY --from=client-builder --chown=django:django /app /app
 
+RUN chown -R django:django /media
 
 USER django
 

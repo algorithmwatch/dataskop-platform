@@ -21,6 +21,7 @@ services:
     command: /start
     volumes:
       - /var/goliath_backups/:/backups
+      - /var/goliath_media_files/:/media
 
   postgres:
     image: postgres:11

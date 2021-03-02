@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
@@ -24,7 +24,7 @@ from django.views.generic.list import ListView
 from ratelimit.decorators import ratelimit
 
 from .forms import CaseStatusForm, get_admin_form_preview
-from .models import Case, CaseType, PostCaseCreation
+from .models import Case, CaseType, PostCaseCreation, PublicFile
 from .tasks import send_admin_notification_waiting_approval_case
 
 User = get_user_model()
@@ -331,3 +331,17 @@ def preview_letter_text_view(request, pk):
         username = f"{first_name} {last_name}"
 
     return HttpResponse(ct.render_letter(answers, username), content_type="text/plain")
+
+
+@method_decorator(cache_control(max_age=3600, public=True), name="dispatch")
+class PublicFileDownload(View):
+    """
+    quick & dirty way to download a public file. If in production: use nginx to override the path.
+    """
+
+    def get(self, request, relative_path):
+        relative_path = "public_files/" + relative_path
+        if relative_path.endswith("/"):
+            relative_path = relative_path[:-1]
+        file = get_object_or_404(PublicFile, file=relative_path)
+        return FileResponse(open(file.get_absolute_url(), "rb"), as_attachment=True)

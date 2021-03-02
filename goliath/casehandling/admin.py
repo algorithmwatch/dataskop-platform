@@ -9,6 +9,7 @@ from .models import (
     CaseType,
     Entity,
     ExternalSupport,
+    PublicFile,
     ReceivedMessage,
     SentMessage,
 )
@@ -183,3 +184,5 @@ class GoliathFlatPageAdmin(FlatPageAdmin):
 # Re-register FlatPageAdmin
 admin.site.unregister(FlatPage)
 admin.site.register(GoliathFlatPage, GoliathFlatPageAdmin)
+
+admin.site.register(PublicFile)

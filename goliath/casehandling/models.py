@@ -247,7 +247,10 @@ class Case(TimeStampMixin):
                 text = self.case_type.user_notification_new_answer_custom_text
 
             send_user_notification_new_message(
-                self.user.email, settings.URL_ORIGIN + self.get_absolute_url(), text, f"Neue Antwort #{self.pk}"
+                self.user.email,
+                settings.URL_ORIGIN + self.get_absolute_url(),
+                text,
+                f"Neue Antwort #{self.pk}",
             )
             self.status = self.Status.WAITING_USER_INPUT
             self.save()
@@ -463,6 +466,7 @@ class SentMessage(Message):
     def is_reply(self):
         return False
 
+
 class ReceivedMessage(Message):
     received_at = models.DateTimeField()
     html = models.TextField(blank=True, null=True)
@@ -506,3 +510,13 @@ class GoliathFlatPage(FlatPage):
     markdown_content = MarkupField(
         default_markup_type="markdown", blank=True, null=True
     )
+
+
+class PublicFile(models.Model):
+    file = models.FileField(upload_to="public_files")
+
+    def get_absolute_url(self):
+        return self.file.url
+
+    def __str__(self):
+        return self.file.url
