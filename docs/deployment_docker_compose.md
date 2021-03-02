@@ -14,6 +14,12 @@ Protect the staging enviroment with basic auth.
 htpasswd -c compose/production/traefik/htpasswd user
 ```
 
+## Settings via .env files
+
+```bash
+mkdir -p .envs/.production/.django && mkdir .envs/.production/.postgres
+```
+
 ## Docker with systemd service
 
 Here an example on how to deploy with Docker-Compose and systemd.

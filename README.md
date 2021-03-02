@@ -6,15 +6,6 @@ This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pyd
 
 ## Development Setup
 
-### Settings via .env files
-
-```bash
-mkdir -p .envs/.local/.django && mkdir .envs/.local/.postgres
-```
-
-Check [docs/settings.md](./docs/settings.md) for more.
-Also the [cookiecutter docs](<(http://cookiecutter-django.readthedocs.io/en/latest/settings.html)>) may help for some settings.
-
 ### VS Code Dev Container
 
 We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
@@ -97,6 +88,11 @@ available as docker container.
 View sent emails at: <http://localhost:8025>
 
 ## Production
+
+### Settings via Environment Varibales
+
+Check [docs/settings.md](./docs/settings.md) for more.
+Also the [cookiecutter docs](<(http://cookiecutter-django.readthedocs.io/en/latest/settings.html)>) may help for some settings.
 
 ### Deployment
 
