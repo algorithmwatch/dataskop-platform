@@ -1,0 +1,24 @@
+# General
+USE_DOCKER=yes
+IPYTHONDIR=/app/.ipython
+DJANGO_DEBUG=yes
+URL_ORIGIN=http://localhost:8000
+
+# Redis
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+CELERY_BROKER_URL=redis://redis:6379/0
+
+# Flower
+CELERY_FLOWER_USER=xx
+CELERY_FLOWER_PASSWORD=xx
+
+# Email
+MAILJET_API_KEY=xx
+MAILJET_SECRET_KEY=xx
+WEBHOOK_SECRET=xx:xx
+
+# import data from airtable
+AIRTABLE_KEY=xx
+AIRTABLE_TABLE=xx
