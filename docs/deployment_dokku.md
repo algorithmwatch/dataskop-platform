@@ -23,3 +23,8 @@ git push dokku
 docker pull postgres:11
 dokku postgres:upgrade $dbname -I 11
 ```
+
+### Misc
+
+- setup a default server: https://dokku.com/docs/configuration/nginx/#default-site
+- to make the custom CHECKS file work: set a list of allowed hosts (e.g. a local IP adress): `DJANGO_ALLOWED_HOSTS=.unding.de,xx.xx.xx.xx`
