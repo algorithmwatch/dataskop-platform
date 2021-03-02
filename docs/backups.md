@@ -22,7 +22,7 @@ S3_REGION=xx
 ## Backup
 
 ```
-./backup.sh
+./scripts/backup.sh
 ```
 
 ## Restore
@@ -37,5 +37,5 @@ gpg -d encrypteddata.psql.gz.gpg > data.psql.gz
 Put the file to your server in a mounted volume and:
 
 ```bash
-./restore.sh /backups/data.psql.gz
+./scripts/restore.sh /backups/data.psql.gz
 ```

@@ -1,16 +1,31 @@
 # Goliath ![image](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg) ![image](https://img.shields.io/badge/code%20style-black-000000.svg)
 
-The Goliath project by AlgorithmWatch.
+The Goliath project by [AlgorithmWatch](https://algorithmwatch.org/) powering [Unding.de](//unding.de).
 
-## Information & Features
+This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django) but heavily modified.
 
-This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django).
+## Development Setup
 
-### Settings
+### Settings via .env files
 
-Check out for a description of [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+```bash
+mkdir -p .envs/.local/.django && mkdir .envs/.local/.postgres
+```
 
-## Development
+Check [docs/settings.md](./docs/settings.md) for more.
+Also the [cookiecutter docs](<(http://cookiecutter-django.readthedocs.io/en/latest/settings.html)>) may help for some settings.
+
+### VS Code Dev Container
+
+We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
+
+To start the devlopment server: Open a new terminal and run `/start`.
+
+To run management commands: Open a new terminal and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
+
+As an alternative, see below to use Docker without VS Code.
+
+### Docker
 
 Install and use [Docker](https://docs.docker.com/get-docker/). [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
 
@@ -18,7 +33,7 @@ Install and use [Docker](https://docs.docker.com/get-docker/). [More information
 ./local.sh
 ```
 
-To run Django management comannds:
+Some important Django management comands:
 
 ```bash
 ./local_manage.sh makemigrations
@@ -79,120 +94,32 @@ sent from your application. For that reason local SMTP server
 [MailHog](https://github.com/mailhog/MailHog) with a web interface is
 available as docker container.
 
-Container mailhog will start automatically when you will run all docker
-containers. Please check [cookiecutter-django Docker
-documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
-for more details how to start all containers.
+View sent emails at: <http://localhost:8025>
 
-View emails at: `http://127.0.0.1:8025`
+## Production
 
-## Deployment
+### Deployment
 
-Two different environments: `staging` for previewing before finally releasing to `production`.
-Useful because the email handling only works if the app is deployed somewhere.
+We currently support two different Docker-based ways to deploy Goliath:
+
+- [Docker-Compose](./docs/deployment_docker_compose.md) (originating from Django-Cookie-Cutter)
+- [Dokku](./docs/deployment_dokku.md) (_preferred_, self-hosted Heroku)
 
 ### Sentry
 
-Setup [Sentry](https://sentry.io) and set the `SENTRY_DSN` as environment variable.
+Setup [Sentry](https://sentry.io) to monitor errors.
+Set the `SENTRY_DSN` as environment variable.
 
 ### E-Mail Services
 
-TODO
+See [docs/emails_mailjet.md](./docs/emails_mailjet.md) on how to configure [Mailjet](https://www.mailjet.com/).
+Right now, we only support Mailjet but we could make any other email service from [django-anymail](https://github.com/anymail/django-anymail) work.
 
 ### Staging
 
-Using the docker-compose of the production environment of `Django-Cookie-Cutter` for our staging invironment.
-For our production, we are using Dokku.
-
-```bash
-docker-compose -f production.yml run --rm django python manage.py migrate
-docker-compose -f production.yml run --rm django python manage.py createsuperuser
-docker-compose -f production.yml --env-file .envs/.staging/.django up
-```
-
-Protect the staging enviroment with basic auth.
-
-```bash
-htpasswd -c compose/production/traefik/htpasswd user
-```
-
-#### Docker with systemd service
-
-Here an example on how to deploy with Docker-Compose and systemd.
-
-Some more details in the [cookiecutter-django Docker
-documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
-
-```bash
-cd /etc/systemd/system
-vim goliath-staging.service
-```
-
-```
-[Unit]
-Description=Goliath (Staging)
-After=docker.service
-
-[Service]
-Restart=on-failure
-RestartSec=5s
-
-Type=oneshot
-RemainAfterExit=yes
-StandardOutput=file:/var/log/goli.log
-StandardError=file:/var/log/goli_error.log
-
-WorkingDirectory=/root/code/goliath/
-ExecStart=/usr/bin/docker-compose -f production.yml --env-file .envs/.staging/.django up -d
-ExecStop=/usr/bin/docker-compose -f production.yml down
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-systemctl daemon-reload
-systemctl enable goliath-staging.service
-```
-
-##### Commands
-
-Usefull commands
-
-```bash
-systemctl enable goliath-staging
-systemctl status goliath-staging
-systemctl start goliath-staging
-systemctl stop goliath-staging
-```
-
-##### Deployment
-
-Create a simple deployment script:
-
-```bash
-rsync -avz . awlab2:~/code/goliath
-ssh awlab2 "cd code/goliath && docker-compose -f production.yml up --detach --build django && docker-compose -f production.yml run --rm django python manage.py migrate"
-```
-
-### Production
-
-You may as well use the Docker-compose setup from `staging`.
-
-### Dokku
-
-Set up a [Dokku application](http://dokku.viewdocs.io/dokku/deployment/application-deployment/), create and link a Postgres DB and a Redis instance, respectivly. Then set up all the environment variables. Finally:
-
-```bash
-git push dokku
-```
-
-#### Upgrade to a specific database version
-
-```bash
-docker pull postgres:11
-dokku postgres:upgrade $dbname -I 11
-```
+In order to test the email receiving, you need to have Goliath deployed somewhere.
+So think about creating a seperate `staging` server to test Goliath.
+You take all the production settings but customize Goliath via .env files.
 
 ## License
 

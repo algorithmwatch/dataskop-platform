@@ -15,23 +15,19 @@ services:
     depends_on:
       - postgres
       - redis
-    # using the staging enviroment since we are actually staging with Docker compose
     env_file:
-      - ./.envs/.staging/.django
-      - ./.envs/.staging/.postgres
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
     command: /start
     volumes:
       - /var/goliath_backups/:/backups
 
   postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: goliath_production_postgres
+    image: postgres:11
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
     env_file:
-      - ./.envs/.staging/.postgres
+      - ./.envs/.production/.postgres
 
   traefik:
     build:

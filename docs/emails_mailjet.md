@@ -1,4 +1,6 @@
-Setup emails for mailjet
+# Emails Mailjet
+
+## Setup emails for mailjet
 
 ```Python
 from mailjet_rest import Client
