@@ -6,7 +6,7 @@
   // Update the 'dockerComposeFile' list if you have more compose files or use different names.
   // The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
   "dockerComposeFile": [
-    "../local.yml",
+    "../docker-compose.local.yml",
     "docker-compose.yml"
   ],
   // The 'service' property is the name of the service for the container that VS Code should
@@ -40,7 +40,6 @@
     "less.validate": false,
     "scss.validate": false,
     "stylelint.enable": true,
-
     // tailwind intellisense config
     "css.validate": false,
     "editor.quickSuggestions": {
@@ -48,7 +47,7 @@
     },
     "tailwindCSS.includeLanguages": {
       "django-html": "html"
-		}
+    }
   },
   "extensions": [
     "ms-python.python",
