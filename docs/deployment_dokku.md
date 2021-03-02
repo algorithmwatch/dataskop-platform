@@ -28,3 +28,11 @@ dokku postgres:upgrade $dbname -I 11
 
 - setup a default server: https://dokku.com/docs/configuration/nginx/#default-site
 - to make the custom CHECKS file work: set a list of allowed hosts (e.g. a local IP adress): `DJANGO_ALLOWED_HOSTS=.unding.de,xx.xx.xx.xx`
+
+### Volumes
+
+`mkdir /var/lib/dokku/data/storage/some-storage`
+
+The uid and gid of the user of the Dockerfile (in this case the user `django`)
+
+`chown -R 101:101 /var/lib/dokku/data/storage/some-storage`
