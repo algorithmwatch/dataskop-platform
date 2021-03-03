@@ -4,13 +4,24 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
+from goliath.casehandling.models import Case, PostCaseCreation
+
 User = get_user_model()
+
+
+class PCCInline(admin.TabularInline):
+    model = PostCaseCreation
+
+
+class CaseInline(admin.TabularInline):
+    model = Case
+    fk_name = "user"
 
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     fieldsets = (
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
         (
             _("Permissions"),
             {
@@ -35,6 +46,7 @@ class UserAdmin(auth_admin.UserAdmin):
     ]
     search_fields = ["email", "first_name", "last_name"]
     ordering = ("-date_joined",)
+    inlines = [PCCInline, CaseInline]
 
     def has_add_permission(self, request, obj=None):
         return False
