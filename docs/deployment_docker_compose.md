@@ -74,6 +74,18 @@ systemctl stop goliath-staging
 Create a simple deployment script:
 
 ```bash
+#!/usr/bin/env bash
+
 rsync -avz . awlab2:~/code/goliath
 ssh awlab2 "cd code/goliath && docker-compose -f docker-compose.production.yml up --detach --build django && docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate"
+```
+
+## Volumnes
+
+Create a volume (on the host) and assign the uid + guid of the user running django.
+
+```bash
+mkdir /var/goliath_media_files
+
+chown -R 101:101 /var/goliath_media_files
 ```
