@@ -25,7 +25,7 @@ S3_REGION=xx
 ./scripts/backup.sh
 ```
 
-## Restore
+## Restore Encrypted DB Dump
 
 Download the file from the bucket.
 Decrypt it on your device with your secret key.
@@ -37,5 +37,7 @@ gpg -d encrypteddata.psql.gz.gpg > data.psql.gz
 Put the file to your server in a mounted volume and:
 
 ```bash
-./scripts/restore.sh /backups/data.psql.gz
+./scripts/restore_db.sh /backups/data.psql.gz
 ```
+
+Likewise for encrypted & compressed media folder.

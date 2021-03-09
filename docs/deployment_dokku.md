@@ -36,3 +36,10 @@ dokku postgres:upgrade $dbname -I 11
 The uid and gid of the user of the Dockerfile (in this case the user `django`)
 
 `chown -R 101:101 /var/lib/dokku/data/storage/some-storage`
+
+### Backup cronjobs
+
+```
+16 * * * * /usr/bin/dokku run unding ./manage.py dbbackup --encrypt --compress --clean
+16 12,19 * * * /usr/bin/dokku run unding ./manage.py mediabackup --encrypt --compress --clean
+```
