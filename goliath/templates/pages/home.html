@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load static i18n meta_tags %}
 
-{% block title %}Start{% endblock %}
+{% block meta_tags %}
+  {% meta_tags title='Start' %}
+{% endblock %}
 
 {% block body_class %}bg-blue-100{% endblock %}
 {% block content_class %}{% endblock %}

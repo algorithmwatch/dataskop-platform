@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% load meta_tags %}
 
-{% block title %}Start{% endblock %}
-
+{% block meta_tags %}
+  {% meta_tags title='Dashboard' %}
+{% endblock %}
 
 {% block content %}
 <div class="box-border md:box-content border-4">

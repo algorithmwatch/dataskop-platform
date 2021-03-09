@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load i18n case_status_icon %}
+{% load static i18n case_status_icon meta_tags %}
 
-{% block title %}Meine Fälle{% endblock %}
+{% block meta_tags %}
+  {% meta_tags title="Meine Fälle" %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 

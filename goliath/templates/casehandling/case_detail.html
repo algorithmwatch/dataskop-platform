@@ -1,7 +1,13 @@
 {% extends "base.html" %}
-{% load case_status_icon comments widget_tweaks %}
+{% load case_status_icon comments widget_tweaks meta_tags %}
 
-{% block title %}Fall #{{case.id}}{% endblock %}
+{% block meta_tags %}
+  {% with case.id|stringformat:"s" as cid %}
+    {% with "Fall #"|add:cid as title %}
+      {% meta_tags title=title %}
+    {% endwith %}
+  {% endwith %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space {% endblock %}
 

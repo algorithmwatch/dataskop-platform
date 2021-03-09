@@ -1,27 +1,12 @@
-{% load static i18n settings_value %}
+{% load static i18n settings_value meta_tags %}
 <!DOCTYPE html>
 <html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>{% block title %}{% endblock %} - Unding</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Automatische Entscheidungen anfechten" />
-    <meta name="author" content="AlgorithmWatch" />
 
-
-    {# Open Graph #}
-    <meta property="og:title" content="Unding.de">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    {% comment %} <meta property="og:title" content="{% block title %}{% endblock %} - Unding" /> {% endcomment %}
-    <meta property="og:description" content="Automatische Entscheidungen anfechten" />
-    <meta property="og:site_name" content="Unding" />
-    <meta property="og:image" content="https://unding.de/static/img/ogimage.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@_unding">
-    <meta name="twitter:image" content="https://unding.de/static/img/ogimage.png" >
+    {% block meta_tags %}{% meta_tags %}{% endblock%}
 
     {# Google Search Console etc. #}
     <meta name="google-site-verification" content="{% settings_value "GOOGLE_VERIFICATION" %}" />

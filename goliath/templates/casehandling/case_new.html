@@ -1,7 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static meta_tags %}
 
-{% block title %}{{case_type.title}} - Neuer Fall{% endblock %}
+{% block meta_tags %}
+  {% with case_type.title|add:" - Neuer Fall" as title %}
+    {% meta_tags title=title %}
+  {% endwith %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 

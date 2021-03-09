@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static meta_tags %}
 
-{% block title %}Warte auf Bestätigung{% endblock %}
+{% block meta_tags %}
+  {% meta_tags title="Warte auf Bestätigung" %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 

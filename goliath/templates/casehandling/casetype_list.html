@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n meta_tags %}
 
-{% block title %}Neuer Fall{% endblock %}
+{% block meta_tags %}
+  {% meta_tags title='Neuer Fall' %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space mt-8 lg:mt-10{% endblock %}
 

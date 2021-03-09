@@ -1,7 +1,11 @@
 {% extends "base.html" %}
-{% load static widget_tweaks %}
+{% load static widget_tweaks meta_tags %}
 
-{% block title %}{{case_type.title}} - Ihr Fall wurde gemeldet!{% endblock %}
+{% block meta_tags %}
+  {% with case_type.title|add:" - Ihr Fall wurde gemeldet!" as title %}
+    {% meta_tags title=title %}
+  {% endwith %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
