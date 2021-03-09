@@ -127,10 +127,29 @@ class EntityAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
     ]
 
 
-class MessageAdmin(
+class SentMessageAdmin(
     RemoveAdminAddButtonMixin, HistoryDeletedFilterMixin, SimpleHistoryAdmin
 ):
-    list_display = ["id", "created_at", "subject", "from_email", "to_email"]
+    list_display = [
+        "id",
+        "created_at",
+        "subject",
+        "from_email",
+        "to_email",
+        "esp_message_status",
+    ]
+    ordering = ("-created_at",)
+
+
+class ReceivedMessageAdmin(SentMessageAdmin):
+    list_display = [
+        "id",
+        "created_at",
+        "subject",
+        "from_email",
+        "to_email",
+        "is_autoreply",
+    ]
 
 
 class ExternalSupportAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
@@ -150,8 +169,8 @@ admin.site.register(Entity, EntityAdmin)
 admin.site.register(CaseType, CaseTypeAdmin)
 admin.site.register(Case, CaseAdmin)
 admin.site.register(ExternalSupport, ExternalSupportAdmin)
-admin.site.register(ReceivedMessage, MessageAdmin)
-admin.site.register(SentMessage, MessageAdmin)
+admin.site.register(ReceivedMessage, ReceivedMessageAdmin)
+admin.site.register(SentMessage, SentMessageAdmin)
 admin.site.register(AutoreplyKeyword, AutoreplyKeywordAdmin)
 
 # TODO: put into seperate app
