@@ -234,16 +234,17 @@ def persist_inbound_email(message):
             break
 
     case_found = case is not None
-    parsed_content = EmailReplyParser.parse_reply(message.text)
+    raw_text = message.text or ""
+    parsed_content = EmailReplyParser.parse_reply(raw_text)
     is_autoreply = None
     if case_found:
         is_autoreply = case.case_type.is_message_autoreply(parsed_content)
 
-    ReceivedMessage.objects.create(
+    received_object = ReceivedMessage.objects.create(
         case=case,
         from_email=message.envelope_sender,
         to_email=to_address,
-        content=message.text,
+        content=raw_text,
         parsed_content=parsed_content,
         is_autoreply=is_autoreply,
         html=message.html,
