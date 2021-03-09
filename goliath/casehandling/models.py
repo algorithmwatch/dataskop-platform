@@ -452,7 +452,7 @@ class Message(TimeStampMixin):
         ordering = ["sent_at"]
 
     def __str__(self):
-        return self.from_email + self.to_email + self.subject
+        return self.subject + self.from_email + self.to_email if self.to_email else ""
 
 
 class SentMessage(Message):
