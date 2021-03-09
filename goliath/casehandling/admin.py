@@ -166,14 +166,26 @@ from .models import GoliathFlatPage
 # Define a new FlatPageAdmin
 class GoliathFlatPageAdmin(FlatPageAdmin):
     fieldsets = (
-        (None, {"fields": ("url", "title", "content", "sites", "markdown_content")}),
+        (
+            None,
+            {
+                "fields": (
+                    "url",
+                    "title",
+                    "social_media_description",
+                    "social_media_image",
+                    "markdown_content",
+                    "sites",
+                )
+            },
+        ),
         (
             _("Advanced options"),
             {
                 "classes": ("collapse",),
                 "fields": (
                     # "enable_comments",
-                    "registration_required",
+                    # "registration_required",
                     "template_name",
                 ),
             },

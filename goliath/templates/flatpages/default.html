@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load meta_tags %}
 
-{% block title %}
-  {{flatpage.title}}
+{% block meta_tags %}
+  {% meta_tags title=flatpage.title description=flatpage.goliathflatpage.social_media_description social_media_image=flatpage.goliathflatpage.social_media_image|stringformat:"s" %}
 {% endblock %}
 
 {% block content_class %}page-wrap-wide relative{% endblock %}
@@ -9,6 +10,6 @@
 {% block content %}
   <div class="page-wrap-prose page-wrap-space prose-content">
     {{ flatpage.goliathflatpage.content|safe }}
-    {{flatpage.goliathflatpage.markdown_content.rendered|safe}}
+    {{ flatpage.goliathflatpage.markdown_content.rendered|safe }}
   </div>
 {% endblock content %}

@@ -507,6 +507,10 @@ from django.contrib.flatpages.models import FlatPage
 
 
 class GoliathFlatPage(FlatPage):
+    social_media_image = models.ForeignKey(
+        "PublicFile", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    social_media_description = models.TextField(blank=True, null=True)
     markdown_content = MarkupField(
         default_markup_type="markdown", blank=True, null=True
     )
