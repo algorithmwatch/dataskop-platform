@@ -164,7 +164,7 @@ from .models import GoliathFlatPage
 
 
 # Define a new FlatPageAdmin
-class GoliathFlatPageAdmin(FlatPageAdmin):
+class GoliathFlatPageAdmin(FlatPageAdmin, SimpleHistoryAdmin):
     fieldsets = (
         (
             None,

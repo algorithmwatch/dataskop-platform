@@ -515,6 +515,11 @@ class GoliathFlatPage(FlatPage):
         default_markup_type="markdown", blank=True, null=True
     )
 
+    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
+    history = HistoricalRecords(
+        excluded_fields=["_markdown_content_rendered", "markdown_content_markup_type"]
+    )
+
 
 class PublicFile(models.Model):
     file = models.FileField(upload_to="public_files")
