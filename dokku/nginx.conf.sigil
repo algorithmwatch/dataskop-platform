@@ -65,6 +65,7 @@ server {
 
 # START UNDING
 proxy_cache_path /tmp/undingcache levels=1:2 keys_zone=undingcache:10m max_size=1g inactive=5m use_temp_path=off;
+client_max_body_size 50m;
 # END UNDING
 
 server {
