@@ -10,6 +10,7 @@ from .models import (
     Entity,
     ExternalSupport,
     PublicFile,
+    ReceivedAttachment,
     ReceivedMessage,
     SentMessage,
 )
@@ -165,11 +166,20 @@ class AutoreplyKeywordAdmin(HistoryDeletedFilterMixin, SimpleHistoryAdmin):
     view_on_site = False
 
 
+class ReceivedAttachmentAdmin(RemoveAdminAddButtonMixin, admin.ModelAdmin):
+    list_display = [
+        "id",
+        "filename",
+        "message",
+    ]
+
+
 admin.site.register(Entity, EntityAdmin)
 admin.site.register(CaseType, CaseTypeAdmin)
 admin.site.register(Case, CaseAdmin)
 admin.site.register(ExternalSupport, ExternalSupportAdmin)
 admin.site.register(ReceivedMessage, ReceivedMessageAdmin)
+admin.site.register(ReceivedAttachment, ReceivedAttachmentAdmin)
 admin.site.register(SentMessage, SentMessageAdmin)
 admin.site.register(AutoreplyKeyword, AutoreplyKeywordAdmin)
 

@@ -484,6 +484,17 @@ class ReceivedMessage(Message):
         return True
 
 
+class ReceivedAttachment(models.Model):
+    file = models.FileField(upload_to="private_attachments")
+    filename = models.TextField(blank=True, null=True)
+    content_type = models.TextField(blank=True, null=True)
+    content_disposition = models.CharField(blank=True, null=True, max_length=20)
+    message = models.ForeignKey(
+        "ReceivedMessage", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+
+# FIXME: currently not used
 class UserReplyChoice(models.Model):
     subject = models.CharField(max_length=255)
     content = models.TextField()

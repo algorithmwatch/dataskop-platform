@@ -7,7 +7,7 @@ from email_reply_parser import EmailReplyParser
 from config import celery_app
 
 from ..utils.email import send_anymail_email
-from .models import Case, ReceivedMessage, SentMessage
+from .models import Case, ReceivedAttachment, ReceivedMessage, SentMessage
 
 
 @celery_app.task()
@@ -261,6 +261,15 @@ def persist_inbound_email(message):
         to_addresses=[str(x) for x in message.to] + [message.envelope_recipient],
         cc_addresses=[str(x) for x in message.cc],
     )
+
+    for a in message.attachments + list(message.inline_attachments.values()):
+        ReceivedAttachment.objects.create(
+            message=received_object,
+            file=a.as_uploaded_file(),
+            filename=a.get_filename(),
+            content_type=a.get_content_type(),
+            content_disposition=a.get_content_disposition(),
+        )
 
     if case is not None:
         case.handle_incoming_email(is_autoreply)
