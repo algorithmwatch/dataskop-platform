@@ -10,16 +10,22 @@
 {% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
 {% block content %}
-  <div class="rounded-xl bg-blue-100">
+  <div class="rounded-xl bg-blue-100" x-data="{ processHowToOpen: false }">
 
     <div class="max-w-2xl mx-auto p-8 sm:p-10 md:p-12 lg:py-12 lg:px-0">
       <h1 class="hl-2xl mb-6">{{case_type.title}}</h1>
       <p class="text-lg">{{case_type.description}}</p>
+      <p class="mt-8">Noch Fragen? <a class="font-bold hover:underline" role="button" @click="processHowToOpen = !processHowToOpen">Klicken Sie hier</a> für eine Prozesserklärung.</p>
     </div>
 
     {% comment %} <div class="p-4">
       <button type="button" class="survey-reset btn btn--small btn--outline">Neustarten</button>
     </div> {% endcomment %}
+
+    <div class="mb-12 py-8 bg-orange-200" x-show="processHowToOpen === true">
+      {% include '../pages/process_description.html' %}
+    </div>
+
 
     <div class="survey-container px-4 pb-6">
 
