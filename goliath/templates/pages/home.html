@@ -168,26 +168,17 @@
     </div>
   </div>
 
+
+  {# About video #}
   <div class="bg-orange-200 py-12 lg:pt-16 lg:pb-24">
-    <div id="ueber" class="px-2 page-wrap-wide text-center">
-
+    <div id="ueber" class="px-4 page-wrap-wide text-center">
       <div>
-        <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-5 lg:mb-8">{% trans 'Das ist ein Unding' %}</h2>
 
-        <div class="lg:flex lg:justify-center space-y-6 lg:space-y-0 lg:space-x-6">
-          <div class="
-            max-w-md w-full
-            h-72
-            mx-auto lg:mx-0
+        <div class="lg:flex lg:justify-center max-w-6xl mx-auto lg:px-10 lg:py-14 lg:rounded-lg lg:bg-orange-300">
 
-          overflow-hidden
-            flex justify-center items-center
-          ">
-            <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/b1bYq9Q73tU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-
-          <div class="px-4 md:px-0 lg:max-w-md lg:text-left">
+          <div class="px-4 md:px-0 mb-10 lg:mb-0 lg:mr-6 lg:max-w-xl lg:text-left">
             <div class="lg:text-lg mb-6 max-w-prose mx-auto">
+              <h2 class="hl-2xl xs:hl-3xl md:hl-4xl mb-6 lg:mb-8">{% trans 'So funktioniert Unding' %}</h2>
               Immer mehr Dinge in unserem Alltag werden automatisiert entschieden.
               Stellen Sie sich vor, dass Navis so viel Verkehr vor Ihrer Tür entlang schicken, dass Sie nicht mehr sicheren Fußes über die Straße kommen. Dass Fotoautomaten in Behörden ihr Gesicht nicht erfassen, weil die Ihre Hautfarbe nicht richtig erkennen. Oder Sie einen Vertrag nicht bekommen, weil der Computer errechnet hat Sie seien nicht kreditwürdig. Was für Undinger!
             </div>
@@ -195,14 +186,26 @@
               <a href="/ueber" class="btn btn--regular btn--primary">{% trans 'Weiterlesen' %}</a>
             </div>
           </div>
+
+          <div class="
+            max-w-md w-full
+            h-64
+            mx-auto lg:mx-0
+            lg:mt-16
+            overflow-hidden
+            flex justify-center items-center
+          ">
+            <iframe width="430" height="256" src="https://www.youtube-nocookie.com/embed/b1bYq9Q73tU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+
         </div>
       </div>
 
-{% comment %}
-      <div>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/PFER5B2X8kk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div> {% endcomment %}
+    </div>
 
+    {# process visual #}
+    <div class="page-wrap-wide mt-10 mb-6 md:mt-12 lg:mt-20 ">
+      {% include './process_description.html' %}
     </div>
 
   </div>

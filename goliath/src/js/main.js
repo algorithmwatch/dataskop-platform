@@ -2,12 +2,12 @@ import 'alpinejs'
 import '../scss/main.scss'
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt,
-  faPaperPlane,
+  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt, faStarHalfAlt,
 
   // case types:
   faTruck, faBuilding, faPersonBooth, faTachometerAlt
 } from '@fortawesome/free-solid-svg-icons'
+import { faComments, faPaperPlane, faUserCircle as faUserCircleOutline, faBell as faBellOutline } from '@fortawesome/free-regular-svg-icons'
 import { faGoogle, faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebookSquare } from '@fortawesome/free-brands-svg-icons'
 
 /*
@@ -22,8 +22,8 @@ import { faGoogle, faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebo
 */
 
 library.add(
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt,
-  faPaperPlane,
+  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt, faStarHalfAlt,
+  faPaperPlane, faComments, faUserCircleOutline, faBellOutline,
 
   faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebookSquare,
 
