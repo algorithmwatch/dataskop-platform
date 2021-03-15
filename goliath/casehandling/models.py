@@ -506,6 +506,12 @@ class ReceivedAttachment(models.Model):
         "ReceivedMessage", on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    def get_absolute_url(self):
+        return self.file.url
+
+    def __str__(self):
+        return self.file.url
+
 
 # FIXME: currently not used
 class UserReplyChoice(models.Model):

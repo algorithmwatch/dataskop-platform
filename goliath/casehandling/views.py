@@ -24,7 +24,7 @@ from django.views.generic.list import ListView
 from ratelimit.decorators import ratelimit
 
 from .forms import CaseStatusForm, get_admin_form_preview
-from .models import Case, CaseType, PostCaseCreation, PublicFile
+from .models import Case, CaseType, PostCaseCreation, PublicFile, ReceivedAttachment
 from .tasks import send_admin_notification_waiting_approval_case
 
 User = get_user_model()
@@ -344,4 +344,23 @@ class PublicFileDownload(View):
         if relative_path.endswith("/"):
             relative_path = relative_path[:-1]
         file = get_object_or_404(PublicFile, file=relative_path)
+        return FileResponse(open(file.get_absolute_url(), "rb"), as_attachment=True)
+
+
+@method_decorator(never_cache, name="dispatch")
+class PrivateAttachmentFileDownload(View):
+    """
+    quick & dirty way to download a private file
+    """
+
+    def get(self, request, relative_path):
+        relative_path = "private_attachments/" + relative_path
+        if relative_path.endswith("/"):
+            relative_path = relative_path[:-1]
+        file = get_object_or_404(ReceivedAttachment, file=relative_path)
+
+        # allow: 1) user and 2) staff to download the file
+        if file.message.case.user != request.user and not request.user.is_staff:
+            raise PermissionDenied()
+
         return FileResponse(open(file.get_absolute_url(), "rb"), as_attachment=True)
