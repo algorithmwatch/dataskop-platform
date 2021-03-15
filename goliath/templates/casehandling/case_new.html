@@ -14,8 +14,13 @@
 
     <div class="max-w-2xl mx-auto p-8 sm:p-10 md:p-12 lg:py-12 lg:px-0">
       <h1 class="hl-2xl mb-6">{{case_type.title}}</h1>
-      <p class="text-lg">{{case_type.description}}</p>
-      <p class="mt-8">Noch Fragen? <a class="font-bold hover:underline" role="button" @click="processHowToOpen = !processHowToOpen">Klicken Sie hier</a> für eine Prozesserklärung.</p>
+      <div class="text-lg">{{case_type.description}}</div>
+      <div class="flex items-center mt-8 border border-blue-300 rounded-md px-4 py-3">
+        <div class="mr-2 flex items-center"><i class="text-xl far fa-question-circle"></i></div>
+        <p>
+          Noch Fragen? <a class="font-bold underline hover:no-underline" role="button" @click="processHowToOpen = !processHowToOpen">Klicken Sie hier</a> für eine Prozesserklärung.
+        </p>
+      </div>
     </div>
 
     {% comment %} <div class="p-4">
