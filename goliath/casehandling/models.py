@@ -113,7 +113,7 @@ class CaseType(TimeStampMixin):
             )
             return (
                 cleantext.normalize_whitespace(subject_text, no_line_breaks=True)
-                + f"#{case.id}"
+                + f" #{case.id}"
             )
         else:
             return f'Neuer Fall von "{self.title}" auf Unding.de #{case.id}'
