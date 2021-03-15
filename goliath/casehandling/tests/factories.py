@@ -6,7 +6,14 @@ from factory.django import DjangoModelFactory
 
 from goliath.users.tests.factories import UserFactory
 
-from ..models import Case, CaseType, Entity, ReceivedMessage, SentMessage
+from ..models import (
+    Case,
+    CaseType,
+    Entity,
+    ReceivedAttachment,
+    ReceivedMessage,
+    SentMessage,
+)
 
 
 class EntityFactory(DjangoModelFactory):
@@ -100,6 +107,16 @@ class SentMessageFactory(DjangoModelFactory):
     sent_at = factory.Faker("date_this_year")
 
 
+class ReceivedAttachmentFactory(DjangoModelFactory):
+    class Meta:
+        model = ReceivedAttachment
+
+    file = factory.django.FileField(data="the data".encode(), filename="data.txt")
+    filename = "data.txt"
+    content_type = "text/plan"
+    content_disposition = "text/plan"
+
+
 class ReceivedMessageFactory(DjangoModelFactory):
     class Meta:
         model = ReceivedMessage
@@ -114,3 +131,7 @@ class ReceivedMessageFactory(DjangoModelFactory):
     from_display_email = factory.Faker("company_email", locale="de")
     spam_score = factory.Faker("pyfloat")
     to_addresses = [factory.Faker("email")]
+
+    attachments = factory.RelatedFactoryList(
+        ReceivedAttachmentFactory, "message", size=lambda: random.randint(1, 5)
+    )
