@@ -69,7 +69,7 @@ class CaseType(TimeStampMixin):
     needs_approval = models.BooleanField(default=False)
     autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
     order = models.FloatField(null=True, blank=True)
-    icon_name = models.CharField(max_length=255)
+    icon_name = models.CharField(max_length=255, null=True, blank=True)
     letter_subject_custom_template = models.TextField(null=True, blank=True)
     letter_template = models.TextField(null=True, blank=True)
     user_notification_new_answer_custom_text = models.TextField(null=True, blank=True)
@@ -81,9 +81,9 @@ class CaseType(TimeStampMixin):
         help_text="Welche Notiz sollen die User erhalten, wenn das Unternehmen erinnert wird zu antworten?",
     )
     auto_reply_text = models.TextField(null=True, blank=True)
-    auto_reply_subject = models.CharField(max_length=255)
+    auto_reply_subject = models.CharField(max_length=255, null=True, blank=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
@@ -517,7 +517,7 @@ class ExternalSupport(TimeStampMixin):
     name = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=255, blank=True, null=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     search_vector = SearchVectorField(null=True)
 
     objects = SearchExpertnalSupportQuerySet.as_manager()
