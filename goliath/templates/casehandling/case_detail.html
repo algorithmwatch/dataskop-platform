@@ -96,6 +96,17 @@
             {% endif %}
           </div>
 
+          {% if message.is_reply and message.receivedattachment_set.count > 0 %}
+          <div class="mt-2.5 border-t border-brown-200">
+            <h4>Anhänge:</h4>
+            <ul>
+              {% for f in message.receivedattachment_set.all %}
+                <li><a href="{{ f.get_absolute_url }}">{{f.filename}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
         </div>
 
         {# Comment list #}
