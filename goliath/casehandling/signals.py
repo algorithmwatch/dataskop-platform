@@ -49,18 +49,3 @@ def post_comment(sender, **kwargs):
 
     # always inform
     send_admin_notification_new_comment()
-
-
-@receiver(post_save, sender=Case)
-def post_case_save(sender, instance, created, **kwargs):
-    """
-    Render the subject here because we need the created case (for the pk).
-    """
-    if created:
-        # FIXME: hotfix to make factory boy pass
-        instance.answers_subject = (
-            instance.case_type.render_letter_subject(instance)
-            if instance.case_type
-            else ""
-        )
-        instance.save()

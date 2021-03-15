@@ -187,17 +187,30 @@ class Case(TimeStampMixin):
     objects = CaseManager()
 
     def save(self, *args, **kwargs):
-        self.slug = (
-            "nocasetype" if self.case_type is None else slugify(self.case_type.title)
-        )
-        # FIXME: hotfix to make factory boy pass
-        self.answers_text = (
-            self.case_type.render_letter(self.answers, self.user.full_name)
-            if self.case_type
-            else ""
-        )
+        # `case_type` may be `None` in e.g. a testing environment
+
+        # add a dummy slug `nocasetype` if there is no case type to make routing work
+        if self.slug is None or self.slug == "":
+            self.slug = (
+                "nocasetype"
+                if self.case_type is None
+                else slugify(self.case_type.title)
+            )
+        elif self.slug == "nocasetype" and self.case_type is not None:
+            self.slug = slugify(self.case_type.title)
+
+        # render the letter text only if there is a case type
+        if self.answers_text is None and self.case_type is not None:
+            self.answers_text = self.case_type.render_letter(
+                self.answers, self.user.full_name
+            )
 
         super().save(*args, **kwargs)
+
+        # render the subject after creating the object because we need the pk / id for the subject
+        if self.answers_subject is None and self.case_type is not None:
+            self.answers_subject = self.case_type.render_letter_subject(self)
+            self.save()
 
     def get_absolute_url(self):
         return reverse("cases-detail", kwargs={"pk": self.pk, "slug": self.slug})
