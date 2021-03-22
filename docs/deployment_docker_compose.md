@@ -76,8 +76,9 @@ Create a simple deployment script:
 ```bash
 #!/usr/bin/env bash
 
-rsync -avz . awlab2:~/code/goliath
-ssh awlab2 "cd code/goliath && docker-compose -f docker-compose.production.yml up --detach --build django && docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate"
+rsync -avz --delete --exclude node_modules --exclude .git --exclude htpasswd . awlab2:~/code/goliath
+
+ssh awlab2 "cd code/goliath && docker-compose -f docker-compose.production.yml up --detach --build && docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate"
 ```
 
 ## Volumnes
