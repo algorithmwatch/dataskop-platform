@@ -273,3 +273,11 @@ def persist_inbound_email(message):
 
     if case is not None:
         case.handle_incoming_email(is_autoreply)
+
+
+@celery_app.task()
+def check_reminders():
+    sent_user_reminders = Case.objects.remind_users()
+    print(f"sent {sent_user_reminders} user reminders")
+    sent_entities_reminders = Case.objects.remind_entities()
+    print(f"sent {sent_entities_reminders} entity reminders")
