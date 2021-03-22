@@ -34,11 +34,12 @@ class Entity(TimeStampMixin):
     """Generic complaint / request recipient"""
 
     name = models.CharField(max_length=255)
-    description = MarkupField(default_markup_type="markdown", blank=True, null=True)
+    description = MarkupField(
+        markup_type="markdown", blank=True, null=True, help_text="Markdown is available"
+    )
     email = models.EmailField()
     url = models.URLField(blank=True, null=True)
 
-    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
         excluded_fields=["_description_rendered", "description_markup_type"]
     )
@@ -61,27 +62,71 @@ class CaseType(TimeStampMixin):
     )
     claim = models.CharField(max_length=100, null=True, blank=True)
     short_description = models.CharField(max_length=500, null=True, blank=True)
-    description = MarkupField(default_markup_type="markdown", blank=True, null=True)
+    description = MarkupField(
+        markup_type="markdown", blank=True, null=True, help_text="Markdown is available"
+    )
     questions = models.JSONField(
         help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
     )
     entities = models.ManyToManyField("Entity", blank=True)
     needs_approval = models.BooleanField(default=False)
     autoreply_keywords = models.ManyToManyField("AutoreplyKeyword", blank=True)
-    order = models.FloatField(null=True, blank=True)
-    icon_name = models.CharField(max_length=255, null=True, blank=True)
-    letter_subject_custom_template = models.TextField(null=True, blank=True)
-    letter_template = models.TextField(null=True, blank=True)
-    user_notification_new_answer_custom_text = models.TextField(null=True, blank=True)
-    user_notification_reminder_custom_text = models.TextField(null=True, blank=True)
-    entity_notification_reminder_custom_text = models.TextField(null=True, blank=True)
+    order = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="If not null, show this casetype on the front page. In order of this value.",
+    )
+    icon_name = models.CharField(
+        max_length=255, null=True, blank=True, help_text="Font Awesome Icon Names"
+    )
+    tags = TaggableManager(blank=True)
+
+    # what the user can answer to the entity
+    auto_reply_subject = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text="user reply subject to the entity",
+    )
+    auto_reply_text = models.TextField(
+        null=True, blank=True, help_text="user reply text to the entity"
+    )
+
+    # email settings
+    letter_subject_custom_template = models.TextField(
+        null=True,
+        blank=True,
+        help_text="subject (django template) initial email sent to the entities",
+    )
+    letter_template = models.TextField(
+        null=True,
+        blank=True,
+        help_text="context/body/text (django template) initial email sent to the entities",
+    )
+
+    user_notification_new_answer_custom_text = models.TextField(
+        null=True,
+        blank=True,
+        help_text="special text for the noficiation email if the entity answered",
+    )
+    user_notification_reminder_custom_text = models.TextField(
+        null=True,
+        blank=True,
+        help_text="special text for the reminder email if the user has to choose a status",
+    )
+
+    entity_notification_reminder_custom_text = models.TextField(
+        null=True,
+        blank=True,
+        help_text="special text for the entity notification email",
+    )
     user_notification_entity_notification_reminder_custom_text = models.TextField(
         null=True,
         blank=True,
-        help_text="Welche Notiz sollen die User erhalten, wenn das Unternehmen erinnert wird zu antworten?",
+        help_text="What note should users receive when the entity is reminded to respond?",
     )
-    auto_reply_text = models.TextField(null=True, blank=True)
-    auto_reply_subject = models.CharField(max_length=255, null=True, blank=True)
+
+    # reminder settings
     user_reminder_max = models.IntegerField(
         default=2, help_text="Remind X times and then stop"
     )
@@ -97,9 +142,6 @@ class CaseType(TimeStampMixin):
         help_text="Format: DAYS HOURS:MINUTES:SECONDS e.g. for 7 days: `7 00:00:00`, for every minute `00:01:00`",
     )
 
-    tags = TaggableManager(blank=True)
-
-    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
         excluded_fields=["_description_rendered", "description_markup_type"]
     )
@@ -199,6 +241,9 @@ class Case(TimeStampMixin):
 
     history = HistoricalRecords()
     objects = CaseManager()
+
+    def __str__(self) -> str:
+        return f"#{self.pk} {self.case_type}"
 
     def save(self, *args, **kwargs):
         # `case_type` may be `None` in e.g. a testing environment
@@ -555,11 +600,8 @@ class GoliathFlatPage(FlatPage):
         "PublicFile", on_delete=models.SET_NULL, null=True, blank=True
     )
     social_media_description = models.TextField(blank=True, null=True)
-    markdown_content = MarkupField(
-        default_markup_type="markdown", blank=True, null=True
-    )
+    markdown_content = MarkupField(markup_type="markdown", blank=True, null=True)
 
-    # remove those two fieds to make it work, FIXME: a least make `description_markup_type` work again
     history = HistoricalRecords(
         excluded_fields=["_markdown_content_rendered", "markdown_content_markup_type"]
     )
