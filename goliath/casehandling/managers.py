@@ -26,18 +26,26 @@ class CaseManager(models.Manager):
 
     def remind_users(
         self,
-        margin: datetime.timedelta = datetime.timedelta(days=7),
-        max_reminders: int = 2,
     ):
         """
         Iterate over all case and check if the user should get a reminder.
         Default: remind after 7 days, then remind again after 7 days and stop.
+        This is specified in the model of `CaseType`.
+
+        Returns the total number of sent emails.
         """
         emails_sent = 0
         for case in self.filter(
             status=self.model.Status.WAITING_USER_INPUT,
-            sent_user_reminders__lt=max_reminders,
         ):
+            max_reminders, margin = (
+                case.case_type.user_reminder_max,
+                case.case_type.user_reminder_margin,
+            )
+
+            if case.sent_user_reminders >= max_reminders:
+                continue
+
             if case.last_user_reminder_sent_at is not None and date_within_margin(
                 case.last_user_reminder_sent_at, margin
             ):
@@ -52,20 +60,27 @@ class CaseManager(models.Manager):
                     emails_sent += 1
         return emails_sent
 
-    def remind_entities(
-        self,
-        margin: datetime.timedelta = datetime.timedelta(days=7),
-        max_reminders: int = 2,
-    ):
+    def remind_entities(self):
         """
         Iterate over all cases and check if the entities should get a reminder.
         Default: remind after 7 days, then remind again after 7 days and stop.
+        This is specified in the model of `CaseType`.
+
+        Returns the total number of sent emails.
         """
+
         emails_sent = 0
         for case in self.filter(
             status=self.model.Status.WAITING_RESPONSE,
-            sent_entities_reminders__lt=max_reminders,
         ):
+            max_reminders, margin = (
+                case.case_type.entity_reminder_max,
+                case.case_type.entity_reminder_margin,
+            )
+
+            if case.sent_entities_reminders >= max_reminders:
+                continue
+
             if case.last_entities_reminder_sent_at is not None and date_within_margin(
                 case.last_entities_reminder_sent_at, margin
             ):

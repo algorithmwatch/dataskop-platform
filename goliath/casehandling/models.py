@@ -82,6 +82,20 @@ class CaseType(TimeStampMixin):
     )
     auto_reply_text = models.TextField(null=True, blank=True)
     auto_reply_subject = models.CharField(max_length=255, null=True, blank=True)
+    user_reminder_max = models.IntegerField(
+        default=2, help_text="Remind X times and then stop"
+    )
+    user_reminder_margin = models.DurationField(
+        default=datetime.timedelta(days=7),
+        help_text="Format: DAYS HOURS:MINUTES:SECONDS e.g. for 7 days: `7 00:00:00`, for every minute `00:01:00`",
+    )
+    entity_reminder_max = models.IntegerField(
+        default=2, help_text="Remind X times and then stop"
+    )
+    entity_reminder_margin = models.DurationField(
+        default=datetime.timedelta(days=7),
+        help_text="Format: DAYS HOURS:MINUTES:SECONDS e.g. for 7 days: `7 00:00:00`, for every minute `00:01:00`",
+    )
 
     tags = TaggableManager(blank=True)
 
