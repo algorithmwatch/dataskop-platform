@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   # Update this to the name of the service you want to work with in your docker-compose.yml file
   django:
@@ -21,6 +21,8 @@ services:
     #   dockerfile: .devcontainer/Dockerfile
 
     volumes:
+      - goliath_extensions:/root/.vscode-server/extensions
+
       # Update this to wherever you want VS Code to mount the folder of your project
       - .:/app:cached
 
@@ -36,3 +38,5 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 1000; do :; done"
 
+volumes:
+  goliath_extensions:

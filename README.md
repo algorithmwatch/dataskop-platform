@@ -14,11 +14,13 @@ To start the devlopment server: Open a new terminal and run `/start`.
 
 To run management commands: Open a new terminal and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
 
+If you add a new VS Code extension, you may have to remove the named volume `docker volume rm goliath_extensions`. ([Background](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
+
 As an alternative, see below to use Docker without VS Code.
 
-### Docker
+### Docker-Compose
 
-Install and use [Docker](https://docs.docker.com/get-docker/). [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
+Install and use [Docker](https://docs.docker.com/get-docker/) with Docker-Compose. [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
 
 ```bash
 ./local.sh
