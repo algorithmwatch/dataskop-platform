@@ -14,7 +14,7 @@ function addUserToJson(surveyJSON) {
     type: "text",
     name: "awfirstnamequestion",
     title:
-      "Ihr Vor- und Nachname wird zur Unterzeichnung der E-mail an das Unternehmen/die Behörde verwendet. Wir empfehlen, Ihren Klarnamen zu verwenden. Wie ist Ihr Vorname?",
+      "Ihr Vor- und Nachname wird zur Unterzeichnung der E-Mail an das Unternehmen/die Behörde verwendet. Wir empfehlen, Ihren Klarnamen zu verwenden. Wie ist Ihr Vorname?",
     visibleIf: previewhtmlElement.visibleIf,
   };
 
