@@ -1,8 +1,9 @@
 version: "3"
 
 volumes:
-  local_media_files: {}
-  local_postgres_data: {}
+  local_media_files:
+  local_postgres_data:
+  local_node_modules:
 
 services:
   django: &django
@@ -16,7 +17,11 @@ services:
       - mailhog
     volumes:
       - .:/app:z
-      - local_media_files:/media
+      - local_media_files:/media:z
+      # Do make the node-based development tools such as ESlint work
+      # we need to have read access to `node`s `node_modules`.
+      - local_node_modules:/app/node_modules:z,ro
+
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -84,7 +89,7 @@ services:
     volumes:
       - .:/app:z
       # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
-      - /app/node_modules
+      - local_node_modules:/app/node_modules:z
     command: npm run dev
     ports:
       - "3000:3000"
