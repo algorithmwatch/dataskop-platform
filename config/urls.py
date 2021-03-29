@@ -26,10 +26,22 @@ urlpatterns += [
 # hardcode urls for important flat pages
 urlpatterns += [
     path(
-        "ueber-uns/",
+        "ueber/",
         cache_control(max_age=3600, public=True)(views.flatpage),
-        {"url": "/uber-uns/"},
+        {"url": "/ueber/"},
         name="about",
+    ),
+    path(
+        "news/",
+        cache_control(max_age=3600, public=True)(views.flatpage),
+        {"url": "/news/"},
+        name="news",
+    ),
+    path(
+        "faq/",
+        cache_control(max_age=3600, public=True)(views.flatpage),
+        {"url": "/faq/"},
+        name="faq",
     ),
 ]
 

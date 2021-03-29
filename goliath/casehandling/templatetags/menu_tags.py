@@ -41,16 +41,20 @@ def primary_menu(context, mobile=True):
     if mobile is True:
         site_menu = [
             {
+                "label": "News",
+                "url": reverse("news"),
+            },
+            {
                 "label": "Unding melden",
-                "url": "/neu",
+                "url": reverse("new"),
             },
             {
                 "label": "Über",
-                "url": "/ueber",
+                "url": reverse("about"),
             },
             {
                 "label": "FAQ",
-                "url": "/faq",
+                "url": reverse("faq"),
             },
         ]
 
@@ -65,16 +69,24 @@ def primary_menu(context, mobile=True):
     else:
         site_menu = [
             {
+                "label": "News",
+                "url": reverse("news"),
+            },
+            {
                 "label": "Über",
-                "url": "/ueber",
+                "url": reverse("about"),
             },
             {
                 "label": "FAQ",
-                "url": "/faq",
+                "url": reverse("faq"),
             },
         ]
 
-        report_button = {"label": "Unding melden", "url": "/neu/", "is_button": True}
+        report_button = {
+            "label": "Unding melden",
+            "url": reverse("new"),
+            "is_button": True,
+        }
 
         if request.user.is_authenticated:
             result = site_menu
