@@ -3,7 +3,6 @@ version: "3"
 volumes:
   local_media_files: {}
   local_postgres_data: {}
-  local_node_modules:
 
 services:
   django: &django
@@ -17,9 +16,7 @@ services:
       - mailhog
     volumes:
       - .:/app:z
-      - local_node_modules:/app/node_modules
       - local_media_files:/media
-
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -53,7 +50,7 @@ services:
     depends_on:
       - redis
       - postgres
-      # - mailhog
+      - mailhog
     ports: []
     command: /start-celeryworker
 
@@ -87,7 +84,7 @@ services:
     volumes:
       - .:/app:z
       # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
-      - local_node_modules:/app/node_modules
+      - /app/node_modules
     command: npm run dev
     ports:
       - "3000:3000"
