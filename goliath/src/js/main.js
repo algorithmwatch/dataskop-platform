@@ -1,14 +1,43 @@
-import 'alpinejs'
-import '../scss/main.scss'
-import { dom, library } from '@fortawesome/fontawesome-svg-core'
+import "alpinejs";
+import "../scss/main.scss";
+import { dom, library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt, faStarHalfAlt,
+  faBars,
+  faTimes,
+  faUserCircle,
+  faChevronDown,
+  faChevronCircleDown,
+  faPlus,
+  faBell,
+  faUserClock,
+  faClock,
+  faThumbsUp,
+  faThumbsDown,
+  faPencilAlt,
+  faStarHalfAlt,
+  faSyringe,
 
   // case types:
-  faTruck, faBuilding, faPersonBooth, faTachometerAlt
-} from '@fortawesome/free-solid-svg-icons'
-import { faComments, faPaperPlane, faUserCircle as faUserCircleOutline, faBell as faBellOutline, faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
-import { faGoogle, faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebookSquare } from '@fortawesome/free-brands-svg-icons'
+  faTruck,
+  faBuilding,
+  faPersonBooth,
+  faTachometerAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faComments,
+  faPaperPlane,
+  faUserCircle as faUserCircleOutline,
+  faBell as faBellOutline,
+  faQuestionCircle,
+} from "@fortawesome/free-regular-svg-icons";
+import {
+  faGoogle,
+  faTwitter,
+  faFacebook,
+  faInstagram,
+  faTwitterSquare,
+  faFacebookSquare,
+} from "@fortawesome/free-brands-svg-icons";
 
 /*
   Case types icons
@@ -22,33 +51,56 @@ import { faGoogle, faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebo
 */
 
 library.add(
-  faBars, faTimes, faUserCircle, faChevronDown, faChevronCircleDown, faPlus, faBell, faUserClock, faClock, faThumbsUp, faThumbsDown, faPencilAlt, faStarHalfAlt,
-  faPaperPlane, faComments, faUserCircleOutline, faBellOutline, faQuestionCircle,
+  faBars,
+  faTimes,
+  faUserCircle,
+  faChevronDown,
+  faChevronCircleDown,
+  faPlus,
+  faBell,
+  faUserClock,
+  faClock,
+  faThumbsUp,
+  faThumbsDown,
+  faPencilAlt,
+  faStarHalfAlt,
+  faPaperPlane,
+  faComments,
+  faUserCircleOutline,
+  faBellOutline,
+  faQuestionCircle,
+  faSyringe,
 
-  faTwitter, faFacebook, faInstagram, faTwitterSquare, faFacebookSquare,
+  faTwitter,
+  faFacebook,
+  faInstagram,
+  faTwitterSquare,
+  faFacebookSquare,
 
   // case type icons:
-  faTruck, faBuilding, faPersonBooth, faTachometerAlt, faGoogle
-)
+  faTruck,
+  faBuilding,
+  faPersonBooth,
+  faTachometerAlt,
+  faGoogle
+);
 
 // Will automatically find any <i> tags in the page and replace those with <svg> elements.
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-i2svg
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-watch
-dom.watch()
+dom.watch();
 
-
-function initSmoothAnchorLinkScroll () {
+function initSmoothAnchorLinkScroll() {
   // src: https://stackoverflow.com/a/7717572/5732518
-  const elements = document.querySelectorAll('a[href^="#"].smooth-scroll')
-  elements.forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
+  const elements = document.querySelectorAll('a[href^="#"].smooth-scroll');
+  elements.forEach((anchor) => {
+    anchor.addEventListener("click", (e) => {
       e.preventDefault();
-      document.querySelector(anchor.getAttribute('href'))
-        .scrollIntoView({
-          behavior: 'smooth'
-        })
-    })
+      document.querySelector(anchor.getAttribute("href")).scrollIntoView({
+        behavior: "smooth",
+      });
+    });
   });
 }
 
-initSmoothAnchorLinkScroll()
+initSmoothAnchorLinkScroll();
