@@ -6,7 +6,7 @@ This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pyd
 
 ## Development Setup
 
-Get the code, remove devlopment .env-files from git tracking.
+Get the code, create .ENV-files for local development.
 
 ```bash
 git clone git@github.com:algorithmwatch/goliath.git
@@ -15,7 +15,7 @@ mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
 ```
 
 Adjust `.envs/.local` to you needs.
-See [./docs/settings.md](./docs/settings.md).
+See [docs/settings.md](./docs/settings.md).
 
 ### VS Code Dev Container
 
