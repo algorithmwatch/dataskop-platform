@@ -1,7 +1,7 @@
 from django.urls import include, path, re_path
 from rest_framework import routers
 
-from .api_views import ExternalSupportViewSet
+from .api_views import CaseTypeViewSet, ExternalSupportViewSet
 from .views import (
     CaseCreateView,
     CaseDetailAndUpdateView,
@@ -20,6 +20,7 @@ from .views import (
 
 router = routers.DefaultRouter()
 router.register(r"externalsupport", ExternalSupportViewSet, basename="externalsupport")
+router.register(r"casetype", CaseTypeViewSet, basename="casetype")
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),

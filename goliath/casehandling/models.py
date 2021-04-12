@@ -17,7 +17,7 @@ from simple_history.models import HistoricalRecords
 from taggit.managers import TaggableManager
 
 from .managers import CaseManager
-from .search import SearchExpertnalSupportQuerySet
+from .search import SearchCaseTypeQuerySet, SearchExpertnalSupportQuerySet
 
 User = get_user_model()
 
@@ -143,11 +143,23 @@ class CaseType(TimeStampMixin):
     )
 
     history = HistoricalRecords(
-        excluded_fields=["_description_rendered", "description_markup_type"]
+        excluded_fields=[
+            "_description_rendered",
+            "description_markup_type",
+            "search_vector",
+        ]
     )
+
+    # NB: no search index used now, if needed: at a new Gin Index
+    search_vector = SearchVectorField(null=True, blank=True)
+    search = SearchCaseTypeQuerySet.as_manager()
+    objects = models.Manager()
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+
+        CaseType.search.sync_search()
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -583,9 +595,9 @@ class ExternalSupport(TimeStampMixin):
     description = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=255, blank=True, null=True)
     tags = TaggableManager(blank=True)
-    search_vector = SearchVectorField(null=True)
-
-    objects = SearchExpertnalSupportQuerySet.as_manager()
+    search_vector = SearchVectorField(null=True, blank=True)
+    objects = models.Manager()
+    search = SearchExpertnalSupportQuerySet.as_manager()
 
     class Meta(object):
         indexes = [GinIndex(fields=["search_vector"])]

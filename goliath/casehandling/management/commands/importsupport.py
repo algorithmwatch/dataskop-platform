@@ -27,7 +27,7 @@ class Command(BaseCommand):
             obj = ExternalSupport.objects.create(**fields)
             obj.tags.add(*tags)
 
-        ExternalSupport.objects.sync_search()
+        ExternalSupport.search.sync_search()
 
         self.stdout.write(
             self.style.SUCCESS(
