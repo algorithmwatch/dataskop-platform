@@ -63,6 +63,7 @@
     "timonwong.shellcheck",
     "sleistner.vscode-fileutils",
     "foxundermoon.shell-format",
+    "ms-azuretools.vscode-docker"
   ],
   // set ENV variables such as DATABASE_URL
   "postCreateCommand": "echo \"source /entrypoint\" >> ~/.bashrc",
