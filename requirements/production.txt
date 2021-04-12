@@ -2,9 +2,9 @@
 
 -r base.txt
 
-python-gnupg==0.4.6 #  https://github.com/vsajip/python-gnupg
-gunicorn==20.0.4  # https://github.com/benoitc/gunicorn
-sentry-sdk==0.19.1  # https://github.com/getsentry/sentry-python
+python-gnupg==0.4.7 #  https://github.com/vsajip/python-gnupg
+gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
+sentry-sdk==1.0.0  # https://github.com/getsentry/sentry-python
 
 # Django
 # ------------------------------------------------------------------------------
