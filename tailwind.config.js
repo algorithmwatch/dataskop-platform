@@ -158,6 +158,7 @@ module.exports = {
       ringColor: ['hover', 'active'],
       ringWidth: ['hover', 'active'],
       ringOpacity: ['hover', 'active'],
+      borderWidth: ['last']
     },
   },
   plugins: [

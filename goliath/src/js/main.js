@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import "alpinejs";
 import "../scss/main.scss";
 import { dom, library } from "@fortawesome/fontawesome-svg-core";
@@ -16,6 +17,9 @@ import {
   faPencilAlt,
   faStarHalfAlt,
   faSyringe,
+  faExternalLinkAlt,
+  faSearch,
+
 
   // case types:
   faTruck,
@@ -70,6 +74,8 @@ library.add(
   faBellOutline,
   faQuestionCircle,
   faSyringe,
+  faExternalLinkAlt,
+  faSearch,
 
   faTwitter,
   faFacebook,
@@ -88,7 +94,7 @@ library.add(
 // Will automatically find any <i> tags in the page and replace those with <svg> elements.
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-i2svg
 // https://fontawesome.com/how-to-use/javascript-api/methods/dom-watch
-dom.watch();
+dom.watch()
 
 function initSmoothAnchorLinkScroll() {
   // src: https://stackoverflow.com/a/7717572/5732518
@@ -102,5 +108,65 @@ function initSmoothAnchorLinkScroll() {
     });
   });
 }
+
+window.hubSearch = () => {
+  return {
+    searchTerm: '',
+    isLoading: false,
+    results: [],
+    minTermLength: 2,
+    resultType: {
+      internal: 1,
+      external: 2
+    },
+
+    async handleInput (e) {
+      if (this.searchTerm.length < this.minTermLength) {
+        this.results = []
+        return
+      }
+
+      await this.fetchResults()
+    },
+
+    async fetchResults () {
+      this.isLoading = true
+      const caseTypeResults = await this.fetchCaseTypes()
+      const caseExternalSupportResults = await this.fetchExternalSupport()
+      this.results = caseTypeResults.concat(caseExternalSupportResults)
+      this.isLoading = false
+    },
+
+    async fetchCaseTypes () {
+      const url = 'https://lab2.algorithmwatch.org/api/casetype/?q=' + encodeURIComponent(this.searchTerm)
+      const response = await window.fetch(url)
+      const result = await response.json()
+
+      return result.map(r => ({
+        title: r.title_highlighted,
+        description: r.short_description_highlighted,
+        // icon: r.icon_name,
+        url: r.url,
+        type: this.resultType.internal
+      }))
+    },
+
+    async fetchExternalSupport () {
+      const url = 'https://lab2.algorithmwatch.org/api/externalsupport/?q=' + encodeURIComponent(this.searchTerm)
+      const response = await window.fetch(url)
+      const result = await response.json()
+
+      return result.map(r => ({
+        title: r.name_highlighted,
+        description: r.description_highlighted,
+        url: r.url,
+        // icon: 'fas fa-external-link-alt',
+        type: this.resultType.external
+      }))
+    },
+
+  }
+}
+
 
 initSmoothAnchorLinkScroll();

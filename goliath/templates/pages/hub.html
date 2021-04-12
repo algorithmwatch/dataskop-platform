@@ -1,0 +1,57 @@
+{% load static %}
+
+<div x-data="hubSearch()">
+
+  <div
+    class="relative max-w-sm mx-auto"
+  >
+    <input
+      x-ref="searchField"
+      x-model="searchTerm"
+      x-on:input="handleInput"
+      placeholder="z.B. Impf-Chaos, Foto-Automat etc."
+      type="search"
+      class="text-input text-input--large text-input--hub w-full"
+    />
+    <i x-show="!searchTerm.length" class="absolute top-3.5 right-2 text-2xl text-gray-500 fas fa-search"></i>
+  </div>
+
+  <template x-if="results.length">
+
+    <div class="mt-6 text-left max-w-6xl mx-auto">
+
+      <template x-for="item in results" :key="item">
+        <a x-bind:href="item.url" x-bind:target="item.type === 1 ? '_self' : '_blank'" rel="noopener noreferrer" class="block mb-4 pb-4 border-b border-gray-200 last:border-0">
+          <div class="flex flex-nowrap group">
+            <div class="w-11 flex-none">
+              {% spaceless %}
+
+                <svg x-show="item.type === 1" class="w-8 h-8" fill="none" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260">
+                  <path d="M34 80.6102C34 49.8975 58.8975 25 89.6102 25H171.39C202.102 25 227 49.8975 227 80.6102V234.356H89.6102C58.8975 234.356 34 209.458 34 178.746V80.6102z" fill="#312509"/>
+                  <circle cx="92.8708" cy="100.25" r="19.6271" fill="#fff"/>
+                  <circle cx="168.107" cy="100.25" r="19.6271" fill="#fff"/>
+                </svg>
+
+                <svg x-show="item.type === 2" class="text-gray-500 w-6 h-6 mt-1.5" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path></svg>
+
+              {% endspaceless %}
+            </div>
+            <div>
+              <div class="hl-2xl group-hover:underline" x-html="item.title"></div>
+              <div class="" x-html="item.description"></div>
+            </div>
+          </div>
+        </a>
+      </template>
+
+    </div>
+
+  </template>
+
+  <div x-show="searchTerm.length > minTermLength && !results.length" class="mt-6 text-gray-700">
+    Leider keine Ergebnisse.
+  </div>
+
+
+
+</div>

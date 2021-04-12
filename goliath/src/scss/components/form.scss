@@ -21,6 +21,14 @@
   &--large {
     @apply text-lg py-2.5 px-4;
   }
+
+  /*
+    Theme
+  */
+  &--hub {
+    @apply bg-white text-black;
+    @apply focus:ring-gray-400;
+  }
 }
 
 .select-input {

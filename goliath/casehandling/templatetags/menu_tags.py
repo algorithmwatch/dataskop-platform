@@ -45,6 +45,10 @@ def primary_menu(context, mobile=True):
                 "url": reverse("news"),
             },
             {
+                "label": "Suche",
+                "url": "/#suche",
+            },
+            {
                 "label": "Unding melden",
                 "url": reverse("new"),
             },
@@ -71,6 +75,10 @@ def primary_menu(context, mobile=True):
             {
                 "label": "News",
                 "url": reverse("news"),
+            },
+            {
+                "label": "Suche",
+                "url": "/#suche",
             },
             {
                 "label": "Über",
