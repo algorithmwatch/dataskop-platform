@@ -339,8 +339,6 @@ REST_FRAMEWORK = {
     # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-CORS_URLS_REGEX = r"^/api/.*$"
 
 # Goliath specific settings
 
@@ -353,6 +351,13 @@ URL_ORIGIN = env.str("URL_ORIGIN", None)
 ADMIN_NOTIFICATION_EMAIL = env.str(
     "ADMIN_NOTIFICATION_EMAIL", "notification@example.com"
 )
+
+# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+] + ([] if URL_ORIGIN is None else [URL_ORIGIN])
 
 
 if env("S3_ENDPOINT", default=None) is not None:
