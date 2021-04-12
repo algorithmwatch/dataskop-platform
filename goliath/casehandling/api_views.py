@@ -66,13 +66,14 @@ class CaseTypeSerializer(serializers.ModelSerializer):
     )
     description_highlighted = serializers.CharField(allow_null=True, required=False)
     tags = TagSerializerField()
+    url = serializers.CharField(source="get_absolute_url")
 
     class Meta:
         model = CaseType
         fields = (
             case_type_search_fields
             + case_type_search_fields_high
-            + ["tags", "icon_name"]
+            + ["tags", "icon_name", "url"]
         )
 
     def __init__(self, *args, **kwargs):
