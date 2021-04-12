@@ -346,6 +346,8 @@ CORS_URLS_REGEX = r"^/api/.*$"
 
 AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
 AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
+AIRTABLE_NAME = env.str("AIRTABLE_NAME", "Goliath")
+
 # store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)
 ADMIN_NOTIFICATION_EMAIL = env.str(

@@ -39,6 +39,7 @@ WEBHOOK_SECRET=xx:xx
 # Import data from airtable
 AIRTABLE_KEY=xx
 AIRTABLE_TABLE=xx
+AIRTABLE_NAME=Goliath
 ```
 
 ### Production

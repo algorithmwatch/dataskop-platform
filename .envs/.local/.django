@@ -22,3 +22,4 @@ WEBHOOK_SECRET=xx:xx
 # import data from airtable
 AIRTABLE_KEY=xx
 AIRTABLE_TABLE=xx
+AIRTABLE_NAME=Unding

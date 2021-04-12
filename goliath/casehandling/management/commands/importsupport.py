@@ -12,7 +12,9 @@ class Command(BaseCommand):
 
     def handle(self, **kwargs):
         airtable = Airtable(
-            settings.AIRTABLE_TABLE, "Goliath", api_key=settings.AIRTABLE_KEY
+            settings.AIRTABLE_TABLE,
+            settings.AIRTABLE_NAME,
+            api_key=settings.AIRTABLE_KEY,
         )
         entries = airtable.get_all()
 

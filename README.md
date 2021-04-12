@@ -6,6 +6,17 @@ This project was bootstrapped with [Django-Cookie-Cutter](https://github.com/pyd
 
 ## Development Setup
 
+Get the code, remove devlopment .env-files from git tracking.
+
+```bash
+git clone git@github.com:algorithmwatch/goliath.git
+cd goliath
+git rm -r --cached --ignore-unmatch .envs/.local
+```
+
+Adjust `.envs/.local` to you needs.
+See [./docs/settings.md](./docs/settings.md).
+
 ### VS Code Dev Container
 
 We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
