@@ -138,7 +138,7 @@ window.hubSearch = () => {
     },
 
     async fetchCaseTypes () {
-      const url = 'https://lab2.algorithmwatch.org/api/casetype/?q=' + encodeURIComponent(this.searchTerm)
+      const url = '/api/casetype/?q=' + encodeURIComponent(this.searchTerm)
       const response = await window.fetch(url)
       const result = await response.json()
 
@@ -152,7 +152,7 @@ window.hubSearch = () => {
     },
 
     async fetchExternalSupport () {
-      const url = 'https://lab2.algorithmwatch.org/api/externalsupport/?q=' + encodeURIComponent(this.searchTerm)
+      const url = '/api/externalsupport/?q=' + encodeURIComponent(this.searchTerm)
       const response = await window.fetch(url)
       const result = await response.json()
 
