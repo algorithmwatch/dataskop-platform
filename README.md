@@ -11,7 +11,7 @@ Get the code, remove devlopment .env-files from git tracking.
 ```bash
 git clone git@github.com:algorithmwatch/goliath.git
 cd goliath
-git rm -r --cached --ignore-unmatch .envs/.local
+mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
 ```
 
 Adjust `.envs/.local` to you needs.
