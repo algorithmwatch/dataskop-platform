@@ -157,10 +157,10 @@ class CaseType(TimeStampMixin):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-
-        CaseType.search.sync_search()
-
         super().save(*args, **kwargs)
+
+        # Sync all case types after each save. Not neccesary, should be changed to only update `search_vector` of an object.
+        CaseType.search.sync_search()
 
     def __str__(self):
         return self.title
