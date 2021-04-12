@@ -52,7 +52,4 @@ factory-boy==3.0.1  # https://github.com/FactoryBoy/factory_boy
 # anymail only really used in production but keep it here to make imports work
 django-anymail[mailjet]==8.2  # https://github.com/anymail/django-anymail
 email_reply_parser==0.5.12  # https://github.com/zapier/email-reply-parser
-
-# temporaly install dev version of clean-text for cleaning newlines
-unidecode
-git+git://github.com/jfilter/clean-text.git#egg=clean-text
+clean-text[gpl]==0.4.0  # https://github.com/jfilter/clean-text
