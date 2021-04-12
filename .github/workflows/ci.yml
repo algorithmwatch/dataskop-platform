@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: setup ENV files
-        run: mkdir .envs && cp -r exampleenv .envs/.local/
+        run: mkdir .envs && cp -r docs/exampleenv .envs/.local/
 
       - name: Build the Stack
         run: docker-compose -f docker-compose.local.yml build
