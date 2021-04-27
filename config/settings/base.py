@@ -325,7 +325,9 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_FORMS = {"signup": "goliath.users.forms.CustomSignupForm"}
 # don't ask user, always remember
 ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USER_DISPLAY = lambda user: user.full_name
 
+# passwordless / magic link:
 # magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
 SESAME_MAX_AGE = 300
 
@@ -354,6 +356,9 @@ URL_ORIGIN = env.str("URL_ORIGIN", None)
 ADMIN_NOTIFICATION_EMAIL = env.str(
     "ADMIN_NOTIFICATION_EMAIL", "notification@example.com"
 )
+
+# used in e.g. email templates
+CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default=f"contact@{DEFAULT_EMAIL_DOMAIN}")
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"

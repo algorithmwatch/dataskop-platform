@@ -1,9 +1,8 @@
-{% load i18n %}{% autoescape off %}{% spaceless %}Hallo,
+{% load i18n account %}{% autoescape off %}{% spaceless %}Liebe·r {% user_display user %},
 
 {% block content %}{% endblock %}
 
 {% with site_name=current_site.name site_domain=current_site.domain %}Mit freundlichen Grüßen
+Das {{ site_name }}-Team
 
-Das Team-{{ site_name }}
-
-{{ site_domain }}{% endwith %}{% endspaceless %}{% endautoescape %}
+{% endwith %}{% endspaceless %}{% endautoescape %}

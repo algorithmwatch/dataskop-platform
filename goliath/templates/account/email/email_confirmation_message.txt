@@ -2,6 +2,6 @@
 {% load account %}
 {% load i18n %}
 
-{% block content %}{% autoescape off %}Bitte bestätigen Sie Ihre E-Mail-Adresse indem Sie auf folgenden Link klicken:
+{% block content %}{% autoescape off %}der erste Schritt ist geschafft. Damit Sie Ihre Registrierung abschließen können, klicken Sie bitte auf diesen Link {{ activate_url }}.
 
-{{ activate_url }}{% endautoescape %}{% endblock %}
+{% with site_name=current_site.name %}Viel Spaß mit {{site_name}}! Falls Sie Fragen haben, können Sie sich gerne an uns wenden unter {{CONTACT_EMAIL}}.{% endwith %}{% endautoescape %}{% endblock %}

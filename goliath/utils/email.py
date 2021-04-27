@@ -100,7 +100,7 @@ def send_magic_link(user, email, viewname):
         + urlquote(email)
     )
 
-    context = {"activate_url": magic_link, "current_site": Site.objects.get_current()}
+    context = {"activate_url": magic_link}
 
     subject = render_to_string("account/email/email_confirmation_subject.txt")
     body_text = render_to_string(
