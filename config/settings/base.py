@@ -243,8 +243,9 @@ DEFAULT_EMAIL_DOMAIN = env("DEFAULT_EMAIL_DOMAIN", default="example.com")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default=f"Unding <noreply@{DEFAULT_EMAIL_DOMAIN}>"
+    "DJANGO_DEFAULT_FROM_EMAIL", default=f"noreply@{DEFAULT_EMAIL_DOMAIN}"
 )
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
@@ -348,6 +349,8 @@ AIRTABLE_NAME = env.str("AIRTABLE_NAME", "Goliath")
 
 # store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)
+
+# used to e.g. notify about new cases. (Not sending emails to all admins to avoid sending too many emails)
 ADMIN_NOTIFICATION_EMAIL = env.str(
     "ADMIN_NOTIFICATION_EMAIL", "notification@example.com"
 )

@@ -86,7 +86,7 @@ def send_initial_emails_to_entities(postCC):
         send_anymail_email(
             postCC.user.email,
             text,
-            from_email=settings.DEFAULT_FROM_EMAIL,
+
             subject="E-Mails erfolgreich versandt"
             + "".join([f" #{x.pk}" for x in postCC.cases.all()]),
             ctaLink=ctaLink,
@@ -109,7 +109,6 @@ def send_user_notification_new_message(to_email, link, text, subject):
     send_anymail_email(
         to_email,
         text,
-        from_email=settings.DEFAULT_FROM_EMAIL,
         subject=subject,
         ctaLink=link,
         ctaLabel="zur Antwort",
@@ -122,7 +121,6 @@ def send_user_notification_reminder(to_email, link, text, subject):
     send_anymail_email(
         to_email,
         text,
-        from_email=settings.DEFAULT_FROM_EMAIL,
         subject=subject,
         ctaLink=link,
     )
@@ -134,7 +132,6 @@ def send_user_notification_new_comment(to_email, link):
     send_anymail_email(
         to_email,
         "Neuer Kommentar zu Ihrem Fall",
-        from_email=settings.DEFAULT_FROM_EMAIL,
         subject="Neuer Kommentar zu Ihrem Fall",
         ctaLink=link,
     )
@@ -147,7 +144,6 @@ def send_user_notification_reminder_to_entity(to_email, link, text, subject):
     send_anymail_email(
         to_email,
         text,
-        from_email=settings.DEFAULT_FROM_EMAIL,
         subject=subject,
         ctaLink=link,
     )

@@ -8,6 +8,10 @@ from django.utils.http import urlquote
 from sesame.utils import get_query_string
 
 
+def formated_from():
+    return f"{Site.objects.get_current().name} <{settings.DEFAULT_FROM_EMAIL}>"
+
+
 def send_anymail_email(
     to_email,
     text_content,
@@ -41,6 +45,12 @@ def send_anymail_email(
     no_rest = body_text
     if rest:
         body_text += "\n" + rest
+
+    # provide a default, formatted (with site name) email address
+    kwargs = {
+        "from_mail": formated_from(),
+        **kwargs,
+    }
 
     msg = AnymailMessage(body=body_text, **kwargs, to=[to_email])
 
@@ -105,7 +115,7 @@ def send_magic_link(user, email, viewname):
     send_mail(
         subject,
         body_text,
-        settings.DEFAULT_FROM_EMAIL,
+        formated_from(),
         [email],
         html_message=body_html,
     )

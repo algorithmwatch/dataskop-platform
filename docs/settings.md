@@ -79,7 +79,7 @@ MAILJET_SECRET_KEY=
 WEBHOOK_SECRET=xx:xx
 
 DEFAULT_EMAIL_DOMAIN=undinge.net
-DEFAULT_FROM_EMAIL=Unding <noreplay@undinge.net>
+DEFAULT_FROM_EMAIL=unding@algorithmwatch.org
 EMAIL_SUBJECT_PREFIX=[Unding]
 
 # Import Data
