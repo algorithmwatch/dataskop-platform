@@ -393,9 +393,8 @@ class Case(TimeStampMixin):
             send_user_notification_reminder_to_entity,
         )
 
-        site_short = (
-            " (".join(Site.objects.get_current().values_list("name", "domain")) + ")"
-        )
+        site = Site.objects.get_current()
+        site_short = f"{site.name} ({site.domain})"
 
         for e in self.selected_entities.all():
             text = f"""Guten Tag {e.name},
