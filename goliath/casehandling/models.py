@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
+from django.contrib.sites.models import Site
 from django.db import models
 from django.template import Context, Template
 from django.urls import reverse
@@ -66,7 +67,9 @@ class CaseType(TimeStampMixin):
         markup_type="markdown", blank=True, null=True, help_text="Markdown is available"
     )
     questions = models.JSONField(
-        help_text="Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'. Then go to 'Survey Designer' to edit the survey. Try it out with 'Test Survey'. When you are done, paste the JSON in this field and hit save."
+        help_text="""Please go to https://surveyjs.io/create-survey and paste the JSON 'JSON Editor'.
+        Then go to 'Survey Designer' to edit the survey.Try it out with 'Test Survey'.
+        When you are done, paste the JSON in this field and hit save."""
     )
     entities = models.ManyToManyField("Entity", blank=True)
     needs_approval = models.BooleanField(default=False)
@@ -81,15 +84,22 @@ class CaseType(TimeStampMixin):
     )
     tags = TaggableManager(blank=True)
 
+    # TODO: various email / message strings must not be `null=True` but could not remove them without writing a seperate migration.
+
     # what the user can answer to the entity
     auto_reply_subject = models.CharField(
         max_length=255,
+        default="Bitte um Antwort ",
         null=True,
-        blank=True,
         help_text="user reply subject to the entity",
     )
     auto_reply_text = models.TextField(
-        null=True, blank=True, help_text="user reply text to the entity"
+        default="""herzlichen Dank für Ihre Mail. Leider beantwortet diese meine Frage nicht. Bisherige Versuche, das Problem über andere Formulare, FAQs oder Hilfe-Foren zu lösen, haben leider nicht zum Erfolg geführt.
+
+Ich möchte Sie daher bitten, mir eine*n direkte*n Ansprechpartner*in zu vermitteln.
+""",
+        null=True,
+        help_text="user reply text to the entity",
     )
 
     # email settings
@@ -106,23 +116,24 @@ class CaseType(TimeStampMixin):
 
     user_notification_new_answer_custom_text = models.TextField(
         null=True,
-        blank=True,
+        default="auf Ihre Fallmeldung erhalten. Schau Sie nach, ob sich Ihr Anliegen damit gelöst hat oder ob Sie weitere Schritte einleiten wollen.",
         help_text="special text for the noficiation email if the entity answered",
     )
     user_notification_reminder_custom_text = models.TextField(
         null=True,
-        blank=True,
+        default="auf Ihre Fallmeldung erhalten, die Sie jetzt bewerten können. Lassen Sie uns wissen, wie zufrieden Sie mit der Reaktion sind.",
         help_text="special text for the reminder email if the user has to choose a status",
     )
 
+    # send to entity
     entity_notification_reminder_custom_text = models.TextField(
         null=True,
-        blank=True,
+        default="Bisher habe ich leider keine Antwort erhalten. Ich freue mich über eine zeitnahe Rückmeldung.",
         help_text="special text for the entity notification email",
     )
     user_notification_entity_notification_reminder_custom_text = models.TextField(
         null=True,
-        blank=True,
+        default="daran erinnert, dass Sie bisher noch keine Antwort auf ihre Fallmeldung erhalten haben. Bei neuen Entwicklungen benachrichtigen wir Sie per E-Mail.",
         help_text="What note should users receive when the entity is reminded to respond?",
     )
 
@@ -159,7 +170,8 @@ class CaseType(TimeStampMixin):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-        # Sync all case types after each save. Not neccesary, should be changed to only update `search_vector` of an object.
+        # Sync all case types after each save. Not neccesary, should be changed to only update `search_vector`
+        #  of an object.
         CaseType.search.sync_search()
 
     def __str__(self):
@@ -326,9 +338,8 @@ class Case(TimeStampMixin):
         else:
             from .tasks import send_user_notification_new_message
 
-            text = "Sie haben eine neue Antwort erhalten."
-            if self.case_type.user_notification_new_answer_custom_text:
-                text = self.case_type.user_notification_new_answer_custom_text
+            # FIXME: selected entites may have more items
+            text = f"""Sie haben eine Antwort von {self.selected_entities.first().name} {self.case_type.user_notification_new_answer_custom_text}"""
 
             send_user_notification_new_message(
                 self.user.email,
@@ -363,9 +374,8 @@ class Case(TimeStampMixin):
     def send_user_reminder(self):
         from .tasks import send_user_notification_reminder
 
-        text = "Bitte setzen Sie den Status."
-        if self.case_type.user_notification_reminder_custom_text:
-            text = self.case_type.user_notification_reminder_custom_text
+        # FIXME: selected entites may have more items
+        text = f"""Sie haben eine Antwort von {self.selected_entities.first().name} {self.case_type.user_notification_reminder_custom_text}"""
 
         send_user_notification_reminder(
             self.user.email,
@@ -383,11 +393,18 @@ class Case(TimeStampMixin):
             send_user_notification_reminder_to_entity,
         )
 
-        text = "Bitte Antworten Sie auf unsere Anfrage."
-        if self.case_type.user_notification_reminder_custom_text:
-            text = self.case_type.user_notification_reminder_custom_text
+        site_short = (
+            " (".join(Site.objects.get_current().values_list("name", "domain")) + ")"
+        )
 
         for e in self.selected_entities.all():
+            text = f"""Guten Tag {e.name},
+
+am {self.created_at.strftime("%d.%m.%Y um %H:%M Uhr")} habe ich Ihnen eine Anfrage mit dem Botendienst von {site_short} zukommen lassen. {self.case_type.entity_notification_reminder_custom_text}
+
+Mit freundlichen Grüßen
+{self.user.full_name}"""
+
             send_entity_message(
                 e.email,
                 self,
@@ -400,13 +417,11 @@ class Case(TimeStampMixin):
         self.sent_entities_reminders += 1
         self.save()
 
-        notify_text = (
-            "Wir haben das Unternehmen eine Erinnerung geschickt zu antworten."
-        )
-        if self.case_type.user_notification_entity_notification_reminder_custom_text:
-            notify_text = (
-                self.case_type.user_notification_entity_notification_reminder_custom_text
-            )
+        entity_names = " ,".join([x.name for x in self.selected_entities.all()])
+        notify_text = f"""wir haben für Sie {entity_names} {self.case_type.user_notification_entity_notification_reminder_custom_text}
+
+Den aktuellen Status Ihres Falles können Sie hier einsehen:
+"""
 
         send_user_notification_reminder_to_entity(
             self.user.email,
@@ -418,12 +433,21 @@ class Case(TimeStampMixin):
     def send_auto_reply_message_to_entity(self):
         from .tasks import send_entity_message
 
-        send_entity_message(
-            self.email,
-            self,
-            self.case_type.auto_reply_text,
-            self.case_type.auto_reply_subject + f"#{self.pk}",
-        )
+        for e in self.selected_entities.all():
+
+            text = f"""Guten Tag {e.name},
+
+{self.case_type.auto_reply_text}
+
+Mit freundlichen Grüßen
+{self.user.full_name}"""
+
+            send_entity_message(
+                self.email,
+                self,
+                text,
+                self.case_type.auto_reply_subject + f"#{self.pk}",
+            )
 
     def construct_answer_thread(self):
         """
@@ -457,6 +481,7 @@ class Case(TimeStampMixin):
 
         return result_text
 
+    # FIXME: ???
     def sent_message_to_entity(self):
         pass
 

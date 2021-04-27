@@ -86,7 +86,6 @@ def send_initial_emails_to_entities(postCC):
         send_anymail_email(
             postCC.user.email,
             text,
-
             subject="E-Mails erfolgreich versandt"
             + "".join([f" #{x.pk}" for x in postCC.cases.all()]),
             ctaLink=ctaLink,
@@ -164,6 +163,7 @@ def send_entity_message(to_email, case, text, subject):
         text,
         from_email=from_email,
         subject=subject,
+        is_generic=False,
         rest=case.construct_answer_thread(),
     )
 

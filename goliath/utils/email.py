@@ -33,7 +33,7 @@ def send_anymail_email(
         content += "\n\n" + ctaLink
 
     if is_generic:
-        context = {"content": content, "current_site": Site.objects.get_current()}
+        context = {"content": content}
         body_text = render_to_string(
             "account/email/generic_message.txt",
             context,
