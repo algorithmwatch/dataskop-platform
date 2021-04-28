@@ -1,6 +1,6 @@
 # Deployment with Dokku
 
-Deployment with https://dokku.com/
+Deployment with <https://dokku.com/>.
 
 ## Configuration
 
@@ -17,12 +17,16 @@ Then set up all the environment variables. Finally:
 git push dokku
 ```
 
-### Upgrade to a specific database version
+### Upgrade to a specific postgres/redis version
+
+To use a custom (and updated) image for postgre (and redis): Full the image, and then specify the tag like this:
 
 ```bash
 docker pull postgres:11
 dokku postgres:upgrade $dbname -I 11
 ```
+
+Here a script to keep the images up to date: <https://github.com/jfilter/utils/blob/master/scripts/dokku/update_images.sh>
 
 ### Misc
 
