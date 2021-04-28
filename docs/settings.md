@@ -79,13 +79,14 @@ MAILJET_SECRET_KEY=
 WEBHOOK_SECRET=xx:xx
 
 DEFAULT_EMAIL_DOMAIN=undinge.net
-DEFAULT_FROM_EMAIL=unding@algorithmwatch.org
+DEFAULT_FROM_EMAIL=noreplay@undinge.net
 EMAIL_SUBJECT_PREFIX=[Unding]
 
 # Import Data
 AIRTABLE_KEY=
 AIRTABLE_TABLE=
 
+CONTACT_EMAIL=unding@algorithmwatch.org
 ADMIN_NOTIFICATION_EMAIL=unding@algorithmwatch.org
 
 GPG_PUBLIC_KEY_URL=https://
