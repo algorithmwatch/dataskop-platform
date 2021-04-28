@@ -37,7 +37,9 @@ def post_comment(sender, **kwargs):
     instance = kwargs["comment"]
     # was comment posted by staff? if yes: inform user about new comment
     if instance.user.is_staff:
-        user_email = instance.content_object.case.user.email
+        comment_user = instance.content_object.case.user
+        user_email = comment_user.email
+        user_name = comment_user.full_name
         link = (
             settings.URL_ORIGIN
             + instance.content_object.case.get_absolute_url()
@@ -45,7 +47,7 @@ def post_comment(sender, **kwargs):
             + str(instance.pk)
         )
 
-        send_user_notification_new_comment(user_email, link)
+        send_user_notification_new_comment(user_email, link, user_name)
 
     # always inform
     send_admin_notification_new_comment()

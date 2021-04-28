@@ -49,9 +49,3 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-
-# There seem to be an error when using UserFactory w/ django-allauth. User is in this lambda expression
-# actually a string and not a user object. Referencing `user.full_name` does result
-# in an error. It's not clear where exactly the error is. Either I configured something
-# wrong or it's not meant to work together?
-ACCOUNT_USER_DISPLAY = lambda user: user

@@ -1,4 +1,7 @@
-{% load i18n account %}{% autoescape off %}{% spaceless %}Liebe·r {% user_display user %},
+{% load i18n account %}{% autoescape off %}{% spaceless %}
+{# Email may get rendered w and w/o request context (via celery) #}
+{% if request and request.user %}
+Liebe·r {% user_display user %}{% else %}{% if user_full_name %}Liebe·r {{ user_full_name }}{% else %}Guten Tag{% endif %}{% endif %},
 
 {% block content %}{% endblock %}
 

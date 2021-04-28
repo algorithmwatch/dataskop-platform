@@ -20,6 +20,7 @@ def send_anymail_email(
     html_content=None,
     is_generic=True,
     rest="",
+    full_user_name=None,
     **kwargs,
 ):
     """
@@ -33,7 +34,7 @@ def send_anymail_email(
         content += "\n\n" + ctaLink
 
     if is_generic:
-        context = {"content": content}
+        context = {"content": content, full_user_name: full_user_name}
         body_text = render_to_string(
             "account/email/generic_message.txt",
             context,

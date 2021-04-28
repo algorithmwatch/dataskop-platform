@@ -346,6 +346,7 @@ class Case(TimeStampMixin):
                 settings.URL_ORIGIN + self.get_absolute_url(),
                 text,
                 f"Neue Antwort #{self.pk}",
+                self.user.full_name,
             )
             self.status = self.Status.WAITING_USER_INPUT
             self.save()
@@ -382,6 +383,7 @@ class Case(TimeStampMixin):
             settings.URL_ORIGIN + self.get_absolute_url(),
             text,
             "Bitte setzen Sie den Status #" + str(self.pk),
+            self.user.full_name,
         )
         self.last_user_reminder_sent_at = datetime.datetime.now()
         self.sent_user_reminders += 1
@@ -427,6 +429,7 @@ Den aktuellen Status Ihres Falles können Sie hier einsehen:
             settings.URL_ORIGIN + self.get_absolute_url(),
             notify_text,
             "Erinnerung verschickt #" + str(self.pk),
+            self.user.full_name,
         )
 
     def send_auto_reply_message_to_entity(self):

@@ -90,6 +90,7 @@ def send_initial_emails_to_entities(postCC):
             + "".join([f" #{x.pk}" for x in postCC.cases.all()]),
             ctaLink=ctaLink,
             ctaLabel=ctaLabel,
+            full_user_name=postCC.user.full_name,
         )
 
         postCC.sent_initial_emails_at = datetime.datetime.utcnow()
@@ -103,7 +104,7 @@ def send_initial_emails_to_entities(postCC):
 
 
 @celery_app.task()
-def send_user_notification_new_message(to_email, link, text, subject):
+def send_user_notification_new_message(to_email, link, text, subject, full_user_name):
     """Notify user about incoming new email"""
     send_anymail_email(
         to_email,
@@ -111,40 +112,38 @@ def send_user_notification_new_message(to_email, link, text, subject):
         subject=subject,
         ctaLink=link,
         ctaLabel="zur Antwort",
+        full_user_name=full_user_name,
     )
 
 
 @celery_app.task()
-def send_user_notification_reminder(to_email, link, text, subject):
+def send_user_notification_reminder(to_email, link, text, subject, full_user_name):
     """Remind user about open case"""
     send_anymail_email(
-        to_email,
-        text,
-        subject=subject,
-        ctaLink=link,
+        to_email, text, subject=subject, ctaLink=link, full_user_name=full_user_name
     )
 
 
 @celery_app.task()
-def send_user_notification_new_comment(to_email, link):
+def send_user_notification_new_comment(to_email, link, full_user_name):
     """Inform user about new comment"""
     send_anymail_email(
         to_email,
         "Neuer Kommentar zu Ihrem Fall",
         subject="Neuer Kommentar zu Ihrem Fall",
         ctaLink=link,
+        full_user_name=full_user_name,
     )
 
 
 @celery_app.task()
-def send_user_notification_reminder_to_entity(to_email, link, text, subject):
+def send_user_notification_reminder_to_entity(
+    to_email, link, text, subject, full_user_name
+):
     """notify user about sent notification to entity"""
 
     send_anymail_email(
-        to_email,
-        text,
-        subject=subject,
-        ctaLink=link,
+        to_email, text, subject=subject, ctaLink=link, full_user_name=full_user_name
     )
 
 

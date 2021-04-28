@@ -312,7 +312,7 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # ------------------------------------------------------------------------------
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
-ACCOUNT_EMAIL_VERIFICATION = None if DEBUG else "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "goliath.users.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "goliath.users.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
@@ -325,6 +325,11 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_FORMS = {"signup": "goliath.users.forms.CustomSignupForm"}
 # don't ask user, always remember
 ACCOUNT_SESSION_REMEMBER = True
+
+# Only used when sending emails with request context (e.g. email confirmation).
+# Emails that get sent via cellery do not have access to request.user and thus
+# cannot use django-allauth's tag. The email templates handle this.
+# Check `templates/account/emails/base.html`.
 ACCOUNT_USER_DISPLAY = lambda user: user.full_name
 
 # passwordless / magic link:
