@@ -48,7 +48,7 @@ def send_anymail_email(
 
     # provide a default, formatted (with site name) email address
     kwargs = {
-        "from_mail": formated_from(),
+        "from_email": formated_from(),
         **kwargs,
     }
 
