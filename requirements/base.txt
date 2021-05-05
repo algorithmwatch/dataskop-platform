@@ -11,7 +11,7 @@ django-celery-beat==2.0.0  # https://github.com/celery/django-celery-beat
 flower==0.9.7  # https://github.com/mher/flower
 
 # Django
-django==3.1.8  # pyup: < 3.2  # https://www.djangoproject.com/
+django==3.1.9  # pyup: < 3.2  # https://www.djangoproject.com/
 django-contrib-comments==2.0.0 # https://github.com/django/django-contrib-comments
 django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
