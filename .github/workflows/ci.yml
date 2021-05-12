@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: setup ENV files
         run: mkdir .envs && cp -r docs/exampleenv .envs/.local/
