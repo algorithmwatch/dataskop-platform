@@ -32,7 +32,7 @@ def meta_tags(
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:description" content="{{ description }}" />
     <meta property="og:site_name" content="Unding" />
-    <meta property="og:image" content="{{ social_media_img }}" />
+    <meta property="og:image" content="{{ social_media_image }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@_unding">
