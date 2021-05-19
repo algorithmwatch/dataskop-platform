@@ -79,9 +79,22 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: 'img/**/*',
-          context: 'goliath/src/'
-        }
+          from: "img/**/*",
+          context: "goliath/src/",
+        },
+        {
+          from: "node_modules/@fortawesome/fontawesome-free/svgs/**/*",
+          to({ context, absoluteFilename }) {
+            const all = [];
+            const lastTwo = absoluteFilename.split("/").slice(-2);
+            if (lastTwo[0] == "brands") all.push("fab");
+            if (lastTwo[0] == "regular") all.push("far");
+            if (lastTwo[0] == "solid") all.push("fas");
+            all.push("fa");
+            all.push(lastTwo[1]);
+            return "fontawesome/" + all.join("-");
+          },
+        },
       ],
     }),
     new MiniCssExtractPlugin({
