@@ -20,12 +20,12 @@ import {
   faExternalLinkAlt,
   faSearch,
 
-
   // case types:
   faTruck,
   faBuilding,
   faPersonBooth,
   faTachometerAlt,
+  faAddressCard,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faComments,
@@ -88,7 +88,8 @@ library.add(
   faBuilding,
   faPersonBooth,
   faTachometerAlt,
-  faGoogle
+  faGoogle,
+  faAddressCard
 );
 
 // Will automatically find any <i> tags in the page and replace those with <svg> elements.
