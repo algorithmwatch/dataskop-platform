@@ -1,47 +1,47 @@
-import "regenerator-runtime/runtime";
-import "alpinejs";
-import "../scss/main.scss";
-import { dom, library } from "@fortawesome/fontawesome-svg-core";
+import { dom, library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faFacebook,
+  faFacebookSquare,
+  faGoogle,
+  faInstagram,
+  faTwitter,
+  faTwitterSquare,
+} from '@fortawesome/free-brands-svg-icons';
+import {
+  faBell as faBellOutline,
+  faComments,
+  faPaperPlane,
+  faQuestionCircle,
+  faUserCircle as faUserCircleOutline,
+} from '@fortawesome/free-regular-svg-icons';
+import {
+  faAddressCard,
   faBars,
-  faTimes,
-  faUserCircle,
-  faChevronDown,
-  faChevronCircleDown,
-  faPlus,
   faBell,
-  faUserClock,
+  faBuilding,
+  faChevronCircleDown,
+  faChevronDown,
   faClock,
-  faThumbsUp,
-  faThumbsDown,
+  faExternalLinkAlt,
   faPencilAlt,
+  faPersonBooth,
+  faPlus,
+  faSearch,
   faStarHalfAlt,
   faSyringe,
-  faExternalLinkAlt,
-  faSearch,
+  faTachometerAlt,
+  faThumbsDown,
+  faThumbsUp,
+  faTimes,
 
   // case types:
   faTruck,
-  faBuilding,
-  faPersonBooth,
-  faTachometerAlt,
-  faAddressCard,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faComments,
-  faPaperPlane,
-  faUserCircle as faUserCircleOutline,
-  faBell as faBellOutline,
-  faQuestionCircle,
-} from "@fortawesome/free-regular-svg-icons";
-import {
-  faGoogle,
-  faTwitter,
-  faFacebook,
-  faInstagram,
-  faTwitterSquare,
-  faFacebookSquare,
-} from "@fortawesome/free-brands-svg-icons";
+  faUserCircle,
+  faUserClock,
+} from '@fortawesome/free-solid-svg-icons';
+import 'alpinejs';
+import 'regenerator-runtime/runtime';
+import '../scss/main.scss';
 
 /*
   Case types icons
@@ -101,10 +101,10 @@ function initSmoothAnchorLinkScroll() {
   // src: https://stackoverflow.com/a/7717572/5732518
   const elements = document.querySelectorAll('a[href^="#"].smooth-scroll');
   elements.forEach((anchor) => {
-    anchor.addEventListener("click", (e) => {
+    anchor.addEventListener('click', (e) => {
       e.preventDefault();
-      document.querySelector(anchor.getAttribute("href")).scrollIntoView({
-        behavior: "smooth",
+      document.querySelector(anchor.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth',
       });
     });
   });
@@ -112,7 +112,7 @@ function initSmoothAnchorLinkScroll() {
 
 window.hubSearch = () => {
   return {
-    searchTerm: "",
+    searchTerm: '',
     isLoading: false,
     results: [],
     minTermLength: 2,
@@ -139,7 +139,7 @@ window.hubSearch = () => {
     },
 
     async fetchCaseTypes() {
-      const url = "/api/casetype/?q=" + encodeURIComponent(this.searchTerm);
+      const url = '/api/casetype/?q=' + encodeURIComponent(this.searchTerm);
       const response = await window.fetch(url);
       const result = await response.json();
 
@@ -154,7 +154,7 @@ window.hubSearch = () => {
 
     async fetchExternalSupport() {
       const url =
-        "/api/externalsupport/?q=" + encodeURIComponent(this.searchTerm);
+        '/api/externalsupport/?q=' + encodeURIComponent(this.searchTerm);
       const response = await window.fetch(url);
       const result = await response.json();
 

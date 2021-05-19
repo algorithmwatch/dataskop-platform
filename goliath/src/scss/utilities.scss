@@ -88,13 +88,13 @@
   ol > li {
     &::before {
       @apply absolute left-0 font-normal;
-      color: theme("colors.brown.600");
-      content: counter(list-item) ".";
+      color: theme('colors.brown.600');
+      content: counter(list-item) '.';
     }
   }
   ul > li {
     &::before {
-      content: "";
+      content: '';
       top: 0.75rem;
       @apply bg-brown-600 rounded-full;
       @apply absolute w-1.5 h-1.5 left-1.5;

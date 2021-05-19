@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 @layer base {
-  @import "./fonts";
+  @import './fonts';
 
   body {
     // Activates nicer "l" and German "sz" in Inter font
-    font-feature-settings: "cv05", "cv07";
+    font-feature-settings: 'cv05', 'cv07';
   }
 
   hr {
@@ -16,11 +16,11 @@
 }
 
 @layer components {
-  @import "./components/form";
+  @import './components/form';
 }
 
-@import "./utilities";
-@import "./components/surveyjs";
+@import './utilities';
+@import './components/surveyjs';
 
 // logo eyes
 .unding-eyes {
