@@ -313,9 +313,11 @@ function setupSurvey(
       el.value = options.value;
     }
 
-    // remove non-checked values
-    const $el = $('#' + options.question.id);
-    $el.find('.sv-q-col-1').not('.checked').remove();
+    if (options.question.getType() == 'radiogroup') {
+      // remove non-checked values only for radio groups
+      const $el = $('#' + options.question.id);
+      $el.find('.sv-q-col-1').not('.checked').remove();
+    }
   }
 
   // setting up the survey & setting some appropiate values
@@ -393,6 +395,22 @@ function setupSurvey(
         // "footer": "sv_p_footer",
         // "number": "sv_q_num",
         // "requiredText": "sv_q_required_text"
+      },
+      checkbox: {
+        // root: 'sv_qcbc sv_qcbx form-inline',
+        // item: 'checkbox',
+        // itemChecked: 'checked',
+        // itemSelectAll: 'sv_q_checkbox_selectall',
+        // itemNone: 'sv_q_checkbox_none',
+        // itemInline: 'sv_q_checkbox_inline',
+        itemControl: 'wizard-radio-button',
+        // // itemDecorator: 'sv-hidden',
+        label: 'wizard-radio-label',
+        labelChecked: 'wizard-radio-group-checked',
+        // controlLabel: '',
+        // materialDecorator: 'checkbox-material',
+        // other: 'sv_q_checkbox_other form-control',
+        // column: 'sv_q_select_column',
       },
       radiogroup: {
         // "root": "sv_qcbc form-inline",
