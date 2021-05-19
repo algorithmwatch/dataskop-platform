@@ -1,4 +1,4 @@
-const plugin = require('tailwindcss/plugin')
+const plugin = require('tailwindcss/plugin');
 
 module.exports = {
   purge: {
@@ -7,7 +7,7 @@ module.exports = {
     // These options are passed through directly to PurgeCSS
     options: {
       safelist: ['animate-bounce'],
-    }
+    },
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -119,7 +119,16 @@ module.exports = {
     fontFamily: {
       sans: ['Inter', 'sans-serif'],
       serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
-      mono: ['ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','"Liberation Mono"','"Courier New"','monospace'],
+      mono: [
+        'ui-monospace',
+        'SFMono-Regular',
+        'Menlo',
+        'Monaco',
+        'Consolas',
+        '"Liberation Mono"',
+        '"Courier New"',
+        'monospace',
+      ],
     },
     fontWeight: {
       // thin: '100',
@@ -135,17 +144,17 @@ module.exports = {
     extend: {
       zIndex: {
         '-10': '-10',
-       },
+      },
       height: {
         '80vh': '80vh',
         '90vh': '90vh',
       },
       backgroundSize: {
-        '1300px': '1300px'
+        '1300px': '1300px',
       },
       width: {
-        '240': '15rem',
-      }
+        240: '15rem',
+      },
     },
   },
   variants: {
@@ -155,13 +164,12 @@ module.exports = {
       ringColor: ['hover', 'active'],
       ringWidth: ['hover', 'active'],
       ringOpacity: ['hover', 'active'],
-      borderWidth: ['last']
+      borderWidth: ['last'],
     },
   },
   plugins: [
-
     // heading plugin
-    plugin(function({ addComponents, config, theme }) {
+    plugin(function ({ addComponents, config, theme }) {
       const headings = {
         '.hl-6xl': {
           fontSize: theme('fontSize.6xl'),
@@ -198,10 +206,9 @@ module.exports = {
           lineHeight: config('theme.fontSize.lg')[1].lineHeight,
           fontWeight: theme('fontWeight.bold'),
         },
-      }
+      };
 
-      addComponents(headings, ['responsive'])
+      addComponents(headings, ['responsive']);
     }),
-
   ],
-}
+};
