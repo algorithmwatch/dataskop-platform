@@ -9,8 +9,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    main: './goliath/src/js/main.js',
-    wizard: './goliath/src/js/wizard.js',
+    main: './goliath/frontend/js/main.js',
+    wizard: './goliath/frontend/js/wizard.js',
   },
 
   module: {
@@ -80,7 +80,7 @@ module.exports = {
       patterns: [
         {
           from: 'img/**/*',
-          context: 'goliath/src/',
+          context: 'goliath/frontend/',
         },
         {
           from: 'node_modules/@fortawesome/fontawesome-free/svgs/**/*',

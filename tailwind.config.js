@@ -2,10 +2,7 @@ const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   purge: {
-    content: [
-      './goliath/templates/**/*.html',
-      './goliath/src/js/**/*.js',
-    ],
+    content: ['./goliath/templates/**/*.html', './goliath/frontend/js/**/*.js'],
 
     // These options are passed through directly to PurgeCSS
     options: {
