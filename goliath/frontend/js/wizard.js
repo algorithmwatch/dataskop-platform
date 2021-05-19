@@ -275,21 +275,24 @@ function setupSurvey(
         '<div class="mt-4 text-right clear-both aw-survey-next-button"><button type="button" class="btn btn--regular btn--primary">weiter</button></div>'
       );
     }
+
     if (questionType == 'radiogroup') {
       chanageToNextButton(options.htmlElement);
     }
 
-    setTimeout(function () {
-      options.htmlElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'end',
-      });
-    }, 100);
-    setTimeout(function () {
-      $(options.htmlElement).find('input').focus();
-      options.htmlElement.focus();
-    }, 150);
+    if (!window.awDontScroll) {
+      setTimeout(function () {
+        options.htmlElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'end',
+        });
+      }, 100);
+      setTimeout(function () {
+        $(options.htmlElement).find('input').focus();
+        options.htmlElement.focus();
+      }, 150);
+    }
   }
 
   // survejs changed the values right before completing.
@@ -313,10 +316,18 @@ function setupSurvey(
       el.value = options.value;
     }
 
-    if (options.question.getType() == 'radiogroup') {
+    const questionType = options.question.getType();
+
+    if (questionType == 'radiogroup') {
       // remove non-checked values only for radio groups
       const $el = $('#' + options.question.id);
       $el.find('.sv-q-col-1').not('.checked').remove();
+    }
+
+    if (questionType == 'checkbox') {
+      window.awDontScroll = true;
+    } else {
+      window.awDontScroll = false;
     }
   }
 
