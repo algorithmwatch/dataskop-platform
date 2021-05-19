@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static meta_tags %}
+
+{% block meta_tags %}
+  {% with survey.title|add:" - Umfrage" as title %}
+    {% meta_tags title=title %}
+  {% endwith %}
+{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
+{% block content %}
+  <div class="rounded-xl bg-blue-100" x-data="{ processHowToOpen: false }">
+
+    <div class="max-w-2xl mx-auto p-8 sm:p-10 md:p-12 lg:py-12 lg:px-0">
+      <h1 class="hl-2xl mb-6">{{survey.title}}</h1>
+      <div class="text-lg">{{survey.description}}</div>
+    </div>
+
+    {% comment %} <div class="p-4">
+      <button type="button" class="survey-reset btn btn--small btn--outline">Neustarten</button>
+    </div> {% endcomment %}
+
+
+    <div class="survey-container px-4 pb-6">
+
+      <div class="survey-inner"></div>
+
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'wizard.js' %}"></script>
+  <script>
+  var True = true;
+  var False = false;
+  {% if user.is_authenticated %}
+    window.setupSurvey("{{survey.slug}}", {{survey.pk}}, {{survey.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", [], "/umfrage/", false);
+  {% else %}
+    window.setupSurvey("{{survey.slug}}", {{survey.pk}}, {{survey.questions|safe}},"{{ csrf_token }}", "Teilnehmer:in", [], "/umfrage/", false);
+  {% endif %}
+  </script>
+{% endblock %}

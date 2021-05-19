@@ -93,6 +93,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "goliath.users.apps.UsersConfig",
     "goliath.casehandling.apps.CaseHandlingAppConfig",
+    "goliath.survey.apps.SurveyAppConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

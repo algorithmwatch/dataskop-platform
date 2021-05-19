@@ -12,6 +12,7 @@ urlpatterns = [
     # User management
     path("account/", include("allauth.urls")),
     path("", include("goliath.casehandling.urls")),
+    path("", include("goliath.survey.urls")),
     path("", include("goliath.users.urls")),
 ]
 

@@ -185,7 +185,9 @@ function setupSurvey(
   surveyJSON,
   csrfToken,
   userName,
-  chooseEntities
+  chooseEntities,
+  endpoint,
+  renderPreviewText
 ) {
   if (userName === null) surveyJSON = addUserToJson(surveyJSON);
   // currently not needed
@@ -199,7 +201,7 @@ function setupSurvey(
   function sendDataToServer(survey, options) {
     if (options.isCompleteOnTrigger) {
       alert("Please do something else");
-      window.location.replace("/neu/");
+      window.location.replace(endpoint);
       return;
     }
 
@@ -209,7 +211,7 @@ function setupSurvey(
       csrfmiddlewaretoken: csrfToken,
     };
 
-    $.post("/neu/" + casetypeSlug + "/" + casetypeId + "/", body)
+    $.post(endpoint + casetypeSlug + "/" + casetypeId + "/", body)
       .done(function (successData) {
         window.awstorage.removeState();
         window.location.replace(successData.url);
@@ -249,8 +251,10 @@ function setupSurvey(
 
   function afterRenderQuestion(sender, options) {
     // make button visibile when preview gets rendered
+    // but only if we have the preview text to confirm
     if (options.question.name === "previewhtml") {
-      $(".aw-completebutton").removeClass("hidden");
+      if (renderPreviewText) $(".aw-completebutton").removeClass("hidden");
+      else $(".aw-completebutton").click();
     }
 
     const [questionType, questionInputType] = getQuestionType(
@@ -297,7 +301,11 @@ function setupSurvey(
   }
 
   function surveyValueChanged(sender, options) {
-    if (options.name != "previewhtml" && window.awisCompleting === false) {
+    if (
+      options.name != "previewhtml" &&
+      window.awisCompleting === false &&
+      renderPreviewText
+    ) {
       constructLetterText();
     }
     var el = document.getElementById(options.name);

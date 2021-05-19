@@ -48,9 +48,9 @@
   var True = true;
   var False = false;
   {% if user.is_authenticated %}
-    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", []);
+    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", "{{user.full_name}}", [], "/neu/", true);
   {% else %}
-    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null, []);
+    window.setupSurvey("{{case_type.slug}}", {{case_type.pk}}, {{case_type.questions|safe}},"{{ csrf_token }}", null, [], "/neu/", true);
   {% endif %}
   </script>
 {% endblock %}
