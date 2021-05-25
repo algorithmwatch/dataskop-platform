@@ -15,13 +15,13 @@ mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
 ```
 
 Adjust `.envs/.local` to you needs.
-See [docs/settings.md](./docs/settings.md).
+See [docs/exampleenv](./docs/exampleenv).
 
 ### VS Code Dev Container
 
 We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
 
-To start the devlopment server: Open a new terminal and run `/start`.
+To start the development server: Open a new terminal and run `/start`.
 
 To run management commands: Open a new terminal and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
 
@@ -33,6 +33,8 @@ As an alternative, see below to use Docker without VS Code.
 
 Install and use [Docker](https://docs.docker.com/get-docker/) with Docker-Compose. [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
 
+Start development setup:
+
 ```bash
 ./local.sh
 ```
@@ -40,13 +42,13 @@ Install and use [Docker](https://docs.docker.com/get-docker/) with Docker-Compos
 Some important Django management comands:
 
 ```bash
-./local_manage.sh makemigrations
-./local_manage.sh migrate
-./local_manage.sh createsuperuser
-./local_manage.sh reset_db
-./local_manage.sh shell_plus --print-sql
-./local_manage.sh importsupport
-./local_manage.sh fakedata
+./local.sh manage makemigrations
+./local.sh manage migrate
+./local.sh manage createsuperuser
+./local.sh manage reset_db
+./local.sh manage shell_plus --print-sql
+./local.sh manage importsupport
+./local.sh manage fakedata
 ```
 
 ### Frontend
@@ -91,7 +93,7 @@ Please note: For Celery's import magic to work, it is important _where_
 the celery commands are run. If you are in the same folder with
 _manage.py_, you should be right.
 
-### Email Server
+### E-Mail Server
 
 In development, it is often nice to be able to see emails that are being
 sent from your application. For that reason local SMTP server
@@ -104,8 +106,8 @@ View sent emails at: <http://localhost:8025>
 
 ### Settings via Environment Varibales
 
-Check [docs/settings.md](./docs/settings.md) for more.
-Also the [cookiecutter docs](<(http://cookiecutter-django.readthedocs.io/en/latest/settings.html)>) may help for some settings.
+See [docs/exampleenv/.django_prod](./docs/exampleenv/.django_prod).
+Also the [cookiecutter docs](http://cookiecutter-django.readthedocs.io/en/latest/settings.html) may help for some settings.
 
 ### Deployment
 

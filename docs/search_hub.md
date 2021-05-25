@@ -1,6 +1,6 @@
 # Searching through External Support and Case Types in the Hub
 
-We are using [Django's Wrapper around Postgres' Fulltext search](https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/).
+We are using [Django's Wrapper around Postgres' Full-text search](https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/search/).
 
 ## External Support
 
