@@ -41,6 +41,6 @@ COPY --from=client-builder --chown=django:django /app /app
 
 USER django
 
-ADD dokku/* /app/
+ADD docker/dokku/* /app/
 
 WORKDIR /app
