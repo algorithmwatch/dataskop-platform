@@ -9,7 +9,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./compose/local/django/Dockerfile
+      dockerfile: ./docker/local/django/Dockerfile
     image: goliath_local_django
     container_name: django
     depends_on:
@@ -81,7 +81,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./compose/local/node/Dockerfile
+      dockerfile: ./docker/local/node/Dockerfile
     image: goliath_local_node
     container_name: node
     depends_on:

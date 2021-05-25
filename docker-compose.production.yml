@@ -8,7 +8,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./compose/production/django/Dockerfile
+      dockerfile: ./docker/production/django/Dockerfile
       args:
         - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
     image: goliath_production_django
@@ -33,7 +33,7 @@ services:
   traefik:
     build:
       context: .
-      dockerfile: ./compose/production/traefik/Dockerfile
+      dockerfile: ./docker/production/traefik/Dockerfile
     image: goliath_production_traefik
     depends_on:
       - django

@@ -1,5 +1,5 @@
 # Only for deployment /w Dokku
-# Check out compose/local/django/Dockerfile for the dev Dockerfile.
+# Check out docker/local/django/Dockerfile for the dev Dockerfile.
 
 FROM node:12-stretch-slim as client-builder
 
