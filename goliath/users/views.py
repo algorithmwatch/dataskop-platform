@@ -30,12 +30,6 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
-    def get_form(self, form_class=None):
-        form = super(UserUpdate, self).get_form(form_class)
-        for f in self.fields:
-            form.fields[f].required = False
-        return form
-
 
 @never_cache
 def magic_link_signup_view(request):
