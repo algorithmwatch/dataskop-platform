@@ -14,10 +14,12 @@
       {% csrf_token %}
 
       <div>
+        {% include "account/form_field_error.html" with field=form.login %}
         {{ form.login|add_label_class:"input-label" }}
         {{ form.login|add_class:"text-input text-input--regular w-full" }}
       </div>
       <div>
+        {% include "account/form_field_error.html" with field=form.password %}
         {{ form.password|add_label_class:"input-label" }}
         {{ form.password|add_class:"text-input text-input--regular w-full" }}
         <div class="text-right mt-1 text-sm">
@@ -25,7 +27,7 @@
         </div>
       </div>
 
-      {% if form.errors %}
+      {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
           <div class="text-red-700">
             <strong>{{ error|escape }}</strong>

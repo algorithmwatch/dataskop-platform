@@ -18,23 +18,27 @@
       {% csrf_token %}
 
       <div>
+        {% include "account/form_field_error.html" with field=form.email %}
         {{ form.email|add_label_class:"input-label" }}
         {{ form.email|add_class:"text-input text-input--regular w-full" }}
       </div>
       <div>
+        {% include "account/form_field_error.html" with field=form.password1 %}
         {{ form.password1|add_label_class:"input-label" }}
         {{ form.password1|add_class:"text-input text-input--regular w-full" }}
       </div>
       <div>
+        {% include "account/form_field_error.html" with field=form.first_name %}
         {{ form.first_name|add_label_class:"input-label" }}
         {{ form.first_name|add_class:"text-input text-input--regular w-full" }}
       </div>
       <div>
+        {% include "account/form_field_error.html" with field=form.last_name %}
         {{ form.last_name|add_label_class:"input-label" }}
         {{ form.last_name|add_class:"text-input text-input--regular w-full" }}
       </div>
 
-      {% if form.errors %}
+      {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
           <div class="text-red-700">
             <strong>{{ error|escape }}</strong>

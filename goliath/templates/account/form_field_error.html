@@ -1,0 +1,5 @@
+{% for error in field.errors %}
+    <div class="text-red-700">
+        <strong>{{ error|escape }}</strong>
+    </div>
+{% endfor %}
