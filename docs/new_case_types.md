@@ -1,7 +1,7 @@
-# How to create new case types for Goliath
+# How to create new case types for dataskop
 
 Go to <https://surveyjs.io/create-survey> and create your survey.
-You need to copy out the JSON and insert it into Goliath case type question field.
+You need to copy out the JSON and insert it into dataskop case type question field.
 
 The pages are responsible for adding a progress bar.
 You can use the logic of surveyjs.

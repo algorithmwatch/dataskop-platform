@@ -28,12 +28,12 @@ Some more details in the [cookiecutter-django Docker documentation](http://cooki
 
 ```bash
 cd /etc/systemd/system
-vim goliath-staging.service
+vim dataskop-staging.service
 ```
 
 ```
 [Unit]
-Description=Goliath (Staging)
+Description=dataskop (Staging)
 After=docker.service
 
 [Service]
@@ -45,7 +45,7 @@ RemainAfterExit=yes
 StandardOutput=file:/var/log/goli.log
 StandardError=file:/var/log/goli_error.log
 
-WorkingDirectory=/root/code/goliath/
+WorkingDirectory=/root/code/dataskop/
 ExecStart=/usr/bin/docker-compose -f docker-compose.production.yml --env-file .envs/.production/.django up -d
 ExecStop=/usr/bin/docker-compose -f docker-compose.production.yml down
 
@@ -55,7 +55,7 @@ WantedBy=multi-user.target
 
 ```bash
 systemctl daemon-reload
-systemctl enable goliath-staging.service
+systemctl enable dataskop-staging.service
 ```
 
 ## Commands
@@ -63,10 +63,10 @@ systemctl enable goliath-staging.service
 Usefull commands
 
 ```bash
-systemctl enable goliath-staging
-systemctl status goliath-staging
-systemctl start goliath-staging
-systemctl stop goliath-staging
+systemctl enable dataskop-staging
+systemctl status dataskop-staging
+systemctl start dataskop-staging
+systemctl stop dataskop-staging
 ```
 
 ## Deployment Script
@@ -76,9 +76,9 @@ Create a simple deployment script:
 ```bash
 #!/usr/bin/env bash
 
-rsync -avz --delete --exclude node_modules --exclude .git --exclude htpasswd . awlab2:~/code/goliath
+rsync -avz --delete --exclude node_modules --exclude .git --exclude htpasswd . awlab2:~/code/dataskop
 
-ssh awlab2 "cd code/goliath && docker-compose -f docker-compose.production.yml up --detach --build && docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate"
+ssh awlab2 "cd code/dataskop && docker-compose -f docker-compose.production.yml up --detach --build && docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate"
 ```
 
 ## Volumnes
@@ -86,7 +86,7 @@ ssh awlab2 "cd code/goliath && docker-compose -f docker-compose.production.yml u
 Create a volume (on the host) and assign the uid + guid of the user running django.
 
 ```bash
-mkdir /var/goliath_media_files
+mkdir /var/dataskop_media_files
 
-chown -R 101:101 /var/goliath_media_files
+chown -R 101:101 /var/dataskop_media_files
 ```

@@ -11,9 +11,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("account/", include("allauth.urls")),
-    path("", include("goliath.casehandling.urls")),
-    path("", include("goliath.survey.urls")),
-    path("", include("goliath.users.urls")),
+    path("", include("dataskop.users.urls")),
 ]
 
 

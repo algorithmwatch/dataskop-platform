@@ -1,6 +1,6 @@
-# `goliath`
+# `dataskop`
 
-The Goliath project by [AlgorithmWatch](https://algorithmwatch.org/) powering [Unding.de](//unding.de).
+The dataskop project by [AlgorithmWatch](https://algorithmwatch.org/) powering [Unding.de](//unding.de).
 
 This project was initially bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django) but heavily modified.
 
@@ -9,8 +9,8 @@ This project was initially bootstrapped with [Django-Cookie-Cutter](https://gith
 Get the code, create .ENV files for local development.
 
 ```bash
-git clone git@github.com:algorithmwatch/goliath.git
-cd goliath
+git clone git@github.com:algorithmwatch/dataskop.git
+cd dataskop
 mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
 ```
 
@@ -25,7 +25,7 @@ To start the development server: Open a new terminal and run `/start`.
 
 To run management commands: Open a new terminal and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
 
-If you add a new VS Code extension, you need to remove this named volume `docker volume rm goliath_extensions`. ([Extr](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
+If you add a new VS Code extension, you need to remove this named volume `docker volume rm dataskop_extensions`. ([Extr](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
 
 As an alternative, see below on how to use Docker without VS Code.
 
@@ -59,7 +59,7 @@ If you add a new npm dependency, delete the volume in order to recreate it.
 
 ```bash
 docker-compose -f docker-compose.local.yml down
-docker volume rm goliath_local_node_modules
+docker volume rm dataskop_local_node_modules
 ```
 
 #### Regarding the problems of `node_modules`
@@ -92,7 +92,7 @@ pytest
 To run a celery worker:
 
 ```bash
-cd goliath
+cd dataskop
 celery -A config.celery_app worker -l info
 ```
 
@@ -116,7 +116,7 @@ Also the [cookiecutter docs](http://cookiecutter-django.readthedocs.io/en/latest
 
 ### Deployment
 
-We currently support two different Docker-based ways to deploy Goliath:
+We currently support two different Docker-based ways to deploy dataskop:
 
 - [Docker-Compose](./docs/deployment_docker_compose.md) (originating from Django-Cookie-Cutter)
 - [Dokku](./docs/deployment_dokku.md) (_preferred_, self-hosted Heroku)
@@ -144,9 +144,9 @@ Right now, we only support Mailjet but we could make any other email service fro
 
 ### Staging
 
-In order to test the email receiving, you need to have Goliath deployed somewhere.
-So think about creating a seperate `staging` server to test Goliath.
-You take all the production settings but customize Goliath via .env files.
+In order to test the email receiving, you need to have dataskop deployed somewhere.
+So think about creating a seperate `staging` server to test dataskop.
+You take all the production settings but customize dataskop via .env files.
 
 ## License
 

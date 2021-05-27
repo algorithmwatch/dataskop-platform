@@ -11,7 +11,7 @@ services:
       dockerfile: ./docker/production/django/Dockerfile
       args:
         - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
-    image: goliath_production_django
+    image: dataskop_production_django
     depends_on:
       - postgres
       - redis
@@ -20,8 +20,8 @@ services:
       - ./.envs/.production/.postgres
     command: /start
     volumes:
-      - /var/goliath_backups/:/backups
-      - /var/goliath_media_files/:/media
+      - /var/dataskop_backups/:/backups
+      - /var/dataskop_media_files/:/media
 
   postgres:
     image: postgres:11
@@ -34,7 +34,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/production/traefik/Dockerfile
-    image: goliath_production_traefik
+    image: dataskop_production_traefik
     depends_on:
       - django
     volumes:
@@ -49,15 +49,15 @@ services:
 
   celeryworker:
     <<: *django
-    image: goliath_production_celeryworker
+    image: dataskop_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: goliath_production_celerybeat
+    image: dataskop_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: goliath_production_flower
+    image: dataskop_production_flower
     command: /start-flower

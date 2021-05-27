@@ -7,8 +7,8 @@ from pathlib import Path
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# goliath/
-APPS_DIR = ROOT_DIR / "goliath"
+# dataskop/
+APPS_DIR = ROOT_DIR / "dataskop"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -91,18 +91,12 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "goliath.users.apps.UsersConfig",
-    "goliath.casehandling.apps.CaseHandlingAppConfig",
-    "goliath.survey.apps.SurveyAppConfig",
+    "dataskop.users.apps.UsersConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# MIGRATIONS
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "goliath.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -143,7 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
-    "goliath.casehandling.middleware.reverse_proxy_adapt_ip",
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -205,7 +198,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "goliath.utils.context_processors.settings_context",
+                "dataskop.utils.context_processors.settings_context",
             ],
         },
     }
@@ -250,7 +243,7 @@ DEFAULT_FROM_EMAIL = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[Goliath]")
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[dataskop]")
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -314,8 +307,8 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_ADAPTER = "goliath.users.adapters.AccountAdapter"
-SOCIALACCOUNT_ADAPTER = "goliath.users.adapters.SocialAccountAdapter"
+ACCOUNT_ADAPTER = "dataskop.users.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "dataskop.users.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 # https://django-allauth.readthedocs.io/en/latest/advanced.html#custom-user-models
@@ -323,7 +316,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_FORMS = {"signup": "goliath.users.forms.CustomSignupForm"}
+ACCOUNT_FORMS = {"signup": "dataskop.users.forms.CustomSignupForm"}
 # don't ask user, always remember
 ACCOUNT_SESSION_REMEMBER = True
 
@@ -349,11 +342,11 @@ REST_FRAMEWORK = {
 }
 
 
-# Goliath specific settings
+# dataskop specific settings
 
 AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
 AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
-AIRTABLE_NAME = env.str("AIRTABLE_NAME", "Goliath")
+AIRTABLE_NAME = env.str("AIRTABLE_NAME", "dataskop")
 
 # store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)

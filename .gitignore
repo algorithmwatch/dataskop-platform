@@ -257,7 +257,7 @@ tags
 
 ### Project template
 
-goliath/media/
+dataskop/media/
 
 .pytest_cache/
 
@@ -265,6 +265,6 @@ goliath/media/
 .env
 .envs/*
 
-goliath/static/**/*
+dataskop/static/**/*
 
 deploy.sh

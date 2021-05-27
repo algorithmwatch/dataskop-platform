@@ -9,8 +9,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    main: './goliath/frontend/js/main.js',
-    wizard: './goliath/frontend/js/wizard.js',
+    main: './dataskop/frontend/js/main.js',
+    wizard: './dataskop/frontend/js/wizard.js',
   },
 
   module: {
@@ -61,7 +61,7 @@ module.exports = {
 
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'goliath/static/'),
+    path: path.resolve(__dirname, 'dataskop/static/'),
     publicPath: '/static/',
   },
 
@@ -70,7 +70,7 @@ module.exports = {
   // mode: process.env.NODE_ENV,
 
   devServer: {
-    contentBase: path.resolve(__dirname, 'goliath/static/'),
+    contentBase: path.resolve(__dirname, 'dataskop/static/'),
     writeToDisk: true,
   },
 
@@ -80,7 +80,7 @@ module.exports = {
       patterns: [
         {
           from: 'img/**/*',
-          context: 'goliath/frontend/',
+          context: 'dataskop/frontend/',
         },
         {
           from: 'node_modules/@fortawesome/fontawesome-free/svgs/**/*',
