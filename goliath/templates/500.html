@@ -4,8 +4,10 @@
   <title>Server-Fehler (500) - Unding</title>
 {% endblock%}
 
-{% block content %}
-<h1>Server-Fehler (500)</h1>
+{% block content_class %}page-wrap-wide page-wrap-space {% endblock %}
 
-<p>Wir wurden über den Fehler informatiert.</p>
+{% block content %}
+<h1 class="font-bold text-5xl text-center mt-10 mb-20">Sorry, wir haben einen Fehler gemacht.</h1>
+
+<p class="text-center">Server-Fehler (500)</p>
 {% endblock content %}
