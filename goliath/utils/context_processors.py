@@ -9,6 +9,7 @@ def settings_context(_request):
     return {
         "DEBUG": settings.DEBUG,
         "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+        "GOOGLE_VERIFICATION": settings.GOOGLE_VERIFICATION,
         # add site because when sending emails, we don't have access to request
         "current_site": Site.objects.get_current(),
     }
