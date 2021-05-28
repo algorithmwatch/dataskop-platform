@@ -37,36 +37,20 @@ class CustomUserManager(UserManager):
         user.save(using=self._db)
         return user
 
-    # def get_or_create_user(self, request, answers):
-    #     """
-    #     Create a new user or return current logged in user
-    #     """
-    #     is_logged_in = request.user.is_authenticated
-    #     if is_logged_in:
-    #         user = request.user
-    #     else:
-    #         # need to create a new, unverified user
-    #         # https://stackoverflow.com/q/29147550/4028896
+    def create_unverified_user_send_mail(self, email):
+        user = self.create_user(
+            first_name="first_name", last_name="last_name", email=email
+        )
+        # cleaned version
+        email = user.email
 
-    #         first_name, last_name, email = (
-    #             answers["awfirstnamequestion"],
-    #             answers["awlastnamequestion"],
-    #             answers["awemailquestion"],
-    #         )
-    #         user = self.create_user(
-    #             first_name=first_name, last_name=last_name, email=email
-    #         )
-    #         # cleaned version
-    #         email = user.email
+        EmailAddress.objects.create(
+            user=user, email=email, primary=True, verified=False
+        )
 
-    #         EmailAddress.objects.create(
-    #             user=user, email=email, primary=True, verified=False
-    #         )
+        from ..utils.email import send_magic_link
 
-    #         from ..utils.email import send_magic_link
-
-    #         send_magic_link(user, email, "magic_registration")
-    #     return user, is_logged_in
+        send_magic_link(user, email, "magic_registration")
 
 
 class User(AbstractUser):

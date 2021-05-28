@@ -1,6 +1,7 @@
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
 from django.db import models
+from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
 from model_utils import Choices
 from model_utils.fields import StatusField
 from model_utils.models import StatusModel, TimeStampedModel
@@ -31,7 +32,7 @@ class Campaign(StatusOptions, TimeStampedModel):
         return self.title
 
 
-class Donation(TimeStampedModel):
+class Donation(LifecycleModel, TimeStampedModel):
     campaign = models.ForeignKey(
         "Campaign", on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -41,3 +42,7 @@ class Donation(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
+
+    @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
+    def after_creattion_with_unauthorized_email(self):
+        User.objects.create_unverified_user_send_mail(self.unauthorized_email)
