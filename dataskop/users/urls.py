@@ -6,7 +6,6 @@ from dataskop.users.views import (
     UserUpdate,
     export_text,
     magic_link_login_view,
-    magic_link_signup_view,
 )
 
 urlpatterns = [
@@ -26,10 +25,5 @@ urlpatterns = [
         magic_link_login_view,
         name="account_login_magic",
     ),
-    # path(
-    #     "account/signup/email/",
-    #     magic_link_signup_view,
-    #     name="account_signup_email",
-    # ),
     path("account/", UserUpdate.as_view(), name="account_index"),
 ]

@@ -12,6 +12,8 @@ urlpatterns = [
     # User management
     path("account/", include("allauth.urls")),
     path("", include("dataskop.users.urls")),
+    path("", include("dataskop.campaigns.urls")),
+    path("", include("dataskop.pages.urls")),
 ]
 
 
@@ -19,28 +21,6 @@ urlpatterns = [
 urlpatterns += [
     re_path(
         r"^(?P<url>.*/)$", cache_control(max_age=3600, public=True)(views.flatpage)
-    ),
-]
-
-# hardcode urls for important flat pages
-urlpatterns += [
-    path(
-        "ueber/",
-        cache_control(max_age=3600, public=True)(views.flatpage),
-        {"url": "/ueber/"},
-        name="about",
-    ),
-    path(
-        "news/",
-        cache_control(max_age=3600, public=True)(views.flatpage),
-        {"url": "/news/"},
-        name="news",
-    ),
-    path(
-        "faq/",
-        cache_control(max_age=3600, public=True)(views.flatpage),
-        {"url": "/faq/"},
-        name="faq",
     ),
 ]
 

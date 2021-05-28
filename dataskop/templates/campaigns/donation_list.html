@@ -1,0 +1,8 @@
+<h1>donations</h1>
+<ul>
+{% for dontation in object_list %}
+    <li>{{ dontation.created|date }} - {{ dontation.campaign }}</li>
+{% empty %}
+    <li>No donations yet.</li>
+{% endfor %}
+</ul>

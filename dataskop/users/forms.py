@@ -14,11 +14,5 @@ class CustomSignupForm(SignupForm):
         self.fields["last_name"] = forms.CharField(required=True, label="Nachname")
 
 
-class MagicLinkSignupForm(forms.Form):
-    first_name = forms.CharField(label="Vorname", max_length=255)
-    last_name = forms.CharField(label="Nachname", max_length=255)
-    email = forms.EmailField(label="E-Mail-Adresse", max_length=255)
-
-
 class MagicLinkLoginForm(forms.Form):
     email = forms.EmailField(label="E-Mail-Adresse", max_length=255)

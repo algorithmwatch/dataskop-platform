@@ -6,8 +6,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db.models import CharField
 from django.urls import reverse
-from django.utils.crypto import get_random_string
-from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -39,36 +37,36 @@ class CustomUserManager(UserManager):
         user.save(using=self._db)
         return user
 
-    def get_or_create_user(self, request, answers):
-        """
-        Create a new user or return current logged in user
-        """
-        is_logged_in = request.user.is_authenticated
-        if is_logged_in:
-            user = request.user
-        else:
-            # need to create a new, unverified user
-            # https://stackoverflow.com/q/29147550/4028896
+    # def get_or_create_user(self, request, answers):
+    #     """
+    #     Create a new user or return current logged in user
+    #     """
+    #     is_logged_in = request.user.is_authenticated
+    #     if is_logged_in:
+    #         user = request.user
+    #     else:
+    #         # need to create a new, unverified user
+    #         # https://stackoverflow.com/q/29147550/4028896
 
-            first_name, last_name, email = (
-                answers["awfirstnamequestion"],
-                answers["awlastnamequestion"],
-                answers["awemailquestion"],
-            )
-            user = self.create_user(
-                first_name=first_name, last_name=last_name, email=email
-            )
-            # cleaned version
-            email = user.email
+    #         first_name, last_name, email = (
+    #             answers["awfirstnamequestion"],
+    #             answers["awlastnamequestion"],
+    #             answers["awemailquestion"],
+    #         )
+    #         user = self.create_user(
+    #             first_name=first_name, last_name=last_name, email=email
+    #         )
+    #         # cleaned version
+    #         email = user.email
 
-            EmailAddress.objects.create(
-                user=user, email=email, primary=True, verified=False
-            )
+    #         EmailAddress.objects.create(
+    #             user=user, email=email, primary=True, verified=False
+    #         )
 
-            from ..utils.email import send_magic_link
+    #         from ..utils.email import send_magic_link
 
-            send_magic_link(user, email, "magic_registration")
-        return user, is_logged_in
+    #         send_magic_link(user, email, "magic_registration")
+    #     return user, is_logged_in
 
 
 class User(AbstractUser):
@@ -90,14 +88,6 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse("account_index")
-
-    def gen_case_email(self, num_digits):
-        return (
-            slugify(self.first_name + self.last_name).replace("-", "")
-            + get_random_string(num_digits, allowed_chars=string.digits)
-            + "@"
-            + settings.DEFAULT_EMAIL_DOMAIN
-        )
 
 
 User._meta.get_field("email")._unique = True

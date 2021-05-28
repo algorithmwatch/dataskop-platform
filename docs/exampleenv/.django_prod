@@ -35,10 +35,6 @@ DEFAULT_EMAIL_DOMAIN=undinge.net
 DEFAULT_FROM_EMAIL=noreplay@undinge.net
 EMAIL_SUBJECT_PREFIX=[Unding]
 
-# Import Data
-AIRTABLE_KEY=
-AIRTABLE_TABLE=
-
 CONTACT_EMAIL=unding@algorithmwatch.org
 ADMIN_NOTIFICATION_EMAIL=unding@algorithmwatch.org
 

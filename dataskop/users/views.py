@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
@@ -13,10 +12,11 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
 
+from ..utils.email import send_magic_link
+from .forms import MagicLinkLoginForm
+
 # from dataskop.casehandling.models import PostCaseCreation
 
-from ..utils.email import send_magic_link
-from .forms import MagicLinkLoginForm, MagicLinkSignupForm
 
 User = get_user_model()
 
@@ -29,47 +29,6 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-
-@never_cache
-def magic_link_signup_view(request):
-    """
-    Disables for now, can't register with magic link.
-    """
-    if request.method == "POST":
-        form = MagicLinkSignupForm(request.POST)
-        if form.is_valid():
-            first_name = form.cleaned_data["first_name"]
-            last_name = form.cleaned_data["last_name"]
-            email = form.cleaned_data["email"]
-
-            try:
-                user = User.objects.create_user(
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=email,
-                )
-                # use cleaned email address in user from now on
-                email = user.email
-                EmailAddress.objects.create(
-                    user=user, email=email, primary=True, verified=False
-                )
-                send_magic_link(user, email, "magic_registration")
-                messages.success(
-                    request,
-                    "Ein Link zum Abschluss der Registrierung wurde an Ihre E-Mail-Adresse versandt.",
-                )
-
-            except IntegrityError as e:
-                if "unique constraint" in str(e.args):
-                    messages.error(
-                        request,
-                        "Mit dieser E-mail-Adresse wurde schon ein Account erstellt.",
-                    )
-    else:
-        form = MagicLinkSignupForm()
-
-    return render(request, "account/signup_email.html", {"form": form})
 
 
 @never_cache
@@ -136,24 +95,11 @@ class MagicLinkVerifyEmail(View):
         email_address.set_as_primary(conditional=True)
         email_address.save()
 
-        # very hacky way to determine if the post creation form was already filled or not
-        # need to do it here because the new user need to be logged in
-        first_post_cc = PostCaseCreation.objects.filter(
-            sent_initial_emails_at__isnull=True, user=user
-        ).first()
-        redirect_url = "cases"
-        if first_post_cc is not None:
-            redirect_url = first_post_cc.get_absolute_url()
-
-        # change status, send emails etc.
-        for c in PostCaseCreation.objects.filter(user=user):
-            c.user_verified_afterwards()
-
         # login
         login(request, user)
 
         messages.success(request, "Account erfolgreich verifiziert. Danke!")
-        return redirect(redirect_url)
+        return redirect("/")
 
 
 @require_GET
@@ -162,11 +108,11 @@ def export_text(request):
     user = request.user
     export_string = ""
 
-    for case in user.case_set.all():
-        for m in case.all_messages:
-            m_text = ", ".join(
-                [f"{k}: {v}" for (k, v) in m.__dict__.items() if k != "_state"]
-            )
-            export_string += m_text + "\n\n"
+    # for case in user.case_set.all():
+    #     for m in case.all_messages:
+    #         m_text = ", ".join(
+    #             [f"{k}: {v}" for (k, v) in m.__dict__.items() if k != "_state"]
+    #         )
+    #         export_string += m_text + "\n\n"
 
     return HttpResponse(export_string, content_type="text/plain; charset=UTF-8")

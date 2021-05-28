@@ -73,7 +73,7 @@ DJANGO_APPS = [
     "django_comments",
 ]
 THIRD_PARTY_APPS = [
-    "widget_tweaks",
+    # authentification
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -81,9 +81,15 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.twitter",
     "allauth.socialaccount.providers.facebook",
     "django_celery_beat",
+    # drf
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    # authorization
+    "guardian",
+    # views
+    "widget_tweaks",
+    # models
     "django_filters",
     "simple_history",
     "markupfield",
@@ -92,7 +98,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "dataskop.users.apps.UsersConfig",
-    # Your stuff: custom apps go here
+    "dataskop.campaigns.apps.CampaignsConfig",
+    "dataskop.pages.apps.PagesConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -105,7 +112,10 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
     "sesame.backends.ModelBackend",
+    "guardian.backends.ObjectPermissionBackend",
 ]
+
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
@@ -340,13 +350,6 @@ REST_FRAMEWORK = {
     ),
     # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
-
-
-# dataskop specific settings
-
-AIRTABLE_KEY = env.str("AIRTABLE_KEY", None)
-AIRTABLE_TABLE = env.str("AIRTABLE_TABLE", None)
-AIRTABLE_NAME = env.str("AIRTABLE_NAME", "dataskop")
 
 # store this info here to avoid db lookups in 'sites'
 URL_ORIGIN = env.str("URL_ORIGIN", None)
