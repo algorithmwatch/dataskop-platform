@@ -5,7 +5,6 @@ from .models import Campaign, Donation
 
 
 class CampaignAdmin(GuardedModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}
     list_display = ("title", "slug", "created")
     search_fields = ("title", "content")
     ordering = ("-created",)
@@ -13,3 +12,5 @@ class CampaignAdmin(GuardedModelAdmin):
 
 
 admin.site.register(Campaign, CampaignAdmin)
+
+admin.site.register(Donation)

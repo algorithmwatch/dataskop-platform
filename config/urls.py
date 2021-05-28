@@ -17,13 +17,6 @@ urlpatterns = [
 ]
 
 
-# ensure flatpage catchall does not break append slash middleware
-urlpatterns += [
-    re_path(
-        r"^(?P<url>.*/)$", cache_control(max_age=3600, public=True)(views.flatpage)
-    ),
-]
-
 # API URLS
 urlpatterns += [
     # API base url
@@ -31,6 +24,7 @@ urlpatterns += [
     # DRF auth token
     path("auth-token/", obtain_auth_token),
 ]
+
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
@@ -57,3 +51,11 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+# 1) the catchall flatpages must be placed in the bottom
+# 2) the regex ensures that the `append slash & redirect` middleware works
+urlpatterns += [
+    re_path(
+        r"^(?P<url>.*/)$", cache_control(max_age=3600, public=True)(views.flatpage)
+    ),
+]

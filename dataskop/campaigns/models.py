@@ -37,3 +37,7 @@ class Donation(TimeStampedModel):
     )
     donor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     results = models.JSONField(null=True, blank=True)
+    unauthorized_email = models.EmailField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
