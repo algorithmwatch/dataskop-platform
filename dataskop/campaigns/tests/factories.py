@@ -1,32 +1,31 @@
+import random
 from typing import Any, Sequence
 
-from django.contrib.auth import get_user_model
+import factory
 from factory import Faker, post_generation
 from factory.django import DjangoModelFactory
 
+from dataskop.campaigns.models import Campaign, Donation, StatusOptions
+from dataskop.users.tests.factories import UserFactory
 
-class UserFactory(DjangoModelFactory):
 
-    email = Faker("email", locale="de")
-    first_name = Faker("first_name", locale="de")
-    last_name = Faker("last_name", locale="de")
-
-    @post_generation
-    def password(self, create: bool, extracted: Sequence[Any], **kwargs):
-        password = (
-            extracted
-            if extracted
-            else Faker(
-                "password",
-                length=42,
-                special_chars=True,
-                digits=True,
-                upper_case=True,
-                lower_case=True,
-            ).generate(extra_kwargs={})
-        )
-        self.set_password(password)
+class CampaignFactory(DjangoModelFactory):
+    status = factory.LazyAttribute(
+        lambda o: random.choice(list(StatusOptions.STATUS_OPTIONS))[0]
+    )
+    title = Faker("word")
+    description = Faker("text")
+    scraper_config = Faker("json")
+    created_by = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = get_user_model()
-        django_get_or_create = ["first_name", "last_name", "email"]
+        model = Campaign
+
+
+class DonationFactory(DjangoModelFactory):
+    campaign = factory.SubFactory(CampaignFactory)
+    unauthorized_email = Faker("email")
+    results = Faker("json")
+
+    class Meta:
+        model = Donation

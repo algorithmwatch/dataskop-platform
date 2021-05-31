@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -45,4 +46,13 @@ class Donation(LifecycleModel, TimeStampedModel):
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creattion_with_unauthorized_email(self):
-        User.objects.create_unverified_user_send_mail(self.unauthorized_email)
+
+        existing_email = EmailAddress.objects.filter(
+            email=self.unauthorized_email
+        ).first()
+        if existing_email:
+            existing_email.user.send_email(
+                "Neue Spende", "bitte loggen sie sich ein um die Spende zu bestätigen"
+            )
+        else:
+            User.objects.create_unverified_user_send_mail(self.unauthorized_email)

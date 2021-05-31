@@ -12,7 +12,6 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
 
-from ..utils.email import send_magic_link
 from .forms import MagicLinkLoginForm
 
 # from dataskop.casehandling.models import PostCaseCreation
@@ -37,13 +36,13 @@ def magic_link_login_view(request):
         form = MagicLinkLoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data["email"]
-            user = EmailAddress.objects.filter(email=email).first()
+            email_obj = EmailAddress.objects.filter(email=email).first()
 
-            if not user:
+            if not email_obj:
                 raise PermissionDenied
-            user = user.user
+            user = email_obj.user
 
-            send_magic_link(user, email, "magic_login")
+            user.send_magic_link(email, "magic_login")
             messages.info(
                 request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
             )
@@ -55,7 +54,7 @@ def magic_link_login_view(request):
 
 
 @method_decorator(never_cache, name="dispatch")
-class MagicLinkLoginEmail(View):
+class MagicLinkHandleConfirmationLink(View):
     def get(self, request):
         """
         login when person opened magic link from email
@@ -74,7 +73,7 @@ class MagicLinkLoginEmail(View):
 
 
 @method_decorator(never_cache, name="dispatch")
-class MagicLinkVerifyEmail(View):
+class MagicLinkHandleRegistrationLink(View):
     def get(self, request):
         """
         Scope for each email to ensure the token was actually sent to this
