@@ -1,8 +1,24 @@
-<h1>donations</h1>
+
+
+{% extends "base.html" %}
+
+
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
+{% block content %}
+<div class="mt-8 lg:mt-10">
+  {% block inner %}
+
+  <h1>donations</h1>
 <ul>
 {% for dontation in object_list %}
-    <li>{{ dontation.created|date }} - {{ dontation.campaign }}</li>
+    <li><a href="{{ dontation.get_absolute_url }}">{{ dontation.created|date }} - {{ dontation.campaign }}</a></li>
 {% empty %}
     <li>No donations yet.</li>
 {% endfor %}
 </ul>
+
+  {% endblock %}
+
+</div>
+{% endblock %}

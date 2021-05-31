@@ -2,6 +2,7 @@ from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls.base import reverse
 from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
 from model_utils import Choices
 from model_utils.fields import StatusField
@@ -44,8 +45,13 @@ class Donation(LifecycleModel, TimeStampedModel):
     def __str__(self) -> str:
         return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
 
+    def get_absolute_url(self):
+        return reverse('my-donations-detail', kwargs={'pk':self.pk})
+
+
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creattion_with_unauthorized_email(self):
+        assert self.donor is None
 
         existing_email = EmailAddress.objects.filter(
             email=self.unauthorized_email
