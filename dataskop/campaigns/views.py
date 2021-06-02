@@ -1,6 +1,7 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http.response import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -45,7 +46,8 @@ class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
         return Donation.objects.unconfirmed_donations_by_user(self.request.user)
 
 
-class DonationUnconfirmedView(View):
+@method_decorator(never_cache, name="dispatch")
+class DonationUnconfirmedView(LoginRequiredMixin, View):
     def post(self, request):
         Donation.objects.unconfirmed_donations_by_user(request.user).update(
             donor=request.user
@@ -73,10 +75,14 @@ class DonationUnconfirmedView(View):
 class DonationDetailViewGet(UsersDonationMixin, DetailView):
     model = Donation
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["form"] = CaseStatusForm()
-    #     return context
+
+class DonationDetailDownloadView(DonationDetailViewGet):
+    def render_to_response(self, context, **response_kwargs):
+        response = JsonResponse({"results": context["object"].results})
+        response[
+            "Content-Disposition"
+        ] = f"attachment; filename=dataskop-export-{context['object'].id}.json"
+        return response
 
 
 # can't use SuccessMessageMixin https://stackoverflow.com/a/25325228/4028896

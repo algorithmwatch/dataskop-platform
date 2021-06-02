@@ -2,6 +2,7 @@ from django.urls import path
 
 from dataskop.campaigns.views import (
     DonationDeleteView,
+    DonationDetailDownloadView,
     DonationDetailView,
     DonationListView,
     DonationUnconfirmedView,
@@ -23,5 +24,10 @@ urlpatterns = [
         "meine-spenden-loeschen/<int:pk>/",
         DonationDeleteView.as_view(),
         name="my-donations-delete",
+    ),
+    path(
+        "meine-spenden-download/<int:pk>/",
+        DonationDetailDownloadView.as_view(),
+        name="my-donations-download",
     ),
 ]
