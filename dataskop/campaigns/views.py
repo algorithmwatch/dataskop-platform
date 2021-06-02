@@ -1,15 +1,19 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.text import slugify
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import DeleteView
 
 from dataskop.campaigns.models import Donation
+
+User = get_user_model()
 
 
 class UsersDonationMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -82,6 +86,20 @@ class DonationDetailDownloadView(DonationDetailViewGet):
         response[
             "Content-Disposition"
         ] = f"attachment; filename=dataskop-export-{context['object'].id}.json"
+        return response
+
+
+class DonationDownloadAll(LoginRequiredMixin, View):
+    def get(self, request):
+        export = {}
+        export["user"] = list(User.objects.filter(email=request.user.email).values())
+        export["emails"] = list(EmailAddress.objects.filter(user=request.user).values())
+        export["donations"] = list(Donation.objects.filter(donor=request.user).values())
+
+        response = JsonResponse(export)
+        response[
+            "Content-Disposition"
+        ] = f"attachment; filename=dataskop-export-{slugify(request.user.email)}.json"
         return response
 
 

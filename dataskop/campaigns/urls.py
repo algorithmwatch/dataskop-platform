@@ -4,6 +4,7 @@ from dataskop.campaigns.views import (
     DonationDeleteView,
     DonationDetailDownloadView,
     DonationDetailView,
+    DonationDownloadAll,
     DonationListView,
     DonationUnconfirmedView,
 )
@@ -29,5 +30,10 @@ urlpatterns = [
         "meine-spenden-download/<int:pk>/",
         DonationDetailDownloadView.as_view(),
         name="my-donations-download",
+    ),
+    path(
+        "download-all/",
+        DonationDownloadAll.as_view(),
+        name="download-all",
     ),
 ]
