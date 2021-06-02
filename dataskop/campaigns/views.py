@@ -1,5 +1,7 @@
+from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -25,6 +27,34 @@ class DonationListView(LoginRequiredMixin, ListView):
         """
         qs = Donation.objects.filter(donor=self.request.user)
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[
+            "num_unconfirmed_donations"
+        ] = Donation.objects.unconfirmed_donations_by_user(self.request.user).count()
+        return context
+
+
+@method_decorator(never_cache, name="dispatch")
+class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
+    model = Donation
+    template_name = "campaigns/donation_unconfirmed_list.html"
+
+    def get_queryset(self):
+        return Donation.objects.unconfirmed_donations_by_user(self.request.user)
+
+
+class DonationUnconfirmedView(View):
+    def post(self, request):
+        Donation.objects.unconfirmed_donations_by_user(request.user).update(
+            donor=request.user
+        )
+        return redirect("my-donations-unconfirmed")
+
+    def get(self, request, *args, **kwargs):
+        view = DonationUnconfirmedListView.as_view()
+        return view(request, *args, **kwargs)
 
 
 # class CaseStatusUpdateView(LoginRequiredMixin,UsersDonationMixin, UpdateView):

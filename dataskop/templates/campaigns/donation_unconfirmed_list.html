@@ -1,0 +1,9 @@
+{% extends "campaigns/donation_list.html" %}
+
+{% block beforelistaction %}
+  <form class='p-1' action="{% url 'my-donations-unconfirmed' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Alle bestätigen">
+  </form>
+{% endblock %}
+

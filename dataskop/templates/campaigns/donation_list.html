@@ -10,6 +10,12 @@
 
 {% block content %}
   <div class="mt-8 lg:mt-10">
+    {% block beforelistaction %}
+      {% if num_unconfirmed_donations > 0 %}
+        <a href="{% url 'my-donations-unconfirmed' %}">Bitte bestätigen Sie {{num_unconfirmed_donations}} Spenden.</a>
+        {% endif %}
+    {% endblock %}
+
     {% block inner %}
       <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spenden</h1>
       <ul>

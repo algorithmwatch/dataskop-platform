@@ -9,6 +9,8 @@ from model_utils.fields import StatusField
 from model_utils.models import StatusModel, TimeStampedModel
 from simple_history.models import HistoricalRecords
 
+from dataskop.campaigns.managers import DonationManagers
+
 User = get_user_model()
 
 # https://github.com/jazzband/django-simple-history/issues/190#issuecomment-134281202
@@ -42,12 +44,13 @@ class Donation(LifecycleModel, TimeStampedModel):
     results = models.JSONField(null=True, blank=True)
     unauthorized_email = models.EmailField(null=True, blank=True)
 
+    objects = DonationManagers()
+
     def __str__(self) -> str:
         return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
 
     def get_absolute_url(self):
-        return reverse('my-donations-detail', kwargs={'pk':self.pk})
-
+        return reverse("my-donations-detail", kwargs={"pk": self.pk})
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creattion_with_unauthorized_email(self):
