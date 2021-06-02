@@ -1,7 +1,23 @@
-<h1>donation</h1>
-<ul>
-{{ object }}
-{{ object.results }}
+{% extends "base.html" %}
 
-<a href="{% url 'my-donations-delete' object.pk %}">Löschen</a>
-</ul>
+{% load meta_tags %}
+
+{% block meta_tags %}
+  {% meta_tags title='Meine Spenden' %}
+{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
+{% block content %}
+  <div class="mt-8 lg:mt-10">
+    {% block inner %}
+    <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spende: {{ object }}</h1>
+      <div>
+        {{ object.results }}
+      </div>
+      <div class="mt-10">
+        <a class="font-bold underline text-red-700" href="{% url 'my-donations-delete' object.pk %}">Löschen</a>
+      </div>
+    {% endblock %}
+  </div>
+{% endblock %}

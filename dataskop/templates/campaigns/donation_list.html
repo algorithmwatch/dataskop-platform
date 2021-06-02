@@ -1,24 +1,24 @@
-
-
 {% extends "base.html" %}
 
+{% load meta_tags %}
+
+{% block meta_tags %}
+  {% meta_tags title='Meine Spenden' %}
+{% endblock %}
 
 {% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
 {% block content %}
-<div class="mt-8 lg:mt-10">
-  {% block inner %}
-
-  <h1>donations</h1>
-<ul>
-{% for dontation in object_list %}
-    <li><a href="{{ dontation.get_absolute_url }}">{{ dontation.created|date }} - {{ dontation.campaign }}</a></li>
-{% empty %}
-    <li>No donations yet.</li>
-{% endfor %}
-</ul>
-
-  {% endblock %}
-
-</div>
+  <div class="mt-8 lg:mt-10">
+    {% block inner %}
+      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spenden</h1>
+      <ul>
+        {% for dontation in object_list %}
+          <li class="mt-1"><a class="underline" href="{{ dontation.get_absolute_url }}">{{ dontation.created|date }} - {{ dontation.campaign }}</a></li>
+        {% empty %}
+          <li>Noch keine Daten gespendet.</li>
+        {% endfor %}
+      </ul>
+    {% endblock %}
+  </div>
 {% endblock %}

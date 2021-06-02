@@ -1,6 +1,23 @@
-<form method="post">{% csrf_token %}
+{% extends "base.html" %}
 
-<p>Are you sure you want to delete "{{ object }}"?</p>
+{% load meta_tags %}
 
-    <input type="submit" value="Confirm">
-</form>
+{% block meta_tags %}
+  {% meta_tags title='Löschen bestätigen' %}
+{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
+{% block content %}
+  <div class="mt-8 lg:mt-10">
+    {% block inner %}
+      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Löschen bestätigen</h1>
+      <div>
+        <form method="post">{% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}"?</p>
+            <input class="mt-5 p-1" type="submit" value="Confirm">
+        </form>
+      </div>
+    {% endblock %}
+  </div>
+{% endblock %}
