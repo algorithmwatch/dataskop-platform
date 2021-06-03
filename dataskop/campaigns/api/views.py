@@ -14,5 +14,5 @@ class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         """ offload to celery"""
-        handle_donation.delay(request)
+        handle_donation.delay(request.POST)
         return Response(status=202)

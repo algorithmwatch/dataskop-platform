@@ -10,9 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def handle_donation(request):
-    data = JSONParser().parse(request)
-    serializer = DonationUnauthorizedSerializer(data=data)
+def handle_donation(request_data):
+    serializer = DonationUnauthorizedSerializer(data=request_data)
     if serializer.is_valid():
         serializer.save()
     else:
