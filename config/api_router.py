@@ -9,8 +9,8 @@ if settings.DEBUG:
 else:
     router = SimpleRouter()
 
-router.register("users", UserViewSet)
-router.register("donate", DonationUnauthorizedViewSet, 'donate')
+# router.register("users", UserViewSet)
+router.register("donate", DonationUnauthorizedViewSet, "donate")
 
 
 app_name = "api"

@@ -13,6 +13,7 @@ from django.views.generic.edit import UpdateView
 from sesame.utils import get_user
 
 from .forms import MagicLinkLoginForm
+from .signals import post_magic_email_verified
 
 # from dataskop.casehandling.models import PostCaseCreation
 
@@ -79,13 +80,13 @@ class MagicLinkHandleRegistrationLink(View):
         Scope for each email to ensure the token was actually sent to this
         specific email since we are verifying it.
         """
-        email = request.GET.get("email")
-        user = get_user(request, scope=email)
+        email_str = request.GET.get("email")
+        user = get_user(request, scope=email_str)
 
         if user is None:
             raise PermissionDenied
 
-        email_address = EmailAddress.objects.filter(user=user, email=email).first()
+        email_address = EmailAddress.objects.filter(user=user, email=email_str).first()
 
         if not email_address:
             raise PermissionDenied
@@ -98,6 +99,9 @@ class MagicLinkHandleRegistrationLink(View):
         login(request, user)
 
         messages.success(request, "Account erfolgreich verifiziert. Danke!")
+
+        post_magic_email_verified.send(request, user, email_str)
+
         return redirect("/")
 
 

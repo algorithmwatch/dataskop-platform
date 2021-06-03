@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 
-def test_donation():
+def test_multiple_donation_by_same_user():
     # create a new donation campaing (including a new admin user)
     donation1 = DonationFactory()
 
