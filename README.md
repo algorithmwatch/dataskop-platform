@@ -1,6 +1,6 @@
-# `dataskop`
+# `dataskop-platform`
 
-The dataskop project by [AlgorithmWatch](https://algorithmwatch.org/) powering [Unding.de](//unding.de).
+The Data Donation Platform (DDP) of [DataSkop](https://dataskop.net/), developed by [AlgorithmWatch](https://algorithmwatch.org/).
 
 This project was initially bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django) but heavily modified.
 
@@ -25,7 +25,7 @@ To start the development server: Open a new terminal and run `/start`.
 
 To run management commands: Open a new terminal and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
 
-If you add a new VS Code extension, you need to remove this named volume `docker volume rm dataskop_extensions`. ([Extr](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
+If you add a new VS Code extension, you need to remove this named volume `docker volume rm dataskop_extensions`. ([See more](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
 
 As an alternative, see below on how to use Docker without VS Code.
 
@@ -102,10 +102,8 @@ _manage.py_, you should be right.
 
 ### Viewing sent E-Mail during development
 
-In development, to see emails that are being sent from your application. For that reason local SMTP server
-[MailHog](https://github.com/mailhog/MailHog) with a web interface is available as Docker container.
-
-View sent emails at: <http://localhost:8025>
+In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server
+with a web interface. View sent emails at: <http://localhost:8025>
 
 ## Production
 
@@ -126,27 +124,9 @@ We currently support two different Docker-based ways to deploy dataskop:
 Setup [Sentry](https://sentry.io) to monitor errors.
 Set the `SENTRY_DSN` as environment variable.
 
-### New Relic
+### E-Mail service
 
-Setup [New Relic](https://newrelic.com/) for gerneral APM.
-Set the following ENVs.
-
-```
-NEW_RELIC_LICENSE_KEY=
-NEW_RELIC_APP_NAME=
-NEW_RELIC_CONFIG_FILE=
-```
-
-### E-Mail services
-
-See [docs/emails_mailjet.md](./docs/emails_mailjet.md) on how to configure [Mailjet](https://www.mailjet.com/).
-Right now, we only support Mailjet but we could make any other email service from [django-anymail](https://github.com/anymail/django-anymail) work.
-
-### Staging
-
-In order to test the email receiving, you need to have dataskop deployed somewhere.
-So think about creating a seperate `staging` server to test dataskop.
-You take all the production settings but customize dataskop via .env files.
+Right now, we only support [Mailjet](https://www.mailjet.com/) but we could make any other email service from [django-anymail](https://github.com/anymail/django-anymail) work.
 
 ## License
 
