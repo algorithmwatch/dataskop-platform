@@ -3,26 +3,22 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_GET
 from django.views.generic import View
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView, UpdateView
 from sesame.utils import get_user
 
 from .forms import MagicLinkLoginForm
 from .signals import post_magic_email_verified
 
-# from dataskop.casehandling.models import PostCaseCreation
-
-
 User = get_user_model()
 
 
 @method_decorator(never_cache, name="dispatch")
-class UserUpdate(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "account/index.html"
     model = User
     fields = ["first_name", "last_name"]
@@ -105,17 +101,16 @@ class MagicLinkHandleRegistrationLink(View):
         return redirect("/")
 
 
-@require_GET
-@never_cache
-def export_text(request):
-    user = request.user
-    export_string = ""
+# can't use SuccessMessageMixin https://stackoverflow.com/a/25325228/4028896
+class UserDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = "account/user_confirm_delete.html"
+    model = User
+    success_url = reverse_lazy("home")
+    success_message = "Ihr Account und all Ihre Spenden wurden erfolgreich gelöscht."
 
-    # for case in user.case_set.all():
-    #     for m in case.all_messages:
-    #         m_text = ", ".join(
-    #             [f"{k}: {v}" for (k, v) in m.__dict__.items() if k != "_state"]
-    #         )
-    #         export_string += m_text + "\n\n"
+    def get_object(self, queryset=None):
+        return self.request.user
 
-    return HttpResponse(export_string, content_type="text/plain; charset=UTF-8")
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(UserDeleteView, self).delete(request, *args, **kwargs)

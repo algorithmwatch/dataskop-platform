@@ -30,7 +30,7 @@ def test_confirm_all(client, django_user_model):
 
     client.force_login(user)
 
-    response = client.post(reverse("my-donations-unconfirmed"))
+    response = client.post(reverse("my_donations_unconfirmed"))
 
     assert response.status_code == 302
 

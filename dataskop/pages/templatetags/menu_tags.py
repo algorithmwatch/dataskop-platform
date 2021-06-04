@@ -9,7 +9,7 @@ def create_user_menu(is_authenticated):
         [
             {
                 "label": "Meine Spenden",
-                "url": reverse("my-donations-list"),
+                "url": reverse("my_donations_list"),
                 "is_user_menu": True,
             },
             {

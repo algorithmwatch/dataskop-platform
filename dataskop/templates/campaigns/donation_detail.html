@@ -16,10 +16,10 @@
         {{ object.results }}
       </div>
       <div class="mt-10">
-        <a download class="font-bold underline text-blue-700" href="{% url 'my-donations-download' object.pk %}">Download</a>
+        <a download class="font-bold underline text-blue-700" href="{% url 'my_donations_download' object.pk %}">Download</a>
       </div>
       <div class="mt-10">
-        <a class="font-bold underline text-red-700" href="{% url 'my-donations-delete' object.pk %}">Löschen</a>
+        <a class="font-bold underline text-red-700" href="{% url 'my_donations_delete' object.pk %}">Löschen</a>
       </div>
     {% endblock %}
   </div>

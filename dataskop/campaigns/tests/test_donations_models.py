@@ -3,6 +3,9 @@ from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.core import mail
 
+from dataskop.campaigns.models import Donation
+from dataskop.users.tests.factories import UserFactory
+
 from .factories import DonationFactory
 
 pytestmark = pytest.mark.django_db
@@ -28,3 +31,14 @@ def test_multiple_donation_by_same_user():
     )
     assert User.objects.all().count() == 3  # including Anonymous User
     assert len(mail.outbox), 3
+
+
+def test_user_delete():
+    user = UserFactory()
+    d = DonationFactory(donor=user, unauthorized_email=None)
+
+    assert Donation.objects.count() == 1
+
+    user.delete()
+
+    assert Donation.objects.count() == 0

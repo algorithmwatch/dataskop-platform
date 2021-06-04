@@ -56,7 +56,7 @@ class DonationUnconfirmedView(LoginRequiredMixin, View):
         Donation.objects.unconfirmed_donations_by_user(request.user).update(
             donor=request.user
         )
-        return redirect("my-donations-unconfirmed")
+        return redirect("my_donations_unconfirmed")
 
     def get(self, request, *args, **kwargs):
         view = DonationUnconfirmedListView.as_view()
@@ -106,7 +106,7 @@ class DonationDownloadAll(LoginRequiredMixin, View):
 # can't use SuccessMessageMixin https://stackoverflow.com/a/25325228/4028896
 class DonationDeleteView(UsersDonationMixin, DeleteView):
     model = Donation
-    success_url = reverse_lazy("my-donations-list")
+    success_url = reverse_lazy("my_donations_list")
     success_message = "Die Spende wurde erfolgreich gelöscht."
 
     def delete(self, request, *args, **kwargs):

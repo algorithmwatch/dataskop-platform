@@ -40,7 +40,8 @@ class Donation(LifecycleModel, TimeStampedModel):
     campaign = models.ForeignKey(
         "Campaign", on_delete=models.SET_NULL, null=True, blank=True
     )
-    donor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    # delete all donations when users delete their account
+    donor = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     results = models.JSONField(null=True, blank=True)
     unauthorized_email = models.EmailField(null=True, blank=True)
 
@@ -50,7 +51,7 @@ class Donation(LifecycleModel, TimeStampedModel):
         return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
 
     def get_absolute_url(self):
-        return reverse("my-donations-detail", kwargs={"pk": self.pk})
+        return reverse("my_donations_detail", kwargs={"pk": self.pk})
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creattion_with_unauthorized_email(self):

@@ -10,30 +10,30 @@ from dataskop.campaigns.views import (
 )
 
 urlpatterns = [
-    path("meine-spenden/", DonationListView.as_view(), name="my-donations-list"),
+    path("meine-spenden/", DonationListView.as_view(), name="my_donations_list"),
     path(
         "meine-spenden-unbestaetigt/",
         DonationUnconfirmedView.as_view(),
-        name="my-donations-unconfirmed",
+        name="my_donations_unconfirmed",
     ),
     path(
         "meine-spenden/<int:pk>/",
         DonationDetailView.as_view(),
-        name="my-donations-detail",
+        name="my_donations_detail",
     ),
     path(
         "meine-spenden-loeschen/<int:pk>/",
         DonationDeleteView.as_view(),
-        name="my-donations-delete",
+        name="my_donations_delete",
     ),
     path(
         "meine-spenden-download/<int:pk>/",
         DonationDetailDownloadView.as_view(),
-        name="my-donations-download",
+        name="my_donations_download",
     ),
     path(
         "download-all/",
         DonationDownloadAll.as_view(),
-        name="download-all",
+        name="download_all",
     ),
 ]

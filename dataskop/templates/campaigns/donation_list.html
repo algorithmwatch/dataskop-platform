@@ -12,7 +12,7 @@
   <div class="mt-8 lg:mt-10">
     {% block beforelistaction %}
       {% if num_unconfirmed_donations > 0 %}
-        <a href="{% url 'my-donations-unconfirmed' %}">Bitte bestätigen Sie {{num_unconfirmed_donations}} Spenden.</a>
+        <a href="{% url 'my_donations_unconfirmed' %}">Bitte bestätigen Sie {{num_unconfirmed_donations}} Spenden.</a>
         {% endif %}
     {% endblock %}
 

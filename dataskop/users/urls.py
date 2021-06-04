@@ -1,10 +1,10 @@
-from django.urls import include, path, re_path
+from django.urls import path
 
 from dataskop.users.views import (
     MagicLinkHandleConfirmationLink,
     MagicLinkHandleRegistrationLink,
-    UserUpdate,
-    export_text,
+    UserDeleteView,
+    UserUpdateView,
     magic_link_login_view,
 )
 
@@ -24,6 +24,6 @@ urlpatterns = [
         MagicLinkHandleRegistrationLink.as_view(),
         name="magic_registration",
     ),
-    path("account/", UserUpdate.as_view(), name="account_index"),
-    path("export_text/", export_text, name="export_text"),
+    path("account/", UserUpdateView.as_view(), name="account_index"),
+    path("account/delete/", UserDeleteView.as_view(), name="account_delete"),
 ]

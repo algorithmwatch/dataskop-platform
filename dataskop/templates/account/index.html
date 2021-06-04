@@ -29,14 +29,14 @@
 
     <div class="pt-5">
       <h3 class="font-bold">Ihre E-Mail-Adresse</h3>
-      <p>{{ user.email }} <a href="/account/email/" class="underline hover:no-underline">Ändern</a></p>
+      <p>{{ user.email }} <a href="{% url 'account_email' %}" class="underline hover:no-underline">Ändern</a></p>
     </div>
 
     <div class="pt-5">
       <ul class="space-y-2">
-        <li><a class="hover:no-underline underline" href="/account/password/change/">Passwort ändern</a></li>
-        <li><a download class="hover:no-underline underline" href="{% url 'download-all' %}">Alle Daten exportieren</a></li>
-        <!-- <li><a class="hover:no-underline underline text-red-700" href="/account/">Daten löschen</a></li> -->
+        <li><a class="hover:no-underline underline" href="{% url 'account_change_password' %}">Passwort ändern</a></li>
+        <li><a download class="hover:no-underline underline" href="{% url 'download_all' %}">Alle Daten exportieren</a></li>
+        <li><a class="hover:no-underline underline text-red-700" href="{% url 'account_delete' %}">Alle Daten löschen</a></li>
       </ul>
     </div>
   </div>
