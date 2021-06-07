@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pytest:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
@@ -18,11 +18,16 @@ jobs:
       - name: Build the image
         run: docker build -t dataskop-prod .
 
-      - name: Create an image
+      - name: Create a container
         run: docker create -ti --name dataskop-prod-container dataskop-prod bash
 
       - name: Extract app folder
         run: docker cp dataskop-prod-container:/app prodapp
 
-      - name: compress
-        run: tar -czvf prodapp.tar.gz prodapp && echo $(du -h prodapp.tar.gz)
+      - name: Compress
+        run: tar -czvf app-${{ github.sha }}.tar.gz prodapp
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dataskop-platform-${{ github.sha }}
+          path: app-${{ github.sha }}.tar.gz
