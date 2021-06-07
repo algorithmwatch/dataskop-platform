@@ -21,8 +21,6 @@ RUN apt-get update \
   && apt-get install -y libpq-dev \
   # Translations dependencies
   && apt-get install -y gettext \
-  # for encrypting backup
-  && apt-get install -y gnupg curl \
   # needed by django-dbbackup to dump postgres
   && apt-get install -y postgresql-client \
   # cleaning up unused files
