@@ -34,7 +34,7 @@ jobs:
           draft: false
           prerelease: false
           release_name: ${{ github.sha }}
-          tag_name: ${{ github.ref }}
+          tag_name: deploy
           body_path: README.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
