@@ -27,6 +27,28 @@ jobs:
       - name: Compress
         run: tar -czvf app-${{ github.sha }}.tar.gz prodapp
 
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.sha }}
+          tag_name: ${{ github.ref }}
+          body_path: README.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          
+      - name: Upload Tarball
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app-${{ github.sha }}.tar.gz
+          asset_name: dataskop-platform.tar.gz
+          asset_content_type: application/gzip
+          
       - uses: actions/upload-artifact@v2
         with:
           name: dataskop-platform-${{ github.sha }}
