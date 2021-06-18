@@ -6,7 +6,7 @@ from django.urls.base import reverse
 from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
 from model_utils import Choices
 from model_utils.fields import StatusField
-from model_utils.models import StatusModel, TimeStampedModel
+from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManagers
@@ -18,6 +18,14 @@ class StatusOptions(object):
     STATUS_OPTIONS = Choices("draft", "active", "inactive")
 
 
+class Provider(TimeStampedModel):
+    name = models.CharField(max_length=255)
+    scraping_config_schema = models.JSONField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Campaign(StatusOptions, TimeStampedModel):
     status = StatusField(choices_name="STATUS_OPTIONS")
     title = models.CharField(max_length=255)
@@ -26,8 +34,11 @@ class Campaign(StatusOptions, TimeStampedModel):
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
-    scraper_config = models.JSONField(null=True, blank=True)
+    scraping_config = models.JSONField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to="campaigns")
+    provider = models.ForeignKey(
+        "Provider", on_delete=models.SET_NULL, null=True, blank=True
+    )
     history = HistoricalRecords(bases=[StatusOptions, TimeStampedModel])
 
     class Meta:

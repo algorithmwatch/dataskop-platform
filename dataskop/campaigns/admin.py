@@ -2,6 +2,7 @@ from django.contrib import admin
 from guardian.admin import GuardedModelAdmin
 
 from .models import Campaign, Donation
+from .models import Campaign, Donation, Provider
 
 
 class CampaignAdmin(GuardedModelAdmin):
@@ -13,4 +14,5 @@ class CampaignAdmin(GuardedModelAdmin):
 
 admin.site.register(Campaign, CampaignAdmin)
 
+admin.site.register(Provider)
 admin.site.register(Donation)
