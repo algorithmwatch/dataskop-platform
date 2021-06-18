@@ -59,7 +59,7 @@ If you add a new npm dependency, delete the volume in order to recreate it.
 
 ```bash
 docker-compose -f docker-compose.local.yml down
-docker volume rm dataskop_local_node_modules
+docker volume rm dataskop-platform_local_node_modules
 ```
 
 #### Regarding the problems of `node_modules`

@@ -42,20 +42,12 @@ CACHES = {
     }
 }
 
-# Can't restore with db user / roles specific commands in dump, do don't store them in the first place.
-# https://stackoverflow.com/questions/52571599/unable-to-restore-psql-database-from-pg-dump-with-a-different-username
-# https://github.com/django-dbbackup/django-dbbackup/issues/213
-DBBACKUP_CONNECTORS = {"default": {"dump_cmd": "pg_dump --no-acl --no-owner"}}
-
-# store 100 db backups & 20 media backups
-DBBACKUP_CLEANUP_KEEP = 100
-DBBACKUP_CLEANUP_KEEP_MEDIA = 20
 
 # SECURITY
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
+SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=False)
 # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
 SESSION_COOKIE_SECURE = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
@@ -77,7 +69,6 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# MEDIA
 
 # TEMPLATES
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
@@ -160,5 +151,4 @@ EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
     "MAILJET_API_KEY": env("MAILJET_API_KEY"),
     "MAILJET_SECRET_KEY": env("MAILJET_SECRET_KEY"),
-    "WEBHOOK_SECRET": env("WEBHOOK_SECRET"),
 }

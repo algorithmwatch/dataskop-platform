@@ -10,7 +10,6 @@ const isDev = process.env.NODE_ENV !== 'production';
 module.exports = {
   entry: {
     main: './dataskop/frontend/js/main.js',
-    wizard: './dataskop/frontend/js/wizard.js',
   },
 
   module: {
