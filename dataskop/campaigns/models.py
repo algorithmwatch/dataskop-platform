@@ -27,6 +27,7 @@ class Campaign(StatusOptions, TimeStampedModel):
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
     scraper_config = models.JSONField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to="campaigns")
     history = HistoricalRecords(bases=[StatusOptions, TimeStampedModel])
 
     class Meta:
