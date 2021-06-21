@@ -72,6 +72,7 @@ DJANGO_APPS = [
     "django.contrib.flatpages",
     "django_comments",
 ]
+
 THIRD_PARTY_APPS = [
     # authentification
     "allauth",
@@ -95,6 +96,8 @@ THIRD_PARTY_APPS = [
     "simple_history",
     "markupfield",
     "taggit",
+    # emails
+    "herald",
 ]
 
 LOCAL_APPS = [

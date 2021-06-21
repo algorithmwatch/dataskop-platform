@@ -1,6 +1,7 @@
 # used in production but also in staging
 
 import logging
+from datetime import timedelta
 
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -160,3 +161,6 @@ AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
+
+# keep notification mails for 8 weeks
+HERALD_NOTIFICATION_RETENTION_TIME = timedelta(weeks=8)

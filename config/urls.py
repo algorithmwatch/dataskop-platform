@@ -59,6 +59,11 @@ if settings.DEBUG:
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
+    # watch herald emails locally
+    urlpatterns = [
+        re_path(r"^herald/", include("herald.urls")),
+    ] + urlpatterns
+
 # 1) the catchall flatpages must be placed in the bottom
 # 2) the regex ensures that the `append slash & redirect` middleware works
 urlpatterns += [
