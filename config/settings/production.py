@@ -69,7 +69,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 
 # STATIC
 # ------------------------
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # TEMPLATES
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
