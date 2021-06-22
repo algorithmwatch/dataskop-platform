@@ -28,7 +28,7 @@ jobs:
         run: tar -czvf app-${{ github.sha }}.tar.gz prodapp
 
       - name: Delete old `deploy` tag + release
-      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true
           tag_name: deploy
@@ -60,3 +60,8 @@ jobs:
         with:
           name: dataskop-platform-${{ github.sha }}
           path: app-${{ github.sha }}.tar.gz
+
+      - name: Trigger Deploy to Staging
+        uses: joelwmale/webhook-action@master
+        with:
+          url: ${{ secrets.WEBHOOK_URL }}
