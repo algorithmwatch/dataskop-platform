@@ -64,4 +64,4 @@ jobs:
       - name: Trigger Deploy to Staging
         uses: joelwmale/webhook-action@master
         with:
-          url: ${{ secrets.WEBHOOK_URL }}
+          url: ${{ secrets.STAGING_DEPLOY_WEBHOOK }}
