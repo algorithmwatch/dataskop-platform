@@ -1,17 +1,38 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
+{% load i18n widget_tweaks %}
 {% load account socialaccount %}
+
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block inner %}
 
-<h1>{% trans "Sign In" %}</h1>
+  <div class="max-w-xs mx-auto text-center">
+    <h1 class="hl-2xl mb-6">{% trans "Sign In" %} mit Magic Link</h1>
 
-<form class="login" method="post" action="{% url 'account_login_magic' %}">
-  {% csrf_token %}
-  {{ form }}
-  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
-{% endblock %}
+    <form class="space-y-4 text-left" method="post" action="{% url 'magic_login' %}">
+      {% csrf_token %}
+
+      <div>
+        {% include "account/form_field_error.html" with field=form.email %}
+        {{ form.email|add_label_class:"input-label" }}
+        {{ form.email|add_class:"text-input text-input--regular w-full" }}
+      </div>
+
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <div class="text-red-700">
+            <strong>{{ error|escape }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="pt-2">
+        <button class="btn btn--regular btn--primary btn--stretch" type="submit">{% trans "Sign In" %}</button>
+      </div>
+    </form>
+
+  {% endblock %}
+
+  </div>
 

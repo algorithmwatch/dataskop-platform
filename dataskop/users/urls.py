@@ -1,23 +1,23 @@
 from django.urls import path
 
 from dataskop.users.views import (
+    MagicLinkFormView,
     MagicLinkHandleConfirmationLink,
     MagicLinkHandleRegistrationLink,
     UserDeleteView,
     UserUpdateView,
-    magic_link_login_view,
 )
 
 urlpatterns = [
     path(
-        "account/login/",
-        magic_link_login_view,
-        name="account_login_magic",
+        "magic/login/",
+        MagicLinkFormView.as_view(),
+        name="magic_login",
     ),
     path(
-        "magic/login/",
+        "magic/confirm/",
         MagicLinkHandleConfirmationLink.as_view(),
-        name="magic_login",
+        name="magic_confirm",
     ),
     path(
         "magic/registration/",

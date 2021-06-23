@@ -2,13 +2,15 @@ from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import View
-from django.views.generic.edit import DeleteView, UpdateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
+from ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
 from .forms import MagicLinkLoginForm
@@ -27,27 +29,31 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
-@never_cache
-def magic_link_login_view(request):
-    if request.method == "POST":
-        form = MagicLinkLoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data["email"]
-            email_obj = EmailAddress.objects.filter(email=email).first()
+@method_decorator(
+    ratelimit(key="ip", rate="100/h", method="POST", block=True), name="post"
+)
+@method_decorator(
+    ratelimit(key="ip", rate="10/m", method="POST", block=True), name="post"
+)
+class MagicLinkFormView(SuccessMessageMixin, FormView):
+    template_name = "account/login_magic.html"
+    form_class = MagicLinkLoginForm
+    success_message = "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
+    success_url = "/"
 
-            if not email_obj:
-                raise PermissionDenied
+    def form_valid(self, form):
+        self.send_email(form.cleaned_data)
+        return super().form_valid(form)
+
+    def send_email(self, cleaned_data):
+        email = cleaned_data["email"]
+        email_obj = EmailAddress.objects.filter(email=email).first()
+
+        if email_obj:
             user = email_obj.user
-
-            user.send_magic_link(email, "magic_login")
-            messages.info(
-                request, "Ein Link zum Login wurde an Ihre E-Mail-Adresse versandt."
-            )
-
-    else:
-        form = MagicLinkLoginForm()
-
-    return render(request, "account/login_magic.html", {"form": form})
+            user.send_magic_link(email, "magic_confirm")
+        else:
+            User.objects.create_unverified_user_send_mail(email)
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -96,7 +102,7 @@ class MagicLinkHandleRegistrationLink(View):
 
         messages.success(request, "Account erfolgreich verifiziert. Danke!")
 
-        post_magic_email_verified.send(request, user, email_str)
+        post_magic_email_verified.send(request, user=user, email=email_str)
 
         return redirect("/")
 
