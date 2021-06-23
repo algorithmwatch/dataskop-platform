@@ -17,14 +17,11 @@ pytestmark = pytest.mark.django_db
 
 
 def test_confirm_all(client, django_user_model):
-    user = django_user_model.objects.create_user(
-        email="2test@test.com", first_name="Johanna", last_name="John"
-    )
-    EmailAddress.objects.create(
-        user=user, email=user.email, primary=True, verified=True
-    )
+    user = UserFactory()
 
     donation = DonationFactory(unauthorized_email=user.email)
+
+    assert django_user_model.objects.count() == 3
 
     assert Donation.objects.unconfirmed_donations_by_user(user).count() == 1
 
