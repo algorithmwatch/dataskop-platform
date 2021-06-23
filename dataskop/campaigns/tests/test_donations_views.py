@@ -71,3 +71,28 @@ def test_auto_confirm(client):
         ).count()
         == 0
     )
+
+
+def test_throttle(client):
+    c = CampaignFactory()
+    some_email = "karlheinz@gmail.com"
+
+    data = {
+        "unauthorized_email": some_email,
+        "results": {"some": "data"},
+        "campaign": c.pk,
+    }
+
+    limited = False
+    for _ in range(110):
+        response = client.post(
+            reverse("api:donate-list"),
+            data=data,
+            content_type="application/json",
+        )
+
+        if response.status_code != 202:
+            limited = True
+            break
+
+    assert limited
