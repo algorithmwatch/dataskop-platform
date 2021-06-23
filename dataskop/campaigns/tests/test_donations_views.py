@@ -52,7 +52,7 @@ def test_auto_confirm(client):
 
     assert response.status_code == 202
 
-    handle_donation(data)
+    handle_donation(data, "127.0.0.1")
 
     user = EmailAddress.objects.filter(email=some_email).first().user
 
@@ -64,7 +64,7 @@ def test_auto_confirm(client):
         == 1
     )
 
-    handle_verified(user, request=None, user=user, email=some_email)
+    handle_verified(user, user=user, email=some_email)
 
     assert (
         Donation.objects.unconfirmed_donations_by_user(

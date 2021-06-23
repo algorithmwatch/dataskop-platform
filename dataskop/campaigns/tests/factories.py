@@ -39,6 +39,7 @@ class DonationFactory(DjangoModelFactory):
     campaign = factory.SubFactory(CampaignFactory)
     unauthorized_email = Faker("email")
     results = factory.LazyAttribute(gen_fake_json)
+    ip_address = Faker("ipv4")
 
     class Meta:
         model = Donation

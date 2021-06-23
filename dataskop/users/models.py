@@ -32,7 +32,7 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("account_index")
 
-    def send_magic_link(self, email, viewname):
+    def send_magic_link(self, email, ip_address, viewname):
         """
         Sending the email via django's send_mail because we do need the special features of anymail.
         """
@@ -42,7 +42,7 @@ class User(AbstractUser):
 
         magic_link = settings.URL_ORIGIN + (
             reverse(viewname)
-            + get_query_string(self, scope=email)
+            + get_query_string(self, scope=email + ip_address)
             + "&email="
             + urlquote(email)
         )

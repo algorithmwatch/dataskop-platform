@@ -19,7 +19,12 @@ def test_magic_login(client, django_user_model):
 
     the_email = "peter@lustig.de"
 
-    r2 = client.post(reverse("magic_login"), {"email": the_email}, follow=True)
+    r2 = client.post(
+        reverse("magic_login"),
+        {"email": the_email},
+        follow=True,
+        REMOTE_ADDR="127.0.0.1",
+    )
 
     assert r2.status_code == 200
 
@@ -29,7 +34,7 @@ def test_magic_login(client, django_user_model):
     links = re.findall(r"(http\S*magic\S*)\.\s", mail.outbox[0].body)
 
     the_url = links[0]
-    r3 = client.get(the_url, follow=True)
+    r3 = client.get(the_url, follow=True, REMOTE_ADDR="127.0.0.1")
 
     logged_in_user = r3.context["user"]
     assert logged_in_user.email == the_email

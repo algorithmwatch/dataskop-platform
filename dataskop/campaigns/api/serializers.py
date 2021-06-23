@@ -6,7 +6,7 @@ from dataskop.campaigns.models import Campaign, Donation
 class DonationUnauthorizedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donation
-        fields = ["results", "campaign", "unauthorized_email"]
+        fields = ["results", "campaign", "unauthorized_email", "ip_address"]
 
         extra_kwargs = {"url": {"view_name": "api:donation-unauthorized"}}
 

@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def handle_donation(request_data):
+def handle_donation(request_data, ip_address):
+    request_data["ip_address"] = ip_address
     serializer = DonationUnauthorizedSerializer(data=request_data)
     if serializer.is_valid():
         serializer.save()

@@ -13,6 +13,7 @@ def handle_verified(sender, user, email, **kwargs):
             donor__isnull=True, unauthorized_email=email
         ).earliest("created")
         last_donation.donor = user
+        last_donation.ip_address = None
         last_donation.save()
     except Donation.DoesNotExist:
         pass

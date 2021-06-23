@@ -49,11 +49,13 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
         email = cleaned_data["email"]
         email_obj = EmailAddress.objects.filter(email=email).first()
 
+        ip_address = self.request.META.get("REMOTE_ADDR")
+
         if email_obj:
             user = email_obj.user
-            user.send_magic_link(email, "magic_confirm")
+            user.send_magic_link(email, ip_address, "magic_confirm")
         else:
-            User.objects.create_unverified_user_send_mail(email)
+            User.objects.create_unverified_user_send_mail(email, ip_address)
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -63,7 +65,9 @@ class MagicLinkHandleConfirmationLink(View):
         login when person opened magic link from email
         """
         email = request.GET.get("email")
-        user = get_user(request, scope=email)
+
+        ip_address = self.request.META.get("REMOTE_ADDR")
+        user = get_user(request, scope=email + ip_address)
 
         if user is None:
             messages.error(
@@ -83,7 +87,8 @@ class MagicLinkHandleRegistrationLink(View):
         specific email since we are verifying it.
         """
         email_str = request.GET.get("email")
-        user = get_user(request, scope=email_str)
+        ip_address = self.request.META.get("REMOTE_ADDR")
+        user = get_user(request, scope=email_str + ip_address)
 
         if user is None:
             raise PermissionDenied

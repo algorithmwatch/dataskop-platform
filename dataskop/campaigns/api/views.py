@@ -15,7 +15,9 @@ class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         """ offload to celery"""
-        handle_donation.delay(request.POST)
+        ip_address = self.request.META.get("REMOTE_ADDR")
+
+        handle_donation.delay(request.POST, ip_address)
         return Response(status=202)
 
 

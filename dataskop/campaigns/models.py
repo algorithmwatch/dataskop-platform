@@ -61,6 +61,8 @@ class Donation(LifecycleModel, TimeStampedModel):
     donor = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     results = models.JSONField(null=True, blank=True)
     unauthorized_email = models.EmailField(null=True, blank=True)
+    # store ip address only until the user is verified
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
 
     objects = DonationManagers()
 
@@ -91,4 +93,6 @@ class Donation(LifecycleModel, TimeStampedModel):
                     user=existing_email.user, raise_exception=True
                 )
         else:
-            User.objects.create_unverified_user_send_mail(self.unauthorized_email)
+            User.objects.create_unverified_user_send_mail(
+                self.unauthorized_email, self.ip_address
+            )
