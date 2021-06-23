@@ -4,7 +4,6 @@ import factory
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from factory import Faker, post_generation
-from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 
 

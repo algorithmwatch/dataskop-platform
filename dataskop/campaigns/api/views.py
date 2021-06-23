@@ -5,7 +5,7 @@ from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 from dataskop.campaigns.models import Campaign
 from dataskop.campaigns.tasks import handle_donation
 
-from .serializers import CampaignSerializer, DonationUnauthorizedSerializer
+from .serializers import CampaignSerializer
 
 
 class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):

@@ -1,7 +1,6 @@
 import logging
 
 from celery import shared_task
-from rest_framework.parsers import JSONParser
 
 from dataskop.campaigns.api.serializers import DonationUnauthorizedSerializer
 

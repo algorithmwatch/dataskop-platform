@@ -1,5 +1,4 @@
 from allauth.account.models import EmailAddress
-from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.utils.translation import gettext_lazy as _

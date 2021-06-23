@@ -1,9 +1,8 @@
 import json
 import random
-from typing import Any, Sequence
 
 import factory
-from factory import Faker, post_generation
+from factory import Faker
 from factory.django import DjangoModelFactory
 
 from dataskop.campaigns.models import Campaign, Donation, Provider, StatusOptions

@@ -1,6 +1,5 @@
 from django.urls import path
 
-from dataskop.campaigns.views import DonationListView
 from dataskop.pages.views import HomePageView
 
 urlpatterns = [

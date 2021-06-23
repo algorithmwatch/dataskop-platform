@@ -8,6 +8,6 @@ class CampaignsConfig(AppConfig):
 
     def ready(self):
         try:
-            import dataskop.users.signals  # noqa F401
+            import dataskop.campaigns.signals  # noqa F401
         except ImportError:
             pass

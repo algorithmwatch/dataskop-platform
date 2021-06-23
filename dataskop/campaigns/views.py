@@ -63,19 +63,6 @@ class DonationUnconfirmedView(LoginRequiredMixin, View):
         return view(request, *args, **kwargs)
 
 
-# class CaseStatusUpdateView(LoginRequiredMixin,UsersDonationMixin, UpdateView):
-#     template_name = "casehandling/case_detail.html"
-#     form_class = CaseStatusForm
-#     model = Donation
-
-#     def get_success_url(self):
-#         return self.object.get_absolute_url()
-
-#     def test_func(self):
-#         obj = self.get_object()
-#         return obj.user == self.request.user or self.request.user.is_staff
-
-
 class DonationDetailViewGet(UsersDonationMixin, DetailView):
     model = Donation
 
@@ -120,6 +107,3 @@ class DonationDetailView(View):
         view = DonationDetailViewGet.as_view()
         return view(request, *args, **kwargs)
 
-    # def post(self, request, *args, **kwargs):
-    #     view = CaseStatusUpdateView.as_view()
-    #     return view(request, *args, **kwargs)

@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model

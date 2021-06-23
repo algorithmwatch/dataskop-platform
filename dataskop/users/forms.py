@@ -1,7 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()

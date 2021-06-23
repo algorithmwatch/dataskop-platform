@@ -8,7 +8,6 @@ from dataskop.campaigns.models import Campaign, Donation
 from dataskop.campaigns.signals import handle_verified
 from dataskop.campaigns.tasks import handle_donation
 from dataskop.campaigns.tests.factories import CampaignFactory, DonationFactory
-from dataskop.users.signals import post_magic_email_verified
 from dataskop.users.tests.factories import UserFactory
 
 User = get_user_model()

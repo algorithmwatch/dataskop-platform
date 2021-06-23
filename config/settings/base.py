@@ -70,7 +70,6 @@ DJANGO_APPS = [
     "django.contrib.admin",
     "django.forms",
     "django.contrib.flatpages",
-    "django_comments",
 ]
 
 THIRD_PARTY_APPS = [
@@ -81,6 +80,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.twitter",
     "allauth.socialaccount.providers.facebook",
+    # celery
     "django_celery_beat",
     # drf
     "rest_framework",
@@ -371,6 +371,3 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ] + ([] if URL_ORIGIN is None else [URL_ORIGIN])
-
-
-GOOGLE_VERIFICATION = env.str("GOOGLE_VERIFICATION", "")

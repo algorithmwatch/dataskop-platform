@@ -8,11 +8,6 @@
 
     {% block meta_tags %}{% meta_tags %}{% endblock%}
 
-    {# Google Search Console etc. #}
-    {% if GOOGLE_VERIFICATION %}
-      <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION }}" />
-    {% endif %}
-
     {# Favicon #}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicons/favicon-32x32.png' %}">
