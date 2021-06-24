@@ -42,9 +42,6 @@ django-cors-headers==3.5.0  # https://github.com/adamchainz/django-cors-headers
 django-storages[boto3]==1.11.1  # https://github.com/jschneier/django-storages
 pillow==8.2.0  # https://github.com/python-pillow/Pillow
 
-# generate fake data
-factory-boy==3.0.1  # https://github.com/FactoryBoy/factory_boy
-
 # emails
 # anymail only really used in production but keep it here to make imports work
 django-anymail[mailjet]==8.2  # https://github.com/anymail/django-anymail
