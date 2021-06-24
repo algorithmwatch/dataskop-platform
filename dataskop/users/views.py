@@ -53,7 +53,7 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
 
         if email_obj:
             user = email_obj.user
-            user.send_magic_link(email, ip_address, "magic_confirm")
+            user.send_magic_login(email, ip_address)
         else:
             User.objects.create_unverified_user_send_mail(email, ip_address)
 

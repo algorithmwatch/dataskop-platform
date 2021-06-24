@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils.http import urlquote
 from django.utils.translation import gettext_lazy as _
 
+from dataskop.users.notifications import MagicLoginEmail, MagicRegistrationEmail
 from dataskop.utils.email import formated_from, send_anymail_email
 
 from .managers import CustomUserManager
@@ -32,40 +33,15 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("account_index")
 
-    def send_magic_link(self, email, ip_address, viewname):
-        """
-        Sending the email via django's send_mail because we do need the special features of anymail.
-        """
+    def send_magic_registration(self, email, ip_address):
+        """"""
 
-        # important to import it here because it must not get imported before the declaration of our custom user model.
-        from sesame.utils import get_query_string
+        MagicRegistrationEmail(self, email, ip_address).send(user=self)
 
-        magic_link = settings.URL_ORIGIN + (
-            reverse(viewname)
-            + get_query_string(self, scope=email + ip_address)
-            + "&email="
-            + urlquote(email)
-        )
+    def send_magic_login(self, email, ip_address):
+        """"""
 
-        context = {"activate_url": magic_link}
-
-        subject = render_to_string("account/email/email_confirmation_subject.txt")
-        body_text = render_to_string(
-            "account/email/email_confirmation_message.txt",
-            context,
-        )
-        body_html = render_to_string(
-            "account/email/email_confirmation_message.html",
-            context,
-        )
-
-        send_mail(
-            subject,
-            body_text,
-            formated_from(),
-            [email],
-            html_message=body_html,
-        )
+        MagicLoginEmail(self, email, ip_address).send(user=self)
 
     def send_email(self, subject, body):
         send_anymail_email(

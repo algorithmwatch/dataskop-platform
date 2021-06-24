@@ -46,4 +46,4 @@ class CustomUserManager(UserManager):
         )
         # cleaned version
         email = user.email
-        user.send_magic_link(email, ip_address, "magic_registration")
+        user.send_magic_registration(email, ip_address)

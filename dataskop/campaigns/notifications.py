@@ -1,5 +1,10 @@
 from herald import registry
-from herald.base import EmailNotification
+from herald.base import EmailNotification, NotificationBase
+
+from ..utils import heraldpatches
+
+NotificationBase.resend = classmethod(heraldpatches.resend)
+EmailNotification._send = staticmethod(heraldpatches._send)
 
 
 @registry.register_decorator()

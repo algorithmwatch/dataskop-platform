@@ -85,7 +85,9 @@ class Donation(LifecycleModel, TimeStampedModel):
             thefuture = timezone.now() + timedelta(hours=2)
 
             num_recent_sent = SentNotification.objects.filter(
-                user=existing_email.user, date_sent__range=(recenttime, thefuture)
+                user=existing_email.user,
+                date_sent__range=(recenttime, thefuture),
+                notification_class="dataskop.campaigns.notifications.UnauthorizedDonationShouldLoginEmail",
             ).count()
 
             if num_recent_sent == 0:

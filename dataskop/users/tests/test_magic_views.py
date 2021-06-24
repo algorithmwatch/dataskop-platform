@@ -30,8 +30,8 @@ def test_magic_login(client, django_user_model):
 
     assert django_user_model.objects.count() == 2
     assert len(mail.outbox) == 1
-    # match the final <url>. (mind the dot in the end)
-    links = re.findall(r"(http\S*magic\S*)\.\s", mail.outbox[0].body)
+
+    links = re.findall(r"(http\S*magic\S*)\s", mail.outbox[0].body)
 
     the_url = links[0]
     r3 = client.get(the_url, follow=True, REMOTE_ADDR="127.0.0.1")
