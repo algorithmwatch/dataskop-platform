@@ -5,3 +5,11 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/requirements/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "django"
+        update-types: ["version-update:semver-minor"]
