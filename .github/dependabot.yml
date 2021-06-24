@@ -13,3 +13,5 @@ updates:
     ignore:
       - dependency-name: "django"
         update-types: ["version-update:semver-minor"]
+      - dependency-name: "celery"
+        update-types: ["version-update:semver-major"]
