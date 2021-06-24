@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 
 from dataskop.campaigns.models import Donation
+from dataskop.campaigns.tasks import remind_user_registration
 from dataskop.users.tests.factories import UserFactory
 
 from .factories import CampaignFactory, DonationFactory
@@ -52,3 +53,20 @@ def test_user_delete():
     user.delete()
 
     assert Donation.objects.count() == 0
+
+
+def test_reminders():
+    # create a new donation campaing (not campaign video)
+    cam = CampaignFactory(created_by=None)
+    donation1 = DonationFactory(campaign=cam)
+
+    d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
+    assert d_email.count() == 1
+    assert d_email.first().verified == False
+
+    assert len(mail.outbox) == 1
+
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    assert len(mail.outbox) == 4
