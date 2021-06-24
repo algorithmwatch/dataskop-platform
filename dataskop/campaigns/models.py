@@ -3,6 +3,7 @@ from datetime import timedelta
 from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
+from django.core.mail import message
 from django.db import models
 from django.urls.base import reverse
 from django.utils import timezone
@@ -98,3 +99,15 @@ class Donation(LifecycleModel, TimeStampedModel):
             User.objects.create_unverified_user_send_mail(
                 self.unauthorized_email, self.ip_address
             )
+
+
+class Event(TimeStampedModel):
+    campaign = models.ForeignKey(
+        "Campaign", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    message = models.CharField(max_length=100, null=True, blank=True)
+    data = models.JSONField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.created} / {self.message} / {self.ip_address}"

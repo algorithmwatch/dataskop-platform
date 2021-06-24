@@ -3,7 +3,7 @@ from django.db.models import JSONField
 from guardian.admin import GuardedModelAdmin
 from jsoneditor.forms import JSONEditor
 
-from .models import Campaign, Donation, Provider
+from .models import Campaign, Donation, Event, Provider
 
 
 class TextJSONEditor(JSONEditor):
@@ -20,6 +20,16 @@ class CampaignAdmin(GuardedModelAdmin):
 
 
 admin.site.register(Campaign, CampaignAdmin)
+
+
+class EventAdmin(GuardedModelAdmin):
+    list_display = ("campaign", "message", "created")
+    search_fields = ("message",)
+    ordering = ("-created",)
+    date_hierarchy = "created"
+
+
+admin.site.register(Event, EventAdmin)
 
 admin.site.register(Provider)
 admin.site.register(Donation)
