@@ -22,9 +22,15 @@ class DonationAuthorizedSerializer(serializers.ModelSerializer):
 class CampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campaign
-        fields = ["title", "description", "scraping_config", "image"]
-
-        # extra_kwargs = {"url": {"view_name": "api:donation-authorized"}}
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "description",
+            "scraping_config",
+            "image",
+            "provider",
+        ]
 
 
 class EventSerializer(serializers.ModelSerializer):
