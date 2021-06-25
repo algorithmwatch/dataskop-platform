@@ -1,6 +1,6 @@
 
 # db & cache
-psycopg2==2.8.6  # https://github.com/psycopg/psycopg2
+psycopg2==2.9.1  # https://github.com/psycopg/psycopg2
 django-redis==4.12.1  # https://github.com/jazzband/django-redis
 
 # celery
@@ -44,7 +44,7 @@ pillow==8.2.0  # https://github.com/python-pillow/Pillow
 
 # emails
 # anymail only really used in production but keep it here to make imports work
-django-anymail[mailjet]==8.2  # https://github.com/anymail/django-anymail
+django-anymail[mailjet]==8.4  # https://github.com/anymail/django-anymail
 django-herald==0.2.1  # https://github.com/worthwhile/django-herald
 
 # admin json editor
