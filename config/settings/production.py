@@ -13,6 +13,7 @@ from .base import env
 
 CELERY_BROKER_URL = env("REDIS_URL")
 CELERY_ALWAYS_EAGER = True
+TASK_IGNORE_RESULT = True
 
 # GENERAL
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
