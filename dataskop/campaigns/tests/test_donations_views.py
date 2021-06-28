@@ -44,7 +44,7 @@ def test_auto_confirm(client):
     }
 
     response = client.post(
-        reverse("api:donate-list"),
+        reverse("api:donations-list"),
         data=data,
         content_type="application/json",
     )
@@ -86,7 +86,7 @@ def test_throttle(client):
     limited = False
     for _ in range(110):
         response = client.post(
-            reverse("api:donate-list"),
+            reverse("api:donations-list"),
             data=data,
             content_type="application/json",
         )

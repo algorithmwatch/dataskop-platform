@@ -12,7 +12,7 @@ if settings.DEBUG:
 else:
     router = SimpleRouter()
 
-router.register("donate", DonationUnauthorizedViewSet, "donate")
+router.register("donations", DonationUnauthorizedViewSet, "donations")
 router.register("campaigns", CampaignViewSet, "campaigns")
 router.register("events", EventViewSet, "events")
 
