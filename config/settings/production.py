@@ -12,7 +12,7 @@ from .base import *  # noqa
 from .base import env
 
 CELERY_BROKER_URL = env("REDIS_URL")
-
+CELERY_ALWAYS_EAGER = True
 
 # GENERAL
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
