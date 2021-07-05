@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import View
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from ratelimit.decorators import ratelimit
 from sesame.utils import get_user
@@ -20,10 +21,9 @@ User = get_user_model()
 
 
 @method_decorator(never_cache, name="dispatch")
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, DetailView):
     template_name = "account/index.html"
     model = User
-    fields = ["first_name", "last_name"]
 
     def get_object(self, queryset=None):
         return self.request.user

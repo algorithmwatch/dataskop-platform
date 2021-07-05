@@ -7,26 +7,6 @@
 
   <h1 class="hl-2xl mb-6">{% trans 'Mein Konto' %}</h1>
 
-  <p>Ihr Name wird in den Anschreiben verwendet, die wir für Sie an Unternehmen und Behörden übersenden.</p>
-
-  <div class="space-y-6 divide-y divide-brown-200 mt-6">
-    <form class="space-y-4 max-w-xs" id="account-update" method="post" action="{% url 'account_index' %}">
-      {% csrf_token %}
-
-      <div>
-        {% include "account/form_field_error.html" with field=form.first_name %}
-        {{ form.first_name|add_label_class:"input-label" }}
-        {{ form.first_name|add_class:"text-input text-input--regular w-full" }}
-      </div>
-      <div>
-        {% include "account/form_field_error.html" with field=form.last_name %}
-        {{ form.last_name|add_label_class:"input-label" }}
-        {{ form.last_name|add_class:"text-input text-input--regular w-full" }}
-      </div>
-
-      <button class="btn btn--regular btn--primary" type="submit">Speichern</button>
-    </form>
-
     <div class="pt-5">
       <h3 class="font-bold">Ihre E-Mail-Adresse</h3>
       <p>{{ user.email }} <a href="{% url 'account_email' %}" class="underline hover:no-underline">Ändern</a></p>
