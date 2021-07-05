@@ -1,6 +1,6 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView, FormView, UpdateView
+from django.views.generic.edit import DeleteView, FormView
 from ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
@@ -57,6 +57,12 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
         else:
             User.objects.create_unverified_user_send_mail(email, ip_address)
 
+    # redirect if user is already logged in
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect("/")
+
 
 @method_decorator(never_cache, name="dispatch")
 class MagicLinkHandleConfirmationLink(View):
@@ -75,7 +81,12 @@ class MagicLinkHandleConfirmationLink(View):
             )
             return redirect("account_login")
         messages.success(request, "Login erfolgreich")
+
+        if request.user.is_authenticated:
+            logout(request)
+
         login(request, user)
+
         return redirect("account_index")
 
 
@@ -104,7 +115,9 @@ class MagicLinkHandleRegistrationLink(View):
         email_address.set_as_primary(conditional=True)
         email_address.save()
 
-        # login
+        if request.user.is_authenticated:
+            logout(request)
+
         login(request, user)
 
         messages.success(request, "Account erfolgreich verifiziert. Danke!")

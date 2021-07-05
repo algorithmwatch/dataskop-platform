@@ -42,10 +42,14 @@ def test_magic_login(client, django_user_model):
     assert EmailAddress.objects.filter(user=logged_in_user).first().primary == True
     assert EmailAddress.objects.filter(user=logged_in_user).first().email == the_email
 
+
+def test_magic_login_rate_limit(client, django_user_model):
     # test rate limitting
     limited = False
     for _ in range(20):
-        r = client.post(reverse("magic_login"), {"email": the_email}, follow=True)
+        r = client.post(
+            reverse("magic_login"), {"email": "peter@lustig.de"}, follow=True
+        )
         if r.status_code != 200:
             assert r.status_code == 403
             limited = True
