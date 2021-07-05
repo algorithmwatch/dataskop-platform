@@ -35,8 +35,6 @@ class MagicRegistrationEmail(EmailNotification):
             + urlquote(email)
         )
 
-        print(magic_link)
-
         self.context = {
             "activate_url": magic_link,
             "CONTACT_EMAIL": settings.CONTACT_EMAIL,

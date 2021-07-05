@@ -1,6 +1,8 @@
 Liebe/r Datenspender/in,
 
-bitte loggen sie sich ein um die Spende zu bestätigen.
+bitte loggen Sie sich ein um die Datenspende für DataSkop zu bestätigen.
+
+{{login_url}}
 
 Mit freundlichen Grüßen
 

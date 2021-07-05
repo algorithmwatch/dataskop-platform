@@ -8,6 +8,7 @@ from dataskop.campaigns.api.serializers import (
     EventSerializer,
 )
 from dataskop.campaigns.models import Donation
+from dataskop.campaigns.notifications import ReminderEmail
 
 User = get_user_model()
 
@@ -50,4 +51,4 @@ def remind_user_registration():
         .distinct()
     ):
         user = User.objects.get(email=d["unauthorized_email"])
-        user.send_magic_registration(d["unauthorized_email"], d["ip_address"])
+        ReminderEmail(user).send(user=user)

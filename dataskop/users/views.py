@@ -92,13 +92,13 @@ class MagicLinkHandleRegistrationLink(View):
 
         if user is None:
             raise PermissionDenied(
-                "Benutzer/in nicht gefunden" + email_str + ip_address
+                "Der Link hat nicht funktioniert. Dies kann folgende Gründe haben: 1. Der Link ist abgelaufen, 2. Du hast eine andere IP-Adresse (z. B. durch einen Proxy). Bitte logge dich erneut hier auf der Seite ein."
             )
 
         email_address = EmailAddress.objects.filter(user=user, email=email_str).first()
 
         if not email_address:
-            raise PermissionDenied("E-Mail-Adresse nicht gefunden")
+            raise PermissionDenied("E-Mail-Adresse nicht gefunden.")
 
         email_address.verified = True
         email_address.set_as_primary(conditional=True)

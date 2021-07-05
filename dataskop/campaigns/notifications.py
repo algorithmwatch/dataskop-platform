@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.urls.base import reverse
 from herald import registry
 from herald.base import EmailNotification, NotificationBase
 
@@ -13,7 +15,13 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
     subject = "Neue Datenspenden – Bitte einloggen"
 
     def __init__(self, user):  # optionally customize the initialization
-        self.context = {"user": user}  # set context for the template rendering
+        self.context = {
+            "user": user,
+            "login_url": settings.URL_ORIGIN
+            + reverse("magic_login")
+            + "?email="
+            + user.email,
+        }  # set context for the template rendering
         self.to_emails = [user.email]  # set list of emails to send to
 
     @staticmethod
@@ -23,3 +31,8 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
         User = get_user_model()
 
         return [User.objects.order_by("?")[0]]
+
+
+@registry.register_decorator()
+class ReminderEmail(UnauthorizedDonationShouldLoginEmail):
+    subject = "Erinnerung für DataSkop-Anmeldung"
