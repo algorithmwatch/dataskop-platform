@@ -341,7 +341,7 @@ ACCOUNT_USER_DISPLAY = lambda user: user.full_name
 
 # passwordless / magic link:
 # magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
-SESAME_MAX_AGE = 300
+SESAME_MAX_AGE = 3600
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
