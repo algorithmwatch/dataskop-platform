@@ -7,12 +7,12 @@ register = Library()
 @register.simple_tag(takes_context=True)
 def meta_tags(
     context,
-    title="Unding",
+    title="DataSkop",
     description=None,
     social_media_image=None,
 ):
-    context["title"] = title + " - Unding"
-    context["description"] = description or "Automatische Entscheidungen anfechten"
+    context["title"] = title + " - DataSkop"
+    context["description"] = description or "Mit DataSkop entsteht eine Plattform für Datenspenden, um mit deren Hilfe algorithmische Entscheidungssysteme zu untersuchen und die digitale Souveränität der Nutzer·innen zu stärken"
     context["social_media_image"] = social_media_image or "/static/img/ogimage.png"
 
     # build absolute URL if needed
@@ -31,11 +31,11 @@ def meta_tags(
     <meta property="og:title" content="{{ title }}" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:description" content="{{ description }}" />
-    <meta property="og:site_name" content="Unding" />
+    <meta property="og:site_name" content="DataSkop" />
     <meta property="og:image" content="{{ social_media_image }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@_unding">
+    <meta name="twitter:site" content="@dataskop_net">
     <meta name="twitter:image" content="{{ social_media_image }}" >
     """
     )
