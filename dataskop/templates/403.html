@@ -9,5 +9,10 @@
 {% block content %}
 <h1 class="font-bold text-5xl text-center mt-10 mb-20">Sorry, der Zugang ist verboten.</h1>
 
-<p class="text-center">Zugriff verboten (403)</p>
+{% if exception %}
+  <p class="text-center">{{ exception }}</p>
+{% else %}
+  <p class="text-center">Zugriff verboten (403)</p>
+{% endif %}
+
 {% endblock content %}

@@ -91,12 +91,14 @@ class MagicLinkHandleRegistrationLink(View):
         user = get_user(request, scope=email_str + ip_address)
 
         if user is None:
-            raise PermissionDenied
+            raise PermissionDenied(
+                "Benutzer/in nicht gefunden" + email_str + ip_address
+            )
 
         email_address = EmailAddress.objects.filter(user=user, email=email_str).first()
 
         if not email_address:
-            raise PermissionDenied
+            raise PermissionDenied("E-Mail-Adresse nicht gefunden")
 
         email_address.verified = True
         email_address.set_as_primary(conditional=True)
