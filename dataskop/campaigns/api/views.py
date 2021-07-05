@@ -15,10 +15,10 @@ class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
     """
 
     def create(self, request, *args, **kwargs):
-        """ offload to celery"""
+        """offload to celery"""
         ip_address = self.request.META.get("REMOTE_ADDR")
 
-        handle_donation.delay(request.POST, ip_address)
+        handle_donation.delay(request.data, ip_address)
         return Response(status=202)
 
 
@@ -28,7 +28,7 @@ class EventViewSet(CreateModelMixin, GenericViewSet):
     """
 
     def create(self, request, *args, **kwargs):
-        """ offload to celery"""
+        """offload to celery"""
         ip_address = self.request.META.get("REMOTE_ADDR")
 
         anonip = Anonip()
@@ -36,7 +36,7 @@ class EventViewSet(CreateModelMixin, GenericViewSet):
         # mask last digits
         ip_address = anonip.process_line(ip_address)
 
-        handle_event.delay(request.POST, ip_address)
+        handle_event.delay(request.data, ip_address)
         return Response(status=202)
 
 
