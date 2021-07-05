@@ -29,7 +29,7 @@ django-widget-tweaks==1.4.8 # https://github.com/jazzband/django-widget-tweaks
 
 # user & auth
 django-allauth==0.44.0  # https://github.com/pennersr/django-allauth
-django-sesame[ua]==2.2  # https://github.com/aaugustin/django-sesame
+django-sesame[ua]==2.4  # https://github.com/aaugustin/django-sesame
 django-ratelimit==3.0.1 #  https://github.com/jsocol/django-ratelimit
 argon2-cffi==20.1.0  # https://github.com/hynek/argon2_cffi
 django-guardian==2.4.0  # https://github.com/django-guardian/django-guardian
