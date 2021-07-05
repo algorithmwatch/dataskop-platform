@@ -343,6 +343,12 @@ ACCOUNT_USER_DISPLAY = lambda user: user.full_name
 # magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
 SESAME_MAX_AGE = 3600
 
+# invalidate token after login.
+# It may happen, that email providers automatically check links (send GET requests) in their emails.
+# Since we ensure that the IP that requested the magic links *and* the IP address that opens the link have to be the same,
+# we can be sure that the provider would not successfully open the link (because sesame first checks for scope (see their source code)).
+SESAME_ONE_TIME = True
+
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
