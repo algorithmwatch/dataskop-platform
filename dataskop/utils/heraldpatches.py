@@ -5,7 +5,6 @@ from email.mime.base import MIMEBase
 
 import six
 from anymail.message import AnymailMessage
-
 # from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
 
@@ -53,7 +52,13 @@ def _send(
 
     mail.send()
     status = mail.anymail_status
-    return {"id": status.message_id, "status": json.dumps(status.recipients)}
+    try:
+        return {
+            "id": status.message_id,
+            "status": json.dumps([status.recipients[r].status for r in recipients]),
+        }
+    except:
+        return {"id": None, "status": "not possible to parse anymail response"}
 
 
 def resend(cls, sent_notification, raise_exception=False):
