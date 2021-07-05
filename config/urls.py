@@ -2,13 +2,21 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import include, path, re_path
+from django.urls.base import reverse_lazy
 from django.views import defaults as default_views
 from django.views.decorators.cache import cache_control
+from django.views.generic.base import RedirectView
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    # only allow magic link registration by removing some django allauth logings
+    path("account/login/", RedirectView.as_view(url=reverse_lazy("magic_login"))),
+    path("account/signup/", RedirectView.as_view(url=reverse_lazy("magic_login"))),
+    re_path(
+        r"account/password/.*", RedirectView.as_view(url=reverse_lazy("magic_login"))
+    ),
     # User management
     path("account/", include("allauth.urls")),
     path("", include("dataskop.users.urls")),
