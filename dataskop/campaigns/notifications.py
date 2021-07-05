@@ -13,6 +13,7 @@ EmailNotification._send = staticmethod(heraldpatches._send)
 class UnauthorizedDonationShouldLoginEmail(EmailNotification):
     template_name = "unauthorized_email_should_login"
     subject = "Neue Datenspenden – Bitte einloggen"
+    render_types = ["text"]
 
     def __init__(self, user):  # optionally customize the initialization
         self.context = {

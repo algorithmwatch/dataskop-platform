@@ -14,6 +14,7 @@ EmailNotification._send = staticmethod(heraldpatches._send)
 class MagicRegistrationEmail(EmailNotification):
     template_name = "magic_registration"
     subject = "DataSkop-Anmeldung abschließen"
+    render_types = ['text']
 
     viewname = "magic_registration"
 
