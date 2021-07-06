@@ -84,7 +84,7 @@ def test_throttle(client):
     }
 
     limited = False
-    for _ in range(110):
+    for _ in range(1010):
         response = client.post(
             reverse("api:donations-list"),
             data=data,
