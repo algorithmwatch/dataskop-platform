@@ -40,7 +40,7 @@ django-cors-headers==3.7.0  # https://github.com/adamchainz/django-cors-headers
 
 # media
 django-storages[boto3]==1.11.1  # https://github.com/jschneier/django-storages
-pillow==8.3.0  # https://github.com/python-pillow/Pillow
+pillow==8.3.1  # https://github.com/python-pillow/Pillow
 
 # emails
 # anymail only really used in production but keep it here to make imports work
