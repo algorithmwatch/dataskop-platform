@@ -123,6 +123,15 @@ LOGGING = {
 }
 
 # Sentry
+
+def before_send(event, hint):
+        """Don't log django.DisallowedHost errors in Sentry."""
+        if 'log_record' in hint:
+            if hint['log_record'].name == 'django.security.DisallowedHost':
+                return None
+
+        return event
+
 SENTRY_DSN = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
 
@@ -136,6 +145,7 @@ sentry_sdk.init(
     integrations=integrations,
     environment=env("SENTRY_ENVIRONMENT", default="production"),
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
+    before_send=before_send,
 )
 
 # Anymail w/ Mailjet
