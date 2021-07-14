@@ -1,0 +1,11 @@
+{% autoescape off %}Liebe/r Datenspender/in,
+
+wir bestätigen hiermit, dass Deine Spende erfolgreich war. Damit ist Datenspendevertrag zwischen Dir und AlgorithmWatch zustandegekommen. Den Vertragstext kannst Du hier als pdf-Datei herunterladen: https://dataskop.net/wp-content/uploads/2021/07/Datenspendevertrag_DataSkop_140721.pdf
+
+Um Dich in dein DataSkop-Konto einzuloggen, besuche: https://datenspende.dataskop.net/account/login/
+
+Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
+
+Mit freundlichen Grüßen
+
+Das DataSkop-Team{% endautoescape %}

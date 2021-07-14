@@ -1,3 +1,4 @@
+from dataskop.campaigns.notifications import ConfirmedRegistrationEmail
 from django.dispatch import receiver
 
 from dataskop.users.signals import post_magic_email_verified
@@ -15,5 +16,9 @@ def handle_verified(sender, user, email, **kwargs):
         last_donation.donor = user
         last_donation.ip_address = None
         last_donation.save()
+
+        ConfirmedRegistrationEmail().send(user=user)
+
+
     except Donation.DoesNotExist:
         pass

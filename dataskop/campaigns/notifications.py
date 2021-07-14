@@ -37,3 +37,11 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 @registry.register_decorator()
 class ReminderEmail(UnauthorizedDonationShouldLoginEmail):
     subject = "Erinnerung für DataSkop-Anmeldung"
+
+
+@registry.register_decorator()
+class ConfirmedRegistrationEmail(EmailNotification):
+    template_name = "confirmed_registration"
+    subject = "DataSkop-Anmeldung erfolgreich"
+    render_types = ["text"]
+

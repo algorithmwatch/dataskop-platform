@@ -1,9 +1,11 @@
-Liebe/r Datenspender/in,
+{% autoescape off %}Liebe/r Datenspender/in,
 
-bitte loggen Sie sich ein um die Datenspende für DataSkop zu bestätigen.
+bitte logge dich ein um die Datenspende für DataSkop zu bestätigen.
 
 {{login_url}}
 
+Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
+
 Mit freundlichen Grüßen
 
-Das DataSkop-Team
+Das DataSkop-Team{% endautoescape %}

@@ -1,10 +1,10 @@
 {% autoescape off %}Liebe/r Datenspender/in,
 
-der erste Schritt ist geschafft. Damit Sie Ihre Registrierung abschließen können, klicken Sie bitte auf folgenden Link:
+vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Adresse zum Abschluss der Spende.
 
 {{ activate_url }}
 
-Falls Sie Fragen haben, können Sie sich gerne an uns wenden unter {{CONTACT_EMAIL}}.
+Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
 
 Mit freundlichen Grüßen
 
