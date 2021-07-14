@@ -6,12 +6,12 @@
 
 {% with request.user.is_authenticated as user_is_authenticated %}
 
-  <header role="banner" class="py-2 sm:py-4 md:pt-6 px-4 md:px-8 md:h-20 flex justify-between page-wrap-wide">
+  <header role="banner" class="py-2 sm:py-4 md:pt-6 px-4 md:h-20 flex justify-between page-wrap-wide">
 
     {# Logo #}
     <div>
       <a href="/" class="block relative">{% spaceless %}
-        <img src="{% static 'img/dataskop/Logo.svg' %}" style="height: 3rem;" />
+        <img src="{% static 'img/dataskop/Logo.svg' %}" style="height: 2.5rem;" />
       {% endspaceless %}</a>
     </div>
 
@@ -28,7 +28,7 @@
 
         <ul class="mt-16 divide-y divide-brown-400">
           {% for menu_item in primary_menu_mobile %}
-            <li class="{% if menu_item.is_user_menu %}bg-brown-600 text-white border-white{% endif %}"><a href="{{ menu_item.url }}" class="block w-full p-4">{{ menu_item.label }}</a></li>
+            <li class="{% if menu_item.is_user_menu %}bg-gray-100 text-black border-white{% endif %}"><a href="{{ menu_item.url }}" class="block w-full p-4">{{ menu_item.label }}</a></li>
           {% endfor %}
         </ul>
       </nav>

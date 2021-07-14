@@ -17,7 +17,7 @@
     {% endblock %}
 
     {% block inner %}
-      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spenden</h1>
+      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Meine Spenden</h1>
       <ul>
         {% for dontation in object_list %}
           <li class="mt-1"><a class="underline" href="{{ dontation.get_absolute_url }}">{{ dontation.created|date }} - {{ dontation.campaign }}</a></li>

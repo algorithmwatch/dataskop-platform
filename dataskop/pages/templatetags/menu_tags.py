@@ -44,10 +44,10 @@ def primary_menu(context, mobile=True):
 
     if mobile is True:
         site_menu = [
-            {
-                "label": "Start",
-                "url": reverse("home"),
-            },
+            # {
+            #     "label": "Start",
+            #     "url": reverse("home"),
+            # },
         ]
 
         if request.user.is_authenticated:
@@ -60,10 +60,10 @@ def primary_menu(context, mobile=True):
 
     else:
         site_menu = [
-            {
-                "label": "Start",
-                "url": reverse("home"),
-            },
+            # {
+            #     "label": "Start",
+            #     "url": reverse("home"),
+            # },
         ]
 
         if request.user.is_authenticated:

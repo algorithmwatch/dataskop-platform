@@ -5,7 +5,7 @@
   {% meta_tags title='Start' %}
 {% endblock %}
 
-{% block body_class %}bg-blue-100{% endblock %}
+{% block body_class %}{% endblock %}
 {% block content_class %}{% endblock %}
 
 {% block content %}
@@ -13,26 +13,13 @@
   <div class="relative h-90vh px-4 my-6 sm:my-0 flex flex-col items-center justify-center text-center" style="max-height: 900px">
 
     <div>
-      <div class="max-w-lg md:max-w-2xl mx-auto px-4 py-6 xs:px-6 xs:py-10 md:px-14 md:py-12 lg:px-16 lg:py-12 rounded-3xl bg-white bg-opacity-80">
-        <h1 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'DataSkop' %}</h1>
-        <p class="lg:text-lg">DataSkop DataSkop DataSkop DataSkop DataSkop</p>
-      </div>
-
-      <div class="mt-8 flex justify-center">
-        <div class="bg-white bg-opacity-60 rounded-xl px-4 py-3">
-          <div class="mb-3 text-xs leading-none">Ein Projekt von</div>
-          <a href="https://algorithmwatch.org" target="_blank"><img class="block w-40 mx-auto" src="{% static 'img/dslogo.png' %}" alt="AlgorithmWatch logo" /></a>
-        </div>
+      <div class="max-w-lg md:max-w-3xl mx-auto px-4 py-6 xs:px-6 xs:py-10 md:px-14 md:py-12 lg:px-16 lg:py-12 rounded-3xl bg-white bg-opacity-80">
+        {% comment %} <h1 class="hl-2xl xs:hl-3xl md:hl-4xl mb-4">{% trans 'DataSkop' %}</h1> {% endcomment %}
+        <p class="lg:text-lg">Bitte logge dich oben rechts ein, um deine Datenspenden einzusehen.</p>
       </div>
 
     </div>
 
-    {# decision tree background image #}
-    <!-- <div class="absolute inset-x-0 top-0 -bottom-28 -z-10">
-      <div
-        style="background-image: url({% static 'img/decision_tree.svg' %})"
-        class="w-full h-full -mt-28 bg-no-repeat bg-top bg-cover xl:bg-1300px opacity-80"></div>
-    </div> -->
   </div>
 
 
