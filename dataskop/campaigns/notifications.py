@@ -45,3 +45,8 @@ class ConfirmedRegistrationEmail(EmailNotification):
     subject = "DataSkop-Anmeldung erfolgreich"
     render_types = ["text"]
 
+    def __init__(self, user):  # optionally customize the initialization
+        self.context = {
+            "user": user,
+        }
+        self.to_emails = [user.email]  # set list of emails to send to
