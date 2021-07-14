@@ -374,7 +374,7 @@ ADMIN_NOTIFICATION_EMAIL = env.str(
 )
 
 # used in e.g. email templates
-CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default=f"contact@{DEFAULT_EMAIL_DOMAIN}")
+CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default=f"info@{DEFAULT_EMAIL_DOMAIN}")
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
