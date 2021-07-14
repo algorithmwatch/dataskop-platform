@@ -35,7 +35,7 @@
     "terser-webpack-plugin": "^5.1.1",
     "webpack": "^5.20.2",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^1.16.5"
+    "webpack-dev-server": "^3.0.0"
   },
   "engines": {
     "node": ">=12"
