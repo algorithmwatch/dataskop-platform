@@ -2,6 +2,11 @@
 {% load account %}
 {% load i18n %}
 
-{% block content %}{% autoescape off %}<p>der erste Schritt ist geschafft. Damit Sie Ihre Registrierung abschließen können, klicken Sie bitte auf <a rel="notrack" href="{{ activate_url }}">diesen Link</a>.</p>
+{% block content %}{% autoescape off %}<p>vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Adresse zum Abschluss der Spende.
 
-{% with site_name=current_site.name %}<p>Viel Spaß mit {{site_name}}! Falls Sie Fragen haben, können Sie sich gerne an uns wenden unter <a rel="notrack" href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</p>{% endwith %}{% endautoescape %}{% endblock %}
+{% endautoescape %} <a rel="notrack" href="{{ activate_url }}">diesen Link</a>.</p>
+
+{% with site_name=current_site.name %}<p>Falls du Fragen hast, wende dich bitte an <a rel="notrack" href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</p>
+<p>Mit freundlichen Grüßen
+
+Das DataSkop-Team</p>{% endwith %}{% endautoescape %}{% endblock %}

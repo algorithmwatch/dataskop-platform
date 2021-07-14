@@ -48,5 +48,6 @@ class ConfirmedRegistrationEmail(EmailNotification):
     def __init__(self, user):  # optionally customize the initialization
         self.context = {
             "user": user,
+            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
         }
         self.to_emails = [user.email]  # set list of emails to send to
