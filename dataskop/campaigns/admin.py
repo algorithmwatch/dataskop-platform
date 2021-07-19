@@ -1,9 +1,12 @@
+import import_export
 from django.contrib import admin
 from django.db.models import JSONField
 from guardian.admin import GuardedModelAdmin
 from jsoneditor.forms import JSONEditor
 
 from .models import Campaign, Donation, Event, Provider
+
+admin.site.register(Provider)
 
 
 class TextJSONEditor(JSONEditor):
@@ -31,5 +34,17 @@ class EventAdmin(GuardedModelAdmin):
 
 admin.site.register(Event, EventAdmin)
 
-admin.site.register(Provider)
-admin.site.register(Donation)
+
+class DonationResource(import_export.resources.ModelResource):
+    class Meta:
+        model = Donation
+
+
+class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
+    resource_class = DonationResource
+    formats = [
+        import_export.formats.base_formats.JSON,
+    ]
+
+
+admin.site.register(Donation, DonationAdmin)

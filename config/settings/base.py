@@ -96,6 +96,7 @@ THIRD_PARTY_APPS = [
     "simple_history",
     "markupfield",
     "taggit",
+    "import_export",
     # emails
     "herald",
 ]
