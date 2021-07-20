@@ -1,9 +1,9 @@
 from django.dispatch import receiver
 
 from dataskop.campaigns.notifications import ConfirmedRegistrationEmail
-from dataskop.users.signals import post_magic_email_verified
+from dataskop.users.signals import post_magic_email_verified, pre_user_deleted
 
-from .models import Donation
+from .models import Donation, Event
 
 
 @receiver(post_magic_email_verified)
@@ -21,3 +21,8 @@ def handle_verified(sender, user, email, **kwargs):
 
     except Donation.DoesNotExist:
         pass
+
+
+@receiver(pre_user_deleted)
+def handle_pre_user_deleted(sender, user, **kwargs):
+    Event.objects.create(message=f"user deleted: {user.pk}")

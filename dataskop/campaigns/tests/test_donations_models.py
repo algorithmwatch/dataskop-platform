@@ -3,7 +3,7 @@ from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.core import mail
 
-from dataskop.campaigns.models import Donation
+from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.tasks import remind_user_registration
 from dataskop.users.tests.factories import UserFactory
 
@@ -48,10 +48,15 @@ def test_user_delete():
     user = UserFactory()
     d = DonationFactory(donor=user, unauthorized_email=None)
 
+    uid = user.pk
+
+    assert Event.objects.count() == 0
     assert Donation.objects.count() == 1
 
     user.delete()
 
+    assert Event.objects.count() == 1
+    assert uid in Event.objects.first().message
     assert Donation.objects.count() == 0
 
 
