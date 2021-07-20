@@ -59,7 +59,9 @@ def remind_user_registration():
         .distinct()
     ):
 
-        user = User.objects.get(email=d["unauthorized_email"])
+        user = User.objects.filter(email=d["unauthorized_email"]).first()
+        if user is None:
+            continue
 
         num_sent = SentNotification.objects.filter(
             user=user,
