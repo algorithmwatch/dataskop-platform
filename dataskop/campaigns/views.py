@@ -2,6 +2,7 @@ from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.mail import message
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -11,7 +12,7 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import DeleteView
 
-from dataskop.campaigns.models import Donation
+from dataskop.campaigns.models import Donation, Event
 
 User = get_user_model()
 
@@ -98,6 +99,10 @@ class DonationDeleteView(UsersDonationMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
+        Event.objects.create(
+            message=f"donation deleted: {self.get_object().pk}",
+            campaign=self.get_object().campaign,
+        )
         return super(DonationDeleteView, self).delete(request, *args, **kwargs)
 
 
@@ -106,4 +111,3 @@ class DonationDetailView(View):
     def get(self, request, *args, **kwargs):
         view = DonationDetailViewGet.as_view()
         return view(request, *args, **kwargs)
-
