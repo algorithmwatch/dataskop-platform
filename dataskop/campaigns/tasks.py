@@ -2,7 +2,9 @@ import logging
 
 from celery import shared_task
 from django.contrib.auth import get_user_model
+from herald.models import SentNotification
 
+from dataskop import campaigns
 from dataskop.campaigns.api.serializers import (
     DonationUnauthorizedSerializer,
     EventSerializer,
@@ -44,9 +46,25 @@ def handle_event(request_data, ip_address):
 @shared_task
 def remind_user_registration():
     for d in (
-        Donation.objects.filter(donor__isnull=True, unauthorized_email__isnull=False)
+        # only remind for:
+        # - unverfied donations (donor is null)
+        # - active campaigns
+        Donation.objects.filter(
+            donor__isnull=True,
+            unauthorized_email__isnull=False,
+            campaign__isnull=False,
+            campaign__status="active",
+        )
         .values("unauthorized_email", "ip_address")
         .distinct()
     ):
+
         user = User.objects.get(email=d["unauthorized_email"])
-        ReminderEmail(user).send(user=user)
+
+        num_sent = SentNotification.objects.filter(
+            user=user,
+            notification_class="dataskop.campaigns.notifications.ReminderEmail",
+        ).count()
+
+        if num_sent < 5:
+            ReminderEmail(user).send(user=user)

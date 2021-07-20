@@ -60,9 +60,9 @@ def test_user_delete():
     assert Donation.objects.count() == 0
 
 
-def test_reminders():
+def test_reminders_active():
     # create a new donation campaing (not campaign video)
-    cam = CampaignFactory(created_by=None)
+    cam = CampaignFactory(created_by=None, status="active")
     donation1 = DonationFactory(campaign=cam)
 
     d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
@@ -75,3 +75,41 @@ def test_reminders():
     remind_user_registration()
     remind_user_registration()
     assert len(mail.outbox) == 4
+
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    assert len(mail.outbox) == 6  # 5 notificaiton + 1 user confirm email
+
+
+def test_reminders_inactive():
+    # create a new donation campaing (not campaign video)
+    cam = CampaignFactory(created_by=None, status="inactive")
+    donation1 = DonationFactory(campaign=cam)
+
+    d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
+    assert d_email.count() == 1
+    assert d_email.first().verified == False
+
+    assert len(mail.outbox) == 1
+
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    assert len(mail.outbox) == 1
+
+
+def test_reminders_cam_none():
+    donation1 = DonationFactory(campaign=None)
+
+    d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
+    assert d_email.count() == 1
+    assert d_email.first().verified == False
+
+    assert len(mail.outbox) == 1
+
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    assert len(mail.outbox) == 1
