@@ -25,8 +25,7 @@ def handle_donation(request_data, ip_address):
         serializer.save()
     else:
         logger.info(
-            "serialzer for unauth donation failed with the following errors:",
-            serializer.errors,
+            f"serialzer for unauth donation failed with the following errors: {serializer.errors}"
         )
 
 
@@ -38,8 +37,7 @@ def handle_event(request_data, ip_address):
         serializer.save()
     else:
         logger.info(
-            "event serialer failed with:",
-            serializer.errors,
+            f"event serialer failed with: {serializer.errors}",
         )
 
 
