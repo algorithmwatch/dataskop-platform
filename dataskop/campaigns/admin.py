@@ -38,6 +38,7 @@ admin.site.register(Event, EventAdmin)
 class DonationResource(import_export.resources.ModelResource):
     class Meta:
         model = Donation
+        exclude = ("ip_address", "unauthorized_email")
 
 
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
@@ -45,6 +46,14 @@ class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
     formats = [
         import_export.formats.base_formats.JSON,
     ]
+
+    # only return verified users
+    def get_export_queryset(self, request):
+        return (
+            super(DonationAdmin, self)
+            .get_export_queryset(request)
+            .filter(donor__isnull=False)
+        )
 
 
 admin.site.register(Donation, DonationAdmin)
