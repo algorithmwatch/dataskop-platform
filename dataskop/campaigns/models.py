@@ -2,12 +2,13 @@ from datetime import timedelta
 
 from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.mail import message
 from django.db import models
 from django.urls.base import reverse
 from django.utils import timezone
 from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
+from django_lifecycle.hooks import BEFORE_DELETE
 from herald.models import SentNotification
 from model_utils import Choices
 from model_utils.fields import StatusField
@@ -16,6 +17,7 @@ from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManagers
 from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
+from dataskop.utils.email import send_anymail_email
 
 User = get_user_model()
 
@@ -99,6 +101,14 @@ class Donation(LifecycleModel, TimeStampedModel):
             User.objects.create_unverified_user_send_mail(
                 self.unauthorized_email, self.ip_address
             )
+
+    @hook(BEFORE_DELETE)
+    def send_admin_notification_before_delete(self):
+        send_anymail_email(
+            settings.ADMIN_NOTIFICATION_EMAIL,
+            f"Donation with id {self.pk}, for campaign {self.campaign}, was deleted",
+            subject="Donation Deleted",
+        )
 
 
 class Event(TimeStampedModel):
