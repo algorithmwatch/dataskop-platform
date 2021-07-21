@@ -1,6 +1,7 @@
 from django.urls import path
 
 from dataskop.campaigns.views import (
+    DashboardView,
     DonationDeleteView,
     DonationDetailDownloadView,
     DonationDetailView,
@@ -36,4 +37,5 @@ urlpatterns = [
         DonationDownloadAll.as_view(),
         name="download_all",
     ),
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
 ]

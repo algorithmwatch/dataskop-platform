@@ -1,8 +1,12 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import message
+from django.db.models import Count, Q, Value
+from django.db.models.fields import CharField
+from django.db.models.functions.datetime import TruncDay
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -10,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import DeleteView
 
 from dataskop.campaigns.models import Donation, Event
@@ -111,3 +116,28 @@ class DonationDetailView(View):
     def get(self, request, *args, **kwargs):
         view = DonationDetailViewGet.as_view()
         return view(request, *args, **kwargs)
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class DashboardView(TemplateView):
+    template_name = "campaigns/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardView, self).get_context_data(**kwargs)
+
+        msgs = Event.objects.order_by().values_list("message", flat=True).distinct()
+        context["events"] = {}
+        for m in msgs:
+
+            context["events"][m] = (
+                Event.objects.filter(message=m)
+                .annotate(date_histogram=TruncDay("created"))
+                .values("date_histogram")
+                .order_by("date_histogram")
+                .annotate(
+                    total=Count("date_histogram"),
+                    time_interval=Value("day", CharField()),
+                )
+            )
+
+        return context
