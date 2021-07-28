@@ -45,7 +45,7 @@ def admin_sent_reminder(modeladmin, request, queryset):
     Donation.objects.remind_user_registration(donation_qs=queryset)
 
 
-admin_sent_reminder.short_description = "Sent reminders to registration"
+admin_sent_reminder.short_description = "Sent reminders for registration"
 
 
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):

@@ -5,15 +5,15 @@
 
 {% block inner %}
 
-  <h1 class="hl-2xl mb-6">{% trans 'Mein Konto' %}</h1>
+<h1 class="hl-2xl mb-6">{% trans 'Mein Konto' %}</h1>
+<div class="pt-5">
+  <h3 class="font-bold">Ihre E-Mail-Adresse</h3>
+  <p>{{ user.email }} <a href="{% url 'account_email' %}" class="underline hover:no-underline">Ändern</a></p>
+</div>
 
-    <div class="pt-5">
-      <h3 class="font-bold">Ihre E-Mail-Adresse</h3>
-      <p>{{ user.email }} <a href="{% url 'account_email' %}" class="underline hover:no-underline">Ändern</a></p>
-    </div>
-
-    <div class="pt-5">
-      <ul class="space-y-2">
+<div class="pt-5">
+  <ul class="space-y-2">
+        <li><a href="{% url 'my_donations_list' %}" class="underline hover:no-underline">Meine Spenden</a></li>
         <li><a download class="hover:no-underline underline" href="{% url 'download_all' %}">Alle Daten exportieren</a></li>
         <li><a class="hover:no-underline underline text-red-700" href="{% url 'account_delete' %}">Alle Daten löschen</a></li>
       </ul>

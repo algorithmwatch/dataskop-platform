@@ -101,7 +101,7 @@ class MagicLinkHandleConfirmationLink(View):
 
         login(request, user)
 
-        return redirect("account_index")
+        return redirect("my_donations_list")
 
 
 # can't use SuccessMessageMixin https://stackoverflow.com/a/25325228/4028896
