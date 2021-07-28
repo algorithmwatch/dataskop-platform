@@ -24,5 +24,8 @@
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
-  "stylelint.enable": true
+  "stylelint.enable": true,
+  "python.linting.pylintArgs": [
+    "--django-settings-module=dataskop.settings",
+  ]
 }
