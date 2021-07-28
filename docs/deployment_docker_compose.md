@@ -1,12 +1,15 @@
 # Deployment with Docker-Compose
 
-Using the docker-compose of the production environment of Django-Cookie-Cutter
+Using the docker-compose of the production environment of Django-Cookie-Cutter.
+Not sure if this still works because we deploy <https://datenspende.dataskop.net/> in a different way.
 
 ```bash
 docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate
 docker-compose -f docker-compose.production.yml run --rm django python manage.py createsuperuser
 docker-compose -f docker-compose.production.yml --env-file .envs/.production/.django up
 ```
+
+## Basic Auth (optionally)
 
 Protect the staging enviroment with basic auth.
 

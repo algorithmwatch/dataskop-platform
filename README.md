@@ -6,11 +6,11 @@ This project was initially bootstrapped with [Django-Cookie-Cutter](https://gith
 
 ## Development setup
 
-Get the code, create .ENV files for local development.
+Get the code and create .ENV files for local development.
 
 ```bash
-git clone git@github.com:algorithmwatch/dataskop.git
-cd dataskop
+git clone git@github.com:algorithmwatch/dataskop-platform.git
+cd dataskop-platform
 mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
 ```
 
@@ -102,8 +102,7 @@ _manage.py_, you should be right.
 
 ### Viewing sent E-Mail during development
 
-In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server
-with a web interface. View sent emails at: <http://localhost:8025>
+In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server with a web interface. View sent emails at: <http://localhost:8025>
 
 ## Production
 
@@ -114,10 +113,7 @@ Also the [cookiecutter docs](http://cookiecutter-django.readthedocs.io/en/latest
 
 ### Deployment
 
-We currently support two different Docker-based ways to deploy dataskop:
-
-- [Docker-Compose](./docs/deployment_docker_compose.md) (originating from Django-Cookie-Cutter)
-- [Dokku](./docs/deployment_dokku.md) (_preferred_, self-hosted Heroku)
+[Docker-Compose](./docs/deployment_docker_compose.md) (originating from Django-Cookie-Cutter)
 
 ### Sentry
 
