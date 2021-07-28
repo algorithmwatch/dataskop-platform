@@ -17,6 +17,7 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 
     def __init__(self, user):  # optionally customize the initialization
         self.context = {
+            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
             "user": user,
             "login_url": settings.URL_ORIGIN
             + reverse("magic_login")
@@ -36,7 +37,9 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 
 @registry.register_decorator()
 class ReminderEmail(UnauthorizedDonationShouldLoginEmail):
-    subject = "Erinnerung für DataSkop-Anmeldung"
+    # subject = "Erinnerung für DataSkop-Anmeldung"
+    subject = "Fehler in Erinnerungsmail - bitte noch einmal bestätigen"
+    template_name = "donation_reminder"
 
 
 @registry.register_decorator()

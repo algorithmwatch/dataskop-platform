@@ -41,8 +41,16 @@ class DonationResource(import_export.resources.ModelResource):
         exclude = ("ip_address", "unauthorized_email")
 
 
+def admin_sent_reminder(modeladmin, request, queryset):
+    Donation.objects.remind_user_registration(donation_qs=queryset)
+
+
+admin_sent_reminder.short_description = "Sent reminders to registration"
+
+
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
     search_fields = ["unauthorized_email", "donor__email"]
+    actions = [admin_sent_reminder]
 
     resource_class = DonationResource
     formats = [

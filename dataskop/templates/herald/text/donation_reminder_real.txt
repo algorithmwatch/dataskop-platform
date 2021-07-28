@@ -1,0 +1,11 @@
+{% autoescape off %}Liebe/r Datenspender/in,
+
+bitte logge Dich ein, um die Datenspende für DataSkop zu bestätigen. Dafür musst Du Dir einen Login-Link für Dein Konto hiermit per E-Mail zusenden lassen:
+
+{{login_url}}
+
+Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
+
+Mit freundlichen Grüßen
+
+Das DataSkop-Team{% endautoescape %}

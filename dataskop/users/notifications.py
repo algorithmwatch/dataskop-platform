@@ -16,8 +16,6 @@ class MagicRegistrationEmail(EmailNotification):
     subject = "DataSkop-Anmeldung abschließen"
     render_types = ["text"]
 
-    viewname = "magic_registration"
-
     def __init__(
         self,
         user,
@@ -30,7 +28,7 @@ class MagicRegistrationEmail(EmailNotification):
         from sesame.utils import get_query_string
 
         magic_link = settings.URL_ORIGIN + (
-            reverse(self.viewname)
+            reverse("magic_confirm")
             + get_query_string(user, scope=email + ip_address)
             + "&email="
             + urlquote(email)
@@ -55,5 +53,3 @@ class MagicRegistrationEmail(EmailNotification):
 class MagicLoginEmail(MagicRegistrationEmail):
     template_name = "magic_login"
     subject = "DataSkop-Anmeldung"
-
-    viewname = "magic_confirm"

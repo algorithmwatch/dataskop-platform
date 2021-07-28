@@ -68,32 +68,6 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
 class MagicLinkHandleConfirmationLink(View):
     def get(self, request):
         """
-        login when person opened magic link from email
-        """
-        email = request.GET.get("email")
-
-        ip_address = self.request.META.get("REMOTE_ADDR")
-        user = get_user(request, scope=email + ip_address)
-
-        if user is None:
-            messages.error(
-                request, "Es wurde kein Account mit diese E-Mail-Adresse gefunden."
-            )
-            return redirect("account_login")
-        messages.success(request, "Login erfolgreich")
-
-        if request.user.is_authenticated:
-            logout(request)
-
-        login(request, user)
-
-        return redirect("account_index")
-
-
-@method_decorator(never_cache, name="dispatch")
-class MagicLinkHandleRegistrationLink(View):
-    def get(self, request):
-        """
         Scope for each email to ensure the token was actually sent to this
         specific email since we are verifying it.
         """
@@ -111,20 +85,23 @@ class MagicLinkHandleRegistrationLink(View):
         if not email_address:
             raise PermissionDenied("E-Mail-Adresse nicht gefunden.")
 
-        email_address.verified = True
-        email_address.set_as_primary(conditional=True)
-        email_address.save()
+        # if registration
+        if email_address.verified:
+            messages.success(request, "Login erfolgreich")
+        else:
+            email_address.verified = True
+            email_address.set_as_primary(conditional=True)
+            email_address.save()
+
+            messages.success(request, "Account erfolgreich verifiziert. Danke!")
+            post_magic_email_verified.send(request, user=user, email=email_str)
 
         if request.user.is_authenticated:
             logout(request)
 
         login(request, user)
 
-        messages.success(request, "Account erfolgreich verifiziert. Danke!")
-
-        post_magic_email_verified.send(request, user=user, email=email_str)
-
-        return redirect("/")
+        return redirect("account_index")
 
 
 # can't use SuccessMessageMixin https://stackoverflow.com/a/25325228/4028896

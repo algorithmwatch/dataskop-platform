@@ -45,28 +45,4 @@ def handle_event(request_data, ip_address):
 
 @shared_task
 def remind_user_registration():
-    for d in (
-        # only remind for:
-        # - unverfied donations (donor is null)
-        # - active campaigns
-        Donation.objects.filter(
-            donor__isnull=True,
-            unauthorized_email__isnull=False,
-            campaign__isnull=False,
-            campaign__status="active",
-        )
-        .values("unauthorized_email", "ip_address")
-        .distinct()
-    ):
-
-        user = User.objects.filter(email=d["unauthorized_email"]).first()
-        if user is None:
-            continue
-
-        num_sent = SentNotification.objects.filter(
-            user=user,
-            notification_class="dataskop.campaigns.notifications.ReminderEmail",
-        ).count()
-
-        if num_sent < 5:
-            ReminderEmail(user).send(user=user)
+    return Donation.objects.remind_user_registration()

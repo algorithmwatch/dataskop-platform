@@ -8,7 +8,7 @@ from .models import Donation, Event
 
 @receiver(post_magic_email_verified)
 def handle_verified(sender, user, email, **kwargs):
-    # mark the last dontion as part of the user
+    # mark the first dontion as part of the user
     try:
         last_donation = Donation.objects.filter(
             donor__isnull=True, unauthorized_email=email
