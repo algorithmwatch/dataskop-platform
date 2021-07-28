@@ -130,6 +130,9 @@ class DashboardView(TemplateView):
         # group special events (that have some identifier in the name)
         msg_fixed = []
         for m in msgs:
+            if m is None:
+                continue
+
             if "user deleted:" in m:
                 msg_fixed.append("user deleted")
             elif "donation deleted" in m:
