@@ -36,6 +36,11 @@ class DonationManagers(models.Manager):
             if user is None:
                 continue
 
+            # If users donate more than 1 time, it can happen that there unconfirmed donations.
+            # User's have to manually mark them as their donations but we don't need to remind for registration.
+            if EmailAddress.objects.filter(user=user, verified=True).exists():
+                continue
+
             num_sent = SentNotification.objects.filter(
                 user=user,
                 notification_class="dataskop.campaigns.notifications.ReminderEmail",
