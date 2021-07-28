@@ -42,6 +42,8 @@ class DonationResource(import_export.resources.ModelResource):
 
 
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
+    search_fields = ["unauthorized_email", "donor__email"]
+
     resource_class = DonationResource
     formats = [
         import_export.formats.base_formats.JSON,
