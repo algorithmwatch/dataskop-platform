@@ -13,8 +13,16 @@
 
     {% block inner %}
       <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Dashboard</h1>
+      <hr/>
+      <h3 class="text-xl">Total events</h3>
+      {% for k,v in total_events.items %}
+      <div>
+        {{k}}: {{v}}
+      </div>
+      {% endfor %}
+      <hr/>
+      <h3 class="text-xl mt-6">Events per day</h3>
       <ul>
-
         {% for k,v in events.items %}
         <div class="mb-10">
           <div>
@@ -31,6 +39,8 @@
         </div>
         {% endfor %}
       </ul>
+      <hr/>
+
     {% endblock %}
   </div>
 {% endblock %}

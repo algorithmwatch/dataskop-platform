@@ -126,11 +126,25 @@ class DashboardView(TemplateView):
         context = super(DashboardView, self).get_context_data(**kwargs)
 
         msgs = Event.objects.order_by().values_list("message", flat=True).distinct()
-        context["events"] = {}
-        for m in msgs:
 
+        # group special events (that have some identifier in the name)
+        msg_fixed = []
+        for m in msgs:
+            if "user deleted:" in m:
+                msg_fixed.append("user deleted")
+            elif "donation deleted" in m:
+                msg_fixed.append("donation deleted")
+            else:
+                msg_fixed.append(m)
+
+        msgs = list(set(msg_fixed))
+
+        context["events"] = {}
+        context["total_events"] = {}
+
+        for m in msgs:
             context["events"][m] = (
-                Event.objects.filter(message=m)
+                Event.objects.filter(message__icontains=m)
                 .annotate(date_histogram=TruncDay("created"))
                 .values("date_histogram")
                 .order_by("date_histogram")
@@ -139,5 +153,10 @@ class DashboardView(TemplateView):
                     time_interval=Value("day", CharField()),
                 )
             )
+
+        for m in msgs:
+            context["total_events"][m] = Event.objects.filter(
+                message__icontains=m
+            ).count()
 
         return context
