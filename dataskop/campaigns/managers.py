@@ -31,8 +31,8 @@ class DonationManagers(models.Manager):
             campaign__status="active",
         )
 
-        for d in qs.values("unauthorized_email", "ip_address").distinct():
-            user = User.objects.filter(email=d["unauthorized_email"]).first()
+        for email in qs.values_list("unauthorized_email", flat=True).distinct():
+            user = User.objects.filter(email=email).first()
             if user is None:
                 continue
 
