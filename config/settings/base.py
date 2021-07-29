@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 
 import environ
+from session_cleanup.settings import weekly_schedule
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # dataskop/
@@ -82,6 +83,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.facebook",
     # celery
     "django_celery_beat",
+    "session_cleanup",
     # drf
     "rest_framework",
     "rest_framework.authtoken",
@@ -315,6 +317,9 @@ CELERY_TASK_TIME_LIMIT = 20 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 10 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+
+CELERYBEAT_SCHEDULE = {"session_cleanup": weekly_schedule}
 
 # django-allauth
 # ------------------------------------------------------------------------------
