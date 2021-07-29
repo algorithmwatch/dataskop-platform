@@ -137,6 +137,8 @@ class DashboardView(TemplateView):
                 msg_fixed.append("user deleted")
             elif "donation deleted" in m:
                 msg_fixed.append("donation deleted")
+            elif "user was logged out" in m:
+                msg_fixed.append("user was logged out")
             else:
                 msg_fixed.append(m)
 
