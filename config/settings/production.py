@@ -164,8 +164,8 @@ ANYMAIL = {
     "MAILJET_SECRET_KEY": env("MAILJET_SECRET_KEY"),
 }
 
-# keep notification mails for 8 weeks
-HERALD_NOTIFICATION_RETENTION_TIME = timedelta(weeks=8)
+# keep notification mails for 8 weeks (right now: forever)
+# HERALD_NOTIFICATION_RETENTION_TIME = timedelta(weeks=8)
 
 
 # STATIC
