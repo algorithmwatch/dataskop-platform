@@ -1,16 +1,15 @@
 import logging
 
 from celery import shared_task
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from herald.models import SentNotification
 
-from dataskop import campaigns
 from dataskop.campaigns.api.serializers import (
     DonationUnauthorizedSerializer,
     EventSerializer,
 )
 from dataskop.campaigns.models import Donation
-from dataskop.campaigns.notifications import ReminderEmail
+from dataskop.utils.email import send_anymail_email
 
 User = get_user_model()
 
@@ -46,3 +45,12 @@ def handle_event(request_data, ip_address):
 @shared_task
 def remind_user_registration():
     return Donation.objects.remind_user_registration()
+
+
+@shared_task
+def test_task_email():
+    send_anymail_email(
+        settings.ADMIN_NOTIFICATION_EMAIL,
+        "this E-Mail should only be sent once.",
+        subject="Test Task E-Mail",
+    )
