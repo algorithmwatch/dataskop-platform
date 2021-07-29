@@ -4,7 +4,7 @@ vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Ad
 
 {{ activate_url }}
 
-Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
+Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
 
 Mit freundlichen Grüßen
 

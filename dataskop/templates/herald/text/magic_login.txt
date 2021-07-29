@@ -4,7 +4,7 @@ um dich einzuloggen, klicke bitte auf folgenden Link:
 
 {{ activate_url }}
 
-Falls du Fragen hast, wende dich bitte an {{CONTACT_EMAIL}}.
+Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
 
 Mit freundlichen Grüßen
 

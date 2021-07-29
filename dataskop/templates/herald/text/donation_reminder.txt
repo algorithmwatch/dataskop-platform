@@ -1,10 +1,10 @@
 {% autoescape off %}Liebe/r Datenspender/in,
 
-entschuldige bitte, dass wir schon wieder eine Mail senden. In der Mail gestern haben wir leider einen Fehler gemacht: Die Bestätigung Deiner Spende konnte nicht funktionieren. Deswegen möchten wir Dich noch einmal bitten, Dich einzuloggen, um die Datenspende für DataSkop zu bestätigen. Dafür musst Du Dir den Login-Link für Dein Konto hiermit per E-Mail zusenden lassen:
+bitte logge Dich ein, um die Datenspende für DataSkop zu bestätigen. Dafür musst Du Dir einen Login-Link zusenden lassen:
 
 {{login_url}}
 
-Bei Fragen melde Dich bitte per E-Mail an support@dataskop.net
+Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
 
 Mit freundlichen Grüßen
 
