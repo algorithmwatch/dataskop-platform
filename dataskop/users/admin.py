@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.models import Session
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
@@ -48,3 +50,16 @@ class UserAdmin(auth_admin.UserAdmin):
 
     def has_add_permission(self, request, obj=None):
         return False
+
+
+class SessionAdmin(ModelAdmin):
+    def _session_data(self, obj):
+        return obj.get_decoded()
+
+    list_display = ["session_key", "_session_data", "expire_date"]
+    readonly_fields = ["session_key", "_session_data", "expire_date"]
+    exclude = ["session_data"]
+    date_hierarchy = "expire_date"
+
+
+admin.site.register(Session, SessionAdmin)
