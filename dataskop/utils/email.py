@@ -1,11 +1,6 @@
 from anymail.message import AnymailMessage
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
-
-
-def formated_from():
-    return f"{Site.objects.get_current().name} <{settings.DEFAULT_FROM_EMAIL}>"
 
 
 def send_anymail_email(
@@ -45,7 +40,7 @@ def send_anymail_email(
 
     # provide a default, formatted (with site name) email address
     kwargs = {
-        "from_email": formated_from(),
+        "from_email": settings.DEFAULT_FROM_EMAIL,
         **kwargs,
     }
 

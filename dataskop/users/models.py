@@ -8,7 +8,7 @@ from django.utils.http import urlquote
 from django.utils.translation import gettext_lazy as _
 
 from dataskop.users.notifications import MagicLoginEmail, MagicRegistrationEmail
-from dataskop.utils.email import formated_from, send_anymail_email
+from dataskop.utils.email import send_anymail_email
 
 from .managers import CustomUserManager
 
