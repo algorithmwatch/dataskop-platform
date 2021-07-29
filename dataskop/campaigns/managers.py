@@ -46,7 +46,8 @@ class DonationManagers(models.Manager):
                 notification_class="dataskop.campaigns.notifications.ReminderEmail",
             ).count()
 
-            if num_sent < 5:
+            # give up after some tries
+            if num_sent < 10:
                 ReminderEmail(user).send(user=user)
 
                 total_reminder_sent += 1

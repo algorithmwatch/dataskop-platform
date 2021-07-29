@@ -75,7 +75,15 @@ def test_reminders_active():
     remind_user_registration()
     remind_user_registration()
     remind_user_registration()
-    assert len(mail.outbox) == 6  # 5 notificaiton + 1 user confirm email
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    remind_user_registration()
+    assert len(mail.outbox) == 11  # 10 notificaiton + 1 user confirm email
 
 
 def test_reminders_inactive():
