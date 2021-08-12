@@ -51,25 +51,6 @@ Some important Django management comands:
 ./local.sh manage fakedata
 ```
 
-### Frontend
-
-[Not supporting IE 11 because of Tailwind v2](https://tailwindcss.com/docs/browser-support), but IE 11 usage is [dropping fast](https://gs.statcounter.com/browser-market-share/desktop/germany/#monthly-201812-202012).
-
-If you add a new npm dependency, delete the volume in order to recreate it.
-
-```bash
-docker-compose -f docker-compose.local.yml down
-docker volume rm dataskop-platform_local_node_modules
-```
-
-#### Regarding the problems of `node_modules`
-
-There are sometimes problems with the data volume of the `node_modules` folder.
-Right now it's not clear whether this is a feature or a bug of docker volumes.
-Most likely we made a mistake with our setup.
-The problem arises from mapping the `node_modules` to the development container of VS Code (since we need linters etc.).
-This seems to prevent installing new `node_modules`.
-
 ### Test coverage
 
 To run the tests, check your test coverage, and generate an HTML

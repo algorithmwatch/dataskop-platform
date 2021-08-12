@@ -10,13 +10,25 @@ RUN apt-get update \
   && apt-get install -y libpq-dev \
   # install git for dev container
   && apt-get install -y git \
-  # needed by django-dbbackup to dump postgres
-  && apt-get install -y postgresql-client \
   # Translations dependencies
   && apt-get install -y gettext \
+  # for node/npm
+  && apt-get install -y ca-certificates curl \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
+
+# install node/npm
+
+ARG NODE_VERSION=12.22.5
+ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
+ARG NODE_HOME=/opt/$NODE_PACKAGE
+
+ENV NODE_PATH $NODE_HOME/lib/node_modules
+ENV PATH $NODE_HOME/bin:$PATH
+
+RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
+
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
@@ -43,5 +55,9 @@ RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 WORKDIR /app
+
+COPY ./package.json ./package-lock.json .
+RUN npm install
+ENV PATH ./node_modules/.bin/:$PATH
 
 ENTRYPOINT ["/entrypoint"]
