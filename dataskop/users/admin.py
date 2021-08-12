@@ -1,3 +1,5 @@
+import import_export
+from allauth.account.models import EmailAddress
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth import admin as auth_admin
@@ -18,8 +20,14 @@ User = get_user_model()
 #     fk_name = "user"
 
 
+class UserResource(import_export.resources.ModelResource):
+    class Meta:
+        model = User
+        fields = ("id", "email")
+
+
 @admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
+class UserAdmin(import_export.admin.ExportMixin, auth_admin.UserAdmin):
     fieldsets = (
         (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
         (
@@ -47,6 +55,24 @@ class UserAdmin(auth_admin.UserAdmin):
     search_fields = ["email", "first_name", "last_name"]
     ordering = ("-date_joined",)
     # inlines = [PCCInline, CaseInline]
+
+    resource_class = UserResource
+    formats = [
+        import_export.formats.base_formats.JSON,
+    ]
+
+    # only return users with primary, verified email address
+    def get_export_queryset(self, request):
+
+        verified_emails = EmailAddress.objects.filter(verified=True).values_list(
+            "email", flat=True
+        )
+
+        return (
+            super(UserAdmin, self)
+            .get_export_queryset(request)
+            .filter(email__in=verified_emails)
+        )
 
     def has_add_permission(self, request, obj=None):
         return False
