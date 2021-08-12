@@ -1,8 +1,12 @@
 {% autoescape off %}Liebe/r Datenspender/in,
 
-bitte logge Dich ein, um die Datenspende für DataSkop zu bestätigen. Dafür musst Du Dir einen Login-Link zusenden lassen:
+bitte klicke auf folgenden Link. Du erhälst daraufhin eine weitere E-Mail mit einem Konto-Login. Den musst du ebenfalls klicken.
+
+Danach ist Deine Datenspende bestätigt. Sonst müssen wir leider Deine Spende Ende August 2021 endgültig löschen und können sie nicht für unsere Forschung verwenden.
 
 {{login_url}}
+
+Danke.
 
 Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
 

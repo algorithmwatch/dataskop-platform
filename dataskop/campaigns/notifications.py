@@ -37,7 +37,7 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 
 @registry.register_decorator()
 class ReminderEmail(UnauthorizedDonationShouldLoginEmail):
-    subject = "Erinnerung für DataSkop-Anmeldung"
+    subject = "Bitte YouTube-Datenspende bestätigen"
     template_name = "donation_reminder"
 
 
