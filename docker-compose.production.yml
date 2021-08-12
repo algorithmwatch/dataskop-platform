@@ -9,8 +9,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
-      args:
-        - GPG_PUBLIC_KEY_URL=${GPG_PUBLIC_KEY_URL}
     image: dataskop_production_django
     depends_on:
       - postgres

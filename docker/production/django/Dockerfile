@@ -1,15 +1,13 @@
 FROM node:12-stretch-slim as client-builder
 
 WORKDIR /app
-COPY ./package.json /app
+COPY ./package.json ./package-lock.json /app
 RUN npm install && npm cache clean --force
 COPY . /app
 RUN npm run build
 
 # Python build stage
 FROM python:3.8-slim-buster
-
-ARG GPG_PUBLIC_KEY_URL
 
 ENV PYTHONUNBUFFERED 1
 
@@ -20,10 +18,6 @@ RUN apt-get update \
   && apt-get install -y libpq-dev \
   # Translations dependencies
   && apt-get install -y gettext \
-  # for encrypting backup
-  && apt-get install -y gnupg curl \
-  # needed by django-dbbackup to dump postgres
-  && apt-get install -y postgresql-client \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -62,8 +56,6 @@ COPY --from=client-builder --chown=django:django /app /app
 RUN chown -R django:django /media
 
 USER django
-
-RUN curl ${GPG_PUBLIC_KEY_URL} | gpg --import || true
 
 WORKDIR /app
 
