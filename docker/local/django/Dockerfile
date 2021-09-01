@@ -1,34 +1,22 @@
-FROM python:3.8-slim-buster
+FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 RUN apt-get update \
   # dependencies for building Python packages
   && apt-get install -y build-essential \
   # psycopg2 dependencies
   && apt-get install -y libpq-dev \
-  # install git for dev container
+  # git for dev container
   && apt-get install -y git \
-  # Translations dependencies
-  && apt-get install -y gettext \
-  # for node/npm
-  && apt-get install -y ca-certificates curl \
+  # node/npm
+  && apt-get install -y nodejs \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
-
-# install node/npm
-
-ARG NODE_VERSION=12.22.5
-ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
-ARG NODE_HOME=/opt/$NODE_PACKAGE
-
-ENV NODE_PATH $NODE_HOME/lib/node_modules
-ENV PATH $NODE_HOME/bin:$PATH
-
-RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
-
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
