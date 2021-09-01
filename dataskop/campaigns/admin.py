@@ -57,12 +57,13 @@ class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
         import_export.formats.base_formats.JSON,
     ]
 
-    # only return verified users
+    # only return donaions from verified users
     def get_export_queryset(self, request):
         return (
             super(DonationAdmin, self)
             .get_export_queryset(request)
             .filter(donor__isnull=False)
+            .select_related()
         )
 
 
