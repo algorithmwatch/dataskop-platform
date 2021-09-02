@@ -3,7 +3,7 @@ from typing import Any, Sequence
 import factory
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
-from factory import Faker, post_generation
+from factory import Faker
 from factory.django import DjangoModelFactory
 
 
@@ -23,13 +23,7 @@ class UserFactory(DjangoModelFactory):
     email = Faker("email", locale="de")
 
     @factory.post_generation
-    def email_obj(obj, create, extracted, **kwargs):
-        if not create:
-            return
-        EmailFactory(email=obj.email, user=obj)
-
-    @post_generation
-    def password(self, create: bool, extracted: Sequence[Any], **kwargs):
+    def setup(obj, create: bool, extracted: Sequence[Any], **kwargs):
         password = (
             extracted
             if extracted
@@ -42,7 +36,10 @@ class UserFactory(DjangoModelFactory):
                 lower_case=True,
             ).evaluate(None, None, extra={"locale": None})
         )
-        self.set_password(password)
+        obj.set_password(password)
+
+        if create:
+            EmailFactory(email=obj.email, user=obj)
 
     class Meta:
         model = get_user_model()

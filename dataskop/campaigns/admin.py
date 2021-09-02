@@ -1,6 +1,8 @@
 import import_export
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db.models import JSONField
+from django.template.response import TemplateResponse
+from django.utils.translation import ngettext
 from guardian.admin import GuardedModelAdmin
 from jsoneditor.forms import JSONEditor
 
@@ -41,16 +43,81 @@ class DonationResource(import_export.resources.ModelResource):
         exclude = ("ip_address", "unauthorized_email")
 
 
-def admin_sent_reminder(modeladmin, request, queryset):
-    Donation.objects.remind_user_registration(donation_qs=queryset)
+def admin_send_reminder(modeladmin, request, queryset):
+    """
+    Remind users to verify their email address in order to confirm their donations.
+    For the users in the queryset, that already had their email address confirmed, do
+    nothing.
+    """
+    num_sent = Donation.objects.remind_user_registration(donation_qs=queryset)
+
+    modeladmin.message_user(
+        request,
+        ngettext(
+            "%d reminder was sent",
+            "%d reminders were sent.",
+            num_sent,
+        )
+        % num_sent,
+        messages.INFO,
+    )
 
 
-admin_sent_reminder.short_description = "Sent reminders for registration"
+admin_send_reminder.short_description = "Send reminders to unverified donations"
+
+
+def require_confirmation(func):
+    """
+    Decorator to confirm an (possibly destructive) admin action.
+    """
+
+    def wrapper(modeladmin, request, queryset):
+        if request.POST.get("confirmation") is None:
+            request.current_app = modeladmin.admin_site.name
+            context = {"action": request.POST["action"], "queryset": queryset}
+            return TemplateResponse(request, "admin/action_confirmation.html", context)
+
+        return func(modeladmin, request, queryset)
+
+    wrapper.__name__ = func.__name__
+    return wrapper
+
+
+@require_confirmation
+def delete_unconfirmed_donations(modeladmin, request, queryset):
+    return Donation.objects.delete_unconfirmed_donations()
+
+
+class UnconfirmedDonationsFilter(admin.SimpleListFilter):
+    """
+    Filter for (un)confirmed donations by checking if the user is verified.
+    """
+
+    title = "confirmed"
+    parameter_name = "confirmed"
+
+    def lookups(self, request, model_admin):
+        return (("confirmed", "Confirmed"), ("unconfirmed", "Unconfirmed"))
+
+    def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
+        if self.value().lower() == "confirmed":
+            return queryset.filter(donor__isnull=False)
+        elif self.value().lower() == "unconfirmed":
+            return queryset.filter(donor__isnull=True)
 
 
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
+    readonly_fields = (
+        "created",
+        "modified",
+    )
     search_fields = ["unauthorized_email", "donor__email"]
-    actions = [admin_sent_reminder]
+    list_filter = ("campaign", "created", UnconfirmedDonationsFilter)
+    list_display = ("campaign", "created", "unauthorized_email", "donor")
+
+    actions = [admin_send_reminder, delete_unconfirmed_donations]
 
     resource_class = DonationResource
     formats = [

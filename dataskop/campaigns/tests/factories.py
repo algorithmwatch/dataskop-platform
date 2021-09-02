@@ -1,7 +1,9 @@
 import json
 import random
+from typing import Any, Sequence
 
 import factory
+from allauth.account.models import EmailAddress
 from factory import Faker
 from factory.django import DjangoModelFactory
 
@@ -42,3 +44,16 @@ class DonationFactory(DjangoModelFactory):
 
     class Meta:
         model = Donation
+
+
+class ConfirmedDonationFactory(DonationFactory):
+    @factory.post_generation
+    def confirm(obj, create: bool, extracted: Sequence[Any], **kwargs):
+        email_obj = EmailAddress.objects.filter(email=obj.unauthorized_email).first()
+
+        email_obj.verified = True
+        email_obj.set_as_primary(conditional=True)
+        email_obj.save()
+
+        obj.donor = email_obj.user
+        obj.save()

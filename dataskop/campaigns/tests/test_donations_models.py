@@ -1,13 +1,16 @@
+import datetime
+
 import pytest
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.core import mail
+from freezegun.api import freeze_time
 
 from dataskop.campaigns.models import Donation
 from dataskop.campaigns.tasks import remind_user_registration
 from dataskop.users.tests.factories import UserFactory
 
-from .factories import CampaignFactory, DonationFactory
+from .factories import CampaignFactory, ConfirmedDonationFactory, DonationFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -116,3 +119,24 @@ def test_reminders_cam_none():
     remind_user_registration()
     remind_user_registration()
     assert len(mail.outbox) == 1
+
+
+def test_delete_unconfirmed_donations():
+
+    # TODO: more tests, ensure email is really deleted
+
+    today = datetime.date.today()
+    in2days = today + datetime.timedelta(days=2)
+    in3days = today + datetime.timedelta(days=3)
+
+    with freeze_time(today):
+        donation1 = ConfirmedDonationFactory(campaign=None)
+        donation2 = DonationFactory(campaign=None)
+        num_deleted = Donation.objects.delete_unconfirmed_donations()
+
+        assert num_deleted == 0
+
+    with freeze_time(in2days):
+        num_deleted = Donation.objects.delete_unconfirmed_donations()
+
+        assert num_deleted == 2
