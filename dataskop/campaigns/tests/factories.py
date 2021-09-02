@@ -10,7 +10,7 @@ from dataskop.users.tests.factories import UserFactory
 
 
 def gen_fake_json(_):
-    return json.loads(Faker("json").generate())
+    return json.loads(Faker("json").evaluate(None, None, {"locale": None}))
 
 
 class ProviderFactory(DjangoModelFactory):
