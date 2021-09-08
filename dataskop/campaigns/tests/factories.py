@@ -45,15 +45,16 @@ class DonationFactory(DjangoModelFactory):
     class Meta:
         model = Donation
 
-
-class ConfirmedDonationFactory(DonationFactory):
     @factory.post_generation
-    def confirm(obj, create: bool, extracted: Sequence[Any], **kwargs):
-        email_obj = EmailAddress.objects.filter(email=obj.unauthorized_email).first()
-
-        email_obj.verified = True
-        email_obj.set_as_primary(conditional=True)
-        email_obj.save()
-
-        obj.donor = email_obj.user
-        obj.save()
+    def email(obj, create: bool, extracted: Sequence[Any], **kwargs):
+        if create:
+            verified = "verified" in kwargs and kwargs["verified"]
+            if verified:
+                email_obj = EmailAddress.objects.filter(
+                    email=obj.unauthorized_email
+                ).first()
+                email_obj.set_as_primary(conditional=True)
+                email_obj.verified = True
+                email_obj.save()
+                obj.donor = email_obj.user
+                obj.save()

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from allauth.account.models import EmailAddress
@@ -58,10 +59,9 @@ class DonationManagers(models.Manager):
         return total_reminder_sent
 
     def delete_unconfirmed_donations(self, donation_qs=None):
-        num_total_deleted = 0
-
+        deleted_objects = []
         # 1. delete donations that somehow have no unauthorized emails
-        num_deleted, _ = (
+        _, deleted = (
             (donation_qs or self.model.objects)
             .filter(
                 donor__isnull=True,
@@ -70,7 +70,7 @@ class DonationManagers(models.Manager):
             .delete()
         )
 
-        num_total_deleted += num_deleted
+        deleted_objects.append(deleted)
 
         # 2. Find unverified donations
         qs = (donation_qs or self.model.objects).filter(
@@ -86,9 +86,8 @@ class DonationManagers(models.Manager):
 
             if email_obj is None:
                 # If no email exists, something is wrong. Delete it.
-                num_deleted, _ = self.model.objects.filter(email=email).delete()
-
-                num_total_deleted += num_deleted
+                _, deleted = self.model.objects.filter(email=email).delete()
+                deleted_objects.append(deleted)
 
             elif email_obj.verified:
                 # The donation is not marked as part of the user, but a verified account
@@ -105,9 +104,21 @@ class DonationManagers(models.Manager):
                 if not EmailAddress.objects.filter(
                     user=email_obj.user, verified=True
                 ).exists():
-                    qs.filter(unauthorized_email=email).delete()
-                    num_deleted, _ = email_obj.user.delete()
+                    _, deleted = qs.filter(unauthorized_email=email).delete()
+                    deleted_objects.append(deleted)
 
-                    num_total_deleted += num_deleted
+                    _, deleted = EmailAddress.objects.filter(
+                        user=email_obj.user
+                    ).delete()
+                    deleted_objects.append(deleted)
 
-        return num_total_deleted
+                    _, deleted = email_obj.user.delete()
+                    deleted_objects.append(deleted)
+
+        total_deleted = defaultdict(lambda: 0)
+
+        for li in deleted_objects:
+            for k, v in li.items():
+                total_deleted[k] += v
+
+        return total_deleted

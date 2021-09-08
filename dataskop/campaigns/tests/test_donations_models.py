@@ -8,9 +8,8 @@ from freezegun.api import freeze_time
 
 from dataskop.campaigns.models import Donation
 from dataskop.campaigns.tasks import remind_user_registration
-from dataskop.users.tests.factories import UserFactory
 
-from .factories import CampaignFactory, ConfirmedDonationFactory, DonationFactory
+from .factories import CampaignFactory, DonationFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -48,12 +47,13 @@ def test_multiple_donation_by_same_user():
 
 
 def test_user_delete():
-    user = UserFactory()
-    d = DonationFactory(donor=user, unauthorized_email=None)
+    d = DonationFactory(email__verified=True)
 
     assert Donation.objects.count() == 1
 
-    user.delete()
+    num_deleted, _ = User.objects.filter(email=d.unauthorized_email).delete()
+
+    assert num_deleted == 3
 
     assert Donation.objects.count() == 0
 
@@ -130,13 +130,12 @@ def test_delete_unconfirmed_donations():
     in3days = today + datetime.timedelta(days=3)
 
     with freeze_time(today):
-        donation1 = ConfirmedDonationFactory(campaign=None)
-        donation2 = DonationFactory(campaign=None)
-        num_deleted = Donation.objects.delete_unconfirmed_donations()
+        donation1 = DonationFactory(campaign=None)
+        donation2 = DonationFactory(campaign=None, email__verified=False)
+        del_objs = Donation.objects.delete_unconfirmed_donations()
 
-        assert num_deleted == 0
+        assert del_objs == {}
 
     with freeze_time(in2days):
-        num_deleted = Donation.objects.delete_unconfirmed_donations()
-
-        assert num_deleted == 2
+        del_objs = Donation.objects.delete_unconfirmed_donations()
+        assert len(del_objs) == 3

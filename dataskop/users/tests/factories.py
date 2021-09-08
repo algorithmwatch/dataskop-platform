@@ -23,7 +23,12 @@ class UserFactory(DjangoModelFactory):
     email = Faker("email", locale="de")
 
     @factory.post_generation
-    def setup(obj, create: bool, extracted: Sequence[Any], **kwargs):
+    def email_obj(obj, create: bool, extracted: Sequence[Any], **kwargs):
+        if create:
+            EmailFactory(email=obj.email, user=obj, **kwargs)
+
+    @factory.post_generation
+    def password(obj, create: bool, extracted: Sequence[Any], **kwargs):
         password = (
             extracted
             if extracted
@@ -37,9 +42,6 @@ class UserFactory(DjangoModelFactory):
             ).evaluate(None, None, extra={"locale": None})
         )
         obj.set_password(password)
-
-        if create:
-            EmailFactory(email=obj.email, user=obj)
 
     class Meta:
         model = get_user_model()
