@@ -123,19 +123,60 @@ def test_reminders_cam_none():
 
 def test_delete_unconfirmed_donations():
 
-    # TODO: more tests, ensure email is really deleted
-
     today = datetime.date.today()
     in2days = today + datetime.timedelta(days=2)
     in3days = today + datetime.timedelta(days=3)
 
     with freeze_time(today):
         donation1 = DonationFactory(campaign=None)
-        donation2 = DonationFactory(campaign=None, email__verified=False)
-        del_objs = Donation.objects.delete_unconfirmed_donations()
+        donation2 = DonationFactory(campaign=None)
+        donation3 = DonationFactory(campaign=None, email__verified=True)
+        donation4 = DonationFactory(campaign=None, email__verified=True)
 
+        donation4_non_confirm = DonationFactory(
+            campaign=None, unauthorized_email=donation4.unauthorized_email
+        )
+
+        donation2_dupli = DonationFactory(
+            campaign=None, unauthorized_email=donation2.unauthorized_email
+        )
+
+        # no deletion for donations that were recently created (<24h)
+        del_objs = Donation.objects.delete_unconfirmed_donations()
         assert del_objs == {}
 
     with freeze_time(in2days):
+        # no deletion if a donor is assigned, testing if given donation_qs works
+        assert {} == Donation.objects.delete_unconfirmed_donations(
+            donation_qs=Donation.objects.filter(donor__isnull=False)
+        )
+
         del_objs = Donation.objects.delete_unconfirmed_donations()
-        assert len(del_objs) == 3
+        assert (
+            sum(del_objs.values()) == 7
+        )  # 2 unique donations (donation + email + user = 3 x 2) + another duplicate donation = 7
+        assert Donation.objects.count() == 3
+        assert EmailAddress.objects.filter(email=donation4.unauthorized_email).exists()
+        assert User.objects.filter(email=donation4.unauthorized_email).exists()
+        # do not delete unconfirmed donations if the email is already verified (but not assiged to the second donation)
+        assert (
+            Donation.objects.filter(
+                unauthorized_email=donation4.unauthorized_email
+            ).count()
+            == 2
+        )
+
+        assert not EmailAddress.objects.filter(
+            email=donation1.unauthorized_email
+        ).exists()
+        assert not User.objects.filter(email=donation1.unauthorized_email).exists()
+
+        donation5 = DonationFactory(campaign=None)
+
+        assert {} == Donation.objects.delete_unconfirmed_donations()
+
+    with freeze_time(in3days):
+        del_objs = Donation.objects.delete_unconfirmed_donations(
+            donation_qs=Donation.objects.filter(donor__isnull=True)
+        )
+        assert sum(del_objs.values()) == 3
