@@ -86,7 +86,9 @@ class DonationManagers(models.Manager):
 
             if email_obj is None:
                 # If no email exists, something is wrong. Delete it.
-                _, deleted = self.model.objects.filter(email=email).delete()
+                _, deleted = self.model.objects.filter(
+                    unauthorized_email=email
+                ).delete()
                 deleted_objects.append(deleted)
 
             elif email_obj.verified:

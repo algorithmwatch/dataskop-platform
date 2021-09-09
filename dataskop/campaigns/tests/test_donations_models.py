@@ -176,7 +176,18 @@ def test_delete_unconfirmed_donations():
         assert {} == Donation.objects.delete_unconfirmed_donations()
 
     with freeze_time(in3days):
+        # donation where the email was already deleted
+        donation6 = DonationFactory(campaign=None)
+        EmailAddress.objects.filter(email=donation6.unauthorized_email).delete()
+
+        # donation without any email
+        donation7 = DonationFactory(campaign=None)
+        donation7.unauthorized_email = None
+        donation7.save()
+
         del_objs = Donation.objects.delete_unconfirmed_donations(
             donation_qs=Donation.objects.filter(donor__isnull=True)
         )
-        assert sum(del_objs.values()) == 3
+        assert (
+            sum(del_objs.values()) == 5
+        )  # (3 for donation5 + 1 for donation6 + 1 for donation7)
