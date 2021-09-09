@@ -72,6 +72,10 @@ class MagicLinkHandleConfirmationLink(View):
         specific email since we are verifying it.
         """
         email_str = request.GET.get("email")
+
+        if email_str is None:
+            raise PermissionDenied("Etwas stimmt nicht mit der E-Mail-Adresse.")
+
         ip_address = self.request.META.get("REMOTE_ADDR")
         user = get_user(request, scope=email_str + ip_address)
 
