@@ -85,7 +85,13 @@ def require_confirmation(func):
 
 @require_confirmation
 def delete_unconfirmed_donations(modeladmin, request, queryset):
-    return Donation.objects.delete_unconfirmed_donations()
+    del_objcts = Donation.objects.delete_unconfirmed_donations(donation_qs=queryset)
+
+    modeladmin.message_user(
+        request,
+        "deleted: " + str(del_objcts.items()),
+        messages.INFO,
+    )
 
 
 class UnconfirmedDonationsFilter(admin.SimpleListFilter):
