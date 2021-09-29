@@ -117,8 +117,7 @@ class DonationDetailView(View):
         view = DonationDetailViewGet.as_view()
         return view(request, *args, **kwargs)
 
-
-@method_decorator(staff_member_required, name="dispatch")
+@method_decorator(staff_member_required(login_url=reverse_lazy("magic_login")), name="dispatch")
 class DashboardView(TemplateView):
     template_name = "campaigns/dashboard.html"
 
