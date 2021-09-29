@@ -16,7 +16,7 @@ module.exports = {
     rules: [
       {
         test: /\.m?js$/i,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -38,11 +38,6 @@ module.exports = {
           },
           {
             loader: 'sass-loader',
-            // options: {
-            //     includePaths: [
-            //         path.resolve(__dirname, './node_modules')
-            //     ]
-            // }
           },
         ],
       },
@@ -66,8 +61,6 @@ module.exports = {
 
   devtool: isDev ? 'inline-source-map' : false,
 
-  // mode: process.env.NODE_ENV,
-
   devServer: {
     contentBase: path.resolve(__dirname, 'dataskop/static/'),
     writeToDisk: true,
@@ -75,6 +68,12 @@ module.exports = {
 
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
+    // Copy Font Awesome SVGs to Django's static dir to reference them individually.
+    // This is useful when icons are assigned to objects (created by users / admins).
+    // Since we only add a subset of all FA icons to the library (see main.js).
     new CopyPlugin({
       patterns: [
         {
@@ -96,25 +95,21 @@ module.exports = {
         },
       ],
     }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
   ],
 
   optimization: {
-    // minimize: !isDev,
     minimizer: [
-      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-      // `...`,
+      // minify js
       new TerserPlugin({
-        // avoid comments in build
+        // remove comments in build
         terserOptions: {
           format: {
             comments: false,
           },
         },
         extractComments: false,
-      }), // to minify js
+      }),
+      // minimize CSS
       new CssMinimizerPlugin(),
     ],
   },
