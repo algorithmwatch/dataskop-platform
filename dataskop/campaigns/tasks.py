@@ -1,7 +1,6 @@
 import logging
 
 from celery import shared_task
-from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from dataskop.campaigns.api.serializers import (
@@ -9,7 +8,7 @@ from dataskop.campaigns.api.serializers import (
     EventSerializer,
 )
 from dataskop.campaigns.models import Donation
-from dataskop.utils.email import send_anymail_email
+from dataskop.utils.email import send_admin_notifcation
 
 User = get_user_model()
 
@@ -49,8 +48,10 @@ def remind_user_registration():
 
 @shared_task
 def test_task_email():
-    send_anymail_email(
-        settings.ADMIN_NOTIFICATION_EMAIL,
+    """
+    A simple task to check if celery beat only runs once to prevent duplicate emails.
+    """
+    send_admin_notifcation(
+        "Test Task E-Mail",
         "this E-Mail should only be sent once.",
-        subject="Test Task E-Mail",
     )

@@ -3,8 +3,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.mail import message
-from django.db.models import Count, Q, Value
+from django.db.models import Count, Value
 from django.db.models.fields import CharField
 from django.db.models.functions.datetime import TruncDay
 from django.http.response import JsonResponse

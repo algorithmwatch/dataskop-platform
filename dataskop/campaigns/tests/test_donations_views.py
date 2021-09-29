@@ -8,7 +8,7 @@ from django.core import mail
 from django.urls.base import reverse
 from freezegun import freeze_time
 
-from dataskop.campaigns.models import Campaign, Donation
+from dataskop.campaigns.models import Donation
 from dataskop.campaigns.tasks import handle_donation, remind_user_registration
 from dataskop.campaigns.tests.factories import CampaignFactory, DonationFactory
 from dataskop.users.tests.factories import UserFactory

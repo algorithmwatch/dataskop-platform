@@ -42,10 +42,10 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
     success_url = "/"
 
     def form_valid(self, form):
-        self.send_email(form.cleaned_data)
+        self.send_magic_email(form.cleaned_data)
         return super().form_valid(form)
 
-    def send_email(self, cleaned_data):
+    def send_magic_email(self, cleaned_data):
         email = cleaned_data["email"]
         email_obj = EmailAddress.objects.filter(email=email).first()
 
