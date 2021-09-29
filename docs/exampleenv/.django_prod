@@ -2,8 +2,8 @@
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=
 DJANGO_ADMIN_URL=
-DJANGO_ALLOWED_HOSTS=.unding.de
-URL_ORIGIN=https://unding.de
+DJANGO_ALLOWED_HOSTS=.peter.de
+URL_ORIGIN=https://peter.de
 
 # Security
 # TIP: better off using DNS, however, redirect is OK too
@@ -18,8 +18,7 @@ WEB_CONCURRENCY=4
 # Redis
 REDIS_URL=redis://redis:6379/0
 
-# Celery
-# Flower
+# Celery + Flower
 CELERY_FLOWER_USER=
 CELERY_FLOWER_PASSWORD=
 
@@ -30,14 +29,11 @@ SENTRY_DSN=https://
 MAILJET_API_KEY=
 MAILJET_SECRET_KEY=
 
-DEFAULT_EMAIL_DOMAIN=undinge.net
-DEFAULT_FROM_EMAIL=noreplay@undinge.net
-EMAIL_SUBJECT_PREFIX=[Unding]
+DJANGO_DEFAULT_FROM_EMAIL=Peter <noreplay@xx.net>
+DJANGO_CONTACT_EMAIL=xx@xx.net
+DJANGO_ADMIN_NOTIFICATION_EMAILS=xx@xx.net,peter@lustig.de
 
-CONTACT_EMAIL=unding@algorithmwatch.org
-ADMIN_NOTIFICATION_EMAIL=unding@algorithmwatch.org
-
-
+# TODO
 S3_ACCESS=
 S3_SECRET=
 S3_ENDPOINT=

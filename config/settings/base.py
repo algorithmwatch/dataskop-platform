@@ -249,17 +249,24 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
-DEFAULT_EMAIL_DOMAIN = env("DEFAULT_EMAIL_DOMAIN", default="example.com")
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default=f"DataSkop <support@{DEFAULT_EMAIL_DOMAIN}>"
+    "DJANGO_DEFAULT_FROM_EMAIL", default="Example <info@example.com>"
 )
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[dataskop]")
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="")
+
+# used to e.g. notify about new cases. (Not sending emails to all admins to avoid sending too many emails)
+ADMIN_NOTIFICATION_EMAILS = env.list(
+    "DJANGO_ADMIN_NOTIFICATION_EMAILS", default="notification@example.com"
+)
+
+# used in e.g. email templates
+CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default="support@example.com")
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -371,17 +378,9 @@ REST_FRAMEWORK = {
     # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
+# site info
 # store this info here to avoid db lookups in 'sites'
-URL_ORIGIN = env.str("URL_ORIGIN", None)
-
-# used to e.g. notify about new cases. (Not sending emails to all admins to avoid sending too many emails)
-ADMIN_NOTIFICATION_EMAIL = env.str(
-    "ADMIN_NOTIFICATION_EMAIL", "notification@example.com"
-)
-
-# used in e.g. email templates
-# CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default=f"info@{DEFAULT_EMAIL_DOMAIN}")
-CONTACT_EMAIL = "support@dataskop.net"
+URL_ORIGIN = env("URL_ORIGIN", default=None)
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
