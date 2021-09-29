@@ -62,8 +62,12 @@ module.exports = {
   devtool: isDev ? 'inline-source-map' : false,
 
   devServer: {
-    contentBase: path.resolve(__dirname, 'dataskop/static/'),
-    writeToDisk: true,
+    static: {
+      directory: path.resolve(__dirname, 'dataskop/static/'),
+    },
+    devMiddleware: {
+      writeToDisk: true,
+    },
   },
 
   plugins: [
