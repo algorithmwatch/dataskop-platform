@@ -53,3 +53,11 @@ class ConfirmedRegistrationEmail(EmailNotification):
             "CONTACT_EMAIL": settings.CONTACT_EMAIL,
         }
         self.to_emails = [user.email]  # set list of emails to send to
+
+    @staticmethod
+    def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
+        return [User.objects.order_by("?")[0]]

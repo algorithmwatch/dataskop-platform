@@ -4,22 +4,24 @@ The Data Donation Platform (DDP) of [DataSkop](https://dataskop.net/), developed
 
 This project was initially bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django) but heavily modified.
 
-## Development setup
+## Development
+### Development setup
 
 Get the code and create .ENV files for local development.
 
 ```bash
 git clone git@github.com:algorithmwatch/dataskop-platform.git
 cd dataskop-platform
-mkdir -p .envs/.local/.django && mkdir -p .envs/.local/.postgres
+cp -r docs/exampleenv .envs
 ```
 
 Adjust `.envs/.local` to you needs.
 See [docs/exampleenv](./docs/exampleenv).
 
-### VS Code Development Container
+#### Development with VS Code Development Container
 
 We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
+As an alternative, see below on how to use Docker without VS Code.
 
 To start the development server: Open a new terminal and run `/start`.
 
@@ -27,11 +29,18 @@ To run management commands: Open a new terminal and run `./manage.py $command`, 
 
 If you add a new VS Code extension, you need to remove this named volume `docker volume rm dataskop_extensions`. ([See more](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
 
-As an alternative, see below on how to use Docker without VS Code.
+##### To get started
 
-### Docker-Compose
+```bash
+./manage migrate
+./manage createsuperuser
+./manage fakedonations
+/start
+```
 
-Install and use [Docker](https://docs.docker.com/get-docker/) with Docker-Compose. [More information.](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html)
+#### Development with Docker-Compose
+
+Install and use [Docker](https://docs.docker.com/get-docker/) with Docker-Compose. ([See more](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html))
 
 Start development setup:
 
@@ -39,34 +48,33 @@ Start development setup:
 ./local.sh
 ```
 
-Some important Django management comands:
+To to run management commands:
 
 ```bash
-./local.sh manage makemigrations
 ./local.sh manage migrate
-./local.sh manage createsuperuser
-./local.sh manage reset_db
-./local.sh manage shell_plus --print-sql
-./local.sh manage importsupport
-./local.sh manage fakedata
 ```
 
-### Test coverage
+### Testing
 
-To run the tests, check your test coverage, and generate an HTML
-coverage report:
+To run the tests, check your test coverage:
 
 ```bash
 coverage run -m pytest
-coverage html
-open htmlcov/index.html
+coverate report
 ```
 
-#### Running tests with py.test
+To only run tests:
 
 ```bash
 pytest
 ```
+### View sent E-Mail during development
+
+In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server with a web interface. View sent emails at: <http://localhost:8025>
+
+### Preview E-Mails
+
+We are using [Django-Herald](https://github.com/worthwhile/django-herald) to send emails. To preview the generated texts, go to: <http://localhost:8000/herald/>
 
 ### Celery
 
@@ -81,15 +89,12 @@ Please note: For Celery's import magic to work, it is important _where_
 the celery commands are run. If you are in the same folder with
 _manage.py_, you should be right.
 
-### Viewing sent E-Mail during development
-
-In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server with a web interface. View sent emails at: <http://localhost:8025>
 
 ## Production
 
 ### Settings via environment varibales
 
-See [docs/exampleenv/.django_prod](./docs/exampleenv/.django_prod).
+See [docs/exampleenv/.production/.django](./docs/exampleenv/.production/.django).
 Also the [cookiecutter docs](http://cookiecutter-django.readthedocs.io/en/latest/settings.html) may help for some settings.
 
 ### Deployment
