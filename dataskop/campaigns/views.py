@@ -14,9 +14,10 @@ from django.utils.text import slugify
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, UpdateView
 
-from dataskop.campaigns.models import Donation, Event
+from dataskop.campaigns.forms import DonorNotificationSettingForm
+from dataskop.campaigns.models import Donation, DonorNotificationSetting, Event
 
 User = get_user_model()
 
@@ -81,7 +82,7 @@ class DonationDetailDownloadView(DonationDetailViewGet):
         return response
 
 
-class DonationDownloadAll(LoginRequiredMixin, View):
+class DonationDownloadAllView(LoginRequiredMixin, View):
     def get(self, request):
         export = {}
         export["user"] = list(User.objects.filter(email=request.user.email).values())
@@ -116,7 +117,22 @@ class DonationDetailView(View):
         view = DonationDetailViewGet.as_view()
         return view(request, *args, **kwargs)
 
-@method_decorator(staff_member_required(login_url=reverse_lazy("magic_login")), name="dispatch")
+
+@method_decorator(never_cache, name="dispatch")
+class DonorNotificationSettingUpdateView(LoginRequiredMixin, UpdateView):
+    model = DonorNotificationSetting
+    form_class = DonorNotificationSettingForm
+    success_url = reverse_lazy("donor_notification_setting")
+
+    def get_object(self):
+        user = self.request.user
+        obj, created = DonorNotificationSetting.objects.get_or_create(user=user)
+        return obj
+
+
+@method_decorator(
+    staff_member_required(login_url=reverse_lazy("magic_login")), name="dispatch"
+)
 class DashboardView(TemplateView):
     template_name = "campaigns/dashboard.html"
 

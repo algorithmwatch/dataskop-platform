@@ -119,3 +119,13 @@ class Event(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.created} / {self.message} / {self.ip_address}"
+
+
+class DonorNotificationSetting(TimeStampedModel):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+    )
+    disable_all = models.BooleanField(default=False)
+    # user's can manually opt-out of notifications for a specific campaign
+    disabled_campaigns = models.ManyToManyField("Campaign", blank=True)

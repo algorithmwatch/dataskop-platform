@@ -14,11 +14,15 @@
 <div class="pt-5">
   <ul class="space-y-2">
         <li><a href="{% url 'my_donations_list' %}" class="underline hover:no-underline">Meine Spenden</a></li>
+        <li><a href="{% url 'donor_notification_setting' %}" class="underline hover:no-underline">Benachrichtigungen einstellen</a></li>
+  </ul>
+  <ul class="space-y-2 mt-10">
         <li><a download class="hover:no-underline underline" href="{% url 'download_all' %}">Alle Daten exportieren</a></li>
         <li><a class="hover:no-underline underline text-red-700" href="{% url 'account_delete' %}">Alle Daten löschen</a></li>
-      </ul>
-    </div>
-  </div>
+  </ul>
+</div>
+
+</div>
 
 
 {% endblock %}

@@ -6,7 +6,7 @@ from django.utils.translation import ngettext
 from guardian.admin import GuardedModelAdmin
 from jsoneditor.forms import JSONEditor
 
-from .models import Campaign, Donation, Event, Provider
+from .models import Campaign, Donation, DonorNotificationSetting, Event, Provider
 
 admin.site.register(Provider)
 
@@ -25,6 +25,17 @@ class CampaignAdmin(GuardedModelAdmin):
 
 
 admin.site.register(Campaign, CampaignAdmin)
+
+
+class DonorNotificationSettingAdmin(GuardedModelAdmin):
+    list_display = (
+        "user",
+        "disable_all",
+    )
+    search_fields = ("user__first_name", "user__last_name", "user__email")
+
+
+admin.site.register(DonorNotificationSetting, DonorNotificationSettingAdmin)
 
 
 class EventAdmin(GuardedModelAdmin):
