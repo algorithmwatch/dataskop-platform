@@ -14,8 +14,8 @@ from model_utils.fields import StatusField
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
-from dataskop.campaigns.managers import DonationManagers
 from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
+from dataskop.campaigns.managers import DonationManager
 from dataskop.utils.email import send_admin_notifcation
 
 User = get_user_model()
@@ -66,7 +66,7 @@ class Donation(LifecycleModel, TimeStampedModel):
     # store ip address only until the user is verified
     ip_address = models.GenericIPAddressField(null=True, blank=True)
 
-    objects = DonationManagers()
+    objects = DonationManager()
 
     def __str__(self) -> str:
         return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"

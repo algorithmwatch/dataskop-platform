@@ -25,7 +25,7 @@ def test_confirm_all(client, django_user_model):
 
     assert django_user_model.objects.count() == 3
 
-    assert Donation.objects.unconfirmed_donations_by_user(user).count() == 1
+    assert Donation.objects.unconfirmed_by_user(user).count() == 1
 
     client.force_login(user)
 
@@ -33,7 +33,7 @@ def test_confirm_all(client, django_user_model):
 
     assert response.status_code == 302
 
-    assert Donation.objects.unconfirmed_donations_by_user(user).count() == 0
+    assert Donation.objects.unconfirmed_by_user(user).count() == 0
 
 
 def test_auto_confirm(client):
@@ -60,23 +60,13 @@ def test_auto_confirm(client):
     user = EmailAddress.objects.filter(email=some_email).first().user
 
     assert Donation.objects.count() > 0
-    assert (
-        Donation.objects.unconfirmed_donations_by_user(
-            user, verified_user=False
-        ).count()
-        == 1
-    )
+    assert Donation.objects.unconfirmed_by_user(user, verified_user=False).count() == 1
 
     # 'click' the generated link
     magic_confirm_link = re.findall(r"(http\S*magic\S*)\s", mail.outbox[0].body)[0]
     client.get(magic_confirm_link, follow=True, REMOTE_ADDR="127.0.0.1")
 
-    assert (
-        Donation.objects.unconfirmed_donations_by_user(
-            user, verified_user=False
-        ).count()
-        == 0
-    )
+    assert Donation.objects.unconfirmed_by_user(user, verified_user=False).count() == 0
 
 
 def test_reminder_emails(client):

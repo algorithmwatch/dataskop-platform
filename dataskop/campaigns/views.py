@@ -41,9 +41,9 @@ class DonationListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context[
-            "num_unconfirmed_donations"
-        ] = Donation.objects.unconfirmed_donations_by_user(self.request.user).count()
+        context["num_unconfirmed_donations"] = Donation.objects.unconfirmed_by_user(
+            self.request.user
+        ).count()
         return context
 
 
@@ -53,15 +53,13 @@ class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
     template_name = "campaigns/donation_unconfirmed_list.html"
 
     def get_queryset(self):
-        return Donation.objects.unconfirmed_donations_by_user(self.request.user)
+        return Donation.objects.unconfirmed_by_user(self.request.user)
 
 
 @method_decorator(never_cache, name="dispatch")
 class DonationUnconfirmedView(LoginRequiredMixin, View):
     def post(self, request):
-        Donation.objects.unconfirmed_donations_by_user(request.user).update(
-            donor=request.user
-        )
+        Donation.objects.unconfirmed_by_user(request.user).update(donor=request.user)
         return redirect("my_donations_unconfirmed")
 
     def get(self, request, *args, **kwargs):

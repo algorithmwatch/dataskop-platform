@@ -11,16 +11,24 @@ from dataskop.campaigns.notifications import ReminderEmail
 User = get_user_model()
 
 
-class DonationManagers(models.Manager):
-    def unconfirmed_donations_by_user(self, user, verified_user=True):
-        assert User.objects.filter(pk=user.pk).exists()
+class DonationQuerySet(models.QuerySet):
+    def confirmed(self):
+        return self.filter(donor__isnull=False)
 
+    def unconfirmed(self):
+        return self.filter(
+            donor__isnull=True,
+            unauthorized_email__isnull=False,
+        )
+
+    def unconfirmed_by_user(self, user, verified_user=True):
         user_emails = EmailAddress.objects.filter(
             user=user, verified=verified_user
         ).values_list("email")
-        qs = self.filter(unauthorized_email__in=user_emails, donor__isnull=True)
-        return qs
+        return self.unconfirmed().filter(unauthorized_email__in=user_emails)
 
+
+class BaseDonationManager(models.Manager):
     def remind_user_registration(self, donation_qs=None, max_reminders_sent=10):
         total_reminder_sent = 0
 
@@ -73,10 +81,7 @@ class DonationManagers(models.Manager):
         deleted_objects.append(deleted)
 
         # 2. Find unverified donations
-        qs = (donation_qs or self.model.objects).filter(
-            donor__isnull=True,
-            unauthorized_email__isnull=False,
-        )
+        qs = (donation_qs or self.model.objects).unconfirmed()
 
         # Only select those donations that can safely be deleted. Do not delete unconfirmed donations that:
         # - are attached to an email address that is assigned to a verified user
@@ -124,3 +129,6 @@ class DonationManagers(models.Manager):
                 total_deleted[k] += v
 
         return total_deleted
+
+
+DonationManager = BaseDonationManager.from_queryset(DonationQuerySet)
