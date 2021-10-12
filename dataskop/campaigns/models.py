@@ -4,6 +4,7 @@ from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Q
 from django.urls.base import reverse
 from django.utils import timezone
 from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
@@ -14,8 +15,11 @@ from model_utils.fields import StatusField
 from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
-from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
 from dataskop.campaigns.managers import DonationManager
+from dataskop.campaigns.notifications import (
+    DonorNotificationEmail,
+    UnauthorizedDonationShouldLoginEmail,
+)
 from dataskop.utils.email import send_admin_notifcation
 
 User = get_user_model()
@@ -129,3 +133,46 @@ class DonorNotificationSetting(TimeStampedModel):
     disable_all = models.BooleanField(default=False)
     # user's can manually opt-out of notifications for a specific campaign
     disabled_campaigns = models.ManyToManyField("Campaign", blank=True)
+
+
+class DonorNotification(TimeStampedModel):
+    sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    draft = models.BooleanField(default=True)
+    subject = models.CharField(max_length=255)
+    text = models.TextField()
+    campaign = models.ForeignKey(
+        "Campaign", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+    def __str__(self) -> str:
+        return f"{self.subject[:20]} / {self.campaign} / {self.sent_by}"
+
+    def send_notification(self):
+        users = User.objects.filter(
+            pk__in=(
+                self.campaign.donation_set.confirmed().values_list("donor").distinct()
+            )
+        )
+
+        exclude_users = DonorNotificationSetting.objects.filter(
+            Q(disable_all=True) | Q(disabled_campaigns=self.campaign)
+        ).values_list("user")
+
+        for u in users.exclude(pk__in=exclude_users).select_related():
+            DonorNotificationEmail(u, self.subject, self.text, self.campaign.pk).send(
+                user=u
+            )
+
+    def save(self, *args, **kwargs):
+        super(DonorNotification, self).save(*args, **kwargs)
+
+        if self.sent_by is None:
+            return
+
+        if self.draft:
+            user = self.sent_by
+            DonorNotificationEmail(
+                user, "DRAFT: " + self.subject, self.text, self.campaign.pk
+            ).send(user=user)
+        else:
+            self.send_notification()

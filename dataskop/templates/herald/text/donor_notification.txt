@@ -1,0 +1,11 @@
+{% autoescape off %}Liebe/r Datenspender/in,
+
+{{notification_text}}
+
+Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
+
+Um Benachrichtigungen abzubestellen, bitte auf folgenden Link klicken: {{disable_url}}
+
+Mit freundlichen Grüßen
+
+Das DataSkop-Team{% endautoescape %}

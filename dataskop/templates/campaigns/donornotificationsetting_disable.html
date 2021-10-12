@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load meta_tags %}
+
+{% block meta_tags %}
+  {% meta_tags title='Benachrichtigungen abbestellen' %}
+{% endblock %}
+
+{% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
+
+{% block content %}
+  <div class="mt-8 lg:mt-10">
+    {% block inner %}
+      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Benachrichtigungen für "{{campaign_title}}" abbestellen</h1>
+      <form method="post">{% csrf_token %}
+        {{ form.disable.as_hidden }}
+        <div class="pt-2.5">
+          <button class="btn btn--regular btn--primary" type="submit">Speichern</button>
+        </div>
+      </form>
+    {% endblock %}
+  </div>
+{% endblock %}

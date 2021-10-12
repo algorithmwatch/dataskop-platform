@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Value
 from django.db.models.fields import CharField
 from django.db.models.functions.datetime import TruncDay
@@ -14,10 +17,19 @@ from django.utils.text import slugify
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import DeleteView, UpdateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
+from sesame.utils import get_user
 
-from dataskop.campaigns.forms import DonorNotificationSettingForm
-from dataskop.campaigns.models import Donation, DonorNotificationSetting, Event
+from dataskop.campaigns.forms import (
+    DonorNotificationDisableForm,
+    DonorNotificationSettingForm,
+)
+from dataskop.campaigns.models import (
+    Campaign,
+    Donation,
+    DonorNotificationSetting,
+    Event,
+)
 
 User = get_user_model()
 
@@ -126,6 +138,58 @@ class DonorNotificationSettingUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         obj, created = DonorNotificationSetting.objects.get_or_create(user=user)
         return obj
+
+
+class DonorNotificationDisableView(FormView):
+    template_name = "campaigns/donornotificationsetting_disable.html"
+    form_class = DonorNotificationDisableForm
+    success_url = reverse_lazy("home")
+    success_message = "Die Einstellung wurde erfolgreich übernommen."
+
+    def get_user_campaing(self, with_user=False):
+        """
+        Weird handling of the `request` / `with_user`, FIXME.
+        """
+        campaign_pk = self.request.GET.get("c")
+        if campaign_pk is None:
+            raise PermissionDenied()
+
+        campaign = Campaign.objects.filter(pk=int(campaign_pk)).first()
+        if campaign is None:
+            raise PermissionDenied()
+
+        user = (
+            get_user(
+                self.request,
+                scope=f"disable-notification-{campaign_pk}",
+                max_age=timedelta(days=90),
+            )
+            if with_user
+            else None
+        )
+        return user, campaign
+
+    def get_context_data(self, **kwargs):
+        context = super(DonorNotificationDisableView, self).get_context_data(**kwargs)
+        _, campaign = self.get_user_campaing()
+        context["campaign_title"] = campaign and campaign.title
+        return context
+
+    def form_valid(self, form):
+        user, campaign = self.get_user_campaing(True)
+
+        if user is None:
+            messages.error(self.request, "Es gab ein Fehler, bitte nochmals einloggen.")
+            # Something went wrong (maybe Redis was cleared?) so redirect to proper settings page.
+            return redirect("donor_notification_setting")
+
+        settings, _ = DonorNotificationSetting.objects.get_or_create(user=user)
+        if form.cleaned_data["disable"]:
+            settings.disabled_campaigns.add(campaign)
+        else:
+            settings.disabled_campaigns.remove(campaign)
+
+        return super().form_valid(form)
 
 
 @method_decorator(

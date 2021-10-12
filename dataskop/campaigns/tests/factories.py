@@ -7,7 +7,14 @@ from allauth.account.models import EmailAddress
 from factory import Faker
 from factory.django import DjangoModelFactory
 
-from dataskop.campaigns.models import Campaign, Donation, Provider, StatusOptions
+from dataskop.campaigns.models import (
+    Campaign,
+    Donation,
+    DonorNotification,
+    DonorNotificationSetting,
+    Provider,
+    StatusOptions,
+)
 from dataskop.users.tests.factories import UserFactory
 
 
@@ -58,3 +65,29 @@ class DonationFactory(DjangoModelFactory):
                 email_obj.save()
                 obj.donor = email_obj.user
                 obj.save()
+
+
+class DonorNotificationSettingFactory(DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    disable_all = False
+
+    class Meta:
+        model = DonorNotificationSetting
+
+    @factory.post_generation
+    def disabled_campaigns(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for c in extracted:
+                self.disabled_campaigns.add(c)
+
+
+class DonorNotificationFactory(DjangoModelFactory):
+    sent_by = factory.SubFactory(UserFactory)
+    subject = Faker("text", max_nb_chars=100)
+    text = Faker("text")
+
+    class Meta:
+        model = DonorNotification

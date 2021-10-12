@@ -8,6 +8,7 @@ from dataskop.campaigns.views import (
     DonationDownloadAllView,
     DonationListView,
     DonationUnconfirmedView,
+    DonorNotificationDisableView,
     DonorNotificationSettingUpdateView,
 )
 
@@ -42,6 +43,11 @@ urlpatterns = [
         "benachrichtigungen/",
         DonorNotificationSettingUpdateView.as_view(),
         name="donor_notification_setting",
+    ),
+    path(
+        "benachrichtigungen-abbestellen/",
+        DonorNotificationDisableView.as_view(),
+        name="donor_notification_disable",
     ),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
 ]

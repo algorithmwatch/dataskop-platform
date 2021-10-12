@@ -3,14 +3,19 @@ import re
 
 import pytest
 from allauth.account.models import EmailAddress
+from django.conf import Settings
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls.base import reverse
 from freezegun import freeze_time
 
-from dataskop.campaigns.models import Donation
+from dataskop.campaigns.models import Donation, DonorNotificationSetting
 from dataskop.campaigns.tasks import handle_donation, remind_user_registration
-from dataskop.campaigns.tests.factories import CampaignFactory, DonationFactory
+from dataskop.campaigns.tests.factories import (
+    CampaignFactory,
+    DonationFactory,
+    DonorNotificationFactory,
+)
 from dataskop.users.tests.factories import UserFactory
 
 User = get_user_model()
@@ -139,3 +144,37 @@ def test_reminder_emails(client):
         sent_emails = remind_user_registration()
 
         assert sent_emails == 0
+
+
+def test_donor_notification_views(client):
+    today = datetime.date.today()
+    in1month = today + datetime.timedelta(days=30)
+
+    cam = CampaignFactory()
+    d1 = DonationFactory(email__verified=True, campaign=cam)
+    donor_noti_1 = DonorNotificationFactory(campaign=cam, subject="Test 1", draft=False)
+
+    disable_notification_link = re.findall(
+        r"(http\S*abbestellen\S*)\s", mail.outbox[-1].body
+    )[0]
+
+    assert len([m for m in mail.outbox if m.subject == donor_noti_1.subject]) == 1
+
+    with freeze_time(in1month):
+        response1 = client.get(
+            disable_notification_link, follow=True, REMOTE_ADDR="127.0.0.1"
+        )
+
+        response2 = client.post(
+            disable_notification_link,
+            {"disable": True},
+            follow=True,
+            REMOTE_ADDR="127.0.0.1",
+        )
+
+        assert response2.status_code == 200
+
+        donor_noti_2 = DonorNotificationFactory(
+            campaign=cam, subject="Test 2", draft=False
+        )
+        assert len([m for m in mail.outbox if m.subject == donor_noti_2.subject]) == 0

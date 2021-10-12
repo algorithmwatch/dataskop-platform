@@ -28,3 +28,7 @@ class DonorNotificationSettingForm(forms.ModelForm):
         self.fields["disabled_campaigns"].queryset = Campaign.objects.filter(
             pk__in=participated_campaigns
         )
+
+
+class DonorNotificationDisableForm(forms.Form):
+    disable = forms.BooleanField(initial=True)

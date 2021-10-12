@@ -9,7 +9,12 @@ from freezegun.api import freeze_time
 from dataskop.campaigns.models import Donation
 from dataskop.campaigns.tasks import remind_user_registration
 
-from .factories import CampaignFactory, DonationFactory
+from .factories import (
+    CampaignFactory,
+    DonationFactory,
+    DonorNotificationFactory,
+    DonorNotificationSettingFactory,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -191,3 +196,43 @@ def test_delete_unconfirmed_donations():
         assert (
             sum(del_objs.values()) == 5
         )  # (3 for donation5 + 1 for donation6 + 1 for donation7)
+
+
+def test_donor_notification():
+    cam = CampaignFactory()
+    d1 = DonationFactory(email__verified=True, campaign=cam)
+    d2 = DonationFactory(email__verified=True, campaign=cam)
+    # re-use exiting user for d3
+    d3 = DonationFactory(
+        email__verified=True, campaign=cam, unauthorized_email=d2.donor.email
+    )
+
+    d4_disable_all = DonationFactory(email__verified=True, campaign=cam)
+    d5_disabled_noti = DonationFactory(email__verified=True, campaign=cam)
+    d6_unrelated = DonationFactory(email__verified=True)
+
+    donor_noti_1 = DonorNotificationFactory(campaign=cam, subject="Test 1")
+
+    assert len([m for m in mail.outbox if "DRAFT" in m.subject]) == 1
+
+    donor_noti_1.draft = False
+    donor_noti_1.save()
+
+    assert len([m for m in mail.outbox if m.subject == donor_noti_1.subject]) == 4
+
+    dn_settings_1 = DonorNotificationSettingFactory(
+        user=d4_disable_all.donor, disable_all=True
+    )
+    dn_settings_2 = DonorNotificationSettingFactory(
+        user=d5_disabled_noti.donor,
+        disable_all=False,
+        disabled_campaigns=[cam, CampaignFactory()],
+    )
+
+    donor_noti_2 = DonorNotificationFactory(campaign=cam, subject="Test 2", draft=False)
+    assert len([m for m in mail.outbox if m.subject == donor_noti_2.subject]) == 2
+
+    dn_settings_2.disabled_campaigns.remove(cam)
+
+    donor_noti_3 = DonorNotificationFactory(campaign=cam, subject="Test 3", draft=False)
+    assert len([m for m in mail.outbox if m.subject == donor_noti_3.subject]) == 3
