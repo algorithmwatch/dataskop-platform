@@ -40,7 +40,7 @@ djangorestframework==3.12.4  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.10.0  # https://github.com/adamchainz/django-cors-headers
 
 # media
-django-storages[boto3]==1.11.1  # https://github.com/jschneier/django-storages
+django-storages[boto3]==1.12.2  # https://github.com/jschneier/django-storages
 pillow==8.3.2  # https://github.com/python-pillow/Pillow
 
 # emails
