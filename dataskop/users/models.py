@@ -35,5 +35,4 @@ class User(AbstractUser):
         return MagicLoginEmail(self, email, ip_address).send(user=self)
 
 
-
 User._meta.get_field("email")._unique = True

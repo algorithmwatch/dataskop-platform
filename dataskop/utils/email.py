@@ -15,6 +15,8 @@ def send_admin_notifcation(subject, text):
 
     for to_email in to_emails:
         if to_email in status.recipients:
-            esp_message_status.append(status.recipients[to_email].status)  # e.g., 'queued'
+            esp_message_status.append(
+                status.recipients[to_email].status
+            )  # e.g., 'queued'
 
     return esp_message_id, esp_message_status

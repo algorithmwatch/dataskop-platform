@@ -7,19 +7,19 @@ import dataskop.users.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0006_auto_20210121_1829'),
+        ("users", "0006_auto_20210121_1829"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
+            name="user",
             managers=[
-                ('objects', dataskop.users.models.CustomUserManager()),
+                ("objects", dataskop.users.models.CustomUserManager()),
             ],
         ),
         migrations.AlterField(
-            model_name='user',
-            name='username',
+            model_name="user",
+            name="username",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

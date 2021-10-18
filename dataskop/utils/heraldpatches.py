@@ -5,7 +5,6 @@ from email.mime.base import MIMEBase
 
 import six
 from anymail.message import AnymailMessage
-# from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
 
 EmailMultiAlternatives = AnymailMessage

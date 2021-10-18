@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('campaigns', '0003_auto_20210604_1035'),
+        ("campaigns", "0003_auto_20210604_1035"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='campaign',
-            name='image',
-            field=models.ImageField(blank=True, null=True, upload_to='campaigns'),
+            model_name="campaign",
+            name="image",
+            field=models.ImageField(blank=True, null=True, upload_to="campaigns"),
         ),
         migrations.AddField(
-            model_name='historicalcampaign',
-            name='image',
+            model_name="historicalcampaign",
+            name="image",
             field=models.TextField(blank=True, max_length=100, null=True),
         ),
     ]
