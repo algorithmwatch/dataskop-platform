@@ -3,9 +3,8 @@
   // Python
   "python.pythonPath": "/usr/local/bin/python",
   "python.formatting.provider": "black",
-  "python.linting.enabled": true,
+  "python.linting.enabled": false,
   "python.languageServer": "Pylance",
-  "python.linting.pylintEnabled": true,
   // JS
   "[javascript]": {
     "editor.codeActionsOnSave": {
@@ -25,7 +24,4 @@
   "less.validate": false,
   "scss.validate": false,
   "stylelint.enable": true,
-  "python.linting.pylintArgs": [
-    "--django-settings-module=dataskop.settings",
-  ]
 }

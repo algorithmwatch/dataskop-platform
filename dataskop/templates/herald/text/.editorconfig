@@ -1,0 +1,3 @@
+# Don't add empty lines to emails
+[*.txt]
+insert_final_newline = false
