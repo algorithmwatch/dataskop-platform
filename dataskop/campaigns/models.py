@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.urls.base import reverse
 from django.utils import timezone
 from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
-from django_lifecycle.hooks import BEFORE_DELETE
+from django_lifecycle.hooks import AFTER_SAVE, AFTER_UPDATE, BEFORE_DELETE
 from herald.models import SentNotification
 from model_utils import Choices
 from model_utils.fields import StatusField
@@ -135,13 +135,21 @@ class DonorNotificationSetting(TimeStampedModel):
     disabled_campaigns = models.ManyToManyField("Campaign", blank=True)
 
 
-class DonorNotification(TimeStampedModel):
-    sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    draft = models.BooleanField(default=True)
+class DonorNotification(LifecycleModel, TimeStampedModel):
+    # NB: `sent_by` and `campaign` can't be blank in the admin form
+    sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    draft = models.BooleanField(
+        default=True,
+        help_text="If you set draft to false, the email will get sent to the chosen campaign (and can't be changed anymore).",
+    )
     subject = models.CharField(max_length=255)
     text = models.TextField()
     campaign = models.ForeignKey(
-        "Campaign", on_delete=models.SET_NULL, null=True, blank=True
+        "Campaign",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False,
+        help_text="Which campaign should receive this message?",
     )
 
     def __str__(self) -> str:
@@ -163,16 +171,26 @@ class DonorNotification(TimeStampedModel):
                 user=u
             )
 
-    def save(self, *args, **kwargs):
-        super(DonorNotification, self).save(*args, **kwargs)
+    @hook(AFTER_SAVE, when="draft", is_now=True)
+    def on_draft_update(self):
+        """
+        Send a draft email to the admin who is editing the notification.
+        """
+        user = self.sent_by
+        DonorNotificationEmail(
+            user, "DRAFT: " + self.subject, self.text, self.campaign.pk
+        ).send(user=user)
 
-        if self.sent_by is None:
-            return
+    @hook(AFTER_CREATE, when="draft", is_now=False)
+    def on_create_publish(self):
+        """
+        Send real emails to the campaign.
+        """
+        self.send_notification()
 
-        if self.draft:
-            user = self.sent_by
-            DonorNotificationEmail(
-                user, "DRAFT: " + self.subject, self.text, self.campaign.pk
-            ).send(user=user)
-        else:
-            self.send_notification()
+    @hook(AFTER_UPDATE, when="draft", was=True, is_now=False)
+    def on_update_publish(self):
+        """
+        Send real emails to the campaign.
+        """
+        self.send_notification()

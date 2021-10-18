@@ -198,7 +198,7 @@ def test_delete_unconfirmed_donations():
         )  # (3 for donation5 + 1 for donation6 + 1 for donation7)
 
 
-def test_donor_notification():
+def test_donor_notification_models():
     cam = CampaignFactory()
     d1 = DonationFactory(email__verified=True, campaign=cam)
     d2 = DonationFactory(email__verified=True, campaign=cam)

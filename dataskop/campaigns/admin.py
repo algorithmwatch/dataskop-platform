@@ -55,8 +55,19 @@ class DonorNotificationAdmin(GuardedModelAdmin):
     )
     search_fields = ("subject", "text")
 
+    def has_change_permission(self, request, obj=None):
+        """
+        The notification can't be updated if the emails were already sent.
+        """
+        return obj and obj.draft
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(DonorNotificationAdmin, self).get_form(request, obj, **kwargs)
+
+        # If the mail was sent, don't manipulate the form.
+        if obj and not obj.draft:
+            return form
+
         sent_by_field = form.base_fields["sent_by"]
         campaign_field = form.base_fields["campaign"]
         sent_by_field.initial = request.user
@@ -65,11 +76,6 @@ class DonorNotificationAdmin(GuardedModelAdmin):
             f.widget.can_add_related = False
             f.widget.can_change_related = False
             f.widget.can_delete_related = False
-
-        # the message was already sent
-        if obj and not obj.draft:
-            form.base_fields["draft"].disabled = True
-            form.base_fields["draft"].help_text = "This message was already sent."
 
         return form
 
