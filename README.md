@@ -60,7 +60,7 @@ To run the tests, check your test coverage:
 
 ```bash
 coverage run -m pytest
-coverate report
+coverage report
 ```
 
 To only run tests:
