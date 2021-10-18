@@ -17,7 +17,7 @@ django-environ==0.8.0  # https://github.com/joke2k/django-environ
 django-filter==21.1  # https://github.com/carltongibson/django-filter
 django-simple-history==3.0.0  # https://github.com/jazzband/django-simple-history
 django-taggit==1.5.1  # https://github.com/jazzband/django-taggit
-django-model-utils==4.1.1  # https://github.com/jazzband/django-model-utils
+django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==0.9.1  # https://github.com/rsinger86/django-lifecycle/
 
