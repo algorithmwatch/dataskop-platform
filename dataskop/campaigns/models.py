@@ -9,8 +9,14 @@ from django.db import models
 from django.db.models import Q
 from django.urls.base import reverse
 from django.utils import timezone
-from django_lifecycle import AFTER_CREATE, LifecycleModel, hook
-from django_lifecycle.hooks import AFTER_SAVE, AFTER_UPDATE, BEFORE_DELETE
+from django_lifecycle import (
+    AFTER_CREATE,
+    LifecycleModel,
+    hook,
+    AFTER_SAVE,
+    AFTER_UPDATE,
+    BEFORE_DELETE,
+)
 from herald.models import SentNotification
 from model_utils import Choices
 from model_utils.fields import StatusField

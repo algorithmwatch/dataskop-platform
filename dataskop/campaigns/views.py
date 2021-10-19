@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Value
 from django.db.models.fields import CharField
@@ -140,7 +141,7 @@ class DonorNotificationSettingUpdateView(LoginRequiredMixin, UpdateView):
         return obj
 
 
-class DonorNotificationDisableView(FormView):
+class DonorNotificationDisableView(SuccessMessageMixin, FormView):
     template_name = "campaigns/donornotificationsetting_disable.html"
     form_class = DonorNotificationDisableForm
     success_url = reverse_lazy("home")
