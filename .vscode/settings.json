@@ -1,4 +1,5 @@
 {
+  "terminal.integrated.shell.linux": "/bin/bash",
   "editor.formatOnSave": true,
   // Python
   "python.pythonPath": "/usr/local/bin/python",
@@ -24,4 +25,15 @@
   "less.validate": false,
   "scss.validate": false,
   "stylelint.enable": true,
+  // django extension
+  "files.associations": {
+    "**/*.html": "html",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+  // tailwind
+  "tailwindCSS.includeLanguages": {
+    "django-html": "html"
+  }
 }
