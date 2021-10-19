@@ -1,7 +1,9 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
+import time
 
 from allauth.account.models import EmailAddress
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from herald.models import SentNotification
@@ -62,6 +64,7 @@ class BaseDonationManager(models.Manager):
             # give up after some tries
             if num_sent < max_reminders_sent:
                 ReminderEmail(user).send(user=user)
+                time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
                 total_reminder_sent += 1
 
         return total_reminder_sent

@@ -1,7 +1,9 @@
+import time
 from datetime import timedelta
 
 from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q
@@ -170,6 +172,7 @@ class DonorNotification(LifecycleModel, TimeStampedModel):
             DonorNotificationEmail(u, self.subject, self.text, self.campaign.pk).send(
                 user=u
             )
+            time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
 
     @hook(AFTER_SAVE, when="draft", is_now=True)
     def on_draft_update(self):
