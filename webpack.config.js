@@ -68,6 +68,8 @@ module.exports = {
     devMiddleware: {
       writeToDisk: true,
     },
+    // Wtch Django-html files for change to reload the site.
+    watchFiles: ['**/*.html'],
   },
 
   plugins: [

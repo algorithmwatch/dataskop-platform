@@ -33,6 +33,7 @@
     "foxundermoon.shell-format",
     "ms-azuretools.vscode-docker"
   ],
-  // set ENV variables such as DATABASE_URL
-  "postCreateCommand": "echo \"source /entrypoint\" >> ~/.bashrc",
+  // `/entrypoint` initializes ENV variables such as DATABASE_URL, source it for all interactive sessions.
+  // Also start the django + webpack dev servers on launching terminals.
+  "postCreateCommand": "echo \"source /entrypoint && /start\" >> ~/.bashrc",
 }

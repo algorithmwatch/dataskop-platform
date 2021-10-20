@@ -21,7 +21,8 @@ services:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - '8000:8000'
+      - '8000:8000' # django
+      - '8080:8080' # webpack dev live reload
     command: /start
     restart: unless-stopped
 
