@@ -1,6 +1,5 @@
 version: 2
 updates:
-  # Update Github actions in workflows
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -17,4 +16,15 @@ updates:
         update-types: ["version-update:semver-major"]
         # flower depends on celery 5
       - dependency-name: "flower"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "production"
+      - dependency-name: "webpack*"
+    ignore:
+      - dependency-name: "*"
         update-types: ["version-update:semver-major"]
