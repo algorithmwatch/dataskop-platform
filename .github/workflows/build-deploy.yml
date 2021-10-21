@@ -1,4 +1,4 @@
-name: stage
+name: Build `deploy` release
 
 # Enable Buildkit and let compose use it to speed up image building
 env:
@@ -23,7 +23,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Checkout Code Repository
+      - name: Checkout code repository
         uses: actions/checkout@v2.3.4
 
       - name: Build the image
@@ -49,7 +49,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Upload Tarball
+      - name: Upload tarball to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -58,13 +58,3 @@ jobs:
           asset_path: ./app-${{ github.sha }}.tar.gz
           asset_name: dataskop-platform.tar.gz
           asset_content_type: application/gzip
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dataskop-platform-${{ github.sha }}
-          path: app-${{ github.sha }}.tar.gz
-
-      - name: Trigger Deploy to Staging
-        uses: joelwmale/webhook-action@master
-        with:
-          url: ${{ secrets.STAGING_DEPLOY_WEBHOOK }}

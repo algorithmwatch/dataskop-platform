@@ -1,4 +1,4 @@
-name: test
+name: CI tests
 
 # Enable Buildkit and let compose use it to speed up image building.
 # Not working with the caching right now. Thus, it's disabled. (https://github.com/satackey/action-docker-layer-caching/issues/117)
