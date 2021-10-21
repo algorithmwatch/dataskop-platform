@@ -1,9 +1,10 @@
 name: test
 
-# Enable Buildkit and let compose use it to speed up image building
-env:
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
+# Enable Buildkit and let compose use it to speed up image building.
+# Not working with the caching right now. Thus, it's disabled. (https://github.com/satackey/action-docker-layer-caching/issues/117)
+# env:
+#   DOCKER_BUILDKIT: 1
+#   COMPOSE_DOCKER_CLI_BUILD: 1
 
 on:
   workflow_dispatch:
@@ -22,20 +23,18 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v2.3.4
 
-      - name: setup ENV files
+      - name: Setup ENV files
         run: cp -r docs/exampleenv .envs
 
-      - name: Build the Stack
-        run: docker-compose -f docker-compose.local.yml build
+      - name: Pull depending docker images
+        run: docker-compose -f docker-compose.local.yml pull postgres redis
 
-      - name: Make DB Migrations
-        run: docker-compose -f docker-compose.local.yml run --rm django python manage.py migrate
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 
-      - name: Run the Stack
-        run: docker-compose -f docker-compose.local.yml up -d
+      - name: Build the stack
+        run: docker-compose -f docker-compose.local.yml build django
 
-      - name: Run Django Tests
-        run: docker-compose -f docker-compose.local.yml run --rm django pytest
-
-      - name: Tear down the Stack
-        run: docker-compose -f docker-compose.local.yml down
+      - name: Migrate and run tests
+        run: docker-compose -f docker-compose.local.yml run django bash -c "./manage.py migrate && pytest"

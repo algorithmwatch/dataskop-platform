@@ -44,7 +44,7 @@ RUN chmod +x /start-flower
 
 WORKDIR /app
 
-COPY ./package.json ./package-lock.json .
+COPY ./package.json ./package-lock.json ./
 RUN npm install
 ENV PATH ./node_modules/.bin/:$PATH
 

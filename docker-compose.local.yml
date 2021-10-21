@@ -12,11 +12,10 @@ services:
     image: dataskop_local_django
     depends_on:
       - postgres
-      - mailhog
+      - redis
     volumes:
       - .:/app:z
       - local_media_files:/media:z
-
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -33,13 +32,13 @@ services:
     env_file:
       - ./.envs/.local/.postgres
 
+  redis:
+    image: redis:5.0
+
   mailhog:
     image: mailhog/mailhog:v1.0.0
     ports:
       - '8025:8025'
-
-  redis:
-    image: redis:5.0
 
   celeryworker:
     <<: *django
