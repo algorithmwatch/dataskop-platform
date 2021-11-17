@@ -6,13 +6,20 @@ from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 from dataskop.campaigns.models import Campaign
 from dataskop.campaigns.tasks import handle_donation, handle_event
 
-from .serializers import CampaignSerializer
+from .serializers import (
+    CampaignSerializer,
+    DonationUnauthorizedSerializer,
+    EventSerializer,
+)
 
 
 class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
     """
     Only allow posting the donation.
     """
+
+    # not needed right now, but GET requests cause 500ers without `serializer_class`
+    serializer_class = DonationUnauthorizedSerializer
 
     def create(self, request, *args, **kwargs):
         """offload to celery"""
@@ -26,6 +33,9 @@ class EventViewSet(CreateModelMixin, GenericViewSet):
     """
     Only allow posting the donation.
     """
+
+    # not needed right now, but GET requests cause 500ers without `serializer_class`
+    serializer_class = EventSerializer
 
     def create(self, request, *args, **kwargs):
         """offload to celery"""
