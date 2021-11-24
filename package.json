@@ -32,7 +32,7 @@
     "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.18.0",
     "terser-webpack-plugin": "^5.1.1",
-    "webpack": "^5.59.0",
+    "webpack": "^5.64.3",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^4.3.1"
   },
