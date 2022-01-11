@@ -1,7 +1,7 @@
 
 # db & cache
 psycopg2==2.9.1  # https://github.com/psycopg/psycopg2
-django-redis==5.0.0  # https://github.com/jazzband/django-redis
+django-redis==5.2.0  # https://github.com/jazzband/django-redis
 
 # celery
 celery==4.4.7  # https://github.com/celery/celery
@@ -29,7 +29,7 @@ markdown==3.3.6  # https://github.com/Python-Markdown/markdown
 django-widget-tweaks==1.4.11 # https://github.com/jazzband/django-widget-tweaks
 
 # user & auth
-django-allauth==0.45.0  # https://github.com/pennersr/django-allauth
+django-allauth==0.47.0  # https://github.com/pennersr/django-allauth
 django-sesame[ua]==2.4  # https://github.com/aaugustin/django-sesame
 django-ratelimit==3.0.1 #  https://github.com/jsocol/django-ratelimit
 argon2-cffi==21.1.0  # https://github.com/hynek/argon2_cffi
@@ -55,4 +55,4 @@ django-jsoneditor-widget==1.3.2  # https://github.com/arthurc0102/django-jsonedi
 django-import-export==2.7.1  # https://github.com/django-import-export/django-import-export
 
 # mask ip address
-anonip==1.0.0  # https://github.com/DigitaleGesellschaft/Anonip
+anonip==1.1.0  # https://github.com/DigitaleGesellschaft/Anonip
