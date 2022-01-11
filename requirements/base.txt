@@ -22,7 +22,7 @@ django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==0.9.3  # https://github.com/rsinger86/django-lifecycle/
 
 # Markdown field for django
-django-markupfield==2.0.0  # https://github.com/jamesturk/django-markupfield
+django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
 markdown==3.3.4  # https://github.com/Python-Markdown/markdown
 
 # Frontend
