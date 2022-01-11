@@ -16,14 +16,14 @@ django==3.2.11  # https://www.djangoproject.com/
 django-environ==0.8.1  # https://github.com/joke2k/django-environ
 django-filter==21.1  # https://github.com/carltongibson/django-filter
 django-simple-history==3.0.0  # https://github.com/jazzband/django-simple-history
-django-taggit==1.5.1  # https://github.com/jazzband/django-taggit
+django-taggit==2.0.0  # https://github.com/jazzband/django-taggit
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==0.9.3  # https://github.com/rsinger86/django-lifecycle/
 
 # Markdown field for django
 django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
-markdown==3.3.4  # https://github.com/Python-Markdown/markdown
+markdown==3.3.6  # https://github.com/Python-Markdown/markdown
 
 # Frontend
 django-widget-tweaks==1.4.11 # https://github.com/jazzband/django-widget-tweaks
