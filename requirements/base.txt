@@ -23,7 +23,7 @@ django-lifecycle==0.9.3  # https://github.com/rsinger86/django-lifecycle/
 
 # Markdown field for django
 django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
-markdown==3.3.4  # https://github.com/Python-Markdown/markdown
+markdown==3.3.6  # https://github.com/Python-Markdown/markdown
 
 # Frontend
 django-widget-tweaks==1.4.11 # https://github.com/jazzband/django-widget-tweaks
