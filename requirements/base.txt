@@ -26,7 +26,7 @@ django-markupfield==2.0.0  # https://github.com/jamesturk/django-markupfield
 markdown==3.3.4  # https://github.com/Python-Markdown/markdown
 
 # Frontend
-django-widget-tweaks==1.4.8 # https://github.com/jazzband/django-widget-tweaks
+django-widget-tweaks==1.4.11 # https://github.com/jazzband/django-widget-tweaks
 
 # user & auth
 django-allauth==0.45.0  # https://github.com/pennersr/django-allauth
