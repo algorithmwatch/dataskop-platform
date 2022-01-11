@@ -19,7 +19,7 @@ django-simple-history==3.0.0  # https://github.com/jazzband/django-simple-histor
 django-taggit==1.5.1  # https://github.com/jazzband/django-taggit
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
-django-lifecycle==0.9.1  # https://github.com/rsinger86/django-lifecycle/
+django-lifecycle==0.9.3  # https://github.com/rsinger86/django-lifecycle/
 
 # Markdown field for django
 django-markupfield==2.0.0  # https://github.com/jamesturk/django-markupfield
