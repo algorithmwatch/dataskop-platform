@@ -24,7 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Checkout code repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v2
 
       - name: Build the image
         run: docker build -t dataskop-prod -f docker/nk-production/Dockerfile .

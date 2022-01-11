@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v2
 
       - name: Setup ENV files
         run: cp -r docs/exampleenv .envs
