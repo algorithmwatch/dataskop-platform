@@ -15,7 +15,7 @@ from ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
 from .forms import MagicLinkLoginForm
-from .signals import post_magic_email_verified, pre_user_deleted
+from .signals import post_magic_email_verified
 
 User = get_user_model()
 
@@ -120,5 +120,4 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
-        pre_user_deleted.send(request, user=self.request.user)
         return super(UserDeleteView, self).delete(request, *args, **kwargs)
