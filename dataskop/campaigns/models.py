@@ -11,7 +11,7 @@ from django.urls.base import reverse
 from django.utils import timezone
 from django_lifecycle import (
     AFTER_CREATE,
-    LifecycleModel,
+    LifecycleModelMixin,
     hook,
     AFTER_SAVE,
     AFTER_UPDATE,
@@ -67,7 +67,7 @@ class Campaign(StatusOptions, TimeStampedModel):
         return self.title
 
 
-class Donation(LifecycleModel, TimeStampedModel):
+class Donation(LifecycleModelMixin, TimeStampedModel):
     campaign = models.ForeignKey(
         "Campaign", on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -143,7 +143,7 @@ class DonorNotificationSetting(TimeStampedModel):
     disabled_campaigns = models.ManyToManyField("Campaign", blank=True)
 
 
-class DonorNotification(LifecycleModel, TimeStampedModel):
+class DonorNotification(LifecycleModelMixin, TimeStampedModel):
     # NB: `sent_by` and `campaign` can't be blank in the admin form
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     draft = models.BooleanField(
