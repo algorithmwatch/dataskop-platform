@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from freezegun.api import freeze_time
 
-from dataskop.campaigns.models import Donation
+from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.tasks import remind_user_registration
 
 from .factories import (
@@ -56,11 +56,17 @@ def test_user_delete():
 
     assert Donation.objects.count() == 1
 
-    num_deleted, _ = User.objects.filter(email=d.unauthorized_email).delete()
+    user = User.objects.filter(email=d.unauthorized_email).first()
+    user_pk = user.pk
+    num_deleted, _ = user.delete()
 
     assert num_deleted == 3
 
     assert Donation.objects.count() == 0
+
+    assert Event.objects.count() == 1
+    assert Event.objects.first().message == "user deleted"
+    assert Event.objects.first().data["user"] == user_pk
 
 
 def test_reminders_active():

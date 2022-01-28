@@ -116,7 +116,8 @@ class DonationDeleteView(UsersDonationMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         Event.objects.create(
-            message=f"donation deleted: {self.get_object().pk}",
+            message=f"donation deleted",
+            data={"donation": self.get_object().pk},
             campaign=self.get_object().campaign,
         )
         return super(DonationDeleteView, self).delete(request, *args, **kwargs)
@@ -197,6 +198,10 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
     staff_member_required(login_url=reverse_lazy("magic_login")), name="dispatch"
 )
 class DashboardView(TemplateView):
+    """
+    A staff-only view to see statistics about campaigns.
+    """
+
     template_name = "campaigns/dashboard.html"
 
     def get_context_data(self, **kwargs):
@@ -204,13 +209,16 @@ class DashboardView(TemplateView):
 
         msgs = Event.objects.order_by().values_list("message", flat=True).distinct()
 
-        # group special events (that have some identifier in the name)
+        # Hotfix: In the past, some events had user-specific information in the event name.
+        # This made it hard to group all events by name. So the following lines remove those
+        # user-specific information. New events should have simplier message names and all the
+        # details should go into `data`.
         msg_fixed = []
         for m in msgs:
             if m is None:
                 continue
 
-            if "user deleted:" in m:
+            if "user deleted" in m:
                 msg_fixed.append("user deleted")
             elif "donation deleted" in m:
                 msg_fixed.append("donation deleted")

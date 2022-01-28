@@ -25,4 +25,4 @@ def handle_verified(sender, user, email, **kwargs):
 
 @receiver(pre_user_deleted)
 def handle_pre_user_deleted(sender, user, **kwargs):
-    Event.objects.create(message=f"user deleted: {user.pk}")
+    Event.objects.create(message=f"user deleted", data={"user": user.pk})
