@@ -38,11 +38,28 @@ class StatusOptions(object):
 
 
 class Provider(TimeStampedModel):
-    name = models.CharField(max_length=255)
-    scraping_config_schema = models.JSONField(null=True, blank=True)
+    """
+    A provider is the platform (or website) that gets scraped in combination with a client
+    (app/browser extension) that does the work.
+    """
+
+    name = models.CharField(
+        max_length=255,
+        help_text="Platform or website from which the data is scraped, e.g., YouTube",
+    )
+    client = models.CharField(
+        max_length=255,
+        default="DataSkop Electron app",
+        help_text="Name of the software that collects the data, e.g., DataSkop Electron app",
+    )
+    scraping_config_schema = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Optional JSON schema to validate the `scraping_config` of `Campaign`",
+    )
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} {self.client}"
 
 
 class Campaign(StatusOptions, TimeStampedModel):
@@ -187,7 +204,7 @@ class DonorNotification(LifecycleModelMixin, TimeStampedModel):
     draft = models.BooleanField(
         default=True,
         help_text="If you set draft to false, the email will get sent to the chosen \
-        campaign (and can't be changed anymore).",
+campaign (and can't be changed anymore).",
     )
     subject = models.CharField(max_length=255)
     text = models.TextField()
