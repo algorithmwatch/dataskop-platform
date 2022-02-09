@@ -15,15 +15,24 @@ User = get_user_model()
 
 class DonationQuerySet(models.QuerySet):
     def confirmed(self):
+        """
+        Get confirmed donations.
+        """
         return self.filter(donor__isnull=False)
 
     def unconfirmed(self):
+        """
+        Get unconfirmed donations.
+        """
         return self.filter(
             donor__isnull=True,
             unauthorized_email__isnull=False,
         )
 
     def unconfirmed_by_user(self, user, verified_user=True):
+        """
+        Get unconfirmed donations for a given user.
+        """
         user_emails = EmailAddress.objects.filter(
             user=user, verified=verified_user
         ).values_list("email")
@@ -32,6 +41,10 @@ class DonationQuerySet(models.QuerySet):
 
 class BaseDonationManager(models.Manager):
     def remind_user_registration(self, donation_qs=None, max_reminders_sent=10):
+        """
+        Remind users that they have to confirm email their address.
+        """
+
         total_reminder_sent = 0
 
         # only remind for:
@@ -70,6 +83,10 @@ class BaseDonationManager(models.Manager):
         return total_reminder_sent
 
     def delete_unconfirmed_donations(self, donation_qs=None):
+        """
+        Delete unconfirmed donations that are older than 24 hours.
+        """
+
         deleted_objects = []
         # 1. delete donations that somehow have no unauthorized emails
         _, deleted = (
@@ -86,9 +103,10 @@ class BaseDonationManager(models.Manager):
         # 2. Find unverified donations
         qs = (donation_qs or self.model.objects).unconfirmed()
 
-        # Only select those donations that can safely be deleted. Do not delete unconfirmed donations that:
+        # Only select those donations that can safely be deleted. Do not delete
+        # unconfirmed donations that:
         # - are attached to an email address that is assigned to a verified user
-        # -
+        # - were created only recently (up to 24h ago)
         for email in qs.values_list("unauthorized_email", flat=True).distinct():
             email_obj = EmailAddress.objects.filter(email=email).first()
 

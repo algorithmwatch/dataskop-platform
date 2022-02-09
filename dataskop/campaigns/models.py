@@ -46,6 +46,11 @@ class Provider(TimeStampedModel):
 
 
 class Campaign(StatusOptions, TimeStampedModel):
+    """
+    A campaign is an investigation into a specific platform (provider). It has a status
+    and is defined in detail by a JSON-based scraping config.
+    """
+
     status = StatusField(choices_name="STATUS_OPTIONS")
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from="title")
@@ -68,6 +73,17 @@ class Campaign(StatusOptions, TimeStampedModel):
 
 
 class Donation(LifecycleModelMixin, TimeStampedModel):
+    """
+    A donation is a crowd-sourced data donation. The donation is connected to a user but
+    it can be created without existing user account. So the account gets created with the
+    first donation. The donation needs to get verified at some point or the data gets
+    removed.
+
+    If a user account for the given email address exists, inform the user that a new
+    donation was just made. The user has to verify that the new donation belongs actually
+    her/him. The donation can be created without any authentication.
+    """
+
     campaign = models.ForeignKey(
         "Campaign", on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -88,12 +104,17 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creattion_with_unauthorized_email(self):
+        """
+        On creation, either create a new user account and inform the existing user about
+        a new donation.
+        """
         assert self.donor is None
 
         existing_email = EmailAddress.objects.filter(
             email=self.unauthorized_email
         ).first()
 
+        # check if a user exists for the given email address
         if existing_email:
             recenttime = timezone.now() - timedelta(hours=2)
             thefuture = timezone.now() + timedelta(hours=2)
@@ -104,17 +125,22 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
                 notification_class="dataskop.campaigns.notifications.UnauthorizedDonationShouldLoginEmail",
             ).count()
 
+            # only inform a user if she or he wasn't recently contacted
             if num_recent_sent == 0:
                 UnauthorizedDonationShouldLoginEmail(existing_email.user).send(
                     user=existing_email.user, raise_exception=True
                 )
         else:
+            # create a new account
             User.objects.create_unverified_user_send_mail(
                 self.unauthorized_email, self.ip_address
             )
 
     @hook(BEFORE_DELETE)
     def send_admin_notification_before_delete(self):
+        """
+        Inform admins when a user deletes their account
+        """
         send_admin_notifcation(
             "Donation Deleted",
             f"Donation with id {self.pk}, for campaign {self.campaign}, was deleted",
@@ -122,6 +148,10 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
 
 
 class Event(TimeStampedModel):
+    """
+    A event for basic analytics that has a message and an optional JSON-based data field.
+    """
+
     campaign = models.ForeignKey(
         "Campaign", on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -134,6 +164,10 @@ class Event(TimeStampedModel):
 
 
 class DonorNotificationSetting(TimeStampedModel):
+    """
+    Users can opt-out of notifications for their donations.
+    """
+
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -144,11 +178,16 @@ class DonorNotificationSetting(TimeStampedModel):
 
 
 class DonorNotification(LifecycleModelMixin, TimeStampedModel):
+    """
+    Send a notification (email) to all donors of a campaign.
+    """
+
     # NB: `sent_by` and `campaign` can't be blank in the admin form
     sent_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     draft = models.BooleanField(
         default=True,
-        help_text="If you set draft to false, the email will get sent to the chosen campaign (and can't be changed anymore).",
+        help_text="If you set draft to false, the email will get sent to the chosen \
+        campaign (and can't be changed anymore).",
     )
     subject = models.CharField(max_length=255)
     text = models.TextField()
@@ -178,6 +217,7 @@ class DonorNotification(LifecycleModelMixin, TimeStampedModel):
             DonorNotificationEmail(u, self.subject, self.text, self.campaign.pk).send(
                 user=u
             )
+            # cheap throttle
             time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
 
     @hook(AFTER_SAVE, when="draft", is_now=True)
@@ -193,13 +233,13 @@ class DonorNotification(LifecycleModelMixin, TimeStampedModel):
     @hook(AFTER_CREATE, when="draft", is_now=False)
     def on_create_publish(self):
         """
-        Send real emails to the campaign.
+        Send real emails to the campaign on creation when `draft` is false.
         """
         self.send_notification()
 
     @hook(AFTER_UPDATE, when="draft", was=True, is_now=False)
     def on_update_publish(self):
         """
-        Send real emails to the campaign.
+        Send real emails to the campaign on setting `draft` to false.
         """
         self.send_notification()
