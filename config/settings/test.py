@@ -25,6 +25,11 @@ CACHES = {
     }
 }
 
+# DATABASE
+
+# 4.3 Disable Database Serialization, Page 50, Speed up your Django Tests, Adam Johnson
+DATABASES["default"]["TEST"] = {"SERIALIZE": False}
+
 # PASSWORDS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers

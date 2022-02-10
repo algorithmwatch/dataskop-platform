@@ -37,4 +37,4 @@ jobs:
         run: docker-compose -f docker-compose.local.yml build django
 
       - name: Migrate and run tests
-        run: docker-compose -f docker-compose.local.yml run django bash -c "./manage.py migrate && pytest"
+        run: docker-compose -f docker-compose.local.yml run django bash -c "./manage.py migrate && pytest --durations 10"
