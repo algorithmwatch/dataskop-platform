@@ -15,14 +15,16 @@ from .serializers import (
 
 class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
     """
-    Only allow posting the donation.
+    Endpoint to accept new donations (POST-only).
     """
 
-    # not needed right now, but GET requests cause 500ers without `serializer_class`
+    # deserialization happens in the celery task
     serializer_class = DonationUnauthorizedSerializer
 
     def create(self, request, *args, **kwargs):
-        """offload to celery"""
+        """
+        offload to celery
+        """
         ip_address = self.request.META.get("REMOTE_ADDR")
 
         handle_donation.delay(request.data, ip_address)
@@ -31,18 +33,18 @@ class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
 
 class EventViewSet(CreateModelMixin, GenericViewSet):
     """
-    Only allow posting the donation.
+    Endpoint to accept new events (POST-only).
     """
 
-    # not needed right now, but GET requests cause 500ers without `serializer_class`
+    # deserialization happens in the celery task
     serializer_class = EventSerializer
 
     def create(self, request, *args, **kwargs):
-        """offload to celery"""
+        """
+        offload to celery
+        """
         ip_address = self.request.META.get("REMOTE_ADDR")
-
         anonip = Anonip()
-
         # mask last digits
         ip_address = anonip.process_line(ip_address)
 
@@ -52,8 +54,9 @@ class EventViewSet(CreateModelMixin, GenericViewSet):
 
 class CampaignViewSet(ReadOnlyModelViewSet):
     """
-    A simple ViewSet for viewing public campaigns.
+    Read-only endpoint for active campaigns.
     """
 
     queryset = Campaign.objects.filter(status="active")
     serializer_class = CampaignSerializer
+    filterset_fields = ["provider__client", "provider__name"]

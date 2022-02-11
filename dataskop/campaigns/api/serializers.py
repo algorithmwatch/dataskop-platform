@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataskop.campaigns.models import Campaign, Donation, Event
+from dataskop.campaigns.models import Campaign, Donation, Event, Provider
 
 
 class DonationUnauthorizedSerializer(serializers.ModelSerializer):
@@ -19,7 +19,15 @@ class DonationAuthorizedSerializer(serializers.ModelSerializer):
         extra_kwargs = {"url": {"view_name": "api:donation-authorized"}}
 
 
+class ProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Provider
+        fields = ["name", "client"]
+
+
 class CampaignSerializer(serializers.ModelSerializer):
+    provider = ProviderSerializer(read_only=True)
+
     class Meta:
         model = Campaign
         fields = [

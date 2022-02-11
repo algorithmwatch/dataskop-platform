@@ -156,7 +156,7 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
     @hook(BEFORE_DELETE)
     def send_admin_notification_before_delete(self):
         """
-        Inform admins when a user deletes their account
+        Inform admins when a user deletes their account.
         """
         send_admin_notifcation(
             "Donation Deleted",
