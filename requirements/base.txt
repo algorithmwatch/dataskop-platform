@@ -10,7 +10,7 @@ flower==0.9.7  # https://github.com/mher/flower
 django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-cleanup
 
 # Django
-django==3.2.11  # https://www.djangoproject.com/
+django==3.2.12  # https://www.djangoproject.com/
 
 # Models
 django-environ==0.8.1  # https://github.com/joke2k/django-environ
@@ -29,7 +29,7 @@ markdown==3.3.6  # https://github.com/Python-Markdown/markdown
 django-widget-tweaks==1.4.11 # https://github.com/jazzband/django-widget-tweaks
 
 # user & auth
-django-allauth==0.47.0  # https://github.com/pennersr/django-allauth
+django-allauth==0.48.0  # https://github.com/pennersr/django-allauth
 django-sesame[ua]==2.4  # https://github.com/aaugustin/django-sesame
 django-ratelimit==3.0.1 #  https://github.com/jsocol/django-ratelimit
 argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
