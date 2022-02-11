@@ -9,11 +9,6 @@ updates:
         update-types: ["version-update:semver-minor"]
       - dependency-name: "django"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "celery"
-        update-types: ["version-update:semver-major"]
-        # flower depends on celery 5
-      - dependency-name: "flower"
-        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "npm"
     directory: "/"
