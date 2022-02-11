@@ -82,13 +82,10 @@ class BaseDonationManager(models.Manager):
 
         return total_reminder_sent
 
-    def delete_unconfirmed_donations(self, donation_qs=None):
+    def delete_anonymous_donations(self, donation_qs=None):
         """
-        Delete unconfirmed donations that are older than 24 hours.
+        delete donations that have no unauthorized emails
         """
-
-        deleted_objects = []
-        # 1. delete donations that somehow have no unauthorized emails
         _, deleted = (
             (donation_qs or self.model.objects)
             .filter(
@@ -97,10 +94,15 @@ class BaseDonationManager(models.Manager):
             )
             .delete()
         )
+        return sum(deleted.values())
 
-        deleted_objects.append(deleted)
+    def delete_unconfirmed_donations(self, donation_qs=None):
+        """
+        Delete unconfirmed donations that are older than 24 hours.
+        """
 
-        # 2. Find unverified donations
+        deleted_objects = []
+        # select unconfirmed donations
         qs = (donation_qs or self.model.objects).unconfirmed()
 
         # Only select those donations that can safely be deleted. Do not delete

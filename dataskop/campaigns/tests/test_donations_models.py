@@ -133,7 +133,6 @@ def test_reminders_cam_none():
 
 
 def test_delete_unconfirmed_donations():
-
     today = datetime.date.today()
     in2days = today + datetime.timedelta(days=2)
     in3days = today + datetime.timedelta(days=3)
@@ -191,17 +190,23 @@ def test_delete_unconfirmed_donations():
         donation6 = DonationFactory(campaign=None)
         EmailAddress.objects.filter(email=donation6.unauthorized_email).delete()
 
-        # donation without any email
-        donation7 = DonationFactory(campaign=None)
-        donation7.unauthorized_email = None
-        donation7.save()
+        # a anonymous donation without any email should not get deleted
+        donation7 = DonationFactory(campaign=None, unauthorized_email=None)
 
         del_objs = Donation.objects.delete_unconfirmed_donations(
             donation_qs=Donation.objects.filter(donor__isnull=True)
         )
         assert (
-            sum(del_objs.values()) == 5
-        )  # (3 for donation5 + 1 for donation6 + 1 for donation7)
+            sum(del_objs.values()) == 4
+        )  # (3 for donation5 + 1 for donation6 + 0 for donation7)
+
+
+def test_delete_anonymous_donations():
+    DonationFactory(campaign=None, unauthorized_email=None)
+    DonationFactory(campaign=None)
+    DonationFactory()
+
+    assert Donation.objects.delete_anonymous_donations() == 1
 
 
 def test_donor_notification_models():
