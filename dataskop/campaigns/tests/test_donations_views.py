@@ -51,6 +51,7 @@ def test_auto_confirm(client):
         "campaign": c.pk,
     }
 
+    # The celery tasks gets executed eagerly.
     response = client.post(
         reverse("api:donations-list"),
         data=data,
@@ -58,9 +59,6 @@ def test_auto_confirm(client):
     )
 
     assert response.status_code == 202
-
-    # skip celery by calling the task directly
-    handle_donation(data, "127.0.0.1")
 
     user = EmailAddress.objects.filter(email=some_email).first().user
 
@@ -75,7 +73,6 @@ def test_auto_confirm(client):
 
 
 def test_reminder_emails(client):
-
     today = datetime.date.today()
     in2days = today + datetime.timedelta(days=2)
     in3days = today + datetime.timedelta(days=3)

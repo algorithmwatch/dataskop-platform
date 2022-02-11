@@ -25,8 +25,12 @@ CACHES = {
     }
 }
 
-# DATABASE
+# CELERY
+# Emulate celery behavior to make view tests work.
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
 
+# DATABASE
 # 4.3 Disable Database Serialization, Page 50, Speed up your Django Tests, Adam Johnson
 DATABASES["default"]["TEST"] = {"SERIALIZE": False}
 
