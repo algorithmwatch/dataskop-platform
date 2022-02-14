@@ -106,8 +106,9 @@ def test_reminder_emails(client):
 
         assert sent_emails == 1
 
+        # extract the magic link from the second last email, the last is the admin notification
+        login_link = re.findall(r"(http\S*magic\S*)\s", mail.outbox[-2].body)[0]
         # click on the 'go to login' link
-        login_link = re.findall(r"(http\S*magic\S*)\s", mail.outbox[-1].body)[0]
         response2 = client.get(login_link, follow=True, REMOTE_ADDR="127.0.0.1")
 
         assert "login" in login_link

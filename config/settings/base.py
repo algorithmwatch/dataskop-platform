@@ -271,7 +271,7 @@ EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="")
 
 # used to e.g. notify about new cases. (Not sending emails to all admins to avoid sending too many emails)
 ADMIN_NOTIFICATION_EMAILS = env.list(
-    "DJANGO_ADMIN_NOTIFICATION_EMAILS", default="notification@example.com"
+    "DJANGO_ADMIN_NOTIFICATION_EMAILS", default=["notification@example.com"]
 )
 
 # used in e.g. email templates

@@ -70,7 +70,6 @@ def test_user_delete():
 
 
 def test_reminders_active():
-    # create a new donation campaing (not campaign video)
     cam = CampaignFactory(created_by=None, status="active")
     donation1 = DonationFactory(campaign=cam)
 
@@ -83,7 +82,7 @@ def test_reminders_active():
     remind_user_registration()
     remind_user_registration()
     remind_user_registration()
-    assert len(mail.outbox) == 4
+    assert len(mail.outbox) == 4 + 3  # 4 reminders, 3 admin notification
 
     remind_user_registration()
     remind_user_registration()
@@ -97,11 +96,10 @@ def test_reminders_active():
     remind_user_registration()
     remind_user_registration()
     remind_user_registration()
-    assert len(mail.outbox) == 11  # 10 notificaiton + 1 user confirm email
+    assert len(mail.outbox) == 10 + 1 + 10  # 10 notificaiton + 1 user confirm email
 
 
 def test_reminders_inactive():
-    # create a new donation campaing (not campaign video)
     cam = CampaignFactory(created_by=None, status="inactive")
     donation1 = DonationFactory(campaign=cam)
 

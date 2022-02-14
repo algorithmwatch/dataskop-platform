@@ -2,7 +2,7 @@ from anymail.message import AnymailMessage
 from django.conf import settings
 
 
-def send_admin_notifcation(subject, text):
+def send_admin_notification(subject, text):
     to_emails = settings.ADMIN_NOTIFICATION_EMAILS
     msg = AnymailMessage(body=text, subject=subject, to=to_emails)
     msg.send()

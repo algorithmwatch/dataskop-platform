@@ -28,7 +28,7 @@ from dataskop.campaigns.notifications import (
     DonorNotificationEmail,
     UnauthorizedDonationShouldLoginEmail,
 )
-from dataskop.utils.email import send_admin_notifcation
+from dataskop.utils.email import send_admin_notification
 
 User = get_user_model()
 
@@ -120,7 +120,7 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         return reverse("my_donations_detail", kwargs={"pk": self.pk})
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
-    def after_creattion_with_unauthorized_email(self):
+    def after_creation_with_unauthorized_email(self):
         """
         On creation, either create a new user account and inform the existing user about
         a new donation.
@@ -158,7 +158,7 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         """
         Inform admins when a user deletes their account.
         """
-        send_admin_notifcation(
+        send_admin_notification(
             "Donation Deleted",
             f"Donation with id {self.pk}, for campaign {self.campaign}, was deleted",
         )
