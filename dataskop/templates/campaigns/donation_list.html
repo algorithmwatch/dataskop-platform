@@ -13,7 +13,7 @@
     {% block beforelistaction %}
       {% if num_unconfirmed_donations > 0 %}
         <a href="{% url 'my_donations_unconfirmed' %}" class="underline p-1 mb-10">Es gibt weitere Spenden zu deinem Account. Bitte bestätige {{num_unconfirmed_donations}} Spende(n).</a>
-        {% endif %}
+      {% endif %}
     {% endblock %}
 
     {% block inner %}

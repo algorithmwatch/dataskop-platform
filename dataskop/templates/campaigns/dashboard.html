@@ -16,27 +16,27 @@
       <hr/>
       <h3 class="text-xl">Total events</h3>
       {% for k,v in total_events.items %}
-      <div>
-        {{k}}: {{v}}
-      </div>
+        <div>
+          {{k}}: {{v}}
+        </div>
       {% endfor %}
       <hr/>
       <h3 class="text-xl mt-6">Events per day</h3>
       <ul>
         {% for k,v in events.items %}
-        <div class="mb-10">
-          <div>
-            {{k}}
+          <div class="mb-10">
+            <div>
+              {{k}}
+            </div>
+            <div class="pl-10">
+              {% for time in v %}
+                <span>
+                  {{time.date_histogram|date}}:
+                  {{time.total}},
+                </span>
+              {% endfor %}
+            </div>
           </div>
-          <div class="pl-10">
-            {% for time in v %}
-              <span>
-              {{time.date_histogram|date}}:
-              {{time.total}},
-              </span>
-            {% endfor %}
-          </div>
-        </div>
         {% endfor %}
       </ul>
       <hr/>

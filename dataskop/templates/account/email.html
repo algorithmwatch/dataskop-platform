@@ -19,26 +19,26 @@
           {% csrf_token %}
 
           <ul class="my-6">
-          {% for emailaddress in user.emailaddress_set.all %}
-            <li>
-              <label for="email_radio_{{forloop.counter}}" class="{% if emailaddress.primary %}primary_email{%endif%}">
+            {% for emailaddress in user.emailaddress_set.all %}
+              <li>
+                <label for="email_radio_{{forloop.counter}}" class="{% if emailaddress.primary %}primary_email{%endif%}">
 
-                <input id="email_radio_{{forloop.counter}}" type="radio" name="email" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{%endif %} value="{{emailaddress.email}}"/>
+                  <input id="email_radio_{{forloop.counter}}" type="radio" name="email" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{%endif %} value="{{emailaddress.email}}"/>
 
-                {{ emailaddress.email }}
-                <span class="font-bold text-sm">({% spaceless %}
-                  {% if emailaddress.verified %}
-                    {% trans "Verified" %}
-                  {% else %}
-                    {% trans "Unverified" %}
-                  {% endif %}
-                {% endspaceless %})</span>
+                  {{ emailaddress.email }}
+                  <span class="font-bold text-sm">({% spaceless %}
+                    {% if emailaddress.verified %}
+                      {% trans "Verified" %}
+                    {% else %}
+                      {% trans "Unverified" %}
+                    {% endif %}
+                  {% endspaceless %})</span>
 
-                {% if emailaddress.primary %}<span class="text-green-800 text-sm">{% trans "Primary" %}</span>{% endif %}
+                  {% if emailaddress.primary %}<span class="text-green-800 text-sm">{% trans "Primary" %}</span>{% endif %}
 
-              </label>
-            </li>
-          {% endfor %}
+                </label>
+              </li>
+            {% endfor %}
           </ul>
 
           <div class="flex space-x-3">
@@ -55,10 +55,10 @@
     <div class="pt-5">
       <h2 class="hl-xl mb-6">{% trans 'Add E-mail Address' %}</h2>
       <form method="post" action="{% url 'account_email' %}" class="space-y-4 max-w-xs">
-          {% csrf_token %}
-          {% comment %} {{ form.email|add_label_class:"input-label" }} {% endcomment %}
-          {{ form.email|add_class:"text-input text-input--regular w-full" }}
-          <button class="btn btn--regular btn--primary" name="action_add" type="submit">{% trans "Add E-mail" %}</button>
+        {% csrf_token %}
+        {% comment %} {{ form.email|add_label_class:"input-label" }} {% endcomment %}
+        {{ form.email|add_class:"text-input text-input--regular w-full" }}
+        <button class="btn btn--regular btn--primary" name="action_add" type="submit">{% trans "Add E-mail" %}</button>
       </form>
     </div>
 

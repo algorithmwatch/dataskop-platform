@@ -11,19 +11,19 @@
 {% block content %}
   <div class="mt-8 lg:mt-10">
     {% block inner %}
-    <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spende: {{ object }}</h1>
+      <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Spende: {{ object }}</h1>
 
-    <div class="space-y-4">
-      <div class="hl-xl">Rohdaten:</div>
-      <div class="relative p-4 border border-gray-500 rounded max-h-96 overflow-y-auto">
-        {{ object.results }}
-      </div>
+      <div class="space-y-4">
+        <div class="hl-xl">Rohdaten:</div>
+        <div class="relative p-4 border border-gray-500 rounded max-h-96 overflow-y-auto">
+          {{ object.results }}
+        </div>
 
-      <div class="flex space-x-4">
-        <a download class="font-bold underline hover:no-underline text-blue-700" href="{% url 'my_donations_download' object.pk %}">Download</a>
-        <a class="font-bold underline hover:no-underline text-red-700" href="{% url 'my_donations_delete' object.pk %}">Löschen</a>
+        <div class="flex space-x-4">
+          <a download class="font-bold underline hover:no-underline text-blue-700" href="{% url 'my_donations_download' object.pk %}">Download</a>
+          <a class="font-bold underline hover:no-underline text-red-700" href="{% url 'my_donations_delete' object.pk %}">Löschen</a>
+        </div>
       </div>
-    </div>
 
     {% endblock %}
   </div>

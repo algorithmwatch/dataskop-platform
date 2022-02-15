@@ -9,12 +9,12 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block inner %}
-<h1>{% trans "Sign Up" %}</h1>
+  <h1>{% trans "Sign Up" %}</h1>
 
-<form class="signup" method="post" action="{% url 'account_signup_email' %}">
-  {% csrf_token %}
-  {{ form }}
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
-</form>
+  <form class="signup" method="post" action="{% url 'account_signup_email' %}">
+    {% csrf_token %}
+    {{ form }}
+    <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
+  </form>
 
 {% endblock %}
