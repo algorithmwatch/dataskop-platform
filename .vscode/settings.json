@@ -2,9 +2,7 @@
   "terminal.integrated.shell.linux": "/bin/bash",
   "editor.formatOnSave": true,
   // Black's default line length is 88.
-  "editor.rulers": [
-    88
-  ],
+  "editor.rulers": [88],
   // Python
   "python.pythonPath": "/usr/local/bin/python",
   "python.formatting.provider": "black",
@@ -18,6 +16,9 @@
   },
   // yaml
   "yaml.format.enable": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
   // CSS and co.
   "editor.quickSuggestions": {
     "strings": true

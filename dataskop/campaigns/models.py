@@ -11,11 +11,11 @@ from django.urls.base import reverse
 from django.utils import timezone
 from django_lifecycle import (
     AFTER_CREATE,
-    LifecycleModelMixin,
-    hook,
     AFTER_SAVE,
     AFTER_UPDATE,
     BEFORE_DELETE,
+    LifecycleModelMixin,
+    hook,
 )
 from herald.models import SentNotification
 from model_utils import Choices

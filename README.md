@@ -5,6 +5,7 @@ The Data Donation Platform (DDP) of [DataSkop](https://dataskop.net/), developed
 This project was initially bootstrapped with [Django-Cookie-Cutter](https://github.com/pydanny/cookiecutter-django) but heavily modified.
 
 ## Development
+
 ### Development setup
 
 Get the code and create .ENV files for local development.
@@ -24,7 +25,7 @@ We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](
 As an alternative, see below on how to use Docker without VS Code.
 
 To start the development server: Open a new terminal and see how `/start` will get executed automatically to open two dev servers (Django, Wepback).
-To run management command, stop the dev servers and run  `./manage.py $command`, e.g., `./manage.py makemigrations`.
+To run management command, stop the dev servers and run `./manage.py $command`, e.g., `./manage.py makemigrations`.
 
 If you add a new VS Code extension, you need to remove this named volume `docker volume rm dataskop_extensions`. ([See more](https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild))
 
@@ -67,6 +68,7 @@ To only run tests:
 ```bash
 pytest
 ```
+
 ### View sent E-Mail during development
 
 In development, we use [MailHog](https://github.com/mailhog/MailHog) as a local SMTP server with a web interface. View sent emails at: <http://localhost:8025>
@@ -87,7 +89,6 @@ celery -A config.celery_app worker -l info
 Please note: For Celery's import magic to work, it is important _where_
 the celery commands are run. If you are in the same folder with
 _manage.py_, you should be right.
-
 
 ## Production
 

@@ -1,6 +1,6 @@
+import time
 from collections import defaultdict
 from datetime import datetime, timedelta
-import time
 
 from allauth.account.models import EmailAddress
 from django.conf import settings

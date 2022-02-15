@@ -1,12 +1,12 @@
 # Guide for Data Donation Editors
 
-Here will be a guide for people who run data donation projects on dataskop.net. We cam them *editors* (in German: *Redakteur/in*).
+Here will be a guide for people who run data donation projects on dataskop.net. We cam them _editors_ (in German: _Redakteur/in_).
 
 ## Create a new data donation campaign (project)
 
 [TODO]
 
-## Send reminders to people 
+## Send reminders to people
 
 Right now, we do not send reminders automatically to donors who didn't verified.
 To go the admin view of all donations and choose an admin aciton.
@@ -29,4 +29,3 @@ Go to admin action and select the records (e.g. via filter), then choose the adm
 [TODO]
 
 - Dashboard
-
