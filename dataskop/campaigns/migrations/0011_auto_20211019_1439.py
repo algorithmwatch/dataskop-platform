@@ -9,23 +9,35 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('campaigns', '0010_donornotification'),
+        ("campaigns", "0010_donornotification"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='donornotification',
-            name='campaign',
-            field=models.ForeignKey(help_text='Which campaign should receive this message?', null=True, on_delete=django.db.models.deletion.SET_NULL, to='campaigns.campaign'),
+            model_name="donornotification",
+            name="campaign",
+            field=models.ForeignKey(
+                help_text="Which campaign should receive this message?",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="campaigns.campaign",
+            ),
         ),
         migrations.AlterField(
-            model_name='donornotification',
-            name='draft',
-            field=models.BooleanField(default=True, help_text="If you set draft to false, the email will get sent to the chosen campaign (and can't be changed anymore)."),
+            model_name="donornotification",
+            name="draft",
+            field=models.BooleanField(
+                default=True,
+                help_text="If you set draft to false, the email will get sent to the chosen campaign (and can't be changed anymore).",
+            ),
         ),
         migrations.AlterField(
-            model_name='donornotification',
-            name='sent_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="donornotification",
+            name="sent_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
