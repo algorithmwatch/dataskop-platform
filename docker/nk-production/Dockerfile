@@ -1,12 +1,13 @@
 # Only for deployment /w Dokku
 # Check out docker/local/django/Dockerfile for the dev Dockerfile.
 
-FROM node:12-stretch-slim as client-builder
+FROM node:14-stretch-slim as client-builder
 
 WORKDIR /app
-COPY ./package.json ./package-lock.json /app
+COPY ./package.json ./package-lock.json /app/
 RUN npm install && npm cache clean --force
 COPY . /app
+RUN npx browserslist@latest --update-db
 RUN npm run build
 
 # Python build stage
