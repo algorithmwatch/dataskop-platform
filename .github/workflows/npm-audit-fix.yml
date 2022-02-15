@@ -6,12 +6,18 @@ on:
     - cron: "1 1 * * 1"
 
 jobs:
-  pytest:
+  npm-audit-fix:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
-
-      - uses: ybiquitous/npm-audit-fix-action@v3
+      - uses: actions/setup-node@v2
         with:
-          commit_title: "Bump node dependencies via `npm audit fix`"
+          node-version: "14"
+      - name: NPM Audit
+        uses: luisfontes19/npm-audit-action@v0.1.0
+        with:
+          fix: true
+          force: false
+          git-message: "Bump node dependencies via `npm audit fix`"
+          github-token: ${{ secrets.GH_TOKEN }}
