@@ -19,6 +19,29 @@ cp -r docs/exampleenv .envs
 Adjust `.envs/.local` to you needs.
 See [docs/exampleenv](./docs/exampleenv).
 
+#### Git hook
+
+For consistent code formating, we provide a [format script](./scripts/format.sh).
+Since git hooks are not part of git, you have to configure it on your local machine.
+
+Set up a pre-commit [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) in `.git/hooks/pre-commit` with the following content.
+
+```bash
+#!/usr/bin/env bash
+
+# If any command fails, exit immediately with that command's exit status
+set -xeo pipefail
+
+docker-compose -f docker-compose.local.yml run --rm django ./scripts/format.sh
+```
+
+Ensure the file is executable: `chmod +x .git/hooks/pre-commit` and the following config is not empty: `git config core.hooksPath`.
+If it's empty, set it like this:
+
+```bash
+git config core.hooksPath .git/hooks
+```
+
 #### Development with VS Code Development Container
 
 We recommend to use [VS Code](https://code.visualstudio.com/) with the [Docker](https://docs.docker.com/get-docker/)-based [VS Code Development Container](https://code.visualstudio.com/docs/remote/containers).
