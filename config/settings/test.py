@@ -51,6 +51,9 @@ TEMPLATES[-1]["OPTIONS"]["loaders"] = [  # type: ignore[index] # noqa F405
     )
 ]
 
+# https://github.com/nedbat/django_coverage_plugin/issues/18#issuecomment-430370581
+TEMPLATES[-1]["OPTIONS"]["debug"] = True
+
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend

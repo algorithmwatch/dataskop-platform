@@ -36,5 +36,5 @@ jobs:
       - name: Build the stack
         run: docker-compose -f docker-compose.local.yml build django
 
-      - name: Migrate and run tests
-        run: docker-compose -f docker-compose.local.yml run django bash -c "./manage.py migrate && pytest --durations 10"
+      - name: Migrate, run tests, show coverage, check npm build
+        run: docker-compose -f docker-compose.local.yml run django bash -c "./manage.py migrate && coverage run -m pytest --durations 10 && coverage report && npm ci && npm run build"
