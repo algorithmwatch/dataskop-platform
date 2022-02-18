@@ -1,4 +1,6 @@
-# used in production but also in staging
+"""
+Settings used in production (and staging)
+"""
 
 import logging
 from datetime import timedelta
@@ -11,15 +13,11 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from .base import *  # noqa
 from .base import env
 
-CELERY_BROKER_URL = env("REDIS_URL")
-
-
 # GENERAL
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
-
 # allow 172.17.x.x
 ALLOWED_HOSTS += ["172.17.{}.{}".format(i, j) for i in range(256) for j in range(256)]
 
@@ -28,6 +26,7 @@ ALLOWED_HOSTS += ["172.17.{}.{}".format(i, j) for i in range(256) for j in range
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
+
 
 # CACHES
 CACHES = {
@@ -42,6 +41,10 @@ CACHES = {
         },
     }
 }
+
+
+# CELERY
+CELERY_BROKER_URL = env("REDIS_URL")
 
 
 # SECURITY
@@ -68,6 +71,9 @@ SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
+# Admin
+ADMIN_URL = env("DJANGO_ADMIN_URL")
+
 
 # TEMPLATES
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
@@ -80,10 +86,6 @@ TEMPLATES[-1]["OPTIONS"]["loaders"] = [  # type: ignore[index] # noqa F405
         ],
     )
 ]
-
-# ADMIN
-# Django Admin URL regex.
-ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 
 # LOGGING
@@ -124,6 +126,7 @@ LOGGING = {
     },
 }
 
+
 # Sentry
 
 
@@ -154,9 +157,6 @@ sentry_sdk.init(
 
 # Anymail w/ Mailjet
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-# https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
-# https://anymail.readthedocs.io/en/stable/esps/mailjet/
 INSTALLED_APPS += ["anymail"]  # noqa F405
 EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
@@ -169,10 +169,9 @@ ANYMAIL = {
 
 
 # STATIC
-# ------------------------
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
-# Media Files
+# MEDIA
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")

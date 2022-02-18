@@ -8,7 +8,7 @@ import environ
 from session_cleanup.settings import weekly_schedule
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# dataskop/
+
 APPS_DIR = ROOT_DIR / "dataskop"
 env = environ.Env()
 
@@ -18,14 +18,9 @@ if READ_DOT_ENV_FILE:
     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
-
-# Local time zone. Choices are
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# though not all of them may be available with every OS.
-# In Windows, this must be set to your system time zone.
+# Local time zone
 TIME_ZONE = "UTC"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "de-DE"
@@ -39,30 +34,29 @@ USE_L10N = True
 USE_TZ = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [str(ROOT_DIR / "locale")]
-
-# restrict to German for now (otherwise remove LocaleMiddleware)
+# Restrict to German for now (otherwise remove LocaleMiddleware).
 LANGUAGES = [
     ("de", "Deutsch"),
 ]
-
 # https://docs.djangoproject.com/en/4.0/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+# store this info here to avoid db lookups in 'sites'
+URL_ORIGIN = env("URL_ORIGIN", default=None)
 
 # DATABASES
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+
 # URLS
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
 ROOT_URLCONF = "config.urls"
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "config.wsgi.application"
 
+
 # APPS
-# ------------------------------------------------------------------------------
 DJANGO_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -116,7 +110,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 # AUTHENTICATION
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -125,7 +118,6 @@ AUTHENTICATION_BACKENDS = [
     "guardian.backends.ObjectPermissionBackend",
 ]
 
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
@@ -133,8 +125,39 @@ LOGIN_REDIRECT_URL = "home"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "magic_login"
 
+# Django-Allauth
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_ADAPTER = "dataskop.users.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "dataskop.users.adapters.SocialAccountAdapter"
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+# https://django-allauth.readthedocs.io/en/latest/advanced.html#custom-user-models
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_FORMS = {"signup": "dataskop.users.forms.CustomSignupForm"}
+# Don't ask user, always remember.
+ACCOUNT_SESSION_REMEMBER = True
+
+# Only used when sending emails with request context (e.g. email confirmation).
+# Emails that get sent via cellery do not have access to request.user and thus
+# cannot use django-allauth's tag. The email templates handle this.
+# Check `templates/account/emails/base.html`.
+ACCOUNT_USER_DISPLAY = lambda user: user.full_name
+
+# Django-Sesame (Magic Login) - https://github.com/aaugustin/django-sesame
+SESAME_MAX_AGE = 3600
+# Invalidate token after login.
+# It may happen, that email providers automatically check links (send GET requests) in their emails.
+# Since we ensure that the IP that requested the magic links *and* the IP address that opens the link have to be the same,
+# we can be sure that the provider would not successfully open the link (because sesame first checks for scope (see their source code)).
+SESAME_ONE_TIME = True
+
+
 # PASSWORDS
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
 PASSWORD_HASHERS = [
     # https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
@@ -153,8 +176,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+
 # MIDDLEWARE
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -165,13 +188,12 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
+
 # STATIC
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR / "static")
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
@@ -184,15 +206,15 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+
 # MEDIA
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = "/media"
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = "/media/"
 
+
 # TEMPLATES
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
 TEMPLATES = [
     {
@@ -222,18 +244,16 @@ TEMPLATES = [
         },
     }
 ]
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 
 # FIXTURES
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (str(APPS_DIR / "fixtures"),)
 
+
 # SECURITY
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
 SESSION_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
@@ -242,52 +262,45 @@ CSRF_COOKIE_HTTPONLY = True
 SECURE_BROWSER_XSS_FILTER = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
 X_FRAME_OPTIONS = "DENY"
+# ADMIN
+ADMIN_URL = "admin/"
+
+# Django-CORS-Headers - https://github.com/adamchainz/django-cors-headers#setup
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:\d+$",
+    r"^http://127\.0\.0\.1:\d+$",
+] + ([] if URL_ORIGIN is None else [URL_ORIGIN])
+
 
 # EMAIL
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
     "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
-
-
 # cheap throttle with `time.sleep`
 EMAIL_MAX_PER_SECOND = 5
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL", default="Example <info@example.com>"
 ).replace(
     '\\"', ""
 )  # remove escape characters added for ansible / nk
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
-
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="")
-
-# used to e.g. notify about new cases. (Not sending emails to all admins to avoid sending too many emails)
+# Notify some emails (admins) about important actions.
 ADMIN_NOTIFICATION_EMAILS = env.list(
     "DJANGO_ADMIN_NOTIFICATION_EMAILS", default=["notification@example.com"]
 )
-
-# used in e.g. email templates
+# Public email address of the used in e.g. email templates
 CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default="support@example.com")
 
-# ADMIN
-# ------------------------------------------------------------------------------
-# Django Admin URL.
-ADMIN_URL = "admin/"
-# https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = []
-# https://docs.djangoproject.com/en/dev/ref/settings/#managers
-MANAGERS = ADMINS
 
 # LOGGING
-# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
@@ -310,8 +323,8 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
+
 # Celery
-# ------------------------------------------------------------------------------
 if USE_TZ:
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
     CELERY_TIMEZONE = TIME_ZONE
@@ -328,52 +341,19 @@ CELERY_TASK_SERIALIZER = "json"
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
 CELERY_RESULT_SERIALIZER = "json"
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
-CELERY_TASK_TIME_LIMIT = 20 * 60
+CELERY_TASK_TIME_LIMIT = 40 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
-CELERY_TASK_SOFT_TIME_LIMIT = 10 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 30 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {"session_cleanup": weekly_schedule}
+# Since we changed some tasks to `acks_late=True`, we have to adjust this Redis setting.
+# Otherwise, long running tasks could be duplicated in the queue.
+# https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/redis.html#id1
+BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": CELERY_TASK_TIME_LIMIT}
 
 
-CELERYBEAT_SCHEDULE = {"session_cleanup": weekly_schedule}
-
-# django-allauth
-# ------------------------------------------------------------------------------
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_ADAPTER = "dataskop.users.adapters.AccountAdapter"
-SOCIALACCOUNT_ADAPTER = "dataskop.users.adapters.SocialAccountAdapter"
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-# https://django-allauth.readthedocs.io/en/latest/advanced.html#custom-user-models
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_FORMS = {"signup": "dataskop.users.forms.CustomSignupForm"}
-# don't ask user, always remember
-ACCOUNT_SESSION_REMEMBER = True
-
-# Only used when sending emails with request context (e.g. email confirmation).
-# Emails that get sent via cellery do not have access to request.user and thus
-# cannot use django-allauth's tag. The email templates handle this.
-# Check `templates/account/emails/base.html`.
-ACCOUNT_USER_DISPLAY = lambda user: user.full_name
-
-# passwordless / magic link:
-# magic links only valid for 5 minutes https://github.com/aaugustin/django-sesame#tokens-lifecycle
-SESAME_MAX_AGE = 3600
-
-# invalidate token after login.
-# It may happen, that email providers automatically check links (send GET requests) in their emails.
-# Since we ensure that the IP that requested the magic links *and* the IP address that opens the link have to be the same,
-# we can be sure that the provider would not successfully open the link (because sesame first checks for scope (see their source code)).
-SESAME_ONE_TIME = True
-
-# django-rest-framework
-# -------------------------------------------------------------------------------
-# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
+# Django-Rest-Framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
@@ -384,17 +364,5 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "1000/hour", "user": "1000/day"},
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
-    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
-
-# site info
-# store this info here to avoid db lookups in 'sites'
-URL_ORIGIN = env("URL_ORIGIN", default=None)
-
-# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-CORS_URLS_REGEX = r"^/api/.*$"
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://localhost:\d+$",
-    r"^http://127\.0\.0\.1:\d+$",
-] + ([] if URL_ORIGIN is None else [URL_ORIGIN])
