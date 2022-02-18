@@ -8,7 +8,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./docker/local/django/Dockerfile
+      dockerfile: ./docker/local/Dockerfile
     image: dataskop_local_django
     depends_on:
       - postgres
@@ -39,30 +39,3 @@ services:
     image: mailhog/mailhog:v1.0.0
     ports:
       - '8025:8025'
-
-  celeryworker:
-    <<: *django
-    image: dataskop_local_celeryworker
-    depends_on:
-      - redis
-      - postgres
-      - mailhog
-    ports: []
-    command: /start-celeryworker
-
-  celerybeat:
-    <<: *django
-    image: dataskop_local_celerybeat
-    depends_on:
-      - redis
-      - postgres
-      - mailhog
-    ports: []
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: dataskop_local_flower
-    ports:
-      - '5555:5555'
-    command: /start-flower
