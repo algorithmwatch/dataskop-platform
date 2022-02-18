@@ -1,3 +1,4 @@
+from typing import List, TypedDict
 from django import template
 from django.urls import reverse
 
@@ -35,6 +36,11 @@ def create_user_menu(is_authenticated):
     )
 
 
+class MenuItem(TypedDict):
+    label: str
+    url: str
+
+
 @register.simple_tag(takes_context=True)
 def primary_menu(context, mobile=True):
     request = context.get("request", None)
@@ -42,6 +48,7 @@ def primary_menu(context, mobile=True):
     if not request:
         return []
 
+    site_menu: List[MenuItem]
     if mobile is True:
         site_menu = [
             # {

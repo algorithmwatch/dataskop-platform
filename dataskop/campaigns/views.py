@@ -37,8 +37,8 @@ User = get_user_model()
 
 class UsersDonationMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
-        obj = self.get_object()
-        return obj.donor == self.request.user or self.request.user.is_staff
+        obj = self.get_object()  # type: ignore
+        return obj.donor == self.request.user or self.request.user.is_staff  # type: ignore
 
 
 @method_decorator(never_cache, name="dispatch")

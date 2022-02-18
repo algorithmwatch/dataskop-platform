@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -17,9 +19,6 @@ class Command(BaseCommand):
             action="store_true",
         )
 
-    # mute signals when creating fake data (via https://stackoverflow.com/a/26490827/4028896)
-
-    # @factory.django.mute_signals(signals.pre_save, signals.post_save)
     @transaction.atomic
     def handle(self, *args, **options):
 

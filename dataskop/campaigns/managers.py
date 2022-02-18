@@ -1,6 +1,7 @@
 import time
 from collections import defaultdict
 from datetime import datetime, timedelta
+from typing import Dict
 
 from allauth.account.models import EmailAddress
 from django.conf import settings
@@ -145,7 +146,7 @@ class BaseDonationManager(models.Manager):
                     _, deleted = email_obj.user.delete()
                     deleted_objects.append(deleted)
 
-        total_deleted = defaultdict(lambda: 0)
+        total_deleted: Dict[str, int] = defaultdict(lambda: 0)
 
         for li in deleted_objects:
             for k, v in li.items():

@@ -220,6 +220,11 @@ campaign (and can't be changed anymore).",
         return f"{self.subject[:20]} / {self.campaign} / {self.sent_by}"
 
     def send_notification(self):
+        """
+        Send notifcation to all donors of the campaign.
+        """
+        assert self.campaign is not None
+
         users = User.objects.filter(
             pk__in=(
                 self.campaign.donation_set.confirmed().values_list("donor").distinct()
@@ -242,6 +247,8 @@ campaign (and can't be changed anymore).",
         """
         Send a draft email to the admin who is editing the notification.
         """
+        assert self.campaign is not None
+
         user = self.sent_by
         DonorNotificationEmail(
             user, "DRAFT: " + self.subject, self.text, self.campaign.pk

@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 # add anymails status to herald's `extra_data`
 
 import json

@@ -57,6 +57,8 @@ def test_user_delete():
     assert Donation.objects.count() == 1
 
     user = User.objects.filter(email=d.unauthorized_email).first()
+
+    assert user
     user_pk = user.pk
     num_deleted, _ = user.delete()
 

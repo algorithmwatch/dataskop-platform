@@ -14,9 +14,9 @@ class User(LifecycleModelMixin, AbstractUser):
     """Default user for dataskop."""
 
     # easier to override username
-    username = CharField(max_length=255, blank=True, null=True)
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    username = CharField(max_length=255, blank=True, null=True)  # type: ignore
+    USERNAME_FIELD: str = "email"
+    REQUIRED_FIELDS: list = []
 
     first_name = CharField("Vorname", max_length=255)
     last_name = CharField("Nachname", max_length=255)
@@ -41,4 +41,4 @@ class User(LifecycleModelMixin, AbstractUser):
         pre_user_deleted.send(self, user=self)
 
 
-User._meta.get_field("email")._unique = True
+User._meta.get_field("email")._unique = True  # type: ignore

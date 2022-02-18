@@ -22,7 +22,7 @@ See [docs/exampleenv](./docs/exampleenv).
 #### Git hook
 
 For consistent code formating, we provide a [format script](./scripts/format.sh).
-Since git hooks are not part of git, you have to configure it on your local machine.
+Since git hooks are not stored with git, you have to configure it on your local machine.
 
 Set up a pre-commit [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) in `.git/hooks/pre-commit` with the following content.
 

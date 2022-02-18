@@ -119,7 +119,7 @@ def admin_send_reminder(modeladmin, request, queryset):
     )
 
 
-admin_send_reminder.short_description = "Send reminders to unverified donations"
+admin_send_reminder.short_description = "Send reminders to unverified donations"  # type: ignore
 
 
 def require_confirmation(func):
@@ -162,11 +162,12 @@ class UnconfirmedDonationsFilter(admin.SimpleListFilter):
         return (("confirmed", "Confirmed"), ("unconfirmed", "Unconfirmed"))
 
     def queryset(self, request, queryset):
-        if not self.value():
+        val = self.value()
+        if val is None:
             return queryset
-        if self.value().lower() == "confirmed":
+        elif val.lower() == "confirmed":
             return queryset.filter(donor__isnull=False)
-        elif self.value().lower() == "unconfirmed":
+        elif val.lower() == "unconfirmed":
             return queryset.filter(donor__isnull=True)
 
 

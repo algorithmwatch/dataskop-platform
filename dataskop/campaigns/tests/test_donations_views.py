@@ -3,13 +3,12 @@ import re
 
 import pytest
 from allauth.account.models import EmailAddress
-from django.conf import Settings
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls.base import reverse
 from freezegun import freeze_time
 
-from dataskop.campaigns.models import Donation, DonorNotificationSetting
+from dataskop.campaigns.models import Donation
 from dataskop.campaigns.tasks import handle_donation, remind_user_registration
 from dataskop.campaigns.tests.factories import (
     CampaignFactory,
