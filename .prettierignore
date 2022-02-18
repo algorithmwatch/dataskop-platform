@@ -1,3 +1,5 @@
 *.html
 staticfiles
 *.yml
+.mypy_cache
+dataskop/static
