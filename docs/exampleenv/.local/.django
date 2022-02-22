@@ -3,7 +3,6 @@
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
 DJANGO_DEBUG=yes
-URL_ORIGIN=http://localhost:8000
 
 # Redis
 

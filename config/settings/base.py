@@ -40,8 +40,6 @@ LANGUAGES = [
 ]
 # https://docs.djangoproject.com/en/4.0/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-# store this info here to avoid db lookups in 'sites'
-URL_ORIGIN = env("URL_ORIGIN", default=None)
 
 # DATABASES
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
@@ -270,7 +268,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://localhost:\d+$",
     r"^http://127\.0\.0\.1:\d+$",
-] + ([] if URL_ORIGIN is None else [URL_ORIGIN])
+]
 
 
 # EMAIL

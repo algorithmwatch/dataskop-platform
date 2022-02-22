@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -51,11 +52,12 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
 
         ip_address = self.request.META.get("REMOTE_ADDR")
 
+        site = get_current_site(self.request)
         if email_obj:
             user = email_obj.user
-            user.send_magic_login(email, ip_address)
+            user.send_magic_login(email, ip_address, site)
         else:
-            User.objects.create_unverified_user_send_mail(email, ip_address)
+            User.objects.create_unverified_user_send_mail(email, ip_address, site)
 
     # redirect if user is already logged in
     def dispatch(self, request, *args, **kwargs):

@@ -40,10 +40,10 @@ class CustomUserManager(UserManager):
         EmailAddress.objects.create(user=user, email=email, verified=True, primary=True)
         return user
 
-    def create_unverified_user_send_mail(self, email, ip_address):
+    def create_unverified_user_send_mail(self, email, ip_address, site):
         user = self.create_user(
             first_name="first_name", last_name="last_name", email=email
         )
         # cleaned version
         email = user.email
-        user.send_magic_registration(email, ip_address)
+        user.send_magic_registration(email, ip_address, site)

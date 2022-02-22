@@ -6,6 +6,7 @@ from typing import Dict
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.db import models
 from herald.models import SentNotification
 
@@ -57,9 +58,14 @@ class BaseDonationManager(models.Manager):
             campaign__isnull=False,
             campaign__status="active",
         )
-
-        for email in qs.values_list("unauthorized_email", flat=True).distinct():
-            user = User.objects.filter(email=email).first()
+        # NB: Only works with Postgres:
+        # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#distinct
+        for obj in (
+            qs.order_by("unauthorized_email", "campaign")
+            .distinct("unauthorized_email", "campaign")
+            .select_related("campaign__site")
+        ):
+            user = User.objects.filter(email=obj.unauthorized_email).first()
             if user is None:
                 continue
 
@@ -77,7 +83,7 @@ class BaseDonationManager(models.Manager):
 
             # give up after some tries
             if num_sent < max_reminders_sent:
-                ReminderEmail(user).send(user=user)
+                ReminderEmail(user, obj.campaign.site).send(user=user)
                 time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
                 total_reminder_sent += 1
 

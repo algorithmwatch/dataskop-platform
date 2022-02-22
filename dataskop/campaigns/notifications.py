@@ -16,11 +16,11 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
     subject = "Neue Datenspenden – Bitte einloggen"
     render_types = ["text"]
 
-    def __init__(self, user):  # optionally customize the initialization
+    def __init__(self, user, site):  # optionally customize the initialization
         self.context = {
             "CONTACT_EMAIL": settings.CONTACT_EMAIL,
             "user": user,
-            "login_url": settings.URL_ORIGIN
+            "login_url": site.siteextended.url_origin
             + reverse("magic_login")
             + "?email="
             + user.email,
@@ -30,10 +30,14 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
     @staticmethod
     def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
         from django.contrib.auth import get_user_model
+        from django.contrib.sites.models import Site
 
         User = get_user_model()
 
-        return [User.objects.order_by("?")[0]]
+        return [
+            User.objects.order_by("?")[0],
+            Site.objects.first(),
+        ]
 
 
 @registry.register_decorator()
@@ -69,12 +73,12 @@ class DonorNotificationEmail(EmailNotification):
     template_name = "donor_notification"
     render_types = ["text"]
 
-    def __init__(self, user, subject, text, campaign_pk):
+    def __init__(self, user, subject, text, campaign_pk, site):
         magic_params = get_query_string(
             user,
             scope=f"disable-notification-{campaign_pk}",
         )
-        disable_url = f"{settings.URL_ORIGIN}{reverse('donor_notification_disable')}{magic_params}&c={campaign_pk}"
+        disable_url = f"{site.siteextended.url_origin}{reverse('donor_notification_disable')}{magic_params}&c={campaign_pk}"
         self.context = {
             "user": user,
             "CONTACT_EMAIL": settings.CONTACT_EMAIL,
@@ -87,6 +91,9 @@ class DonorNotificationEmail(EmailNotification):
     @staticmethod
     def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
         from django.contrib.auth import get_user_model
+        from django.contrib.sites.models import Site
+
+        from dataskop.campaigns.models import Campaign
 
         User = get_user_model()
 
@@ -94,4 +101,6 @@ class DonorNotificationEmail(EmailNotification):
             User.objects.order_by("?")[0],
             "Neugikeit für Test",
             "wir haben Neugikeiten für dich.",
+            Campaign.objects.first(),
+            Site.objects.first(),
         ]

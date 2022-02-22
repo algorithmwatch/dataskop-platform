@@ -175,13 +175,15 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
 
             # only inform a user if she or he wasn't recently contacted
             if num_recent_sent == 0:
-                UnauthorizedDonationShouldLoginEmail(existing_email.user).send(
-                    user=existing_email.user, raise_exception=True
-                )
+                UnauthorizedDonationShouldLoginEmail(
+                    existing_email.user, self.campaign.site
+                ).send(user=existing_email.user, raise_exception=True)
         else:
+            assert self.campaign
+            assert self.campaign.site
             # create a new account
             User.objects.create_unverified_user_send_mail(
-                self.unauthorized_email, self.ip_address
+                self.unauthorized_email, self.ip_address, self.campaign.site
             )
 
     @hook(BEFORE_DELETE)
@@ -267,9 +269,9 @@ campaign (and can't be changed anymore).",
         ).values_list("user")
 
         for u in users.exclude(pk__in=exclude_users).select_related():
-            DonorNotificationEmail(u, self.subject, self.text, self.campaign.pk).send(
-                user=u
-            )
+            DonorNotificationEmail(
+                u, self.subject, self.text, self.campaign.pk, self.campaign.site
+            ).send(user=u)
             # cheap throttle
             time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
 
@@ -282,7 +284,11 @@ campaign (and can't be changed anymore).",
 
         user = self.sent_by
         DonorNotificationEmail(
-            user, "DRAFT: " + self.subject, self.text, self.campaign.pk
+            user,
+            "DRAFT: " + self.subject,
+            self.text,
+            self.campaign.pk,
+            self.campaign.site,
         ).send(user=user)
 
     @hook(AFTER_CREATE, when="draft", is_now=False)

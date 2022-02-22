@@ -30,11 +30,11 @@ class User(LifecycleModelMixin, AbstractUser):
     def get_absolute_url(self):
         return reverse("account_index")
 
-    def send_magic_registration(self, email, ip_address):
-        return MagicRegistrationEmail(self, email, ip_address).send(user=self)
+    def send_magic_registration(self, email, ip_address, site):
+        return MagicRegistrationEmail(self, email, ip_address, site).send(user=self)
 
-    def send_magic_login(self, email, ip_address):
-        return MagicLoginEmail(self, email, ip_address).send(user=self)
+    def send_magic_login(self, email, ip_address, site):
+        return MagicLoginEmail(self, email, ip_address, site).send(user=self)
 
     @hook(BEFORE_DELETE)
     def before_delete_hook(self):
