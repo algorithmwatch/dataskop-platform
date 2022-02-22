@@ -1,6 +1,4 @@
 import pytest
-from allauth.account.models import EmailAddress
-from django.db.models.expressions import F
 
 from .factories import DonationFactory
 

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('campaigns', '0016_auto_20220222_1629'),
+        ("campaigns", "0016_auto_20220222_1629"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='siteextended',
-            name='port',
+            model_name="siteextended",
+            name="port",
             field=models.IntegerField(blank=True, default=None, null=True),
         ),
     ]

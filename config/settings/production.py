@@ -18,8 +18,6 @@ from .base import env
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
-# allow 172.17.x.x
-ALLOWED_HOSTS += ["172.17.{}.{}".format(i, j) for i in range(256) for j in range(256)]
 
 
 # DATABASES
