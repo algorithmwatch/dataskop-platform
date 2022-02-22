@@ -6,7 +6,6 @@ from typing import Dict
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.sites.models import Site
 from django.db import models
 from herald.models import SentNotification
 

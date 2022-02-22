@@ -25,6 +25,7 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
             + user.email,
         }
         self.to_emails = [user.email]
+        self.from_email = site.siteextended.formatted_from
 
     @staticmethod
     def get_demo_args():
@@ -57,6 +58,7 @@ class ConfirmedRegistrationEmail(EmailNotification):
             "support_email": site.siteextended.support_email,
         }
         self.to_emails = [user.email]
+        self.from_email = site.siteextended.formatted_from
 
     @staticmethod
     def get_demo_args():
@@ -87,6 +89,7 @@ class DonorNotificationEmail(EmailNotification):
         }
         self.subject = subject
         self.to_emails = [user.email]
+        self.from_email = site.siteextended.formatted_from
 
     @staticmethod
     def get_demo_args():

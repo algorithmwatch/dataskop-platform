@@ -49,6 +49,10 @@ class SiteExtended(models.Model):
     def url_origin(self):
         return f"http{'s' if self.https else ''}://{self.site.domain}{self.port if self.port else ''}"
 
+    @property
+    def formatted_from(self):
+        return f"{self.site.name} <{self.from_email}>"
+
     def __str__(self):
         return str(self.site)
 
