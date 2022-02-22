@@ -4,6 +4,7 @@ from typing import Any, Sequence
 
 import factory
 from allauth.account.models import EmailAddress
+from django.contrib.sites.models import Site
 from factory import Faker
 from factory.django import DjangoModelFactory
 
@@ -13,6 +14,7 @@ from dataskop.campaigns.models import (
     DonorNotification,
     DonorNotificationSetting,
     Provider,
+    SiteExtended,
     StatusOptions,
 )
 from dataskop.users.tests.factories import UserFactory
@@ -20,6 +22,25 @@ from dataskop.users.tests.factories import UserFactory
 
 def gen_fake_json(_):
     return json.loads(Faker("json").evaluate(None, None, {"locale": None}))
+
+
+class SiteFactory(DjangoModelFactory):
+    domain = "example.com"
+    name = "localhost example.com"
+    # site_id = 1
+
+    class Meta:
+        model = Site
+
+
+class SiteExtendedFactory(DjangoModelFactory):
+    https = False
+    support_email = "support@example.com"
+    from_email = "info@example.com"
+    site = factory.SubFactory(SiteFactory)
+
+    class Meta:
+        model = SiteExtended
 
 
 class ProviderFactory(DjangoModelFactory):
@@ -38,9 +59,17 @@ class CampaignFactory(DjangoModelFactory):
     scraping_config = factory.LazyAttribute(gen_fake_json)
     created_by = factory.SubFactory(UserFactory)
     provider = factory.SubFactory(ProviderFactory)
+    site = factory.LazyFunction(lambda: Site.objects.first())
 
     class Meta:
         model = Campaign
+
+    @factory.post_generation
+    def site(obj, create: bool, extracted: Sequence[Any], **kwargs):
+        if SiteExtended.objects.count() == 0:
+            SiteExtendedFactory(site=Site.objects.first())
+        obj.site = Site.objects.first()
+        obj.save()
 
 
 class DonationFactory(DjangoModelFactory):

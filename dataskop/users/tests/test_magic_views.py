@@ -5,13 +5,25 @@ from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls.base import reverse
+from django.contrib.sites.models import Site
+
+from dataskop.campaigns.models import SiteExtended
+from dataskop.campaigns.tests.factories import SiteExtendedFactory
 
 User = get_user_model()
 
 pytestmark = pytest.mark.django_db
 
 
-def test_magic_login(client, django_user_model):
+# Arrange
+@pytest.fixture
+def setupSiteExtended():
+    print("peter")
+    if SiteExtended.objects.count() == 0:
+        SiteExtendedFactory(site=Site.objects.first())
+
+
+def test_magic_login(setupSiteExtended, client, django_user_model):
 
     r1 = client.get(reverse("magic_login"))
 
@@ -43,7 +55,7 @@ def test_magic_login(client, django_user_model):
     assert EmailAddress.objects.filter(user=logged_in_user).first().email == the_email
 
 
-def test_magic_login_rate_limit(client, django_user_model):
+def test_magic_login_rate_limit(setupSiteExtended, client, django_user_model):
     # test rate limitting
     limited = False
     for _ in range(20):

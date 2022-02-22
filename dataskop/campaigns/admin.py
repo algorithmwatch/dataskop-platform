@@ -13,9 +13,11 @@ from .models import (
     DonorNotificationSetting,
     Event,
     Provider,
+    SiteExtended,
 )
 
 admin.site.register(Provider)
+admin.site.register(SiteExtended)
 
 
 class TextJSONEditor(JSONEditor):

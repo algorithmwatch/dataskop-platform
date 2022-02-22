@@ -5,6 +5,7 @@ from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Q
 from django.urls.base import reverse
@@ -32,9 +33,24 @@ from dataskop.utils.email import send_admin_notification
 
 User = get_user_model()
 
-# https://github.com/jazzband/django-simple-history/issues/190#issuecomment-134281202
-class StatusOptions(object):
-    STATUS_OPTIONS = Choices("draft", "active", "inactive")
+
+class SiteExtended(models.Model):
+    """
+    This model adds domain-specific attributes to Django's Site.
+    """
+
+    site = models.OneToOneField(Site, on_delete=models.CASCADE)
+    support_email = models.EmailField(max_length=255, default="support@example.com")
+    from_email = models.EmailField(max_length=255, default="info@example.com")
+    https = models.BooleanField(default=True)
+    port = models.IntegerField(default=None, blank=True, null=True)
+
+    @property
+    def url_origin(self):
+        return f"http{'s' if self.https else ''}://{self.site.domain}{self.port if self.port else ''}"
+
+    def __str__(self):
+        return str(self.site)
 
 
 class Provider(TimeStampedModel):
@@ -62,6 +78,15 @@ class Provider(TimeStampedModel):
         return f"{self.name} {self.client}"
 
 
+class StatusOptions(object):
+    """
+    A hotfix to make status field work with django-simple-history.
+    # https://github.com/jazzband/django-simple-history/issues/190#issuecomment-134281202
+    """
+
+    STATUS_OPTIONS = Choices("draft", "active", "inactive")
+
+
 class Campaign(StatusOptions, TimeStampedModel):
     """
     A campaign is an investigation into a specific platform (provider). It has a status
@@ -79,6 +104,12 @@ class Campaign(StatusOptions, TimeStampedModel):
     image = models.ImageField(null=True, blank=True, upload_to="campaigns")
     provider = models.ForeignKey(
         "Provider", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    site = models.ForeignKey(
+        Site,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
     history = HistoricalRecords(bases=[StatusOptions, TimeStampedModel])
 
