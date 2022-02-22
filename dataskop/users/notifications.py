@@ -37,7 +37,7 @@ class MagicRegistrationEmail(EmailNotification):
 
         self.context = {
             "activate_url": magic_link,
-            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+            "support_email": site.siteextended.support_email,
         }
 
     @staticmethod

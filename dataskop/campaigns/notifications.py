@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.urls.base import reverse
 from herald import registry
 from herald.base import EmailNotification, NotificationBase
@@ -16,19 +15,19 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
     subject = "Neue Datenspenden – Bitte einloggen"
     render_types = ["text"]
 
-    def __init__(self, user, site):  # optionally customize the initialization
+    def __init__(self, user, site):
         self.context = {
-            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+            "support_email": site.siteextended.support_email,
             "user": user,
             "login_url": site.siteextended.url_origin
             + reverse("magic_login")
             + "?email="
             + user.email,
-        }  # set context for the template rendering
-        self.to_emails = [user.email]  # set list of emails to send to
+        }
+        self.to_emails = [user.email]
 
     @staticmethod
-    def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
+    def get_demo_args():
         from django.contrib.auth import get_user_model
         from django.contrib.sites.models import Site
 
@@ -52,20 +51,21 @@ class ConfirmedRegistrationEmail(EmailNotification):
     subject = "DataSkop-Anmeldung erfolgreich"
     render_types = ["text"]
 
-    def __init__(self, user):  # optionally customize the initialization
+    def __init__(self, user, site):
         self.context = {
             "user": user,
-            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+            "support_email": site.siteextended.support_email,
         }
-        self.to_emails = [user.email]  # set list of emails to send to
+        self.to_emails = [user.email]
 
     @staticmethod
-    def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
+    def get_demo_args():
         from django.contrib.auth import get_user_model
+        from django.contrib.sites.models import Site
 
         User = get_user_model()
 
-        return [User.objects.order_by("?")[0]]
+        return [User.objects.order_by("?")[0], Site.objects.first()]
 
 
 @registry.register_decorator()
@@ -81,7 +81,7 @@ class DonorNotificationEmail(EmailNotification):
         disable_url = f"{site.siteextended.url_origin}{reverse('donor_notification_disable')}{magic_params}&c={campaign_pk}"
         self.context = {
             "user": user,
-            "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+            "support_email": site.siteextended.support_email,
             "notification_text": text,
             "disable_url": disable_url,
         }
@@ -89,7 +89,7 @@ class DonorNotificationEmail(EmailNotification):
         self.to_emails = [user.email]
 
     @staticmethod
-    def get_demo_args():  # define a static method to return list of args needed to initialize class for testing
+    def get_demo_args():
         from django.contrib.auth import get_user_model
         from django.contrib.sites.models import Site
 

@@ -8,7 +8,7 @@ Danach ist Deine Datenspende bestätigt. Sonst müssen wir leider Deine Spende E
 
 Danke.
 
-Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
+Bei Fragen melde Dich bitte per E-Mail an {{support_email}}.
 
 Mit freundlichen Grüßen
 

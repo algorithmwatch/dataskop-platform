@@ -2,7 +2,7 @@
 
 {{notification_text}}
 
-Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
+Bei Fragen melde Dich bitte per E-Mail an {{support_email}}.
 
 Um Benachrichtigungen abzubestellen, bitte auf folgenden Link klicken: {{disable_url}}
 

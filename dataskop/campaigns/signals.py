@@ -17,7 +17,7 @@ def handle_verified(sender, user, email, **kwargs):
         last_donation.ip_address = None
         last_donation.save()
 
-        ConfirmedRegistrationEmail(user).send(user=user)
+        ConfirmedRegistrationEmail(user, last_donation.campaign.site).send(user=user)
 
     except Donation.DoesNotExist:
         pass

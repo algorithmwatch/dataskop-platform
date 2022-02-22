@@ -294,8 +294,6 @@ EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="")
 ADMIN_NOTIFICATION_EMAILS = env.list(
     "DJANGO_ADMIN_NOTIFICATION_EMAILS", default=["notification@example.com"]
 )
-# Public email address of the used in e.g. email templates
-CONTACT_EMAIL = env("DJANGO_CONTACT_EMAIL", default="support@example.com")
 
 
 # LOGGING

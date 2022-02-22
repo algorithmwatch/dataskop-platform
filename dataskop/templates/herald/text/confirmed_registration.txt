@@ -4,7 +4,7 @@ wir bestätigen hiermit, dass Deine Spende erfolgreich war. Damit ist Datenspend
 
 Um Dich in dein DataSkop-Konto einzuloggen, besuche: https://datenspende.dataskop.net/account/login/
 
-Bei Fragen melde Dich bitte per E-Mail an {{CONTACT_EMAIL}}.
+Bei Fragen melde Dich bitte per E-Mail an {{support_email}}.
 
 Mit freundlichen Grüßen
 
