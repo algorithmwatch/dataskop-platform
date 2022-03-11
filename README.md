@@ -32,7 +32,7 @@ Set up a pre-commit [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Gi
 # If any command fails, exit immediately with that command's exit status
 set -xeo pipefail
 
-docker-compose -f docker-compose.local.yml run --rm django ./scripts/format.sh
+docker-compose -f docker-compose.local.yml run --rm django ./scripts/check_format.sh
 ```
 
 Ensure the file is executable: `chmod +x .git/hooks/pre-commit` and the following config is not empty: `git config core.hooksPath`.
