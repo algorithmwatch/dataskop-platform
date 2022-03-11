@@ -75,7 +75,11 @@ class DonorNotificationEmail(EmailNotification):
     template_name = "donor_notification"
     render_types = ["text"]
 
-    def __init__(self, user, subject, text, campaign_pk, site):
+    def __init__(self, user, subject, text, campaign_pk):
+        from dataskop.campaigns.models import Campaign
+
+        site = Campaign.objects.get(pk=campaign_pk).site
+
         magic_params = get_query_string(
             user,
             scope=f"disable-notification-{campaign_pk}",
@@ -104,6 +108,5 @@ class DonorNotificationEmail(EmailNotification):
             User.objects.order_by("?")[0],
             "Neugikeit für Test",
             "wir haben Neugikeiten für dich.",
-            Campaign.objects.first(),
-            Site.objects.first(),
+            Campaign.objects.first().pk,
         ]

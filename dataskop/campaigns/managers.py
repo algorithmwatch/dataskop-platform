@@ -1,15 +1,11 @@
-import time
 from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Dict
 
 from allauth.account.models import EmailAddress
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from herald.models import SentNotification
-
-from dataskop.campaigns.notifications import ReminderEmail
 
 User = get_user_model()
 
@@ -45,6 +41,8 @@ class BaseDonationManager(models.Manager):
         """
         Remind users that they have to confirm email their address.
         """
+
+        from dataskop.campaigns.tasks import send_reminder_email
 
         total_reminder_sent = 0
 
@@ -82,8 +80,7 @@ class BaseDonationManager(models.Manager):
 
             # give up after some tries
             if num_sent < max_reminders_sent:
-                ReminderEmail(user, obj.campaign.site).send(user=user)
-                time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
+                send_reminder_email.delay(user.pk, obj.campaign.site.pk)
                 total_reminder_sent += 1
 
         return total_reminder_sent

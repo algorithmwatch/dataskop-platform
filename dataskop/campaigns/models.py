@@ -1,9 +1,7 @@
-import time
 from datetime import timedelta
 
 from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.db import models
@@ -181,7 +179,7 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
             if num_recent_sent == 0:
                 UnauthorizedDonationShouldLoginEmail(
                     existing_email.user, self.campaign.site
-                ).send(user=existing_email.user, raise_exception=True)
+                ).send(user=existing_email.user)
         else:
             assert self.campaign
             assert self.campaign.site
@@ -272,12 +270,15 @@ campaign (and can't be changed anymore).",
             Q(disable_all=True) | Q(disabled_campaigns=self.campaign)
         ).values_list("user")
 
-        for u in users.exclude(pk__in=exclude_users).select_related():
-            DonorNotificationEmail(
-                u, self.subject, self.text, self.campaign.pk, self.campaign.site
-            ).send(user=u)
-            # cheap throttle
-            time.sleep(1 / settings.EMAIL_MAX_PER_SECOND)
+        from dataskop.campaigns.tasks import send_donor_notification_email
+
+        for user in users.exclude(pk__in=exclude_users).select_related():
+            send_donor_notification_email.delay(
+                user.pk,
+                self.subject,
+                self.text,
+                self.campaign.pk,
+            )
 
     @hook(AFTER_SAVE, when="draft", is_now=True)
     def on_draft_update(self):
@@ -292,7 +293,6 @@ campaign (and can't be changed anymore).",
             "DRAFT: " + self.subject,
             self.text,
             self.campaign.pk,
-            self.campaign.site,
         ).send(user=user)
 
     @hook(AFTER_CREATE, when="draft", is_now=False)

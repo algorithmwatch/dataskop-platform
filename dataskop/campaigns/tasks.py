@@ -2,12 +2,14 @@ import logging
 
 from celery import shared_task
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from dataskop.campaigns.api.serializers import (
     DonationUnauthorizedSerializer,
     EventSerializer,
 )
 from dataskop.campaigns.models import Donation
+from dataskop.campaigns.notifications import DonorNotificationEmail, ReminderEmail
 from dataskop.utils.email import send_admin_notification
 
 User = get_user_model()
@@ -68,6 +70,31 @@ def remind_user_registration():
         text = f"{num_reminder_sent} reminders sent"
         send_admin_notification(text, text)
     return num_reminder_sent
+
+
+@shared_task(
+    rate_limit="5/s",
+    autoretry_for=(Exception,),
+    retry_backoff=3,
+    retry_kwargs={"max_retries": 5},
+)
+def send_reminder_email(user_pk, site_pk):
+    user = User.objects.get(pk=user_pk)
+    site = Site.objects.get(pk=site_pk)
+    ReminderEmail(user, site).send(user=user, raise_exception=True)
+
+
+@shared_task(
+    rate_limit="5/s",
+    autoretry_for=(Exception,),
+    retry_backoff=3,
+    retry_kwargs={"max_retries": 5},
+)
+def send_donor_notification_email(user_pk, subject, text, campaign_pk):
+    user = User.objects.get(pk=user_pk)
+    DonorNotificationEmail(user, subject, text, campaign_pk).send(
+        user=user, raise_exception=True
+    )
 
 
 @shared_task
