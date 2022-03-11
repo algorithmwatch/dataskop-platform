@@ -3,6 +3,7 @@ import logging
 from celery import shared_task
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from herald.models import SentNotification
 
 from dataskop.campaigns.api.serializers import (
     DonationUnauthorizedSerializer,
@@ -95,6 +96,24 @@ def send_donor_notification_email(user_pk, subject, text, campaign_pk):
     DonorNotificationEmail(user, subject, text, campaign_pk).send(
         user=user, raise_exception=True
     )
+
+
+@shared_task
+def resend_failed_emails():
+    """
+    Try to resend some failed emails.
+    """
+    notification_types = (
+        "ConfirmedRegistrationEmail",
+        "UnauthorizedDonationShouldLoginEmail",
+    )
+
+    for nt in notification_types:
+        for sn in SentNotification.objects.filter(
+            status=SentNotification.STATUS_FAILED,
+            notification_class=f"dataskop.campaigns.notifications.{nt}",
+        ):
+            sn.resend()
 
 
 @shared_task

@@ -98,7 +98,6 @@ class DonorNotificationEmail(EmailNotification):
     @staticmethod
     def get_demo_args():
         from django.contrib.auth import get_user_model
-        from django.contrib.sites.models import Site
 
         from dataskop.campaigns.models import Campaign
 
