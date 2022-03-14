@@ -29,7 +29,10 @@ class UserResource(import_export.resources.ModelResource):
 @admin.register(User)
 class UserAdmin(import_export.admin.ExportMixin, auth_admin.UserAdmin):
     fieldsets = (
-        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (
+            _("Personal info"),
+            {"fields": ("first_name", "last_name", "email", "password")},
+        ),
         (
             _("Permissions"),
             {
