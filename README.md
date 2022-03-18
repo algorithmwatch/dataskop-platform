@@ -106,7 +106,7 @@ To run a celery worker:
 
 ```bash
 cd dataskop
-celery -A config.celery_app worker -l info
+celery -A config.celery_app worker -l info -Q high_priority,low_priority,celery
 ```
 
 Please note: For Celery's import magic to work, it is important _where_

@@ -1,3 +1,12 @@
+"""
+Celery tasks to off-load certain funtionality.
+
+We are currently using two queues (high_priority and low_priority). In a simple setup,
+a single worker should consume tasks from both queues. This ensures that low priority
+tasks don't block the high priority tasks (since tasks from the queues are fetched in
+a round robin way).
+"""
+
 import logging
 
 from celery import shared_task
@@ -20,7 +29,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-@shared_task(acks_late=True, reject_on_worker_lost=True)
+@shared_task(queue="high_priority", acks_late=True, reject_on_worker_lost=True)
 def handle_donation(request_data, ip_address):
     """
     Process POSTed data to create a donation.
@@ -28,7 +37,7 @@ def handle_donation(request_data, ip_address):
     We don't enforce atomic requests because it's unlikely that an exception gets thrown
     due to external factors. If there is an exception, there is most likely a bug. And,
     we want to make sure that the donation gets persisted to the DB. All the post-save
-    handling of a donation, is not essential. In the worst case, we have to retry a task
+    handling of a donation is not essential. In the worst case, we have to retry a task
     and a donation gets duplicated (and this can be handled manually). All bugs get
     reported via sentry.
 
@@ -46,7 +55,7 @@ def handle_donation(request_data, ip_address):
         )
 
 
-@shared_task(acks_late=True, reject_on_worker_lost=True)
+@shared_task(queue="low_priority", acks_late=True, reject_on_worker_lost=True)
 def handle_event(request_data, ip_address):
     """
     Process POSTed data to create an event.
@@ -61,7 +70,7 @@ def handle_event(request_data, ip_address):
         )
 
 
-@shared_task
+@shared_task(queue="high_priority")
 def remind_user_registration():
     """
     Send reminder emails to users who didn't verify their email address.
@@ -74,6 +83,7 @@ def remind_user_registration():
 
 
 @shared_task(
+    queue="low_priority",
     rate_limit="5/s",
     autoretry_for=(Exception,),
     retry_backoff=3,
@@ -86,6 +96,7 @@ def send_reminder_email(user_pk, site_pk):
 
 
 @shared_task(
+    queue="high_priority",
     rate_limit="5/s",
     autoretry_for=(Exception,),
     retry_backoff=3,
@@ -98,7 +109,7 @@ def send_donor_notification_email(user_pk, subject, text, campaign_pk):
     )
 
 
-@shared_task
+@shared_task(queue="low_priority")
 def resend_failed_emails():
     """
     Try to resend some failed emails.
@@ -116,7 +127,7 @@ def resend_failed_emails():
             sn.resend()
 
 
-@shared_task
+@shared_task(queue="low_priority")
 def test_task_email():
     """
     Test if celery beat only runs once to prevent duplicate emails.
