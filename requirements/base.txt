@@ -25,7 +25,7 @@ django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==0.9.6  # https://github.com/rsinger86/django-lifecycle/
 
 # User & authentication
-django-allauth==0.49.0  # https://github.com/pennersr/django-allauth
+django-allauth==0.50.0  # https://github.com/pennersr/django-allauth
 django-sesame[ua]==2.4  # https://github.com/aaugustin/django-sesame
 django-ratelimit==3.0.1 #  https://github.com/jsocol/django-ratelimit
 argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
