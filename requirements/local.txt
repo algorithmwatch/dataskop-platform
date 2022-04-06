@@ -13,7 +13,7 @@ coverage==6.3.2  # https://github.com/nedbat/coveragepy
 
 # Code quality
 django-stubs==1.9.0  # https://github.com/typeddjango/django-stubs
-types-freezegun==1.1.7  # https://github.com/python/typeshed
+types-freezegun==1.1.8  # https://github.com/python/typeshed
 mypy==0.942  # https://github.com/python/mypy
 black==22.1.0  # https://github.com/ambv/black
 isort==5.10.1  # https://github.com/PyCQA/isort
