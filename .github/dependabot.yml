@@ -9,6 +9,10 @@ updates:
         update-types: ["version-update:semver-minor"]
       - dependency-name: "django"
         update-types: ["version-update:semver-major"]
+        # Django-Extension is not working with the most recent Werkzeug release.
+        # https://github.com/django-extensions/django-extensions/issues/1715
+      - dependency-name: "werkzeug"
+        update-types: ["version-update:semver-minor"]
 
   - package-ecosystem: "npm"
     directory: "/"
