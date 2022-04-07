@@ -6,8 +6,13 @@ from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
 from django.db import connection, transaction
 
-from dataskop.campaigns.models import Campaign, Donation, SiteExtended
-from dataskop.campaigns.tests.factories import DonationFactory, SiteExtendedFactory
+from dataskop.campaigns.models import Campaign, Donation, SiteExtended, Event
+from dataskop.campaigns.tests.factories import (
+    DonationFactory,
+    EventFactory,
+    SiteExtendedFactory,
+)
+from dataskop.users.tests.factories import UserFactory
 
 User = get_user_model()
 
@@ -27,7 +32,7 @@ class Command(BaseCommand):
             self.stdout.write("Deleting all old objects (besides superusers)...")
 
             User.objects.filter(is_superuser=False).delete()
-            models = [Campaign, Donation, Site, SiteExtended]
+            models = [Campaign, Donation, Site, SiteExtended, Event]
             for m in models:
                 self.stdout.write(f"Deleting model `{m}` ...")
                 m.objects.all().delete()
@@ -43,8 +48,19 @@ class Command(BaseCommand):
         SiteExtendedFactory()
 
         for su in User.objects.filter(is_superuser=True):
+            # create new campaign for every superuser
             d1 = DonationFactory(donor=su, unauthorized_email=None)
             for _ in range(10):
-                DonationFactory(donor=su, unauthorized_email=None, campaign=d1.campaign)
+                d = DonationFactory(
+                    donor=su, unauthorized_email=None, campaign=d1.campaign
+                )
+
+            for _ in range(100):
+                EventFactory(campaign=d1.campaign)
+
+        for _ in range(10):
+            user = UserFactory()
+            d = DonationFactory(donor=user, unauthorized_email=None)
+            d.donor.delete()
 
         self.stdout.write(self.style.SUCCESS("done"))

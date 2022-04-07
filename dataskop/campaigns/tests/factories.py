@@ -16,6 +16,7 @@ from dataskop.campaigns.models import (
     Provider,
     SiteExtended,
     StatusOptions,
+    Event,
 )
 from dataskop.users.tests.factories import UserFactory
 
@@ -120,3 +121,12 @@ class DonorNotificationFactory(DjangoModelFactory):
 
     class Meta:
         model = DonorNotification
+
+
+class EventFactory(DjangoModelFactory):
+    campaign = factory.SubFactory(CampaignFactory)
+    message = Faker("word", ext_word_list=["some_event1", "some_event2", "some_event3"])
+    created = Faker("past_datetime")
+
+    class Meta:
+        model = Event
