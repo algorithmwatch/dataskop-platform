@@ -13,7 +13,7 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = "Generates fake data for donations"
+    help = "Generate fake data to get started quickly"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -24,7 +24,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         if options["delete"]:
-            self.stdout.write("Deleting old data (besides superusers)...")
+            self.stdout.write("Deleting all old objects (besides superusers)...")
 
             User.objects.filter(is_superuser=False).delete()
             models = [Campaign, Donation, Site, SiteExtended]

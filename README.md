@@ -57,7 +57,7 @@ If you add a new VS Code extension, you need to remove this named volume `docker
 ```bash
 ./manage migrate
 ./manage createsuperuser
-./manage fakedonations
+./manage seeddata
 /start
 ```
 
