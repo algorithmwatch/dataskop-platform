@@ -87,6 +87,7 @@ admin.site.register(DonorNotification, DonorNotificationAdmin)
 
 class EventAdmin(GuardedModelAdmin):
     list_display = ("campaign", "message", "created")
+    list_filter = ("campaign", "message", "created")
     search_fields = ("message",)
     ordering = ("-created",)
     date_hierarchy = "created"

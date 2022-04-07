@@ -25,4 +25,8 @@ def handle_verified(sender, user, email, **kwargs):
 
 @receiver(pre_user_deleted)
 def handle_pre_user_deleted(sender, user, **kwargs):
-    Event.objects.create(message=f"user deleted", data={"user": user.pk})
+    # store IDs for donations (that are about to get deleted)
+    donations = list(Donation.objects.filter(donor=user).values("id", "campaign"))
+    Event.objects.create(
+        message=f"user deleted", data={"user": user.pk, "donations": donations}
+    )

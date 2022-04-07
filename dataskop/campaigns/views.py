@@ -115,10 +115,11 @@ class DonationDeleteView(UsersDonationMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
+        obj = self.get_object()
         Event.objects.create(
             message=f"donation deleted",
-            data={"donation": self.get_object().pk},
-            campaign=self.get_object().campaign,
+            data={"donation": obj.pk, "user": obj.donor.pk},
+            campaign=obj.campaign,
         )
         return super(DonationDeleteView, self).delete(request, *args, **kwargs)
 

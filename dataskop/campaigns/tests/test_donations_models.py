@@ -55,20 +55,21 @@ def test_user_delete():
     d = DonationFactory(email__verified=True)
 
     assert Donation.objects.count() == 1
+    don = Donation.objects.all().values()[0]
 
-    user = User.objects.filter(email=d.unauthorized_email).first()
-
+    user = User.objects.filter(email=d.unauthorized_email).values()[0]
     assert user
-    user_pk = user.pk
-    num_deleted, _ = user.delete()
+    num_deleted, _ = User.objects.filter(email=d.unauthorized_email).first().delete()
 
     assert num_deleted == 3
-
     assert Donation.objects.count() == 0
 
     assert Event.objects.count() == 1
     assert Event.objects.first().message == "user deleted"
-    assert Event.objects.first().data["user"] == user_pk
+    assert Event.objects.first().data["user"] == user["id"]
+    assert len(Event.objects.first().data["donations"]) == 1
+    assert Event.objects.first().data["donations"][0]["id"] == don["id"]
+    assert Event.objects.first().data["donations"][0]["campaign"] == don["campaign_id"]
 
 
 def test_reminders_active():
