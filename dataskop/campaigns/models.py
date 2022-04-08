@@ -23,10 +23,7 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManager
-from dataskop.campaigns.notifications import (
-    DonorNotificationEmail,
-    UnauthorizedDonationShouldLoginEmail,
-)
+from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
 from dataskop.utils.email import send_admin_notification
 
 User = get_user_model()
@@ -284,16 +281,22 @@ campaign (and can't be changed anymore).",
     def on_draft_update(self):
         """
         Send a draft email to the admin who is editing the notification.
+
+        Send the email through celery because we want to check if the celery process has
+        the latest code changes. We had problems in the past, that the celery worker was
+        out of sync.
         """
         assert self.campaign is not None
 
+        from dataskop.campaigns.tasks import send_donor_notification_email
+
         user = self.sent_by
-        DonorNotificationEmail(
-            user,
-            "DRAFT: " + self.subject,
+        send_donor_notification_email.delay(
+            user.pk,
+            f"DRAFT: {self.subject}",
             self.text,
             self.campaign.pk,
-        ).send(user=user)
+        )
 
     @hook(AFTER_CREATE, when="draft", is_now=False)
     def on_create_publish(self):
