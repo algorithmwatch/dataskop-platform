@@ -32,3 +32,7 @@ class DonorNotificationSettingForm(forms.ModelForm):
 
 class DonorNotificationDisableForm(forms.Form):
     disable = forms.BooleanField(initial=True)
+
+
+class DashboardForm(forms.Form):
+    campaign = forms.ModelChoiceField(queryset=Campaign.objects)

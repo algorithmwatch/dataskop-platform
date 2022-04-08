@@ -1,4 +1,5 @@
 from datetime import timedelta
+from functools import cached_property
 
 from allauth.account.models import EmailAddress
 from django.contrib import messages
@@ -11,17 +12,17 @@ from django.db.models import Count, Value
 from django.db.models.fields import CharField
 from django.db.models.functions.datetime import TruncDay
 from django.http.response import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.decorators.cache import never_cache
 from django.views.generic import DetailView, ListView, View
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from sesame.utils import get_user
 
 from dataskop.campaigns.forms import (
+    DashboardForm,
     DonorNotificationDisableForm,
     DonorNotificationSettingForm,
 )
@@ -198,17 +199,28 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
 @method_decorator(
     staff_member_required(login_url=reverse_lazy("magic_login")), name="dispatch"
 )
-class DashboardView(TemplateView):
+class DashboardView(FormView):
     """
-    A staff-only view to see statistics about campaigns.
+    A staff-only view to see statistics about campaigns. You need to select a single
+    campaign.
     """
 
+    form_class = DashboardForm
     template_name = "campaigns/dashboard.html"
+
+    @cached_property
+    def campaign(self):
+        return get_object_or_404(
+            Campaign, pk=self.request.GET.get("campaign", Campaign.objects.last().pk)
+        )
+
+    def get_initial(self):
+        return {**super().get_initial(), "campaign": self.campaign}
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-
-        msgs = Event.objects.order_by().values_list("message", flat=True).distinct()
+        qs = Event.objects.filter(campaign=self.campaign)
+        msgs = qs.order_by().values_list("message", flat=True).distinct()
 
         # Hotfix: In the past, some events had user-specific information in the event name.
         # This made it hard to group all events by name. So the following lines remove those
@@ -235,7 +247,7 @@ class DashboardView(TemplateView):
 
         for m in msgs:
             context["events"][m] = (
-                Event.objects.filter(message__icontains=m)
+                qs.filter(message__icontains=m)
                 .annotate(date_histogram=TruncDay("created"))
                 .values("date_histogram")
                 .order_by("date_histogram")
@@ -246,8 +258,11 @@ class DashboardView(TemplateView):
             )
 
         for m in msgs:
-            context["total_events"][m] = Event.objects.filter(
-                message__icontains=m
-            ).count()
+            context["total_events"][m] = qs.filter(message__icontains=m).count()
+
+        context["num_donations"] = self.campaign.donation_set.count()
+        context["num_donations_distinct"] = self.campaign.donation_set.distinct(
+            "donor"
+        ).count()
 
         return context

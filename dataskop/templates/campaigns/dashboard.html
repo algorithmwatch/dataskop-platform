@@ -9,31 +9,40 @@
 {% block content_class %}page-wrap-wide page-wrap-space{% endblock %}
 
 {% block content %}
-  <div class="mt-8 lg:mt-10">
+  <div class="mt-8 lg:mt-10 font-mono">
 
     {% block inner %}
       <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Dashboard</h1>
       <hr/>
-      <h3 class="text-xl">Total events</h3>
+
+      <form method="get">
+        {{ form.as_p }}
+        <input type="submit" value="Show">
+      </form>
+      <hr/>
+      <h3 class="text-xl my-6">Donations</h3>
+      <div>{{ num_donations }} donations from {{num_donations_distinct}} donors</div>
+      <hr />
+      <h3 class="text-xl my-6">Total events</h3>
       {% for k,v in total_events.items %}
         <div>
           {{k}}: {{v}}
         </div>
       {% endfor %}
       <hr/>
-      <h3 class="text-xl mt-6">Events per day</h3>
+      <h3 class="text-xl my-6">Events per day</h3>
       <ul>
         {% for k,v in events.items %}
           <div class="mb-10">
-            <div>
+            <div class="text-lg mb-3">
               {{k}}
             </div>
-            <div class="pl-10">
+            <div class="grid grid-cols-6">
               {% for time in v %}
-                <span>
-                  {{time.date_histogram|date}}:
-                  {{time.total}},
-                </span>
+                <div class="flex">
+                  <div>{{time.date_histogram|date:"d.m.y"}}:</div>
+                  <div class='pl-2'>{{time.total}}</div>
+                </div>
               {% endfor %}
             </div>
           </div>
