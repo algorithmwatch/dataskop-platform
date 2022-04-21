@@ -23,6 +23,9 @@
       <h3 class="text-xl my-6">Donations</h3>
       <div>{{ num_donations }} donations from {{num_donations_distinct}} donors</div>
       <hr />
+      <h3 class="text-xl my-6">User deleted</h3>
+      <div>{{user_deleted|length}} Users, who participated in the campaign, deleted their account.</div>
+      <hr />
       <h3 class="text-xl my-6">Total events</h3>
       {% for k,v in total_events.items %}
         <div>

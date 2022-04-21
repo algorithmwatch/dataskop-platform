@@ -265,4 +265,15 @@ class DashboardView(FormView):
             "donor"
         ).count()
 
+        # Get all users that deleted their account and also donated to the given campaign.
+        context["user_deleted"] = []
+        for event in Event.objects.filter(message="user deleted").values():
+            if any(
+                [
+                    d["campaign"] == self.campaign.pk
+                    for d in event["data"].get("donations", [])
+                ]
+            ):
+                context["user_deleted"].append(event)
+
         return context
