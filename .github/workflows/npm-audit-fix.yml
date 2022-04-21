@@ -21,4 +21,5 @@ jobs:
           force: false
           git-pr-title: "Bump node dependencies via `npm audit fix`"
           git-message: "Bump node dependencies via `npm audit fix`"
+          git-branch: "npm-audit-action-${{ github.run_number }}"
           github-token: ${{ secrets.GH_TOKEN }}
