@@ -93,6 +93,7 @@ class Campaign(StatusOptions, TimeStampedModel):
     """
 
     status = StatusField(choices_name="STATUS_OPTIONS")
+    accept_new_donations = models.BooleanField(default=True)
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from="title")
     description = models.TextField(null=True, blank=True)

@@ -4,6 +4,19 @@ from dataskop.campaigns.models import Campaign, Donation, Event, Provider
 
 
 class DonationUnauthorizedSerializer(serializers.ModelSerializer):
+    def validate_campaign(self, value):
+        """
+        Additional custom validation for campaign to ensure that the campaign is set and
+        that the campaign accepts new donations.
+        """
+        if value is None or not value.accept_new_donations:
+            raise serializers.ValidationError(
+                {
+                    "campaign": "campaign must be set and also the campaign must accept new donations"
+                }
+            )
+        return value
+
     class Meta:
         model = Donation
         fields = ["results", "campaign", "unauthorized_email", "ip_address"]

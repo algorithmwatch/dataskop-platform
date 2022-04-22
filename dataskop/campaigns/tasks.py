@@ -6,9 +6,6 @@ a single worker should consume tasks from both queues. This ensures that low pri
 tasks don't block the high priority tasks (since tasks from the queues are fetched in
 a round robin way).
 """
-
-import logging
-
 from celery import shared_task
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
@@ -18,15 +15,11 @@ from dataskop.campaigns.api.serializers import (
     DonationUnauthorizedSerializer,
     EventSerializer,
 )
-from dataskop.campaigns.models import Donation
+from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.notifications import DonorNotificationEmail, ReminderEmail
 from dataskop.utils.email import send_admin_notification
 
 User = get_user_model()
-
-
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
 
 
 @shared_task(queue="high_priority", acks_late=True, reject_on_worker_lost=True)
@@ -50,8 +43,9 @@ def handle_donation(request_data, ip_address):
     if serializer.is_valid():
         serializer.save()
     else:
-        logger.info(
-            f"serialzer for unauth donation failed with the following errors: {serializer.errors}"
+        Event.objects.create(
+            message="serialzer for unauthorized donation failed",
+            data={"errors": serializer.errors, "post_data": request_data},
         )
 
 
@@ -65,8 +59,9 @@ def handle_event(request_data, ip_address):
     if serializer.is_valid():
         serializer.save()
     else:
-        logger.info(
-            f"event serialer failed with: {serializer.errors}",
+        Event.objects.create(
+            message="serialzer for event failed",
+            data={"errors": serializer.errors, "post_data": request_data},
         )
 
 
