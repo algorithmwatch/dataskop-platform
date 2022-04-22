@@ -6,7 +6,10 @@ a single worker should consume tasks from both queues. This ensures that low pri
 tasks don't block the high priority tasks (since tasks from the queues are fetched in
 a round robin way).
 """
-from celery import shared_task
+import json
+import subprocess
+
+from celery import current_app, shared_task
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from herald.models import SentNotification
@@ -125,9 +128,16 @@ def resend_failed_emails():
 @shared_task(queue="low_priority")
 def test_task_email():
     """
-    Test if celery beat only runs once to prevent duplicate emails.
+    Test if celery beat only runs once to prevent duplicate emails and get some information.
     """
+    celery_stats = f"celery:\n\n{json.dumps(current_app.control.inspect().stats(), sort_keys=True, indent=4)}"
+
+    # For FreeBSD: https://raghukumarc.blogspot.com/2011/11/show-all-processes-in-freebsd.html
+    ps = subprocess.run(["ps", "-auxww"], capture_output=True, text=True).stdout.strip(
+        "\n"
+    )
+
     send_admin_notification(
-        "Test task e-mail",
-        "this E-Mail should only be sent once.",
+        "DataSkop Heartbeat",
+        f"This email should only be sent once. If not, please contact the developer.\n\n{celery_stats}\n\nps:\n\n{ps}",
     )
