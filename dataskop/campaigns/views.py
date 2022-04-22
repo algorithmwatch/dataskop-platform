@@ -219,35 +219,21 @@ class DashboardView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
+
+        context["num_donations"] = self.campaign.donation_set.count()
+        context["num_donations_distinct"] = self.campaign.donation_set.distinct(
+            "donor"
+        ).count()
+
+        # Get total number of events and also aggregate per day
         qs = Event.objects.filter(campaign=self.campaign)
         msgs = qs.order_by().values_list("message", flat=True).distinct()
-
-        # Hotfix: In the past, some events had user-specific information in the event name.
-        # This made it hard to group all events by name. So the following lines remove those
-        # user-specific information. New events should have simplier message names and all the
-        # details should go into `data`.
-        msg_fixed = []
-        for m in msgs:
-            if m is None:
-                continue
-
-            if "user deleted" in m:
-                msg_fixed.append("user deleted")
-            elif "donation deleted" in m:
-                msg_fixed.append("donation deleted")
-            elif "user was logged out" in m:
-                msg_fixed.append("user was logged out")
-            else:
-                msg_fixed.append(m)
-
-        msgs = list(set(msg_fixed))
-
         context["events"] = {}
         context["total_events"] = {}
 
         for m in msgs:
             context["events"][m] = (
-                qs.filter(message__icontains=m)
+                qs.filter(message=m)
                 .annotate(date_histogram=TruncDay("created"))
                 .values("date_histogram")
                 .order_by("date_histogram")
@@ -258,12 +244,7 @@ class DashboardView(FormView):
             )
 
         for m in msgs:
-            context["total_events"][m] = qs.filter(message__icontains=m).count()
-
-        context["num_donations"] = self.campaign.donation_set.count()
-        context["num_donations_distinct"] = self.campaign.donation_set.distinct(
-            "donor"
-        ).count()
+            context["total_events"][m] = qs.filter(message=m).count()
 
         # Get all users that deleted their account and also donated to the given campaign.
         context["user_deleted"] = []
