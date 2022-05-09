@@ -93,7 +93,12 @@ class Campaign(StatusOptions, TimeStampedModel):
     """
 
     status = StatusField(choices_name="STATUS_OPTIONS")
+    # Optionally disable the creation of new donations.
     accept_new_donations = models.BooleanField(default=True)
+    # Featured campaigns get treaten preferably from the client. Right now, the first
+    # featured campaign gets chosen automatically and there is no selection for campaings
+    # in the Electron app.
+    featured = models.BooleanField(default=True)
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from="title")
     description = models.TextField(null=True, blank=True)

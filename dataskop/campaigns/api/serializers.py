@@ -51,6 +51,8 @@ class CampaignSerializer(serializers.ModelSerializer):
             "scraping_config",
             "image",
             "provider",
+            "accept_new_donations",
+            "featured",
         ]
 
 
