@@ -3,7 +3,7 @@ django==3.2.13  # https://www.djangoproject.com/
 
 # Django REST Framework
 djangorestframework==3.13.1  # https://github.com/encode/django-rest-framework
-django-cors-headers==3.11.0  # https://github.com/adamchainz/django-cors-headers
+django-cors-headers==3.13.0  # https://github.com/adamchainz/django-cors-headers
 
 # Database & cache
 psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
@@ -12,7 +12,7 @@ django-redis==5.2.0  # https://github.com/jazzband/django-redis
 # Celery
 celery==5.2.6  # https://github.com/celery/celery
 django-celery-beat==2.2.1  # https://github.com/celery/django-celery-beat
-flower==1.0.0  # https://github.com/mher/flower
+flower==1.1.0  # https://github.com/mher/flower
 django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-cleanup
 
 # Models
@@ -41,7 +41,7 @@ django-import-export==2.8.0  # https://github.com/django-import-export/django-im
 
 # Media
 django-storages[boto3]==1.12.3  # https://github.com/jschneier/django-storages
-pillow==9.1.0  # https://github.com/python-pillow/Pillow
+pillow==9.2.0  # https://github.com/python-pillow/Pillow
 
 # Markdown field for CMS
 django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
