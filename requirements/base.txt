@@ -16,7 +16,7 @@ flower==1.1.0  # https://github.com/mher/flower
 django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-cleanup
 
 # Models
-django-environ==0.8.1  # https://github.com/joke2k/django-environ
+django-environ==0.9.0  # https://github.com/joke2k/django-environ
 django-filter==22.1  # https://github.com/carltongibson/django-filter
 django-simple-history==3.0.0  # https://github.com/jazzband/django-simple-history
 django-taggit==2.1.0  # https://github.com/jazzband/django-taggit
