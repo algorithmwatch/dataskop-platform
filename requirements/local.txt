@@ -15,9 +15,9 @@ coverage==6.4.1  # https://github.com/nedbat/coveragepy
 django-stubs==1.9.0  # https://github.com/typeddjango/django-stubs
 types-freezegun==1.1.10  # https://github.com/python/typeshed
 mypy==0.961  # https://github.com/python/mypy
-black==22.3.0  # https://github.com/ambv/black
+black==22.6.0  # https://github.com/ambv/black
 isort==5.10.1  # https://github.com/PyCQA/isort
-djhtml==1.5.0  # https://github.com/rtts/djhtml
+djhtml==1.5.1  # https://github.com/rtts/djhtml
 
 # Utilities
 django-extensions==3.1.5  # https://github.com/django-extensions/django-extensions
