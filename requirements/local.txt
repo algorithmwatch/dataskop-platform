@@ -20,5 +20,5 @@ isort==5.10.1  # https://github.com/PyCQA/isort
 djhtml==1.5.1  # https://github.com/rtts/djhtml
 
 # Utilities
-django-extensions==3.1.5  # https://github.com/django-extensions/django-extensions
+django-extensions==3.2.0  # https://github.com/django-extensions/django-extensions
 Werkzeug==2.0.3 # https://github.com/pallets/werkzeug
