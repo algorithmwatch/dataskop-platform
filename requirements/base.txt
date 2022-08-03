@@ -45,7 +45,7 @@ pillow==9.2.0  # https://github.com/python-pillow/Pillow
 
 # Markdown field for CMS
 django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
-markdown==3.3.7  # https://github.com/Python-Markdown/markdown
+markdown==3.4.1  # https://github.com/Python-Markdown/markdown
 
 # Frontend
 django-widget-tweaks==1.4.12 # https://github.com/jazzband/django-widget-tweaks
