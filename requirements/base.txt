@@ -1,5 +1,5 @@
 # Django
-django==3.2.14  # https://www.djangoproject.com/
+django==3.2.15  # https://www.djangoproject.com/
 
 # Django REST Framework
 djangorestframework==3.13.1  # https://github.com/encode/django-rest-framework
