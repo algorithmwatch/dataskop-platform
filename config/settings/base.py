@@ -73,9 +73,6 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.twitter",
-    "allauth.socialaccount.providers.facebook",
     # celery
     "django_celery_beat",
     "session_cleanup",
@@ -91,8 +88,6 @@ THIRD_PARTY_APPS = [
     # models
     "django_filters",
     "simple_history",
-    "markupfield",
-    "taggit",
     "import_export",
     # emails
     "herald",

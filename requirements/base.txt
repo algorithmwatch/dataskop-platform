@@ -19,7 +19,6 @@ django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-clean
 django-environ==0.9.0  # https://github.com/joke2k/django-environ
 django-filter==22.1  # https://github.com/carltongibson/django-filter
 django-simple-history==3.1.1  # https://github.com/jazzband/django-simple-history
-django-taggit==2.1.0  # https://github.com/jazzband/django-taggit
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==1.0.0  # https://github.com/rsinger86/django-lifecycle/
@@ -42,10 +41,6 @@ django-import-export==2.8.0  # https://github.com/django-import-export/django-im
 # Media
 django-storages[boto3]==1.13.1  # https://github.com/jschneier/django-storages
 pillow==9.2.0  # https://github.com/python-pillow/Pillow
-
-# Markdown field for CMS
-django-markupfield==2.0.1  # https://github.com/jamesturk/django-markupfield
-markdown==3.4.1  # https://github.com/Python-Markdown/markdown
 
 # Frontend
 django-widget-tweaks==1.4.12 # https://github.com/jazzband/django-widget-tweaks
