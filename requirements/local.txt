@@ -9,7 +9,7 @@ factory-boy==3.2.1  # https://github.com/FactoryBoy/factory_boy
 
 # Coverage
 django-coverage-plugin==2.0.3  # https://github.com/nedbat/django_coverage_plugin
-coverage==6.4.2  # https://github.com/nedbat/coveragepy
+coverage==6.4.4  # https://github.com/nedbat/coveragepy
 
 # Code quality
 django-stubs==1.12.0  # https://github.com/typeddjango/django-stubs
@@ -17,7 +17,7 @@ types-freezegun==1.1.10  # https://github.com/python/typeshed
 mypy==0.971  # https://github.com/python/mypy
 black==22.6.0  # https://github.com/ambv/black
 isort==5.10.1  # https://github.com/PyCQA/isort
-djhtml==1.5.1  # https://github.com/rtts/djhtml
+djhtml==1.5.2  # https://github.com/rtts/djhtml
 
 # Utilities
 django-extensions==3.2.0  # https://github.com/django-extensions/django-extensions
