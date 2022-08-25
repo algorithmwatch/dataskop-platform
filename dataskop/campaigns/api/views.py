@@ -20,6 +20,7 @@ class DonationUnauthorizedViewSet(CreateModelMixin, GenericViewSet):
 
     # deserialization happens in the celery task
     serializer_class = DonationUnauthorizedSerializer
+    throttle_scope = "post_large"
 
     def create(self, request, *args, **kwargs):
         """
@@ -38,6 +39,7 @@ class EventViewSet(CreateModelMixin, GenericViewSet):
 
     # deserialization happens in the celery task
     serializer_class = EventSerializer
+    throttle_scope = "post_small"
 
     def create(self, request, *args, **kwargs):
         """

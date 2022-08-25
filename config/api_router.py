@@ -6,6 +6,7 @@ from dataskop.campaigns.api.views import (
     DonationUnauthorizedViewSet,
     EventViewSet,
 )
+from dataskop.lookups.api.views import InternalLookupViewSet, PublicLookupViewSet
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -15,6 +16,8 @@ else:
 router.register("donations", DonationUnauthorizedViewSet, "donations")
 router.register("campaigns", CampaignViewSet, "campaigns")
 router.register("events", EventViewSet, "events")
+router.register("lookups", PublicLookupViewSet, "lookups")
+router.register("internallookups", InternalLookupViewSet, "internallookups")
 
 
 app_name = "api"

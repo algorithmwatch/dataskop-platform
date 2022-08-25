@@ -79,6 +79,7 @@ THIRD_PARTY_APPS = [
     # drf
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_api_key",
     "corsheaders",
     # authorization
     "guardian",
@@ -97,6 +98,7 @@ LOCAL_APPS = [
     "dataskop.users.apps.UsersConfig",
     "dataskop.campaigns.apps.CampaignsConfig",
     "dataskop.pages.apps.PagesConfig",
+    "dataskop.lookups.apps.LookupsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -349,9 +351,10 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
+        "dataskop.utils.throttle.PostScopedRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "1000/hour", "user": "1000/day"},
+    "DEFAULT_THROTTLE_RATES": {"post_small": "10000/day", "post_large": "1000/day"},
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_DATASKOP_API_KEY"
