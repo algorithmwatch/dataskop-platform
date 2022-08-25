@@ -1,4 +1,7 @@
+import pytest
 from rest_framework_api_key.models import APIKey
+
+pytestmark = pytest.mark.django_db
 
 
 def test_lookup_api(client):
