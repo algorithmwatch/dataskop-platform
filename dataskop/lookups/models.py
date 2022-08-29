@@ -1,4 +1,4 @@
-from django.db.models import CharField, TextField
+from django.db.models import BinaryField, BooleanField, CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
@@ -6,7 +6,7 @@ from model_utils.models import TimeStampedModel
 
 class Lookup(TimeStampedModel):
     """
-    Store data (as stringified, compressed JSON) connected to a unique identifier (id).
+    Store binary data connected to a unique identifier (id).
     Generally, we want to store metadata about posts on platforms.
 
     `id` should be a strings because post ids on platforms vary. Prepend an indentifier
@@ -22,7 +22,8 @@ class Lookup(TimeStampedModel):
     """
 
     id = CharField(primary_key=True, max_length=25)
-    data = TextField(blank=True, null=True)
+    data = BinaryField(blank=True, null=True)
+    processing = BooleanField(default=False)
 
     def __str__(self) -> str:
-        return self.id + self.data[:5] if self.data else ""
+        return self.id
