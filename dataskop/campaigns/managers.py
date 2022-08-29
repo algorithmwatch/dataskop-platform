@@ -26,6 +26,12 @@ class DonationQuerySet(models.QuerySet):
             unauthorized_email__isnull=False,
         )
 
+    def confirmed_by_user(self, user):
+        """
+        Get confirmed donations for a given user.
+        """
+        return self.confirmed().filter(donor=user)
+
     def unconfirmed_by_user(self, user, verified_user=True):
         """
         Get unconfirmed donations for a given user.

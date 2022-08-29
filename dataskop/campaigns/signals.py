@@ -14,9 +14,7 @@ def handle_verified(sender, user, email, **kwargs):
             donor__isnull=True, unauthorized_email=email
         ).earliest("created")
         last_donation.donor = user
-        last_donation.ip_address = None
         last_donation.save()
-
         ConfirmedRegistrationEmail(user, last_donation.campaign.site).send(user=user)
 
     except Donation.DoesNotExist:

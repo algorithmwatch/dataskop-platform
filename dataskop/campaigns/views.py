@@ -73,7 +73,11 @@ class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
 @method_decorator(never_cache, name="dispatch")
 class DonationUnconfirmedView(LoginRequiredMixin, View):
     def post(self, request):
-        Donation.objects.unconfirmed_by_user(request.user).update(donor=request.user)
+        # Don't use bulk update to run lifecycle functions
+        for d in Donation.objects.unconfirmed_by_user(request.user):
+            d.donor = request.user
+            d.save()
+
         return redirect("my_donations_unconfirmed")
 
     def get(self, request, *args, **kwargs):
@@ -183,7 +187,9 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
         user, campaign = self.get_user_campaing(True)
 
         if user is None:
-            messages.error(self.request, "Es gab ein Fehler, bitte nochmals einloggen.")
+            messages.error(
+                self.request, "Es gab einen Fehler, bitte nochmals einloggen."
+            )
             # Something went wrong (maybe Redis was cleared?) so redirect to proper settings page.
             return redirect("donor_notification_setting")
 

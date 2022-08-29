@@ -191,6 +191,14 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
                 self.unauthorized_email, self.ip_address, self.campaign.site
             )
 
+    @hook(AFTER_UPDATE, when="donor", was=None, is_not=None)
+    def on_confirmation(self):
+        """
+        Execute when a donation has been confirmed
+        """
+        self.ip_address = None
+        self.save(update_fields=["ip_address"])
+
     @hook(BEFORE_DELETE)
     def send_admin_notification_before_delete(self):
         """

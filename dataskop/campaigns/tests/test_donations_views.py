@@ -24,20 +24,22 @@ pytestmark = pytest.mark.django_db
 
 def test_confirm_all(client, django_user_model):
     user = UserFactory()
-
     donation = DonationFactory(unauthorized_email=user.email)
+    donation = DonationFactory(
+        unauthorized_email=user.email, campaign=donation.campaign
+    )
 
     assert django_user_model.objects.count() == 3
-
-    assert Donation.objects.unconfirmed_by_user(user).count() == 1
+    assert Donation.objects.unconfirmed_by_user(user).count() == 2
 
     client.force_login(user)
-
     response = client.post(reverse("my_donations_unconfirmed"))
-
     assert response.status_code == 302
 
     assert Donation.objects.unconfirmed_by_user(user).count() == 0
+    assert Donation.objects.confirmed_by_user(user).count() == 2
+    for d in Donation.objects.confirmed_by_user(user):
+        assert d.ip_address is None
 
 
 def test_auto_confirm(client):
@@ -69,6 +71,7 @@ def test_auto_confirm(client):
     client.get(magic_confirm_link, follow=True, REMOTE_ADDR="127.0.0.1")
 
     assert Donation.objects.unconfirmed_by_user(user, verified_user=False).count() == 0
+    assert Donation.objects.confirmed_by_user(user).first().ip_address is None
 
 
 def test_reminder_emails(client):
