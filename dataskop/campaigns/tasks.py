@@ -10,7 +10,6 @@ import json
 import subprocess
 
 from celery import current_app, shared_task
-from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from herald.models import SentNotification
 
@@ -20,9 +19,8 @@ from dataskop.campaigns.api.serializers import (
 )
 from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.notifications import DonorNotificationEmail, ReminderEmail
+from dataskop.users.models import User
 from dataskop.utils.email import send_admin_notification
-
-User = get_user_model()
 
 
 @shared_task(queue="high_priority", acks_late=True, reject_on_worker_lost=True)

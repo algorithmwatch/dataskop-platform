@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from allauth.account.models import EmailAddress
 from autoslug import AutoSlugField
-from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Q
@@ -24,9 +23,8 @@ from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManager
 from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
+from dataskop.users.models import User
 from dataskop.utils.email import send_admin_notification
-
-User = get_user_model()
 
 
 class SiteExtended(models.Model):

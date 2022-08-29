@@ -4,7 +4,6 @@ from functools import cached_property
 from allauth.account.models import EmailAddress
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -32,8 +31,7 @@ from dataskop.campaigns.models import (
     DonorNotificationSetting,
     Event,
 )
-
-User = get_user_model()
+from dataskop.users.models import User
 
 
 class UsersDonationMixin(LoginRequiredMixin, UserPassesTestMixin):

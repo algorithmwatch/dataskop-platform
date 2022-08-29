@@ -29,10 +29,9 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 
     @staticmethod
     def get_demo_args():
-        from django.contrib.auth import get_user_model
         from django.contrib.sites.models import Site
 
-        User = get_user_model()
+        from dataskop.users.models import User
 
         return [
             User.objects.order_by("?")[0],
@@ -62,10 +61,9 @@ class ConfirmedRegistrationEmail(EmailNotification):
 
     @staticmethod
     def get_demo_args():
-        from django.contrib.auth import get_user_model
         from django.contrib.sites.models import Site
 
-        User = get_user_model()
+        from dataskop.users.models import User
 
         return [User.objects.order_by("?")[0], Site.objects.first()]
 
@@ -97,11 +95,8 @@ class DonorNotificationEmail(EmailNotification):
 
     @staticmethod
     def get_demo_args():
-        from django.contrib.auth import get_user_model
-
         from dataskop.campaigns.models import Campaign
-
-        User = get_user_model()
+        from dataskop.users.models import User
 
         return [
             User.objects.order_by("?")[0],

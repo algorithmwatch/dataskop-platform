@@ -3,7 +3,6 @@ import re
 
 import pytest
 from allauth.account.models import EmailAddress
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls.base import reverse
 from freezegun import freeze_time
@@ -17,7 +16,6 @@ from dataskop.campaigns.tests.factories import (
 )
 from dataskop.users.tests.factories import UserFactory
 
-User = get_user_model()
 
 pytestmark = pytest.mark.django_db
 

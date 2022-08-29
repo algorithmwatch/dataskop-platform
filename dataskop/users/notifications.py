@@ -43,10 +43,9 @@ class MagicRegistrationEmail(EmailNotification):
 
     @staticmethod
     def get_demo_args():
-        from django.contrib.auth import get_user_model
         from django.contrib.sites.models import Site
 
-        User = get_user_model()
+        from dataskop.users.models import User
 
         return [
             User.objects.order_by("?")[0],

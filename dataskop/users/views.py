@@ -1,6 +1,6 @@
 from allauth.account.models import EmailAddress
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
@@ -15,10 +15,9 @@ from django.views.generic.edit import DeleteView, FormView
 from ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
-from .forms import MagicLinkLoginForm
-from .signals import post_magic_email_verified
-
-User = get_user_model()
+from dataskop.users.forms import MagicLinkLoginForm
+from dataskop.users.models import User
+from dataskop.users.signals import post_magic_email_verified
 
 
 @method_decorator(never_cache, name="dispatch")

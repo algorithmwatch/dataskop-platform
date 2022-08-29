@@ -1,6 +1,5 @@
 # mypy: ignore-errors
 
-from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
@@ -13,8 +12,7 @@ from dataskop.campaigns.tests.factories import (
     SiteExtendedFactory,
 )
 from dataskop.users.tests.factories import UserFactory
-
-User = get_user_model()
+from dataskop.users.models import User
 
 
 class Command(BaseCommand):

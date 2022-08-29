@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 from allauth.account.models import EmailAddress
-from django.contrib.auth import get_user_model
 from django.db import models
 from herald.models import SentNotification
 
-User = get_user_model()
+from dataskop.users.models import User
 
 
 class DonationQuerySet(models.QuerySet):

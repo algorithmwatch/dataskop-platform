@@ -2,12 +2,13 @@ import datetime
 
 import pytest
 from allauth.account.models import EmailAddress
-from django.contrib.auth import get_user_model
 from django.core import mail
 from freezegun.api import freeze_time
 
 from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.tasks import remind_user_registration
+from dataskop.users.models import User
+
 
 from .factories import (
     CampaignFactory,
@@ -17,8 +18,6 @@ from .factories import (
 )
 
 pytestmark = pytest.mark.django_db
-
-User = get_user_model()
 
 
 def test_multiple_donation_by_same_user():
