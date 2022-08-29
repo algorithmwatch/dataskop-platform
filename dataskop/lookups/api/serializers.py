@@ -2,7 +2,7 @@ import base64
 
 from rest_framework import serializers
 
-from dataskop.lookups.models import Lookup
+from dataskop.lookups.models import Lookup, LookupJob
 
 
 class BinaryField(serializers.Field):
@@ -19,3 +19,9 @@ class LookupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lookup
         fields = ["id", "data"]
+
+
+class LookupJobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LookupJob
+        fields = ["id", "input_todo", "input_done"]

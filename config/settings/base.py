@@ -353,7 +353,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_CLASSES": [
         "dataskop.utils.throttle.PostScopedRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"post_small": "10000/day", "post_large": "1000/day"},
+    "DEFAULT_THROTTLE_RATES": {"post_small": "1000/hour", "post_large": "100/hour"},
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 

@@ -23,6 +23,7 @@ from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManager
 from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
+from dataskop.lookups.models import LookupJob
 from dataskop.users.models import User
 from dataskop.utils.email import send_admin_notification
 
@@ -196,6 +197,18 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         """
         self.ip_address = None
         self.save(update_fields=["ip_address"])
+
+        if "lookups" in self.results:
+            if "done" in self.results["lookups"]:
+                LookupJob.objects.create(
+                    created_by=self.donor, input_done=self.results["lookups"]["done"]
+                )
+            if "todo" in self.results["lookups"]:
+                LookupJob.objects.create(
+                    created_by=self.donor, input_todo=self.results["lookups"]["todo"]
+                )
+            self.results["lookups"] = None
+            self.save(update_fields=["results"])
 
     @hook(BEFORE_DELETE)
     def send_admin_notification_before_delete(self):

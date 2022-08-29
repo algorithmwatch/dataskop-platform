@@ -1,7 +1,10 @@
-from django.db.models import BinaryField, BooleanField, CharField
-from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
+from django.db import models
 from model_utils.models import TimeStampedModel
+
+from dataskop.users.models import User
+
+LOOKUP_ID_LENGTH = 25
 
 
 class Lookup(TimeStampedModel):
@@ -21,9 +24,33 @@ class Lookup(TimeStampedModel):
     index needs to be added to keep the lookup for posts working.
     """
 
-    id = CharField(primary_key=True, max_length=25)
-    data = BinaryField(blank=True, null=True)
-    processing = BooleanField(default=False)
+    id = models.CharField(primary_key=True, max_length=LOOKUP_ID_LENGTH)
+    data = models.BinaryField()
+    job = models.ForeignKey(
+        "LookupJob", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def __str__(self) -> str:
         return self.id
+
+
+class LookupJob(TimeStampedModel):
+    """
+    Manage the process to get lookup data.
+    """
+
+    done = models.BooleanField(default=False)
+    processing = models.BooleanField(default=False)
+    error = models.BooleanField(default=False)
+    trusted = models.BooleanField(default=False)
+    input_todo = ArrayField(
+        models.CharField(max_length=LOOKUP_ID_LENGTH), null=True, blank=True
+    )
+    input_done = models.JSONField(null=True, blank=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    log = models.TextField(default="")
+
+    def __str__(self) -> str:
+        return f"{self.pk}  {self.created}"
