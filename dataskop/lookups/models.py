@@ -7,7 +7,7 @@ from dataskop.users.models import User
 LOOKUP_ID_LENGTH = 25
 
 
-class Lookup(TimeStampedModel):
+class Lookup(models.Model):
     """
     Store binary data connected to a unique identifier (id).
     Generally, we want to store metadata about posts on platforms.

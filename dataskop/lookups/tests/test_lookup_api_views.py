@@ -1,10 +1,7 @@
 import base64
-from distutils.log import error
 
 import pytest
 from rest_framework_api_key.models import APIKey
-
-from dataskop.lookups.models import LookupJob
 
 pytestmark = pytest.mark.django_db
 

@@ -4,13 +4,8 @@ from dataskop.lookups.models import Lookup, LookupJob
 
 
 class LookupAdmin(admin.ModelAdmin):
-    readonly_fields = ("created", "modified")
     search_fields = ("id",)
-    list_filter = (
-        "modified",
-        "created",
-    )
-    list_display = ("modified", "created", "id")
+    list_display = ("id",)
 
 
 admin.site.register(Lookup, LookupAdmin)

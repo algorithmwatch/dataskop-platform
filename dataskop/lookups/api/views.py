@@ -1,4 +1,5 @@
-from unittest import result
+import datetime
+
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework_api_key.permissions import HasAPIKey
@@ -30,7 +31,6 @@ class LookupJobViewSet(ViewSet):
         qs = LookupJob.objects.filter(done=False, processing=False, error=False)
 
         resp_obj = None
-
         ready_input = qs.filter(input_done__isnull=False).first()
         if ready_input:
             resp_obj = ready_input
@@ -38,17 +38,18 @@ class LookupJobViewSet(ViewSet):
             resp_obj = qs.first()
 
         if resp_obj:
-            processing_objs = sum(
-                LookupJob.objects.filter(
-                    processing=True, input_todo__isnull=False
-                ).values_list("input_todo", flat=True),
-                [],
-            )
-            processing_objs = set(processing_objs)
+            processing_objs = LookupJob.objects.filter(
+                processing=True, input_todo__isnull=False
+            ).values_list("input_todo", flat=True)
+            processing_objs = set(sum(processing_objs, []))
 
-            # 1) Don't scrpaing data that is already getting processed.
-            # 2) Don't scrape data that is already there. This can happen because time elapsed since the upload.
-            # But don't save the updated data!
+            # Mark object as `processing` asap to avoid duplicated work
+            resp_obj.processing = True
+            resp_obj.save(update_fields=["processing"])
+
+            # 1) Don't scrape data that is already getting processed.
+            # 2) Don't scrape data that is already there. This can happen because time
+            # elapsed since the upload. But don't save the updated data!
             resp_obj.input_todo = [
                 x
                 for x in resp_obj.input_todo
@@ -56,10 +57,10 @@ class LookupJobViewSet(ViewSet):
             ]
 
             if not resp_obj.input_todo and not resp_obj.input_done:
+                # Revert marking, but don't save `input_todo` since this may delete items.
+                resp_obj.processing = False
+                resp_obj.save(update_fields=["processing"])
                 return Response(status=204)
-
-            resp_obj.processing = True
-            resp_obj.save()
 
             ser = LookupJobSerializer(resp_obj)
             return Response(ser.data)
@@ -84,7 +85,9 @@ class LookupJobViewSet(ViewSet):
             Lookup.objects.bulk_create(new_lookups, ignore_conflicts=True)
 
         if "log" in request.data:
-            job.log += "\n" + request.data["log"]
+            job.log += (
+                datetime.datetime.now().isoformat() + " " + request.data["log"] + "\n"
+            )
 
         if "done" in request.data and request.data["done"]:
             job.processing = False
@@ -94,8 +97,7 @@ class LookupJobViewSet(ViewSet):
             job.processing = False
             job.error = True
 
-        job.save()
-
+        job.save(update_fields=["log", "done", "processing", "error"])
         return Response(status=204)
 
     def create(self, request):
