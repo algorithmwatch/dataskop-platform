@@ -23,13 +23,12 @@ def setupSiteExtended():
 
 
 def test_magic_login(setupSiteExtended, client, django_user_model):
-
     r1 = client.get(reverse("magic_login"))
-
     assert r1.status_code == 200
 
-    the_email = "peter@lustig.de"
+    num_user_before = django_user_model.objects.count()
 
+    the_email = "peter@lustig.de"
     r2 = client.post(
         reverse("magic_login"),
         {"email": the_email},
@@ -38,8 +37,7 @@ def test_magic_login(setupSiteExtended, client, django_user_model):
     )
 
     assert r2.status_code == 200
-
-    assert django_user_model.objects.count() == 2
+    assert django_user_model.objects.count() == num_user_before + 1
     assert len(mail.outbox) == 1
 
     links = re.findall(r"(http\S*magic\S*)\s", mail.outbox[0].body)

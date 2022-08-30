@@ -27,7 +27,6 @@ def test_confirm_all(client, django_user_model):
         unauthorized_email=user.email, campaign=donation.campaign
     )
 
-    assert django_user_model.objects.count() == 3
     assert Donation.objects.unconfirmed_by_user(user).count() == 2
 
     client.force_login(user)

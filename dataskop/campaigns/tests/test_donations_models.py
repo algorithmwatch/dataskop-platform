@@ -33,12 +33,12 @@ def test_multiple_donation_by_same_user():
 
     # - use the same email so a new user does not get created
     # - but one more email is send to the user
-    assert User.objects.all().count() == 2  # including Anonymous User
+    num_users_before = User.objects.all().count()
     donation2 = DonationFactory(
         unauthorized_email=donation1.unauthorized_email,
         campaign=donation1.campaign,
     )
-    assert User.objects.all().count() == 2  # including Anonymous User
+    assert User.objects.all().count() == num_users_before
     assert len(mail.outbox) == 2
 
     #  same donation, but only one email per hour should be sent
