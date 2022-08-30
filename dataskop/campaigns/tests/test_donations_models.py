@@ -21,7 +21,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_multiple_donation_by_same_user():
-    # create a new donation campaing (not campaign video)
+    # create a new donation campaign (not campaign video)
     cam = CampaignFactory(created_by=None)
     donation1 = DonationFactory(campaign=cam)
 

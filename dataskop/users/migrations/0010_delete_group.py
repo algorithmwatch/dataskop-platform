@@ -6,7 +6,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("guardian", "0002_generic_permissions_index"),
         ("users", "0009_group"),
     ]
 

@@ -71,11 +71,8 @@ class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
 @method_decorator(never_cache, name="dispatch")
 class DonationUnconfirmedView(LoginRequiredMixin, View):
     def post(self, request):
-        # Don't use bulk update to run lifecycle functions
         for d in Donation.objects.unconfirmed_by_user(request.user):
-            d.donor = request.user
-            d.save()
-
+            d.confirm(request.user)
         return redirect("my_donations_unconfirmed")
 
     def get(self, request, *args, **kwargs):
@@ -119,6 +116,7 @@ class DonationDeleteView(UsersDonationMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         obj = self.get_object()
+        # Create the event in the view to only catch deletion requested from users.
         Event.objects.create(
             message=f"donation deleted",
             data={"donation": obj.pk, "user": obj.donor.pk},
@@ -152,7 +150,7 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
     success_url = reverse_lazy("home")
     success_message = "Die Einstellung wurde erfolgreich übernommen."
 
-    def get_user_campaing(self, with_user=False):
+    def get_user_campaign(self, with_user=False):
         """
         Weird handling of the `request` / `with_user`, FIXME.
         """
@@ -177,12 +175,12 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(DonorNotificationDisableView, self).get_context_data(**kwargs)
-        _, campaign = self.get_user_campaing()
+        _, campaign = self.get_user_campaign()
         context["campaign_title"] = campaign and campaign.title
         return context
 
     def form_valid(self, form):
-        user, campaign = self.get_user_campaing(True)
+        user, campaign = self.get_user_campaign(True)
 
         if user is None:
             messages.error(

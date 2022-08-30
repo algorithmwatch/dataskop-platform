@@ -3,7 +3,6 @@ from django.contrib import admin, messages
 from django.db.models import JSONField
 from django.template.response import TemplateResponse
 from django.utils.translation import ngettext
-from guardian.admin import GuardedModelAdmin
 from jsoneditor.forms import JSONEditor
 
 from .models import (
@@ -24,7 +23,7 @@ class TextJSONEditor(JSONEditor):
     jsoneditor_options = {"mode": "text"}
 
 
-class CampaignAdmin(GuardedModelAdmin):
+class CampaignAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "created")
     search_fields = ("title", "content")
     ordering = ("-created",)
@@ -36,7 +35,7 @@ class CampaignAdmin(GuardedModelAdmin):
 admin.site.register(Campaign, CampaignAdmin)
 
 
-class DonorNotificationSettingAdmin(GuardedModelAdmin):
+class DonorNotificationSettingAdmin(admin.ModelAdmin):
     list_display = (
         "user",
         "disable_all",
@@ -47,7 +46,7 @@ class DonorNotificationSettingAdmin(GuardedModelAdmin):
 admin.site.register(DonorNotificationSetting, DonorNotificationSettingAdmin)
 
 
-class DonorNotificationAdmin(GuardedModelAdmin):
+class DonorNotificationAdmin(admin.ModelAdmin):
     list_display = (
         "subject",
         "campaign",
@@ -85,7 +84,7 @@ class DonorNotificationAdmin(GuardedModelAdmin):
 admin.site.register(DonorNotification, DonorNotificationAdmin)
 
 
-class EventAdmin(GuardedModelAdmin):
+class EventAdmin(admin.ModelAdmin):
     list_display = ("campaign", "message", "created")
     list_filter = ("campaign", "message", "created")
     search_fields = ("message",)
@@ -169,9 +168,9 @@ class UnconfirmedDonationsFilter(admin.SimpleListFilter):
         if val is None:
             return queryset
         elif val.lower() == "confirmed":
-            return queryset.filter(donor__isnull=False)
+            return queryset.confirmed()
         elif val.lower() == "unconfirmed":
-            return queryset.filter(donor__isnull=True)
+            return queryset.unconfirmed()
 
 
 class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):

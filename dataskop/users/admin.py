@@ -8,16 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 from dataskop.users.models import User
 
-# TODO: inline donations
-
-# class PCCInline(admin.TabularInline):
-#     model = PostCaseCreation
-
-
-# class CaseInline(admin.TabularInline):
-#     model = Case
-#     fk_name = "user"
-
 
 class UserResource(import_export.resources.ModelResource):
     class Meta:
@@ -56,7 +46,6 @@ class UserAdmin(import_export.admin.ExportMixin, auth_admin.UserAdmin):
     ]
     search_fields = ["email", "first_name", "last_name"]
     ordering = ("-date_joined",)
-    # inlines = [PCCInline, CaseInline]
 
     resource_class = UserResource
     formats = [

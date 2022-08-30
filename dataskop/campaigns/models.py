@@ -11,7 +11,6 @@ from django_lifecycle import (
     AFTER_CREATE,
     AFTER_SAVE,
     AFTER_UPDATE,
-    BEFORE_DELETE,
     LifecycleModelMixin,
     hook,
 )
@@ -22,10 +21,12 @@ from model_utils.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
 from dataskop.campaigns.managers import DonationManager
-from dataskop.campaigns.notifications import UnauthorizedDonationShouldLoginEmail
+from dataskop.campaigns.notifications import (
+    ConfirmedRegistrationEmail,
+    UnauthorizedDonationShouldLoginEmail,
+)
 from dataskop.lookups.models import LookupJob
 from dataskop.users.models import User
-from dataskop.utils.email import send_admin_notification
 
 
 class SiteExtended(models.Model):
@@ -95,7 +96,7 @@ class Campaign(StatusOptions, TimeStampedModel):
     # Optionally disable the creation of new donations.
     accept_new_donations = models.BooleanField(default=True)
     # Featured campaigns get treaten preferably from the client. Right now, the first
-    # featured campaign gets chosen automatically and there is no selection for campaings
+    # featured campaign gets chosen automatically and there is no selection for campaigns
     # in the Electron app.
     featured = models.BooleanField(default=True)
     title = models.CharField(max_length=255)
@@ -116,9 +117,6 @@ class Campaign(StatusOptions, TimeStampedModel):
         blank=True,
     )
     history = HistoricalRecords(bases=[StatusOptions, TimeStampedModel])
-
-    class Meta:
-        permissions = (("assign_campaign", "Assign campaign"),)
 
     def __str__(self) -> str:
         return self.title
@@ -153,6 +151,31 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("my_donations_detail", kwargs={"pk": self.pk})
+
+    def confirm(self, user, send_email=False):
+        """
+        On confirmation, set the user, remove the ip address, and optionally send a confirmation email
+        """
+        self.donor = user
+        self.ip_address = None
+        update_fields = ["ip_address", "donor"]
+
+        if "lookups" in self.results:
+            if "done" in self.results["lookups"]:
+                LookupJob.objects.create(
+                    created_by=self.donor, input_done=self.results["lookups"]["done"]
+                )
+            if "todo" in self.results["lookups"]:
+                LookupJob.objects.create(
+                    created_by=self.donor, input_todo=self.results["lookups"]["todo"]
+                )
+            self.results["lookups"] = None
+            update_fields += ["results"]
+
+        self.save(update_fields=update_fields)
+
+        if send_email:
+            ConfirmedRegistrationEmail(user, self.campaign.site).send(user=user)
 
     @hook(AFTER_CREATE, when="unauthorized_email", is_not=None)
     def after_creation_with_unauthorized_email(self):
@@ -189,36 +212,6 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
             User.objects.create_unverified_user_send_mail(
                 self.unauthorized_email, self.ip_address, self.campaign.site
             )
-
-    @hook(AFTER_UPDATE, when="donor", was=None, is_not=None)
-    def on_confirmation(self):
-        """
-        Execute when a donation has been confirmed
-        """
-        self.ip_address = None
-        self.save(update_fields=["ip_address"])
-
-        if "lookups" in self.results:
-            if "done" in self.results["lookups"]:
-                LookupJob.objects.create(
-                    created_by=self.donor, input_done=self.results["lookups"]["done"]
-                )
-            if "todo" in self.results["lookups"]:
-                LookupJob.objects.create(
-                    created_by=self.donor, input_todo=self.results["lookups"]["todo"]
-                )
-            self.results["lookups"] = None
-            self.save(update_fields=["results"])
-
-    @hook(BEFORE_DELETE)
-    def send_admin_notification_before_delete(self):
-        """
-        Inform admins when a user deletes their account.
-        """
-        send_admin_notification(
-            "Donation Deleted",
-            f"Donation with id {self.pk}, for campaign {self.campaign}, was deleted",
-        )
 
 
 class Event(TimeStampedModel):

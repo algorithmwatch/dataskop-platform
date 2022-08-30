@@ -33,7 +33,7 @@ class DonationQuerySet(models.QuerySet):
 
     def unconfirmed_by_user(self, user, verified_user=True):
         """
-        Get unconfirmed donations for a given user.
+        Get unconfirmed donations for a given user by checking their email addresses.
         """
         user_emails = EmailAddress.objects.filter(
             user=user, verified=verified_user
@@ -92,7 +92,7 @@ class BaseDonationManager(models.Manager):
 
     def delete_anonymous_donations(self, donation_qs=None):
         """
-        delete donations that have no unauthorized emails
+        Delete donations that have no unauthorized emails.
         """
         _, deleted = (
             (donation_qs or self.model.objects)

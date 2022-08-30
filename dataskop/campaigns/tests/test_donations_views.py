@@ -98,7 +98,6 @@ def test_reminder_emails(client):
         # 'click' the generated link
         magic_confirm_link = re.findall(r"(http\S*magic\S*)\s", mail.outbox[0].body)[0]
         response2 = client.get(magic_confirm_link, follow=True, REMOTE_ADDR="127.0.0.1")
-        print(response2.status_code)
         assert response2.status_code == 403
 
     with freeze_time(in3days):

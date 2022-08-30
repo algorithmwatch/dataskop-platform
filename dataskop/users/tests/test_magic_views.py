@@ -18,7 +18,6 @@ pytestmark = pytest.mark.django_db
 # Arrange
 @pytest.fixture
 def setupSiteExtended():
-    print("peter")
     if SiteExtended.objects.count() == 0:
         SiteExtendedFactory(site=Site.objects.first())
 

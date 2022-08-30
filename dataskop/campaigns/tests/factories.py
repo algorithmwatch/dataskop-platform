@@ -93,8 +93,7 @@ class DonationFactory(DjangoModelFactory):
                 email_obj.set_as_primary(conditional=True)
                 email_obj.verified = True
                 email_obj.save()
-                obj.donor = email_obj.user
-                obj.save()
+                obj.confirm(email_obj.user)
 
 
 class DonorNotificationSettingFactory(DjangoModelFactory):

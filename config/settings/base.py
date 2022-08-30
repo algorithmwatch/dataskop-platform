@@ -81,8 +81,6 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "rest_framework_api_key",
     "corsheaders",
-    # authorization
-    "guardian",
     # views
     "widget_tweaks",
     "jsoneditor",
@@ -110,7 +108,6 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
     "sesame.backends.ModelBackend",
-    "guardian.backends.ObjectPermissionBackend",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
