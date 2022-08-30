@@ -104,7 +104,12 @@ class LookupJobViewSet(ViewSet):
         """
         Add a new lookup job with lookup ids
         """
-        LookupJob.objects.create(
-            input_todo=request.data["todo"], log=request.data["log"], trusted=True
+
+        log = (
+            datetime.datetime.now().isoformat()
+            + " "
+            + getattr(request.data, "log", "Creating a new job")
+            + "\n"
         )
+        LookupJob.objects.create(input_todo=request.data["todo"], log=log, trusted=True)
         return Response(status=201)
