@@ -97,6 +97,11 @@ class LookupJobViewSet(ViewSet):
             job.processing = False
             job.error = True
 
+        if "reset" in request.data and request.data["reset"]:
+            job.log += datetime.datetime.now().isoformat() + " Resetting\n"
+            job.processing = False
+            job.error = False
+
         job.save(update_fields=["log", "done", "processing", "error"])
         return Response(status=204)
 
