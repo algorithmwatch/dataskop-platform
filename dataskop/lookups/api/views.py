@@ -110,12 +110,7 @@ class LookupJobViewSet(ViewSet):
         Add a new lookup job with lookup ids
         """
 
-        log = (
-            datetime.datetime.now().isoformat()
-            + " "
-            + getattr(request.data, "log", "Creating a new job")
-            + "\n"
-        )
+        log = getattr(request.data, "log", "Created a new job via API")
         LookupJob.objects.create_chunked_todo(
             input_todo=request.data["todo"], log=log, trusted=True
         )
