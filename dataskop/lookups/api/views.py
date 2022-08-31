@@ -111,5 +111,7 @@ class LookupJobViewSet(ViewSet):
             + getattr(request.data, "log", "Creating a new job")
             + "\n"
         )
-        LookupJob.objects.create(input_todo=request.data["todo"], log=log, trusted=True)
+        LookupJob.objects.create_chunked_todo(
+            input_todo=request.data["todo"], log=log, trusted=True
+        )
         return Response(status=201)

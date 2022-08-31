@@ -2,6 +2,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+from dataskop.lookups.manager import LookupJobManager
 from dataskop.users.models import User
 
 LOOKUP_ID_LENGTH = 25
@@ -51,6 +52,8 @@ class LookupJob(TimeStampedModel):
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
     log = models.TextField(default="")
+
+    objects = LookupJobManager()
 
     def __str__(self) -> str:
         return f"{self.pk}  {self.created}"

@@ -166,9 +166,12 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
                     created_by=self.donor, input_done=self.results["lookups"]["done"]
                 )
             if "todo" in self.results["lookups"]:
-                LookupJob.objects.create(
-                    created_by=self.donor, input_todo=self.results["lookups"]["todo"]
+                LookupJob.objects.create_chunked_todo(
+                    input_todo=self.results["lookups"]["todo"],
+                    log="Created from data dontation",
+                    created_by=self.donor,
                 )
+
             self.results["lookups"] = None
             update_fields += ["results"]
 
