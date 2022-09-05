@@ -14,7 +14,7 @@
       <h1 class="font-bold text-xl lg:text-2xl leading-6 mt-3 mb-3">Benachrichtigungen</h1>
       <form method="post">{% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Speichern">
+        <input class="hover:no-underline underline bg-transparent pt-10 text-lg font-bold" type="submit" value="Speichern">
       </form>
     {% endblock %}
   </div>
