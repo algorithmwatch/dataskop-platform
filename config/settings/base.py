@@ -72,13 +72,11 @@ THIRD_PARTY_APPS = [
     # authentification
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
     # celery
     "django_celery_beat",
     "session_cleanup",
     # drf
     "rest_framework",
-    "rest_framework.authtoken",
     "rest_framework_api_key",
     "corsheaders",
     # views
@@ -122,7 +120,6 @@ LOGIN_URL = "magic_login"
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "dataskop.users.adapters.AccountAdapter"
-SOCIALACCOUNT_ADAPTER = "dataskop.users.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 # https://django-allauth.readthedocs.io/en/latest/advanced.html#custom-user-models
@@ -130,15 +127,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_FORMS = {"signup": "dataskop.users.forms.CustomSignupForm"}
 # Don't ask user, always remember.
 ACCOUNT_SESSION_REMEMBER = True
-
-# Only used when sending emails with request context (e.g. email confirmation).
-# Emails that get sent via cellery do not have access to request.user and thus
-# cannot use django-allauth's tag. The email templates handle this.
-# Check `templates/account/emails/base.html`.
-ACCOUNT_USER_DISPLAY = lambda user: user.full_name
 
 # Django-Sesame (Magic Login) - https://github.com/aaugustin/django-sesame
 SESAME_MAX_AGE = 3600
