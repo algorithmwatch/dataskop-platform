@@ -67,6 +67,11 @@ class DonationUnconfirmedListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Donation.objects.unconfirmed_by_user(self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["hide_title"] = True
+        return super().get_context_data(**kwargs)
+
 
 @method_decorator(never_cache, name="dispatch")
 class DonationUnconfirmedView(LoginRequiredMixin, View):
