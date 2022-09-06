@@ -2,8 +2,4 @@
 {% load account %}
 {% load i18n %}
 
-{% block content %}{% autoescape off %}vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Adresse zum Abschluss der Spende. {{ activate_url }}.
-
-Mit freundlichen Grüßen
-
-Das DataSkop-Team{% endwith %}{% endautoescape %}{% endblock %}
+{% block content %}{% autoescape off %}bitte bestätige Deine E-Mail-Adresse: {{ activate_url }}.{% endautoescape %}{% endblock %}

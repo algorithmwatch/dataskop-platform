@@ -5,16 +5,7 @@
 <html>
   <body>
     <div>
-      {# Email may get rendered w and w/o request context (via celery) #}
-      {% if request and request.user %}
-        <p>Liebe·r {% user_display user %},</p>
-      {% else %}
-        {% if user_full_name %}
-          <p>Liebe·r {{ user_full_name }},</p>
-        {% else %}
-          <p>Guten Tag,</p>
-        {% endif %}
-      {% endif %}
+      <p>Hallo,</p>
       <div>{% block content %}{% endblock %}</div>
       {% with site_name=current_site.name site_domain=current_site.domain %}
         <p>Mit freundlichen Grüßen<br/>Das {{ site_name }}-Team</p>
