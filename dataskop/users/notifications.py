@@ -15,13 +15,7 @@ class MagicRegistrationEmail(EmailNotification):
     subject = "DataSkop-Anmeldung abschließen"
     render_types = ["text"]
 
-    def __init__(
-        self,
-        user,
-        email,
-        ip_address,
-        site,
-    ):
+    def __init__(self, user, email, ip_address, site, donation=None):
         self.to_emails = [email]
         self.from_email = site.siteextended.formatted_from
 
@@ -39,6 +33,7 @@ class MagicRegistrationEmail(EmailNotification):
         self.context = {
             "activate_url": magic_link,
             "support_email": site.siteextended.support_email,
+            "donation": donation,
         }
 
     @staticmethod

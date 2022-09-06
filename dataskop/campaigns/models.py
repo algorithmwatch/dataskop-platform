@@ -213,7 +213,10 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
             assert self.campaign.site
             # create a new account
             User.objects.create_unverified_user_send_mail(
-                self.unauthorized_email, self.ip_address, self.campaign.site
+                self.unauthorized_email,
+                self.ip_address,
+                self.campaign.site,
+                donation=True,
             )
 
 

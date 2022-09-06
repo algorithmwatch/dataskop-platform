@@ -1,6 +1,6 @@
 {% autoescape off %}Liebe/r Datenspender/in,
 
-vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Adresse zum Abschluss der Spende.
+{% if donation %}vielen Dank für Deine Datenspende an DataSkop. Bitte bestätige Deine E-Mail-Adresse zum Abschluss der Spende.{% else %}bitte bestätige deine E-Mail-Adresse, um einen Account auf unserer Webseite zu erstellen.{% endif %}
 
 {{ activate_url }}
 

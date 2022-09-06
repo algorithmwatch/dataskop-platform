@@ -39,6 +39,7 @@ def test_magic_login(setupSiteExtended, client, django_user_model):
     assert r2.status_code == 200
     assert django_user_model.objects.count() == num_user_before + 1
     assert len(mail.outbox) == 1
+    assert "Abschluss der Spende" not in mail.outbox[0].body
 
     links = re.findall(r"(http\S*magic\S*)\s", mail.outbox[0].body)
 
