@@ -66,6 +66,14 @@ def handle_event(request_data, ip_address):
         )
 
 
+@shared_task(queue="low_priority", acks_late=True, reject_on_worker_lost=True)
+def add_event(message, data):
+    Event.objects.create(
+        message=message,
+        data=data,
+    )
+
+
 @shared_task(queue="high_priority")
 def remind_user_registration():
     """
