@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
     # drf
     "rest_framework",
     "rest_framework_api_key",
+    "drf_yasg",
     "corsheaders",
     # views
     "widget_tweaks",

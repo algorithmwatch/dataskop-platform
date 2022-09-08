@@ -6,6 +6,9 @@ from django.urls.base import reverse_lazy
 from django.views import defaults as default_views
 from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -67,6 +70,31 @@ if settings.DEBUG:
     urlpatterns = [
         re_path(r"^herald/", include("herald.urls")),
     ] + urlpatterns
+
+
+schema_view = get_schema_view(
+    openapi.Info(title="DataSkop API", default_version="v1"),
+    public=True,
+    permission_classes=[permissions.IsAdminUser],
+)
+
+urlpatterns += [
+    re_path(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    re_path(
+        r"^swagger/$",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    re_path(
+        r"^redoc/$",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
+]
 
 # 1) the catchall flatpages must be placed in the bottom
 # 2) the regex ensures that the `append slash & redirect` middleware works
