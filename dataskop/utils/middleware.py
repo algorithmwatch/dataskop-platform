@@ -23,7 +23,7 @@ class EventExceptionsMiddelware:
             data={
                 "path": request.get_full_path_info(),
                 "method": request.method,
-                "body": request.body,
+                "body": request.POST,
                 "ip_address": request.META.get("REMOTE_ADDR"),
                 "exception": str(exception),
             },
