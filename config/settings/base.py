@@ -190,6 +190,9 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+# Rate limit for `Django-ratelimit` but also DRF throttling
+RATELIMIT_ENABLE = env.bool("DJANGO_RATELIMIT_ENABLE", True)
+
 
 # MEDIA
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
