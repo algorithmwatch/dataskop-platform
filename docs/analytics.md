@@ -18,3 +18,7 @@ All other data gets deleted.
 - the user
 - the campaign
 - the timestamp of deletion
+
+## Exceptions
+
+We store all view-releated exceptions (permissioned denied, rate limited).
