@@ -39,13 +39,20 @@ def handle_donation(request_data, ip_address):
     any kind of donation. If something is wrong with the worker, the donation is still
     in the queue.
     """
+    if not isinstance(request_data, dict):
+        Event.objects.create(
+            message="Data for unauthorized donation is faulty",
+            data={"post_data": request_data},
+        )
+        return
+
     request_data["ip_address"] = ip_address
     serializer = DonationUnauthorizedSerializer(data=request_data)
     if serializer.is_valid():
         serializer.save()
     else:
         Event.objects.create(
-            message="serialzer for unauthorized donation failed",
+            message="Serialzer for unauthorized donation failed",
             data={"errors": serializer.errors, "post_data": request_data},
         )
 
@@ -55,6 +62,13 @@ def handle_event(request_data, ip_address):
     """
     Process POSTed data to create an event.
     """
+    if not isinstance(request_data, dict):
+        Event.objects.create(
+            message="Data for event is faulty",
+            data={"post_data": request_data},
+        )
+        return
+
     request_data["ip_address"] = ip_address
     serializer = EventSerializer(data=request_data)
     if serializer.is_valid():
