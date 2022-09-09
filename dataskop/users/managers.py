@@ -1,6 +1,7 @@
 from allauth.account.models import EmailAddress
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
+from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -41,9 +42,12 @@ class CustomUserManager(UserManager):
         return user
 
     def create_unverified_user_send_mail(self, email, ip_address, site, donation=None):
-        user = self.create_user(
-            first_name="first_name", last_name="last_name", email=email
-        )
-        # cleaned version
-        email = user.email
-        user.send_magic_registration(email, ip_address, site, donation)
+        try:
+            user = self.create_user(
+                first_name="first_name", last_name="last_name", email=email
+            )
+            # cleaned version
+            email = user.email
+            user.send_magic_registration(email, ip_address, site, donation)
+        except IntegrityError:
+            pass
