@@ -12,7 +12,9 @@
   <div class="mt-8 lg:mt-10">
     {% block beforelistaction %}
       {% if num_unconfirmed_donations > 0 %}
-        Es gibt weitere Spenden zu deinem Account. <a href="{% url 'my_donations_unconfirmed' %}" class="hover:no-underline underline mb-10">Bitte bestätige {{num_unconfirmed_donations}} Spende(n).</a>
+        <div class='text-xl mb-10 font-bold'>
+          Es gibt weitere Spenden zu deinem Account. <a href="{% url 'my_donations_unconfirmed' %}" class="hover:no-underline underline mb-10 text-blue-700">Bitte bestätige {{num_unconfirmed_donations}} Spende(n).</a>
+        </div>
       {% endif %}
     {% endblock %}
 

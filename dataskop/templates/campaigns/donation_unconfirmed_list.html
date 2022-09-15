@@ -4,7 +4,7 @@
   <form class='p-1 mb-5' action="{% url 'my_donations_unconfirmed' %}" method="post">
     {% csrf_token %}
     <p>Es wurden die unten gelisteten Datenspenden zu deinem Account vermerkt. Wenn diese zu deinem Account gehören, dann bestätige diese bitte. Falls nicht, kontaktiere den Support <a class="hover:no-underline underline" href="mailto:support@dataskop.net">support@dataskop.net</a>.<p>
-      <input type="submit" value="Alle bestätigen" class="cursor-pointer hover:no-underline underline bg-transparent pt-10 text-xl font-bold">
+      <input type="submit" value="Alle bestätigen" class="cursor-pointer hover:no-underline underline bg-transparent pt-5 pb-10 text-xl font-bold text-blue-700">
     </form>
 {% endblock %}
 
