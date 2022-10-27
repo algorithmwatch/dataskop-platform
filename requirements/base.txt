@@ -2,7 +2,7 @@
 django==3.2.15  # https://www.djangoproject.com/
 
 # Django REST Framework
-djangorestframework==3.13.1  # https://github.com/encode/django-rest-framework
+djangorestframework==3.14.0  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.13.0  # https://github.com/adamchainz/django-cors-headers
 djangorestframework-api-key==2.2.0  # https://github.com/florimondmanca/djangorestframework-api-key
 drf-yasg==1.21.4  # https://github.com/axnsan12/drf-yasg/
