@@ -1,4 +1,4 @@
-FROM node:12-stretch-slim as client-builder
+FROM node:14-stretch-slim as client-builder
 
 WORKDIR /app
 COPY ./package.json ./package-lock.json /app/
@@ -7,7 +7,7 @@ COPY . /app
 RUN npm run build
 
 # Python build stage
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 
