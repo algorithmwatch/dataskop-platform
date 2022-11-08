@@ -41,7 +41,7 @@ django-import-export==3.0.1  # https://github.com/django-import-export/django-im
 
 # Media
 django-storages[boto3]==1.13.1  # https://github.com/jschneier/django-storages
-pillow==9.2.0  # https://github.com/python-pillow/Pillow
+pillow==9.3.0  # https://github.com/python-pillow/Pillow
 
 # Frontend
 django-widget-tweaks==1.4.12 # https://github.com/jazzband/django-widget-tweaks
