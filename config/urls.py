@@ -25,6 +25,7 @@ urlpatterns = [
     path("", include("dataskop.users.urls")),
     path("", include("dataskop.campaigns.urls")),
     path("", include("dataskop.pages.urls")),
+    path("", include("dataskop.mailjetsync.urls")),
 ]
 
 

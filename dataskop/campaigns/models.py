@@ -143,6 +143,7 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
     unauthorized_email = models.EmailField(null=True, blank=True)
     # store ip address only until the user is verified
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    confirmed_at = models.DateTimeField(null=True, blank=True)
 
     objects = DonationManager()
 
@@ -158,7 +159,8 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         """
         self.donor = user
         self.ip_address = None
-        update_fields = ["ip_address", "donor"]
+        self.confirmed_at = timezone.now()
+        update_fields = ["ip_address", "donor", "confirmed_at"]
 
         if "lookups" in self.results:
             if "done" in self.results["lookups"]:

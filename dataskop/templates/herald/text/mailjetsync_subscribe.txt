@@ -1,0 +1,11 @@
+{% autoescape off %}Bitte bestätigen Sie Ihre Email-Adresse
+
+Vielen Dank für Ihr Abonnement unseres Newsletters. Um die Anmeldung abzuschießen, klicken Sie bitte auf folgenden Link:
+
+{{ activate_url }}
+
+Wenn Sie nicht um eine Anmeldung gebeten haben oder Ihre Meinung geändert haben, ignorieren Sie diese E-Mail einfach.
+
+Vielen Dank
+
+Das AlgorithmWatch-Team{% endautoescape %}

@@ -104,8 +104,7 @@ def remind_user_registration():
     queue="low_priority",
     rate_limit="5/s",
     autoretry_for=(Exception,),
-    retry_backoff=3,
-    retry_kwargs={"max_retries": 5},
+    retry_backoff=True,
 )
 def send_reminder_email(user_pk, site_pk):
     user = User.objects.get(pk=user_pk)
@@ -117,8 +116,7 @@ def send_reminder_email(user_pk, site_pk):
     queue="high_priority",
     rate_limit="5/s",
     autoretry_for=(Exception,),
-    retry_backoff=3,
-    retry_kwargs={"max_retries": 5},
+    retry_backoff=True,
 )
 def send_donor_notification_email(user_pk, subject, text, campaign_pk):
     user = User.objects.get(pk=user_pk)

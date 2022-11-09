@@ -96,6 +96,7 @@ LOCAL_APPS = [
     "dataskop.campaigns.apps.CampaignsConfig",
     "dataskop.pages.apps.PagesConfig",
     "dataskop.lookups.apps.LookupsConfig",
+    "dataskop.mailjetsync.apps.MailjetsyncConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -281,6 +282,12 @@ EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="")
 ADMIN_NOTIFICATION_EMAILS = env.list(
     "DJANGO_ADMIN_NOTIFICATION_EMAILS", default=["notification@example.com"]
 )
+
+ANYMAIL = {
+    "MAILJET_API_KEY": env("MAILJET_API_KEY", default=""),
+    "MAILJET_SECRET_KEY": env("MAILJET_SECRET_KEY", default=""),
+}
+MAILJET_SUBSCRIBE_LIST_ID = env("MAILJET_SUBSCRIBE_LIST_ID", default="")
 
 
 # LOGGING

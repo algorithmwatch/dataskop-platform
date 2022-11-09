@@ -7,6 +7,7 @@ from dataskop.campaigns.api.views import (
     EventViewSet,
 )
 from dataskop.lookups.api.views import LookupJobViewSet, PublicLookupViewSet
+from dataskop.mailjetsync.api.views import NewsletterSubcriptionViewSet
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -18,6 +19,7 @@ router.register("campaigns", CampaignViewSet, "campaigns")
 router.register("events", EventViewSet, "events")
 router.register("lookups", PublicLookupViewSet, "lookups")
 router.register("lookupjobs", LookupJobViewSet, "lookupjobs")
+router.register("mailjetsync", NewsletterSubcriptionViewSet, "mailjetsync")
 
 
 app_name = "api"

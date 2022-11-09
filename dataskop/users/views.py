@@ -65,6 +65,9 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
         return redirect("/")
 
 
+@method_decorator(
+    ratelimit(key="ip", rate="100/h", method="GET", block=True), name="get"
+)
 @method_decorator(never_cache, name="dispatch")
 class MagicLinkHandleConfirmationLink(View):
     def get(self, request):
