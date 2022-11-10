@@ -17,7 +17,7 @@ from sesame.utils import get_user
 
 from dataskop.users.forms import MagicLinkLoginForm
 from dataskop.users.models import User
-from dataskop.users.signals import post_magic_email_verified
+from dataskop.users.signals import post_magic_login
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -93,16 +93,17 @@ class MagicLinkHandleConfirmationLink(View):
         if not email_address:
             raise PermissionDenied("E-Mail-Adresse nicht gefunden.")
 
-        # if registration
         if email_address.verified:
             messages.success(request, "Login erfolgreich")
         else:
+            # Mark address as verified the first time the user uses it to login successfully.
             email_address.verified = True
             email_address.set_as_primary(conditional=True)
             email_address.save()
 
             messages.success(request, "Account erfolgreich verifiziert. Danke!")
-            post_magic_email_verified.send(request, user=user, email=email_str)
+
+        post_magic_login.send(request, user=user, email=email_str)
 
         if request.user.is_authenticated:
             logout(request)
