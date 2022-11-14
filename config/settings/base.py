@@ -82,7 +82,6 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     # views
     "widget_tweaks",
-    "jsoneditor",
     # models
     "django_filters",
     "simple_history",

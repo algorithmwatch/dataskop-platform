@@ -3,7 +3,6 @@ from django.contrib import admin, messages
 from django.db.models import JSONField
 from django.template.response import TemplateResponse
 from django.utils.translation import ngettext
-from jsoneditor.forms import JSONEditor
 
 from .models import (
     Campaign,
@@ -19,17 +18,11 @@ admin.site.register(Provider)
 admin.site.register(SiteExtended)
 
 
-class TextJSONEditor(JSONEditor):
-    jsoneditor_options = {"mode": "text"}
-
-
 class CampaignAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "created")
     search_fields = ("title", "content")
     ordering = ("-created",)
     date_hierarchy = "created"
-
-    formfield_overrides = {JSONField: {"widget": TextJSONEditor}}
 
 
 admin.site.register(Campaign, CampaignAdmin)
