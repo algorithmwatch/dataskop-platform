@@ -26,10 +26,19 @@ def handle_newsletter_subscription(request_data, ip_address):
     if serializer.is_valid():
         serializer.save()
     else:
-        Event.objects.create(
-            message="serialzer for newsletter subscription failed",
-            data={"errors": serializer.errors, "post_data": request_data},
-        )
+        # Check if the same email was used already to subscribe to the newsletter.
+        if NewsletterSubscription.objects.filter(
+            email=serializer.data["email"]
+        ).exists():
+            Event.objects.create(
+                message="Newsletter subscription: email duplicated",
+                data={"errors": serializer.errors, "post_data": request_data},
+            )
+        else:
+            Event.objects.create(
+                message="Newsletter subscription: serializer failed",
+                data={"errors": serializer.errors, "post_data": request_data},
+            )
 
 
 @shared_task(

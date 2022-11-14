@@ -21,7 +21,7 @@ class NewsletterSubscription(LifecycleModelMixin, TimeStampedModel):
     token = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.id
+        return self.email
 
     @hook(AFTER_CREATE, when="needs_double_optin", is_now=True)
     def send_double_optin_mail(self):
