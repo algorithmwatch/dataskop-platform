@@ -88,7 +88,23 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 
 
+class DonationResultsWidget:
+    """
+    We have to define our own Widget to avoid escaping the JSON with the default JSONWidget
+    """
+
+    def clean(self, value, row=None, **kwargs):
+        return value
+
+    def render(self, value, obj=None):
+        return value.results
+
+
 class DonationResource(import_export.resources.ModelResource):
+    results = import_export.fields.Field(
+        attribute="results", widget=DonationResultsWidget
+    )
+
     class Meta:
         model = Donation
         exclude = ("ip_address", "unauthorized_email")
