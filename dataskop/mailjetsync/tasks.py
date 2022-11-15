@@ -1,7 +1,8 @@
-from datetime import timedelta, timezone
+from datetime import timedelta
 
 from allauth.account.models import EmailAddress
 from celery import shared_task
+from django.utils import timezone
 
 from dataskop.campaigns.models import Donation, Event
 from dataskop.mailjetsync.api.serializers import NewsletterSubscriptionSerializer
