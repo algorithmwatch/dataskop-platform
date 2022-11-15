@@ -61,9 +61,12 @@ def add_to_mailjet(email, has_donated):
         raise e
 
 
-def enque_confirmed_emails():
+@shared_task(
+    queue="low_priority",
+)
+def enqueue_confirmed_emails():
     """
-    Check for emails that don't need a double optin confirmation and enque them.
+    Check for emails that don't need a double opt-in confirmation and add them.
     """
     the_past = timezone.now() - timedelta(days=7)
     user_pks_with_recent_confirmed_donation = set(
