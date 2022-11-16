@@ -21,7 +21,7 @@ django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-clean
 django-environ==0.9.0  # https://github.com/joke2k/django-environ
 django-filter==22.1  # https://github.com/carltongibson/django-filter
 django-simple-history==3.2.0  # https://github.com/jazzband/django-simple-history
-django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
+django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-autoslug==1.9.8  # https://github.com/justinmayer/django-autoslug
 django-lifecycle==1.0.0  # https://github.com/rsinger86/django-lifecycle/
 
