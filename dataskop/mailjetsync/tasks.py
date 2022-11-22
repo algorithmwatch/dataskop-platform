@@ -73,7 +73,7 @@ def enqueue_confirmed_emails():
     user_pks_with_recent_confirmed_donation = set(
         Donation.objects.confirmed()
         .filter(confirmed_at__gte=the_past)
-        .value_list("donor", flat=True)
+        .values_list("donor", flat=True)
     )
 
     for n in NewsletterSubscription.objects.filter(
