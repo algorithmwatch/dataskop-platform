@@ -71,7 +71,7 @@ def enqueue_confirmed_emails():
     """
     the_past = timezone.now() - timedelta(days=7)
     user_pks_with_recent_confirmed_donation = set(
-        Donation.objects.verified()
+        Donation.objects.confirmed()
         .filter(confirmed_at__gte=the_past)
         .value_list("donor", flat=True)
     )
