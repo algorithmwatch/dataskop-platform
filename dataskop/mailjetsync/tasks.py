@@ -79,8 +79,8 @@ def enqueue_confirmed_emails():
     for n in NewsletterSubscription.objects.filter(
         needs_double_optin=False, confirmed_at__isnull=True
     ):
-        email_obj = EmailAddress.objects.filter(email=n.email)
-        if email_obj.user.pk in user_pks_with_recent_confirmed_donation:
+        email_obj = EmailAddress.objects.filter(email=n.email).first()
+        if email_obj and email_obj.user.pk in user_pks_with_recent_confirmed_donation:
             add_to_mailjet.delay(n.email, n.has_donated)
             n.confirmed_at = timezone.now()
             n.save()
