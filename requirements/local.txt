@@ -16,7 +16,7 @@ django-stubs==1.13.1  # https://github.com/typeddjango/django-stubs
 types-freezegun==1.1.10  # https://github.com/python/typeshed
 mypy==0.991  # https://github.com/python/mypy
 black==22.12.0  # https://github.com/ambv/black
-isort==5.10.1  # https://github.com/PyCQA/isort
+isort==5.11.3  # https://github.com/PyCQA/isort
 djhtml==1.5.2  # https://github.com/rtts/djhtml
 
 # Utilities
