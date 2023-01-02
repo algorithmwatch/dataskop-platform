@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import View
-from ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
 from dataskop.mailjetsync.models import NewsletterSubscription
@@ -11,9 +11,7 @@ from dataskop.mailjetsync.models import NewsletterSubscription
 REDIRECT_URL = "https://algorithmwatch.org/de/newsletter/vielen-dank/"
 
 
-@method_decorator(
-    ratelimit(key="ip", rate="100/h", method="GET", block=True), name="get"
-)
+@method_decorator(ratelimit(key="ip", rate="100/h", method="GET"), name="get")
 @method_decorator(never_cache, name="dispatch")
 class MailjetSyncConfirmationLink(View):
     def get(self, request):

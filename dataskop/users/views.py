@@ -12,7 +12,7 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView
-from ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit
 from sesame.utils import get_user
 
 from dataskop.users.forms import MagicLinkLoginForm
@@ -29,12 +29,8 @@ class UserUpdateView(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-@method_decorator(
-    ratelimit(key="ip", rate="100/h", method="POST", block=True), name="post"
-)
-@method_decorator(
-    ratelimit(key="ip", rate="10/m", method="POST", block=True), name="post"
-)
+@method_decorator(ratelimit(key="ip", rate="100/h", method="POST"), name="post")
+@method_decorator(ratelimit(key="ip", rate="10/m", method="POST"), name="post")
 class MagicLinkFormView(SuccessMessageMixin, FormView):
     template_name = "account/login_magic.html"
     form_class = MagicLinkLoginForm
@@ -65,9 +61,7 @@ class MagicLinkFormView(SuccessMessageMixin, FormView):
         return redirect("/")
 
 
-@method_decorator(
-    ratelimit(key="ip", rate="100/h", method="GET", block=True), name="get"
-)
+@method_decorator(ratelimit(key="ip", rate="100/h", method="GET"), name="get")
 @method_decorator(never_cache, name="dispatch")
 class MagicLinkHandleConfirmationLink(View):
     def get(self, request):
