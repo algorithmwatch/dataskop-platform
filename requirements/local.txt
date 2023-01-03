@@ -9,7 +9,7 @@ factory-boy==3.2.1  # https://github.com/FactoryBoy/factory_boy
 
 # Coverage
 django-coverage-plugin==3.0.0  # https://github.com/nedbat/django_coverage_plugin
-coverage==6.5.0  # https://github.com/nedbat/coveragepy
+coverage==7.0.2  # https://github.com/nedbat/coveragepy
 
 # Code quality
 django-stubs==1.13.1  # https://github.com/typeddjango/django-stubs
