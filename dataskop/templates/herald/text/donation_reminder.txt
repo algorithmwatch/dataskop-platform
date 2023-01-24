@@ -1,14 +1,14 @@
 {% autoescape off %}Liebe/r Datenspender/in,
 
-bitte klicke auf folgenden Link. Du erhälst daraufhin eine weitere E-Mail mit einem Konto-Login. Den musst du ebenfalls klicken.
+bitte klicke auf den folgenden Link. Du erhälst daraufhin eine E-Mail mit einem Konto-Login, auf den du ebenfalls klicken musst.
 
-Danach ist Deine Datenspende bestätigt. Sonst müssen wir leider Deine Spende Ende August 2021 endgültig löschen und können sie nicht für unsere Forschung verwenden.
+Danach ist deine Datenspende bestätigt. Wenn du deine Datenspende nicht bestätigst, müssen wir sie leider löschen und können sie nicht für unsere Forschung verwenden.
 
 {{login_url}}
 
-Danke.
+Vielen Dank.
 
-Bei Fragen melde Dich bitte per E-Mail an {{support_email}}.
+Bei Fragen wende dich bitte per E-Mail an {{support_email}}.
 
 Mit freundlichen Grüßen
 
