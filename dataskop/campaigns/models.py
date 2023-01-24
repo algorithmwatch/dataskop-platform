@@ -162,17 +162,12 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         self.confirmed_at = timezone.now()
         update_fields = ["ip_address", "donor", "confirmed_at"]
 
-        if "lookups" in self.results:
-            if "done" in self.results["lookups"]:
-                LookupJob.objects.create(
-                    created_by=self.donor, input_done=self.results["lookups"]["done"]
-                )
-            if "todo" in self.results["lookups"]:
-                LookupJob.objects.create_chunked_todo(
-                    input_todo=self.results["lookups"]["todo"],
-                    log="Created from data dontation",
-                    created_by=self.donor,
-                )
+        if "lookups" in self.results and isinstance(self.results["lookups"], dict):
+            LookupJob.objects.create(
+                created_by=self.donor,
+                input_done=self.results["lookups"],
+                log="Created from data dontation",
+            )
 
             self.results["lookups"] = None
             update_fields += ["results"]
