@@ -41,7 +41,7 @@ class UnauthorizedDonationShouldLoginEmail(EmailNotification):
 
 @registry.register_decorator()
 class ReminderEmail(UnauthorizedDonationShouldLoginEmail):
-    subject = "Bitte YouTube-Datenspende bestätigen"
+    subject = "Bitte Datenspende bestätigen"
     template_name = "donation_reminder"
 
 
