@@ -132,7 +132,6 @@ class BaseDonationManager(models.Manager):
                 # exists. So don't delete it.
                 continue
             else:
-
                 # Do not delete donations / users that were created up to 24h ago.
                 if email_obj.user.date_joined > datetime.now() - timedelta(hours=24):
                     continue

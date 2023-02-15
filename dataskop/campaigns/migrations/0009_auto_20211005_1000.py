@@ -8,7 +8,6 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("campaigns", "0008_donornotification"),

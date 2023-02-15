@@ -5,7 +5,6 @@ import dataskop.users.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0006_auto_20210121_1829"),
     ]

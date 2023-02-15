@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("campaigns", "0012_auto_20220209_1804"),
         ("campaigns", "0013_alter_donornotification_draft"),

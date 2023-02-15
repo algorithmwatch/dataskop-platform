@@ -54,7 +54,6 @@ class UserAdmin(import_export.admin.ExportMixin, auth_admin.UserAdmin):
 
     # only return users with primary, verified email address
     def get_export_queryset(self, request):
-
         verified_emails = EmailAddress.objects.filter(verified=True).values_list(
             "email", flat=True
         )

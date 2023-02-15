@@ -7,7 +7,6 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("campaigns", "0004_auto_20210618_1246"),
     ]

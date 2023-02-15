@@ -20,7 +20,6 @@ def _send(
     extra_data=None,
     attachments=None,
 ):
-
     extra_data = extra_data or {}
 
     mail = EmailMultiAlternatives(

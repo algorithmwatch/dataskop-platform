@@ -30,7 +30,6 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
-
         if options["get_meta"]:
             get_contact_meta()
             return

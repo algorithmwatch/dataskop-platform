@@ -7,7 +7,6 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("campaigns", "0006_donation_ip_address"),
     ]

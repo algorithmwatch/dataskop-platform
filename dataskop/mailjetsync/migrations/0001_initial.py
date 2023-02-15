@@ -5,7 +5,6 @@ import django_lifecycle.mixins
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = []

@@ -6,7 +6,6 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("mailjetsync", "0002_newslettersubscription_has_donated"),
     ]

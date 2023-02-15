@@ -37,7 +37,6 @@ def fix_event_messages(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("campaigns", "0017_siteextended_port"),
     ]

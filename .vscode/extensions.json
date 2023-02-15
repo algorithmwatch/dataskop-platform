@@ -12,7 +12,6 @@
     "redhat.vscode-yaml",
     "timonwong.shellcheck",
     "sleistner.vscode-fileutils",
-    "foxundermoon.shell-format",
-    "ms-vsliveshare.vsliveshare"
+    "foxundermoon.shell-format"
   ]
 }
