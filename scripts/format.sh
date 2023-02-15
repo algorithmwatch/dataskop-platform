@@ -5,4 +5,4 @@ set -x
 prettier --write .
 black .
 isort dataskop/**/*.py
-djhtml -i ./**/templates/**/*.html -t 2
+djhtml ./**/templates/**/*.html -t 2
