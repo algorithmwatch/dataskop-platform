@@ -130,7 +130,26 @@ def admin_send_reminder(modeladmin, request, queryset):
     )
 
 
-admin_send_reminder.short_description = "Send reminders to unverified donations"  # type: ignore
+def dry_run_admin_send_reminder(modeladmin, request, queryset):
+    """
+    Remind users to verify their email address in order to confirm their donations.
+    For the users in the queryset, that already had their email address confirmed, do
+    nothing.
+    """
+    num_sent = Donation.objects.remind_user_registration(
+        donation_qs=queryset, dryrun=True
+    )
+
+    modeladmin.message_user(
+        request,
+        ngettext(
+            "DRY RUN: %d reminder was sent",
+            "DRY RUN: %d reminders were sent.",
+            num_sent,
+        )
+        % num_sent,
+        messages.INFO,
+    )
 
 
 def require_confirmation(func):
@@ -157,6 +176,18 @@ def delete_unconfirmed_donations(modeladmin, request, queryset):
     modeladmin.message_user(
         request,
         "deleted: " + str(del_objcts.items()),
+        messages.INFO,
+    )
+
+
+def dry_run_delete_unconfirmed_donations(modeladmin, request, queryset):
+    del_objcts = Donation.objects.delete_unconfirmed_donations(
+        donation_qs=queryset, dryrun=True
+    )
+
+    modeladmin.message_user(
+        request,
+        "DRY RUN: deleted: " + str(del_objcts.items()),
         messages.INFO,
     )
 
@@ -191,7 +222,12 @@ class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
     list_filter = ("campaign", "created", UnconfirmedDonationsFilter)
     list_display = ("campaign", "created", "unauthorized_email", "donor")
 
-    actions = [admin_send_reminder, delete_unconfirmed_donations]
+    actions = [
+        admin_send_reminder,
+        delete_unconfirmed_donations,
+        dry_run_admin_send_reminder,
+        dry_run_delete_unconfirmed_donations,
+    ]
 
     resource_class = DonationResource
     formats = [

@@ -7,6 +7,7 @@ from django.db import models
 from herald.models import SentNotification
 
 from dataskop.users.models import User
+from dataskop.utils.rollback_atomic import get_atomic_context
 
 
 class DonationQuerySet(models.QuerySet):
@@ -42,7 +43,9 @@ class DonationQuerySet(models.QuerySet):
 
 
 class BaseDonationManager(models.Manager):
-    def remind_user_registration(self, donation_qs=None, max_reminders_sent=10):
+    def remind_user_registration(
+        self, donation_qs=None, max_reminders_sent=10, dryrun=False
+    ):
         """
         Remind users that they have to confirm email their address.
         """
@@ -85,7 +88,9 @@ class BaseDonationManager(models.Manager):
 
             # give up after some tries
             if num_sent < max_reminders_sent:
-                send_reminder_email.delay(user.pk, obj.campaign.site.pk)
+                # Don't use atomic transactions because the emails are already sent out
+                if not dryrun:
+                    send_reminder_email.delay(user.pk, obj.campaign.site.pk)
                 total_reminder_sent += 1
 
         return total_reminder_sent
@@ -104,61 +109,64 @@ class BaseDonationManager(models.Manager):
         )
         return sum(deleted.values())
 
-    def delete_unconfirmed_donations(self, donation_qs=None):
+    def delete_unconfirmed_donations(self, donation_qs=None, dryrun=False):
         """
         Delete unconfirmed donations that are older than 24 hours.
         """
 
-        deleted_objects = []
-        # select unconfirmed donations
-        qs = (donation_qs or self.model.objects).unconfirmed()
+        with get_atomic_context(dryrun):
+            deleted_objects = []
+            # select unconfirmed donations
+            qs = (donation_qs or self.model.objects).unconfirmed()
 
-        # Only select those donations that can safely be deleted. Do not delete
-        # unconfirmed donations that:
-        # - are attached to an email address that is assigned to a verified user
-        # - were created only recently (up to 24h ago)
-        for email in qs.values_list("unauthorized_email", flat=True).distinct():
-            email_obj = EmailAddress.objects.filter(email=email).first()
+            # Only select those donations that can safely be deleted. Do not delete
+            # unconfirmed donations that:
+            # - are attached to an email address that is assigned to a verified user
+            # - were created only recently (up to 24h ago)
+            for email in qs.values_list("unauthorized_email", flat=True).distinct():
+                email_obj = EmailAddress.objects.filter(email=email).first()
 
-            if email_obj is None:
-                # If no email exists, something is wrong. Delete it.
-                _, deleted = self.model.objects.filter(
-                    unauthorized_email=email
-                ).delete()
-                deleted_objects.append(deleted)
-
-            elif email_obj.verified:
-                # The donation is not marked as part of the user, but a verified account
-                # exists. So don't delete it.
-                continue
-            else:
-                # Do not delete donations / users that were created up to 24h ago.
-                if email_obj.user.date_joined > datetime.now() - timedelta(hours=24):
-                    continue
-
-                # A user can have multiple email addresses. Maybe another was was already
-                # verified? If yes, to nothing.
-                if not EmailAddress.objects.filter(
-                    user=email_obj.user, verified=True
-                ).exists():
-                    _, deleted = qs.filter(unauthorized_email=email).delete()
-                    deleted_objects.append(deleted)
-
-                    _, deleted = EmailAddress.objects.filter(
-                        user=email_obj.user
+                if email_obj is None:
+                    # If no email exists, something is wrong. Delete it.
+                    _, deleted = self.model.objects.filter(
+                        unauthorized_email=email
                     ).delete()
                     deleted_objects.append(deleted)
 
-                    _, deleted = email_obj.user.delete()
-                    deleted_objects.append(deleted)
+                elif email_obj.verified:
+                    # The donation is not marked as part of the user, but a verified account
+                    # exists. So don't delete it.
+                    continue
+                else:
+                    # Do not delete donations / users that were created up to 24h ago.
+                    if email_obj.user.date_joined > datetime.now() - timedelta(
+                        hours=24
+                    ):
+                        continue
 
-        total_deleted: Dict[str, int] = defaultdict(lambda: 0)
+                    # A user can have multiple email addresses. Maybe another was was already
+                    # verified? If yes, to nothing.
+                    if not EmailAddress.objects.filter(
+                        user=email_obj.user, verified=True
+                    ).exists():
+                        _, deleted = qs.filter(unauthorized_email=email).delete()
+                        deleted_objects.append(deleted)
 
-        for li in deleted_objects:
-            for k, v in li.items():
-                total_deleted[k] += v
+                        _, deleted = EmailAddress.objects.filter(
+                            user=email_obj.user
+                        ).delete()
+                        deleted_objects.append(deleted)
 
-        return total_deleted
+                        _, deleted = email_obj.user.delete()
+                        deleted_objects.append(deleted)
+
+            total_deleted: Dict[str, int] = defaultdict(lambda: 0)
+
+            for li in deleted_objects:
+                for k, v in li.items():
+                    total_deleted[k] += v
+
+            return total_deleted
 
 
 DonationManager = BaseDonationManager.from_queryset(DonationQuerySet)

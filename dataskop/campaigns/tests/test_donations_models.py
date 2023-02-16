@@ -81,6 +81,8 @@ def test_reminders_active():
 
     assert len(mail.outbox) == 1
 
+    assert Donation.objects.remind_user_registration(dryrun=True) == 1
+
     remind_user_registration()
     remind_user_registration()
     remind_user_registration()
@@ -99,6 +101,8 @@ def test_reminders_active():
     remind_user_registration()
     remind_user_registration()
     assert len(mail.outbox) == 10 + 1 + 10  # 10 notificaiton + 1 user confirm email
+
+    assert Donation.objects.remind_user_registration(dryrun=True) == 0
 
 
 def test_reminders_inactive():
@@ -199,12 +203,26 @@ def test_delete_unconfirmed_donations():
         # a anonymous donation without any email should not get deleted
         donation7 = DonationFactory(campaign=cam, unauthorized_email=None)
 
+        # Test dry run
+        del_objs_dry_1 = Donation.objects.delete_unconfirmed_donations(
+            donation_qs=Donation.objects.filter(donor__isnull=True), dryrun=True
+        )
+
+        assert sum(del_objs_dry_1.values()) == 4
+
         del_objs = Donation.objects.delete_unconfirmed_donations(
             donation_qs=Donation.objects.filter(donor__isnull=True)
         )
         assert (
             sum(del_objs.values()) == 4
         )  # (3 for donation5 + 1 for donation6 + 0 for donation7)
+
+        # Test dry run
+        del_objs_dry_2 = Donation.objects.delete_unconfirmed_donations(
+            donation_qs=Donation.objects.filter(donor__isnull=True), dryrun=False
+        )
+
+        assert sum(del_objs_dry_2.values()) == 0
 
 
 def test_delete_anonymous_donations():
