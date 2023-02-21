@@ -4,7 +4,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import View
 from django_ratelimit.decorators import ratelimit
-from sesame.utils import get_user
 
 from dataskop.mailjetsync.models import NewsletterSubscription
 
@@ -20,15 +19,17 @@ class MailjetSyncConfirmationLink(View):
         if email_str is None:
             raise PermissionDenied("Etwas stimmt nicht mit der E-Mail-Adresse.")
 
-        obj = NewsletterSubscription.objects.get(
-            email=email_str, confirmed_at__isnull=True
-        )
+        obj = NewsletterSubscription.objects.filter(email=email_str).first()
 
         if obj is None or obj.token != request.GET.get("sesame"):
             raise PermissionDenied(
                 "Der Link hat nicht funktioniert. Bitte trage dich auf unserer Webseite algorithmwatch.org in den Newsletter ein."
             )
 
-        obj.confirm()
+        if obj.confirmed:
+            raise PermissionDenied("Diese E-Mail-Adresse wurde bereits bestätigt.")
+        else:
+            ip_address = self.request.META.get("REMOTE_ADDR")
+            obj.confirm(ip_address)
 
         return redirect(REDIRECT_URL)

@@ -1,3 +1,9 @@
+"""
+The confirmation email that includes a link for the user to confirm the newsletter subscription.
+
+We stick to the formal language since the email text is taken from offical AW newsletter.
+"""
+
 from django.urls.base import reverse
 from django.utils.http import urlquote
 from herald import registry
