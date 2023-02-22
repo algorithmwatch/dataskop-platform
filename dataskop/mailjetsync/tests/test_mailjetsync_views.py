@@ -11,8 +11,9 @@ from dataskop.mailjetsync.models import NewsletterSubscription
 pytestmark = pytest.mark.django_db
 
 
+# NB: Mock `subscribe_mailjet_list` where it's used in `tasks.py` and not where it's defined!
 @mock.patch(
-    "dataskop.mailjetsync.mailjet.subscribe_mailjet_list",
+    "dataskop.mailjetsync.tasks.subscribe_mailjet_list",
 )
 def test_double_optin(mock_mailjet_create, client):
     SiteExtendedFactory(site=Site.objects.first())
