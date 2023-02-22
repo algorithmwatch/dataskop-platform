@@ -97,7 +97,9 @@ class MagicLinkHandleConfirmationLink(View):
 
             messages.success(request, "Account erfolgreich verifiziert. Danke!")
 
-        post_magic_login.send(request, user=user, email=email_str)
+        post_magic_login.send(
+            request, user=user, email=email_str, ip_address=ip_address
+        )
 
         if request.user.is_authenticated:
             logout(request)

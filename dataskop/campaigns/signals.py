@@ -10,13 +10,13 @@ from .models import Donation, Event
 
 
 @receiver(post_magic_login)
-def handle_verified(sender, user, email, **kwargs):
+def handle_verified(sender, user, email, ip_address, **kwargs):
     try:
         # mark the last dontion as part of the user
         last_donation = Donation.objects.filter(
             donor__isnull=True, unauthorized_email=email
         ).earliest("created")
-        last_donation.confirm(user, send_email=True)
+        last_donation.confirm(user, send_email=True, ip_address=ip_address)
     except Donation.DoesNotExist:
         pass
 

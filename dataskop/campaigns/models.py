@@ -141,8 +141,8 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
     donor = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     results = models.JSONField(null=True, blank=True)
     unauthorized_email = models.EmailField(null=True, blank=True)
-    # store ip address only until the user is verified
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    confirmed_ip_address = models.GenericIPAddressField(null=True, blank=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
 
     objects = DonationManager()
@@ -153,14 +153,16 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
     def get_absolute_url(self):
         return reverse("my_donations_detail", kwargs={"pk": self.pk})
 
-    def confirm(self, user, send_email=False):
+    def confirm(self, user, send_email=False, ip_address=None):
         """
         On confirmation, set the user, remove the ip address, and optionally send a confirmation email
         """
+        update_fields = ["donor", "confirmed_at"]
         self.donor = user
-        self.ip_address = None
         self.confirmed_at = timezone.now()
-        update_fields = ["ip_address", "donor", "confirmed_at"]
+        if ip_address is not None:
+            self.confirmed_ip_address = ip_address
+            update_fields += ["confirmed_ip_address"]
 
         if "lookups" in self.results and isinstance(self.results["lookups"], dict):
             LookupJob.objects.create(
