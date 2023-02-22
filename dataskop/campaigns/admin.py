@@ -1,6 +1,6 @@
 import import_export
+from allauth.account.models import EmailAddress
 from django.contrib import admin, messages
-from django.db.models import JSONField
 from django.template.response import TemplateResponse
 from django.utils.translation import ngettext
 
@@ -110,7 +110,7 @@ class DonationResource(import_export.resources.ModelResource):
         exclude = ("ip_address", "unauthorized_email")
 
 
-def admin_send_reminder(modeladmin, request, queryset):
+def send_reminder_to_confirm(modeladmin, request, queryset):
     """
     Remind users to verify their email address in order to confirm their donations.
     For the users in the queryset, that already had their email address confirmed, do
@@ -130,7 +130,7 @@ def admin_send_reminder(modeladmin, request, queryset):
     )
 
 
-def dry_run_admin_send_reminder(modeladmin, request, queryset):
+def dry_run_send_reminder_to_confirm(modeladmin, request, queryset):
     """
     Remind users to verify their email address in order to confirm their donations.
     For the users in the queryset, that already had their email address confirmed, do
@@ -192,6 +192,31 @@ def dry_run_delete_unconfirmed_donations(modeladmin, request, queryset):
     )
 
 
+@admin.action(description="Manually mark donations as confirmed")
+def confirm_donations(modeladmin, request, queryset):
+    confirmed = []
+    for donation in queryset.unconfirmed():
+        email_obj = EmailAddress.objects.filter(
+            email=donation.unauthorized_email
+        ).first()
+        if email_obj is None:
+            continue
+        donation.confirm(email_obj.user, send_email=True)
+        confirmed.append(donation.pk)
+
+    if len(confirmed) > 0:
+        Event.objects.create(
+            message="Manually marked some donations as confirmed",
+            data={"pks": confirmed},
+        )
+
+    modeladmin.message_user(
+        request,
+        f"Manually marked {len(confirmed)} donation(s) as confirmed",
+        messages.INFO,
+    )
+
+
 class UnconfirmedDonationsFilter(admin.SimpleListFilter):
     """
     Filter for (un)confirmed donations by checking if the user is verified.
@@ -223,9 +248,10 @@ class DonationAdmin(import_export.admin.ExportMixin, admin.ModelAdmin):
     list_display = ("campaign", "created", "unauthorized_email", "donor")
 
     actions = [
-        admin_send_reminder,
+        confirm_donations,
+        send_reminder_to_confirm,
         delete_unconfirmed_donations,
-        dry_run_admin_send_reminder,
+        dry_run_send_reminder_to_confirm,
         dry_run_delete_unconfirmed_donations,
     ]
 

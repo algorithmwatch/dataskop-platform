@@ -163,8 +163,11 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
         if ip_address is not None:
             self.confirmed_ip_address = ip_address
             update_fields += ["confirmed_ip_address"]
-
-        if "lookups" in self.results and isinstance(self.results["lookups"], dict):
+        if (
+            self.results is not None
+            and "lookups" in self.results
+            and isinstance(self.results["lookups"], dict)
+        ):
             LookupJob.objects.create(
                 created_by=self.donor,
                 input_done=self.results["lookups"],
