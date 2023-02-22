@@ -1,17 +1,15 @@
 from django.core.management.base import BaseCommand
-from django.core.management.color import no_style
-from django.db import connection, transaction
+from django.db import transaction
 
 from dataskop.mailjetsync.mailjet import (
     create_contact_meta,
     get_contact_meta,
     subscribe_mailjet_list,
-    verify_emails,
 )
 
 
 class Command(BaseCommand):
-    help = "Generate fake data to get started quickly"
+    help = "Interact with the Mailjet REST API"
 
     def add_arguments(self, parser):
         parser.add_argument("--email", type=str)
@@ -23,10 +21,6 @@ class Command(BaseCommand):
             "--create_meta",
             action="store_true",
         )
-        parser.add_argument(
-            "--verify",
-            action="store_true",
-        )
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -36,10 +30,6 @@ class Command(BaseCommand):
 
         if options["create_meta"]:
             create_contact_meta()
-            return
-
-        if options["verify"]:
-            verify_emails()
             return
 
         if not options["email"]:

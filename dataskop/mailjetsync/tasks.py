@@ -69,7 +69,7 @@ def enqueue_confirmed_emails():
     """
     Check for emails that don't need a double opt-in confirmation and add them.
     """
-    the_past = timezone.now() - timedelta(days=7)
+    the_past = timezone.now() - timedelta(days=30)
     user_pks_with_recent_confirmed_donation = set(
         Donation.objects.confirmed()
         .filter(confirmed_at__gte=the_past)
