@@ -46,6 +46,8 @@ CELERY_BROKER_URL = env("REDIS_URL")
 
 
 # SECURITY
+# Store sessions with Redis
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect

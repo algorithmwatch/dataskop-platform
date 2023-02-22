@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 
 import environ
-from session_cleanup.settings import weekly_schedule
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
@@ -74,7 +73,6 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     # celery
     "django_celery_beat",
-    "session_cleanup",
     # drf
     "rest_framework",
     "rest_framework_api_key",
@@ -335,7 +333,6 @@ CELERY_TASK_TIME_LIMIT = 40 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 30 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-CELERY_BEAT_SCHEDULE = {"session_cleanup": weekly_schedule}
 # Since we changed some tasks to `acks_late=True`, we have to adjust this Redis setting.
 # Otherwise, long running tasks could be duplicated in the queue.
 # https://docs.celeryproject.org/en/stable/getting-started/backends-and-brokers/redis.html#id1

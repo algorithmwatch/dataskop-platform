@@ -15,7 +15,6 @@ django-redis==5.2.0  # https://github.com/jazzband/django-redis
 celery==5.2.7  # https://github.com/celery/celery
 django-celery-beat==2.4.0  # https://github.com/celery/django-celery-beat
 flower==1.2.0  # https://github.com/mher/flower
-django-session-cleanup==4.0.0  # https://github.com/mobolic/django-session-cleanup
 
 # Models
 django-environ==0.9.0  # https://github.com/joke2k/django-environ
