@@ -142,8 +142,8 @@ def test_reminders_cam_none():
 
 def test_delete_unconfirmed_donations():
     today = datetime.date.today()
-    in2days = today + datetime.timedelta(days=2)
-    in3days = today + datetime.timedelta(days=3)
+    some_future1 = today + datetime.timedelta(days=180)
+    some_future2 = today + datetime.timedelta(days=360)
 
     cam = CampaignFactory()
 
@@ -165,7 +165,7 @@ def test_delete_unconfirmed_donations():
         del_objs = Donation.objects.delete_unconfirmed_donations()
         assert del_objs == {}
 
-    with freeze_time(in2days):
+    with freeze_time(some_future1):
         # no deletion if a donor is assigned, testing if given donation_qs works
         assert {} == Donation.objects.delete_unconfirmed_donations(
             donation_qs=Donation.objects.filter(donor__isnull=False)
@@ -195,7 +195,7 @@ def test_delete_unconfirmed_donations():
 
         assert {} == Donation.objects.delete_unconfirmed_donations()
 
-    with freeze_time(in3days):
+    with freeze_time(some_future2):
         # donation where the email was already deleted
         donation6 = DonationFactory(campaign=cam)
         EmailAddress.objects.filter(email=donation6.unauthorized_email).delete()

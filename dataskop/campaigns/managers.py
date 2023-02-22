@@ -109,9 +109,11 @@ class BaseDonationManager(models.Manager):
         )
         return sum(deleted.values())
 
-    def delete_unconfirmed_donations(self, donation_qs=None, dryrun=False):
+    def delete_unconfirmed_donations(
+        self, donation_qs=None, dryrun=False, days_past=180
+    ):
         """
-        Delete unconfirmed donations that are older than 24 hours.
+        Delete unconfirmed donations that weren't created recently.
         """
 
         with get_atomic_context(dryrun):
@@ -138,14 +140,14 @@ class BaseDonationManager(models.Manager):
                     # exists. So don't delete it.
                     continue
                 else:
-                    # Do not delete donations / users that were created up to 24h ago.
+                    # Do not delete donations / users that were recently created.
                     if email_obj.user.date_joined > datetime.now() - timedelta(
-                        hours=24
+                        days=days_past
                     ):
                         continue
 
                     # A user can have multiple email addresses. Maybe another was was already
-                    # verified? If yes, to nothing.
+                    # verified? If yes, do nothing.
                     if not EmailAddress.objects.filter(
                         user=email_obj.user, verified=True
                     ).exists():
