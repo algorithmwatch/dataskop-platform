@@ -17,7 +17,7 @@ types-freezegun==1.1.10  # https://github.com/python/typeshed
 mypy==1.0.1  # https://github.com/python/mypy
 black==23.1.0  # https://github.com/ambv/black
 isort==5.12.0  # https://github.com/PyCQA/isort
-djhtml==2.0.0  # https://github.com/rtts/djhtml
+djhtml==3.0.2  # https://github.com/rtts/djhtml
 
 # Utilities
 django-extensions==3.2.1  # https://github.com/django-extensions/django-extensions
