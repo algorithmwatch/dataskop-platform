@@ -56,7 +56,7 @@ def _send(
             "id": status.message_id,
             "status": json.dumps([status.recipients[r].status for r in recipients]),
         }
-    except:
+    except Exception:
         return {"id": None, "status": "not possible to parse anymail response"}
 
 

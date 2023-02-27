@@ -1,7 +1,8 @@
 """
 Subscribe an email address as confirmed email address to a mailjet list.
 
-The property name `dataskop_tiktok_2022_donated` is hard-coded. Adapt it for further usage.
+The property name `dataskop_tiktok_2022_donated` is hard-coded. Adapt it for further
+usage.
 """
 
 import json
@@ -23,7 +24,8 @@ def subscribe_mailjet_list(email, donated=False):
     """
     data = {
         "Properties": {"dataskop_tiktok_2022_donated": donated},
-        # Add to the list even though the contact has previusly unsubscribed from the list
+        # Add to the list even though the contact has previusly unsubscribed from the
+        # list
         "Action": "addforce",
         "Email": email,
     }

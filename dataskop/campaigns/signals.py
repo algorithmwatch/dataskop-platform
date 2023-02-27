@@ -26,5 +26,5 @@ def handle_pre_user_deleted(sender, user, **kwargs):
     # store IDs for donations (that are about to get deleted)
     donations = list(Donation.objects.filter(donor=user).values("id", "campaign"))
     Event.objects.create(
-        message=f"user deleted", data={"user": user.pk, "donations": donations}
+        message="user deleted", data={"user": user.pk, "donations": donations}
     )

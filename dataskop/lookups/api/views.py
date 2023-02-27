@@ -57,7 +57,8 @@ class LookupJobViewSet(ViewSet):
             ]
 
             if not resp_obj.input_todo and not resp_obj.input_done:
-                # Revert marking, but don't save `input_todo` since this may delete items.
+                # Revert marking, but don't save `input_todo` since this may delete
+                # items.
                 resp_obj.processing = False
                 resp_obj.save(update_fields=["processing"])
                 return Response(status=204)

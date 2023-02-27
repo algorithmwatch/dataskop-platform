@@ -48,8 +48,8 @@ def test_magic_login(setupSiteExtended, client, django_user_model):
 
     logged_in_user = r3.context["user"]
     assert logged_in_user.email == the_email
-    assert EmailAddress.objects.filter(user=logged_in_user).first().verified == True
-    assert EmailAddress.objects.filter(user=logged_in_user).first().primary == True
+    assert EmailAddress.objects.filter(user=logged_in_user).first().verified is True
+    assert EmailAddress.objects.filter(user=logged_in_user).first().primary is True
     assert EmailAddress.objects.filter(user=logged_in_user).first().email == the_email
 
 

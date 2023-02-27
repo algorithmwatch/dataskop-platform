@@ -27,14 +27,14 @@ def test_multiple_donation_by_same_user():
 
     d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
     assert d_email.count() == 1
-    assert d_email.first().verified == False
+    assert d_email.first().verified is False
 
     assert len(mail.outbox) == 1
 
     # - use the same email so a new user does not get created
     # - but one more email is send to the user
     num_users_before = User.objects.all().count()
-    donation2 = DonationFactory(
+    DonationFactory(
         unauthorized_email=donation1.unauthorized_email,
         campaign=donation1.campaign,
     )
@@ -42,7 +42,7 @@ def test_multiple_donation_by_same_user():
     assert len(mail.outbox) == 2
 
     #  same donation, but only one email per hour should be sent
-    donation3 = DonationFactory(
+    DonationFactory(
         unauthorized_email=donation1.unauthorized_email,
         campaign=donation1.campaign,
     )
@@ -77,7 +77,7 @@ def test_reminders_active():
 
     d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
     assert d_email.count() == 1
-    assert d_email.first().verified == False
+    assert d_email.first().verified is False
 
     assert len(mail.outbox) == 1
 
@@ -111,7 +111,7 @@ def test_reminders_inactive():
 
     d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
     assert d_email.count() == 1
-    assert d_email.first().verified == False
+    assert d_email.first().verified is False
 
     assert len(mail.outbox) == 1
 
@@ -129,7 +129,7 @@ def test_reminders_cam_none():
 
     d_email = EmailAddress.objects.filter(email=donation1.unauthorized_email).all()
     assert d_email.count() == 1
-    assert d_email.first().verified == False
+    assert d_email.first().verified is False
 
     assert len(mail.outbox) == 1
 
@@ -150,16 +150,12 @@ def test_delete_unconfirmed_donations():
     with freeze_time(today):
         donation1 = DonationFactory(campaign=cam)
         donation2 = DonationFactory(campaign=cam)
-        donation3 = DonationFactory(campaign=cam, email__verified=True)
+        DonationFactory(campaign=cam, email__verified=True)
         donation4 = DonationFactory(campaign=cam, email__verified=True)
 
-        donation4_non_confirm = DonationFactory(
-            campaign=cam, unauthorized_email=donation4.unauthorized_email
-        )
+        DonationFactory(campaign=cam, unauthorized_email=donation4.unauthorized_email)
 
-        donation2_dupli = DonationFactory(
-            campaign=cam, unauthorized_email=donation2.unauthorized_email
-        )
+        DonationFactory(campaign=cam, unauthorized_email=donation2.unauthorized_email)
 
         # no deletion for donations that were recently created (<24h)
         del_objs = Donation.objects.delete_unconfirmed_donations()
@@ -174,11 +170,13 @@ def test_delete_unconfirmed_donations():
         del_objs = Donation.objects.delete_unconfirmed_donations()
         assert (
             sum(del_objs.values()) == 7
-        )  # 2 unique donations (donation + email + user = 3 x 2) + another duplicate donation = 7
+        )  # 2 unique donations (donation + email + user = 3 x 2) + another duplicate
+        # donation = 7
         assert Donation.objects.count() == 3
         assert EmailAddress.objects.filter(email=donation4.unauthorized_email).exists()
         assert User.objects.filter(email=donation4.unauthorized_email).exists()
-        # do not delete unconfirmed donations if the email is already verified (but not assiged to the second donation)
+        # do not delete unconfirmed donations if the email is already verified (but not
+        # assiged to the second donation)
         assert (
             Donation.objects.filter(
                 unauthorized_email=donation4.unauthorized_email
@@ -191,7 +189,7 @@ def test_delete_unconfirmed_donations():
         ).exists()
         assert not User.objects.filter(email=donation1.unauthorized_email).exists()
 
-        donation5 = DonationFactory(campaign=cam)
+        DonationFactory(campaign=cam)
 
         assert {} == Donation.objects.delete_unconfirmed_donations()
 
@@ -201,7 +199,7 @@ def test_delete_unconfirmed_donations():
         EmailAddress.objects.filter(email=donation6.unauthorized_email).delete()
 
         # a anonymous donation without any email should not get deleted
-        donation7 = DonationFactory(campaign=cam, unauthorized_email=None)
+        DonationFactory(campaign=cam, unauthorized_email=None)
 
         # Test dry run
         del_objs_dry_1 = Donation.objects.delete_unconfirmed_donations(
@@ -237,16 +235,16 @@ def test_delete_anonymous_donations():
 
 def test_donor_notification_models():
     cam = CampaignFactory()
-    d1 = DonationFactory(email__verified=True, campaign=cam)
+    DonationFactory(email__verified=True, campaign=cam)
     d2 = DonationFactory(email__verified=True, campaign=cam)
     # re-use exiting user for d3
-    d3 = DonationFactory(
+    DonationFactory(
         email__verified=True, campaign=cam, unauthorized_email=d2.donor.email
     )
 
     d4_disable_all = DonationFactory(email__verified=True, campaign=cam)
     d5_disabled_noti = DonationFactory(email__verified=True, campaign=cam)
-    d6_unrelated = DonationFactory(email__verified=True)
+    DonationFactory(email__verified=True)
 
     donor_noti_1 = DonorNotificationFactory(campaign=cam, subject="Test 1")
 
@@ -257,9 +255,7 @@ def test_donor_notification_models():
 
     assert len([m for m in mail.outbox if m.subject == donor_noti_1.subject]) == 4
 
-    dn_settings_1 = DonorNotificationSettingFactory(
-        user=d4_disable_all.donor, disable_all=True
-    )
+    DonorNotificationSettingFactory(user=d4_disable_all.donor, disable_all=True)
     dn_settings_2 = DonorNotificationSettingFactory(
         user=d5_disabled_noti.donor,
         disable_all=False,

@@ -104,15 +104,16 @@ def test_reminder_emails(client):
 
         assert sent_emails == 1
 
-        # extract the magic link from the second last email, the last is the admin notification
+        # extract the magic link from the second last email, the last is the admin
+        # notification
         login_link = re.findall(r"(http\S*magic\S*)\s", mail.outbox[-2].body)[0]
         # click on the 'go to login' link
         response2 = client.get(login_link, follow=True, REMOTE_ADDR="127.0.0.1")
 
         assert "login" in login_link
 
-        # In prod, the form get's automatically commit on page load. Since we don't execute JS,
-        # we have to post a login manually.
+        # In prod, the form get's automatically commit on page load. Since we don't
+        # execute JS, we have to post a login manually.
         client.post(
             reverse("magic_login"),
             {"email": some_email},
@@ -131,8 +132,8 @@ def test_reminder_emails(client):
 
         logged_in_user = response2.context["user"]
         assert logged_in_user.email == some_email
-        assert EmailAddress.objects.filter(user=logged_in_user).first().verified == True
-        assert EmailAddress.objects.filter(user=logged_in_user).first().primary == True
+        assert EmailAddress.objects.filter(user=logged_in_user).first().verified is True
+        assert EmailAddress.objects.filter(user=logged_in_user).first().primary is True
         assert (
             EmailAddress.objects.filter(user=logged_in_user).first().email == some_email
         )
@@ -147,7 +148,7 @@ def test_donor_notification_views(client):
     in1month = today + datetime.timedelta(days=30)
 
     cam = CampaignFactory()
-    d1 = DonationFactory(email__verified=True, campaign=cam)
+    DonationFactory(email__verified=True, campaign=cam)
     donor_noti_1 = DonorNotificationFactory(campaign=cam, subject="Test 1", draft=False)
 
     disable_notification_link = re.findall(
@@ -157,9 +158,7 @@ def test_donor_notification_views(client):
     assert len([m for m in mail.outbox if m.subject == donor_noti_1.subject]) == 1
 
     with freeze_time(in1month):
-        response1 = client.get(
-            disable_notification_link, follow=True, REMOTE_ADDR="127.0.0.1"
-        )
+        client.get(disable_notification_link, follow=True, REMOTE_ADDR="127.0.0.1")
 
         response2 = client.post(
             disable_notification_link,

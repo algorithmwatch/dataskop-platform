@@ -12,7 +12,8 @@ class DonationUnauthorizedSerializer(serializers.ModelSerializer):
         if value is None or not value.accept_new_donations:
             raise serializers.ValidationError(
                 {
-                    "campaign": "campaign must be set and also the campaign must accept new donations"
+                    "campaign": "campaign must be set and also the campaign must "
+                    "accept new donations"
                 }
             )
         return value

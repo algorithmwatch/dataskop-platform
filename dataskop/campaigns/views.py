@@ -36,8 +36,8 @@ from dataskop.users.models import User
 
 class UsersDonationMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
-        obj = self.get_object()  # type: ignore
-        return obj.donor == self.request.user or self.request.user.is_staff  # type: ignore
+        obj = self.get_object()
+        return obj.donor == self.request.user or self.request.user.is_staff
 
 
 @method_decorator(never_cache, name="dispatch")
@@ -123,7 +123,7 @@ class DonationDeleteView(UsersDonationMixin, DeleteView):
         obj = self.get_object()
         # Create the event in the view to only catch deletion requested from users.
         Event.objects.create(
-            message=f"donation deleted",
+            message="donation deleted",
             data={"donation": obj.pk, "user": obj.donor.pk},
             campaign=obj.campaign,
         )
@@ -191,7 +191,8 @@ class DonorNotificationDisableView(SuccessMessageMixin, FormView):
             messages.error(
                 self.request, "Es gab einen Fehler, bitte nochmals einloggen."
             )
-            # Something went wrong (maybe Redis was cleared?) so redirect to proper settings page.
+            # Something went wrong (maybe Redis was cleared?) so redirect to proper
+            # settings page.
             return redirect("donor_notification_setting")
 
         settings, _ = DonorNotificationSetting.objects.get_or_create(user=user)
@@ -253,7 +254,8 @@ class DashboardView(FormView):
         for m in msgs:
             context["total_events"][m] = qs.filter(message=m).count()
 
-        # Get all users that deleted their account and also donated to the given campaign.
+        # Get all users that deleted their account and also donated to the given
+        # campaign.
         context["user_deleted"] = []
         for event in Event.objects.filter(message="user deleted").values():
             if any(

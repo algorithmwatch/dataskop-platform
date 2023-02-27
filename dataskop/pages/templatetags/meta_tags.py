@@ -14,7 +14,9 @@ def meta_tags(
     context["title"] = title + " - DataSkop"
     context["description"] = (
         description
-        or "Mit DataSkop entsteht eine Plattform für Datenspenden, um mit deren Hilfe algorithmische Entscheidungssysteme zu untersuchen und die digitale Souveränität der Nutzer·innen zu stärken"
+        or "Mit DataSkop entsteht eine Plattform für Datenspenden, um mit deren Hilfe "
+        "algorithmische Entscheidungssysteme zu untersuchen und die digitale "
+        "Souveränität der Nutzer·innen zu stärken"
     )
     context["social_media_image"] = social_media_image or "/static/img/ds-og-image.png"
 

@@ -136,8 +136,8 @@ class BaseDonationManager(models.Manager):
                     deleted_objects.append(deleted)
 
                 elif email_obj.verified:
-                    # The donation is not marked as part of the user, but a verified account
-                    # exists. So don't delete it.
+                    # The donation is not marked as part of the user, but a verified
+                    # account exists. So don't delete it.
                     continue
                 else:
                     # Do not delete donations / users that were recently created.
@@ -146,8 +146,8 @@ class BaseDonationManager(models.Manager):
                     ):
                         continue
 
-                    # A user can have multiple email addresses. Maybe another was was already
-                    # verified? If yes, do nothing.
+                    # A user can have multiple email addresses. Maybe another was was
+                    # already verified? If yes, do nothing.
                     if not EmailAddress.objects.filter(
                         user=email_obj.user, verified=True
                     ).exists():

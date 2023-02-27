@@ -90,7 +90,8 @@ admin.site.register(Event, EventAdmin)
 
 class DonationResultsWidget:
     """
-    We have to define our own Widget to avoid escaping the JSON with the default JSONWidget
+    We have to define our own Widget to avoid escaping the JSON with the default
+    JSONWidget.
     """
 
     def clean(self, value, row=None, **kwargs):

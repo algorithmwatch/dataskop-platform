@@ -146,9 +146,11 @@ def resend_failed_emails():
 @shared_task(queue="low_priority")
 def test_task_email():
     """
-    Test if celery beat only runs once to prevent duplicate emails and get some information.
+    Test if celery beat only runs once to prevent duplicate emails and get some
+    information.
     """
-    celery_stats = f"celery:\n\n{json.dumps(current_app.control.inspect().stats(), sort_keys=True, indent=4)}"
+    celery_stats = f"celery:\n\n\
+{json.dumps(current_app.control.inspect().stats(), sort_keys=True, indent=4)}"
 
     # For FreeBSD: https://raghukumarc.blogspot.com/2011/11/show-all-processes-in-freebsd.html
     ps = subprocess.run(["ps", "-auxww"], capture_output=True, text=True).stdout.strip(
@@ -157,5 +159,6 @@ def test_task_email():
 
     send_admin_notification(
         "DataSkop Heartbeat",
-        f"This email should only be sent once. If not, please contact the developer.\n\n{celery_stats}\n\nps:\n\n{ps}",
+        f"This email should only be sent once. If not, please contact the developer.\
+\n\n{celery_stats}\n\nps:\n\n{ps}",
     )

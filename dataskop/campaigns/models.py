@@ -42,7 +42,8 @@ class SiteExtended(models.Model):
 
     @property
     def url_origin(self):
-        return f"http{'s' if self.https else ''}://{self.site.domain}{self.port if self.port else ''}"
+        port = self.port if self.port else ""
+        return f"http{'s' if self.https else ''}://{self.site.domain}{port}"
 
     @property
     def formatted_from(self):
@@ -54,8 +55,8 @@ class SiteExtended(models.Model):
 
 class Provider(TimeStampedModel):
     """
-    A provider is the platform (or website) that gets scraped in combination with a client
-    (app/browser extension) that does the work.
+    A provider is the platform (or website) that gets scraped in combination with a
+    client (app/browser extension) that does the work.
     """
 
     name = models.CharField(
@@ -65,12 +66,13 @@ class Provider(TimeStampedModel):
     client = models.CharField(
         max_length=255,
         default="DataSkop Electron app",
-        help_text="Name of the software that collects the data, e.g., DataSkop Electron app",
+        help_text="Name of the software that collects the data, e.g., DataSkop Electron"
+        "app",
     )
     scraping_config_schema = models.JSONField(
         null=True,
         blank=True,
-        help_text="Optional JSON schema to validate the `scraping_config` of `Campaign`",
+        help_text="Optional JSON schema to validate the `config` of `Campaign`",
     )
 
     def __str__(self) -> str:
@@ -96,8 +98,8 @@ class Campaign(StatusOptions, TimeStampedModel):
     # Optionally disable the creation of new donations.
     accept_new_donations = models.BooleanField(default=True)
     # Featured campaigns get treaten preferably from the client. Right now, the first
-    # featured campaign gets chosen automatically and there is no selection for campaigns
-    # in the Electron app.
+    # featured campaign gets chosen automatically and there is no selection for
+    # campaigns in the Electron app.
     featured = models.BooleanField(default=True)
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from="title")
@@ -125,13 +127,13 @@ class Campaign(StatusOptions, TimeStampedModel):
 class Donation(LifecycleModelMixin, TimeStampedModel):
     """
     A donation is a crowd-sourced data donation. The donation is connected to a user but
-    it can be created without existing user account. So the account gets created with the
-    first donation. The donation needs to get verified at some point or the data gets
-    removed.
+    it can be created without existing user account. So the account gets created with
+    the first donation. The donation needs to get verified at some point or the data
+    gets removed.
 
     If a user account for the given email address exists, inform the user that a new
-    donation was just made. The user has to verify that the new donation belongs actually
-    her/him. The donation can be created without any authentication.
+    donation was just made. The user has to verify that the new donation belongs
+    actually her/him. The donation can be created without any authentication.
     """
 
     campaign = models.ForeignKey(
@@ -148,14 +150,16 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
     objects = DonationManager()
 
     def __str__(self) -> str:
-        return f"{self.campaign} / {self.created} / {self.donor} / {self.unauthorized_email}"
+        return f"{self.campaign} / {self.created} / {self.donor} / \
+            {self.unauthorized_email}"
 
     def get_absolute_url(self):
         return reverse("my_donations_detail", kwargs={"pk": self.pk})
 
     def confirm(self, user, send_email=False, ip_address=None):
         """
-        On confirmation, set the user, remove the ip address, and optionally send a confirmation email
+        On confirmation, set the user, remove the ip address, and optionally send a
+        confirmation email
         """
         update_fields = ["donor", "confirmed_at"]
         self.donor = user
@@ -224,7 +228,8 @@ class Donation(LifecycleModelMixin, TimeStampedModel):
 
 class Event(TimeStampedModel):
     """
-    A event for basic analytics that has a message and an optional JSON-based data field.
+    An event for basic analytics that has a message and an optional JSON-based data
+    field.
     """
 
     campaign = models.ForeignKey(

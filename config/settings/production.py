@@ -3,7 +3,6 @@ Settings used in production (and staging)
 """
 
 import logging
-from datetime import timedelta
 
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration

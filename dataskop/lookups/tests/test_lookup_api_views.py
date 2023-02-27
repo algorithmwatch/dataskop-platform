@@ -7,7 +7,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_lookup_api(client):
-    r = client.get(f"/api/lookups/?l=id1&l=id2&l=id3")
+    r = client.get("/api/lookups/?l=id1&l=id2&l=id3")
     assert r.status_code == 200
     assert r.data == []
 
@@ -31,7 +31,7 @@ def test_lookup_api(client):
     assert r.status_code == 201
 
     # Not work on the data, results should be empty
-    r = client.get(f"/api/lookups/?l=id1&l=id2&l=id3")
+    r = client.get("/api/lookups/?l=id1&l=id2&l=id3")
     assert r.status_code == 200
     assert r.data == []
 
@@ -60,7 +60,7 @@ def test_lookup_api(client):
     assert r.status_code == 204
 
     # Check for updated values
-    r = client.get(f"/api/lookups/?l=id1&l=id2&l=id3")
+    r = client.get("/api/lookups/?l=id1&l=id2&l=id3")
     assert r.status_code == 200
     assert list(r.data[0].values()) == [
         "id1",

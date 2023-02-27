@@ -11,7 +11,8 @@ from dataskop.mailjetsync.models import NewsletterSubscription
 pytestmark = pytest.mark.django_db
 
 
-# NB: Mock `subscribe_mailjet_list` where it's used in `tasks.py` and not where it's defined!
+# NB: Mock `subscribe_mailjet_list` where it's used in `tasks.py` and not where it's
+# defined!
 @mock.patch(
     "dataskop.mailjetsync.tasks.subscribe_mailjet_list",
 )

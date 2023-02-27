@@ -132,9 +132,11 @@ ACCOUNT_SESSION_REMEMBER = True
 # Django-Sesame (Magic Login) - https://github.com/aaugustin/django-sesame
 SESAME_MAX_AGE = 3600
 # Invalidate token after login.
-# It may happen, that email providers automatically check links (send GET requests) in their emails.
-# Since we ensure that the IP that requested the magic links *and* the IP address that opens the link have to be the same,
-# we can be sure that the provider would not successfully open the link (because sesame first checks for scope (see their source code)).
+# It may happen, that email providers automatically check links (send GET requests) in
+# their emails. Since we ensure that the IP that requested the magic links *and* the IP
+# address that opens the link have to be the same, we can be sure that the provider
+# would not successfully open the link (because sesame first checks for scope (see their
+# source code)).
 SESAME_ONE_TIME = True
 
 
@@ -150,7 +152,8 @@ PASSWORD_HASHERS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME": "django.contrib.auth.password_validation"
+        ".UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},

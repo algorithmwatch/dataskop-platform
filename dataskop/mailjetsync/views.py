@@ -23,7 +23,8 @@ class MailjetSyncConfirmationLink(View):
 
         if obj is None or obj.token != request.GET.get("sesame"):
             raise PermissionDenied(
-                "Der Link hat nicht funktioniert. Bitte trage dich auf unserer Webseite algorithmwatch.org in den Newsletter ein."
+                "Der Link hat nicht funktioniert. Bitte trage dich auf unserer "
+                "Webseite algorithmwatch.org in den Newsletter ein."
             )
 
         if obj.confirmed:

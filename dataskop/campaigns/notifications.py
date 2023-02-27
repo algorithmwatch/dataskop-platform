@@ -82,7 +82,8 @@ class DonorNotificationEmail(EmailNotification):
             user,
             scope=f"disable-notification-{campaign_pk}",
         )
-        disable_url = f"{site.siteextended.url_origin}{reverse('donor_notification_disable')}{magic_params}&c={campaign_pk}"
+        disable_url = f"{site.siteextended.url_origin}\
+{reverse('donor_notification_disable')}{magic_params}&c={campaign_pk}"
         self.context = {
             "user": user,
             "support_email": site.siteextended.support_email,
