@@ -1,25 +1,40 @@
 {
-  "terminal.integrated.shell.linux": "/bin/bash",
   "editor.formatOnSave": true,
   // Black's default line length is 88.
   "editor.rulers": [88],
   // Python
-  "python.pythonPath": "/usr/local/bin/python",
-  "python.formatting.provider": "black",
-  "python.linting.enabled": false,
-  "python.languageServer": "Pylance",
-  // JS
-  "[javascript]": {
+  "[python]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
     }
   },
-  // yaml
+  "python.formatting.provider": "black",
+  "python.linting.enabled": false,
+  "python.languageServer": "Pylance",
+  // Django extension
+  "files.associations": {
+    "**/*.html": "html",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+  // JS
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  // JSON
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Yaml
   "yaml.format.enable": true,
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-  // CSS and co.
+  // CSS
   "editor.quickSuggestions": {
     "strings": true
   },
@@ -30,14 +45,7 @@
   "less.validate": false,
   "scss.validate": false,
   "stylelint.enable": true,
-  // django extension
-  "files.associations": {
-    "**/*.html": "html",
-    "**/templates/**/*.html": "django-html",
-    "**/templates/**/*": "django-txt",
-    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
-  },
-  // tailwind
+  // Tailwind
   "tailwindCSS.includeLanguages": {
     "django-html": "html"
   }

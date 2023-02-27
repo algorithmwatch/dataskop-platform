@@ -4,5 +4,5 @@ set -x
 
 prettier --write .
 black .
-isort dataskop/**/*.py
+ruff check . --fix
 djhtml ./**/templates/**/*.html -t 2

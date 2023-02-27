@@ -4,5 +4,5 @@ set -x
 
 prettier --check .
 black . --check
-isort dataskop/**/*.py --check-only
+ruff check .
 djhtml ./**/templates/**/*.html -t 2 --check
