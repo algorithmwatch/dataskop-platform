@@ -5,7 +5,7 @@ from django.urls import include, path, re_path
 from django.urls.base import reverse_lazy
 from django.views import defaults as default_views
 from django.views.decorators.cache import cache_control
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -28,10 +28,14 @@ urlpatterns = [
     path("", include("dataskop.mailjetsync.urls")),
     # Redirect for /favicon.ico
     path(
-        "favicon.ico/",
+        "favicon.ico",
         RedirectView.as_view(
             url=settings.STATIC_URL + "img/favicons/favicon.ico", permanent=True
         ),
+    ),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
 ]
 
