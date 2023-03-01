@@ -28,7 +28,6 @@ def gen_fake_json(_):
 class SiteFactory(DjangoModelFactory):
     domain = "example.com"
     name = "localhost example.com"
-    # site_id = 1
 
     class Meta:
         model = Site

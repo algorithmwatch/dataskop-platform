@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
         self.stdout.write("Creating new data...")
 
-        SiteExtendedFactory()
+        SiteExtendedFactory(site=Site.objects.first())
 
         for su in User.objects.filter(is_superuser=True):
             # create new campaign for every superuser
