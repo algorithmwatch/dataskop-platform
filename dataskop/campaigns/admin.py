@@ -83,6 +83,7 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ("message",)
     ordering = ("-created",)
     date_hierarchy = "created"
+    list_per_page = 1000
 
 
 admin.site.register(Event, EventAdmin)
