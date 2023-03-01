@@ -137,8 +137,9 @@ def before_send(event, hint):
         if hint["log_record"].name == "django.security.DisallowedHost":
             return None
 
-    # Drop user agent
-    del event["request"]["headers"]["User-Agent"]
+    # Drop the requests object to not forward personal data.
+    if event and "request" in event:
+        del event["request"]
 
     return event
 
