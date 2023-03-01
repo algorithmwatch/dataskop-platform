@@ -3,9 +3,9 @@ import re
 import pytest
 from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.core import mail
 from django.urls.base import reverse
-from django.contrib.sites.models import Site
 
 from dataskop.campaigns.models import SiteExtended
 from dataskop.campaigns.tests.factories import SiteExtendedFactory

@@ -9,7 +9,6 @@ from dataskop.campaigns.models import Donation, Event
 from dataskop.campaigns.tasks import remind_user_registration
 from dataskop.users.models import User
 
-
 from .factories import (
     CampaignFactory,
     DonationFactory,

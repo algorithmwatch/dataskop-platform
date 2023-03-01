@@ -16,7 +16,6 @@ from dataskop.campaigns.tests.factories import (
 )
 from dataskop.users.tests.factories import UserFactory
 
-
 pytestmark = pytest.mark.django_db
 
 

@@ -5,14 +5,14 @@ from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
 from django.db import connection, transaction
 
-from dataskop.campaigns.models import Campaign, Donation, SiteExtended, Event
+from dataskop.campaigns.models import Campaign, Donation, Event, SiteExtended
 from dataskop.campaigns.tests.factories import (
     DonationFactory,
     EventFactory,
     SiteExtendedFactory,
 )
-from dataskop.users.tests.factories import UserFactory
 from dataskop.users.models import User
+from dataskop.users.tests.factories import UserFactory
 
 
 class Command(BaseCommand):

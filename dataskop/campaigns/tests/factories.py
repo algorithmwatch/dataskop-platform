@@ -13,10 +13,10 @@ from dataskop.campaigns.models import (
     Donation,
     DonorNotification,
     DonorNotificationSetting,
+    Event,
     Provider,
     SiteExtended,
     StatusOptions,
-    Event,
 )
 from dataskop.users.tests.factories import UserFactory
 

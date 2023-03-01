@@ -1,4 +1,5 @@
 from typing import List, TypedDict
+
 from django import template
 from django.urls import reverse
 
