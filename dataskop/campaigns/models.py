@@ -67,7 +67,7 @@ class Provider(TimeStampedModel):
         max_length=255,
         default="DataSkop Electron app",
         help_text="Name of the software that collects the data, e.g., DataSkop Electron"
-        "app",
+        " app",
     )
     scraping_config_schema = models.JSONField(
         null=True,
