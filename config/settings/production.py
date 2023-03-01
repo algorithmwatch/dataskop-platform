@@ -130,28 +130,42 @@ LOGGING = {
 
 
 def before_send(event, hint):
-    """Don't log django.DisallowedHost errors in Sentry."""
+    """
+    Don't log django.DisallowedHost errors in Sentry.
+    """
     if "log_record" in hint:
         if hint["log_record"].name == "django.security.DisallowedHost":
             return None
 
+    # Drop user agent
+    del event["request"]["headers"]["User-Agent"]
+
     return event
+
+
+def before_breadcrumb(crumb, hint):
+    """
+    Disable breadcrumbs because they may contain private and unnecessary information
+    """
+    return None
 
 
 SENTRY_DSN = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
 
 sentry_logging = LoggingIntegration(
-    level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
-    event_level=logging.ERROR,  # Send errors as events
+    level=SENTRY_LOG_LEVEL,
+    event_level=logging.ERROR,
 )
 integrations = [sentry_logging, DjangoIntegration(), CeleryIntegration()]
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
     environment=env("SENTRY_ENVIRONMENT", default="production"),
+    # Set the env to enable performance monitoring w/ Sentry
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
     before_send=before_send,
+    before_breadcrumb=before_breadcrumb,
 )
 
 # Anymail w/ Mailjet
