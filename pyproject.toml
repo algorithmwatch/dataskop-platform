@@ -1,5 +1,7 @@
 [tool.ruff]
 
-exclude = [
+extend-exclude = [
     "migrations",
 ]
+
+extend-select = ["I"]
