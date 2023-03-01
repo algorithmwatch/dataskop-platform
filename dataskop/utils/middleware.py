@@ -1,3 +1,5 @@
+from django.http import Http404
+
 from dataskop.campaigns.tasks import add_event
 
 
@@ -13,6 +15,9 @@ class EventExceptionsMiddelware:
         return self.get_response(request)
 
     def process_exception(self, request, exception):
+        if isinstance(exception, Http404):
+            return None
+
         add_event.delay(
             message="Django exception",
             data={
@@ -21,6 +26,8 @@ class EventExceptionsMiddelware:
                 "body": request.POST,
                 "ip_address": request.META.get("REMOTE_ADDR"),
                 "exception": str(exception),
+                "exception_type": str(type(exception)),
             },
         )
+
         return None
