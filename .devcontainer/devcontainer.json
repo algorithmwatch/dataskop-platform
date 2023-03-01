@@ -12,24 +12,29 @@
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
   "workspaceFolder": "/app",
-  // Set *default* container specific settings.json values on container create. See `settings.json` for the general VS Code settings.
-  "settings": {},
-  "extensions": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "batisteo.vscode-django",
-    "bradlc.vscode-tailwindcss",
-    "mrorz.language-gettext",
-    "stylelint.vscode-stylelint",
-    "csstools.postcss",
-    "editorconfig.editorconfig",
-    "esbenp.prettier-vscode",
-    "redhat.vscode-yaml",
-    "timonwong.shellcheck",
-    "sleistner.vscode-fileutils",
-    "foxundermoon.shell-format",
-    "ms-azuretools.vscode-docker"
-  ],
+
+  "customizations": {
+    "vscode": {
+      // Set *default* container specific settings.json values on container create. See `settings.json` for the general VS Code settings.
+      "settings": {},
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "batisteo.vscode-django",
+        "bradlc.vscode-tailwindcss",
+        "mrorz.language-gettext",
+        "stylelint.vscode-stylelint",
+        "csstools.postcss",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "redhat.vscode-yaml",
+        "timonwong.shellcheck",
+        "sleistner.vscode-fileutils",
+        "foxundermoon.shell-format"
+      ]
+    }
+  },
   // `/entrypoint` initializes ENV variables such as DATABASE_URL, source it for all interactive sessions.
   // Also start the django + webpack dev servers on launching terminals.
   "postCreateCommand": "echo \"source /entrypoint && /start\" >> ~/.bashrc"
