@@ -26,6 +26,13 @@ urlpatterns = [
     path("", include("dataskop.campaigns.urls")),
     path("", include("dataskop.pages.urls")),
     path("", include("dataskop.mailjetsync.urls")),
+    # Redirect for /favicon.ico
+    path(
+        "favicon.ico/",
+        RedirectView.as_view(
+            url=settings.STATIC_URL + "img/favicons/favicon.ico", permanent=True
+        ),
+    ),
 ]
 
 
