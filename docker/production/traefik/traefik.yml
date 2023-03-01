@@ -17,7 +17,7 @@ certificatesResolvers:
   letsencrypt:
     # https://docs.traefik.io/master/https/acme/#lets-encrypt
     acme:
-      email: "filter@algorithmwatch.org"
+      email: "changetheemail@algorithmwatch.org"
       storage: /etc/traefik/acme/acme.json
       # https://docs.traefik.io/master/https/acme/#httpchallenge
       httpChallenge:
@@ -26,7 +26,7 @@ certificatesResolvers:
 http:
   routers:
     web-router:
-      rule: "Host(`lab2.algorithmwatch.org`)"
+      rule: "Host(`changetoyourdomain.algorithmwatch.org`)"
       entryPoints:
         - web
       middlewares:
@@ -36,7 +36,7 @@ http:
       service: django
 
     web-secure-router:
-      rule: "Host(`lab2.algorithmwatch.org`)"
+      rule: "Host(`changetoyourdomain.algorithmwatch.org`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -48,7 +48,7 @@ http:
         certResolver: letsencrypt
 
     flower-secure-router:
-      rule: "Host(`lab2.algorithmwatch.org`)"
+      rule: "Host(`changetoyourdomain.algorithmwatch.org`)"
       entryPoints:
         - flower
       service: flower
@@ -67,9 +67,10 @@ http:
       # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
       headers:
         hostsProxyHeaders: ["X-CSRFToken"]
-    test-auth:
-      basicAuth:
-        usersFile: "/etc/traefik/htpasswd"
+    # Using basic auth with traefik
+    # test-auth:
+    #   basicAuth:
+    #     usersFile: "/etc/traefik/htpasswd"
 
   services:
     django:

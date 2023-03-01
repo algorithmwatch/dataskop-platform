@@ -30,6 +30,9 @@ COPY ./requirements /requirements
 RUN pip install --no-cache-dir -r /requirements/production.txt \
   && rm -rf /requirements
 
+# Not included in the requirements because gunicorn is not always used as the webserver
+RUN pip install gunicorn
+
 COPY --chown=django:django ./docker/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
