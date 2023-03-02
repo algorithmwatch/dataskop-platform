@@ -50,11 +50,13 @@ class LookupJobViewSet(ViewSet):
             # 1) Don't scrape data that is already getting processed.
             # 2) Don't scrape data that is already there. This can happen because time
             # elapsed since the upload. But don't save the updated data!
-            resp_obj.input_todo = [
-                x
-                for x in resp_obj.input_todo
-                if x not in processing_objs and not Lookup.objects.filter(id=x).exists()
-            ]
+            if resp_obj.input_todo:
+                resp_obj.input_todo = [
+                    x
+                    for x in resp_obj.input_todo
+                    if x not in processing_objs
+                    and not Lookup.objects.filter(id=x).exists()
+                ]
 
             if not resp_obj.input_todo and not resp_obj.input_done:
                 # Revert marking, but don't save `input_todo` since this may delete
