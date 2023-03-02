@@ -19,14 +19,13 @@ class EventExceptionsMiddelware:
             return None
 
         add_event.delay(
-            message="Django exception",
+            message=f"Django exception: {str(type(exception))}",
             data={
                 "path": request.get_full_path_info(),
                 "method": request.method,
                 "body": request.POST,
                 "ip_address": request.META.get("REMOTE_ADDR"),
-                "exception": str(exception),
-                "exception_type": str(type(exception)),
+                "exception_message": str(exception),
             },
         )
 
