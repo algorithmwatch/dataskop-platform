@@ -73,13 +73,18 @@ class LookupJobViewSet(ViewSet):
 
     def update(self, request, pk=None):
         """
-        Update lookups and lookup job
+        Update lookups and lookup job. This view is procteced by an API but still
+        validate the input.
         """
         job = LookupJob.objects.get(pk=pk)
 
         bin_field = BinaryField()
 
-        if "results" in request.data:
+        if (
+            "results" in request.data
+            and request.data["results"]
+            and isinstance(request.data["results"], dict)
+        ):
             new_lookups = [
                 Lookup(id=k, data=bin_field.to_internal_value(v), job=job)
                 for k, v in request.data["results"].items()
@@ -87,7 +92,11 @@ class LookupJobViewSet(ViewSet):
             # ignore lookups that are now already inserted
             Lookup.objects.bulk_create(new_lookups, ignore_conflicts=True)
 
-        if "log" in request.data:
+        if (
+            "log" in request.data
+            and request.data["log"]
+            and isinstance(request.data["log"], str)
+        ):
             job.log += (
                 datetime.datetime.now().isoformat() + " " + request.data["log"] + "\n"
             )

@@ -100,6 +100,14 @@ def test_lookup_api(client):
     )
     assert r.status_code == 204
 
+    r = client.put(
+        f"/api/lookupjobs/{job_id}/",
+        data={"error": "x", "log": None, "results": None},
+        content_type="application/json",
+        **headers,
+    )
+    assert r.status_code == 204
+
     r = client.get(
         "/api/lookupjobs/",
         content_type="application/json",
