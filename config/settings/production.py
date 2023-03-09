@@ -72,7 +72,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 )
 # Admin
 ADMIN_URL = env("DJANGO_ADMIN_URL")
-
+# Increase this to delete 2k recores via the admin interface
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2020
 
 # TEMPLATES
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
