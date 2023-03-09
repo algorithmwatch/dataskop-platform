@@ -30,7 +30,7 @@ class Command(BaseCommand):
             self.stdout.write("Deleting all old objects (besides superusers)...")
 
             User.objects.filter(is_superuser=False).delete()
-            models = [Campaign, Donation, Site, SiteExtended, Event]
+            models = [Campaign, Donation, SiteExtended, Event]
             for m in models:
                 self.stdout.write(f"Deleting model `{m}` ...")
                 m.objects.all().delete()
