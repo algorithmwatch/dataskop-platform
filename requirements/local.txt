@@ -16,7 +16,7 @@ django-stubs==1.15.0  # https://github.com/typeddjango/django-stubs
 types-freezegun==1.1.10  # https://github.com/python/typeshed
 mypy==1.1.1  # https://github.com/python/mypy
 black==23.1.0  # https://github.com/ambv/black
-ruff==0.0.254  # https://github.com/charliermarsh/ruff
+ruff==0.0.260  # https://github.com/charliermarsh/ruff
 djhtml==3.0.4  # https://github.com/rtts/djhtml
 
 # Utilities
