@@ -8,7 +8,7 @@ djangorestframework-api-key==2.3.0  # https://github.com/florimondmanca/djangore
 drf-yasg==1.21.5  # https://github.com/axnsan12/drf-yasg/
 
 # Database & cache
-psycopg2==2.9.5  # https://github.com/psycopg/psycopg2
+psycopg2==2.9.6  # https://github.com/psycopg/psycopg2
 django-redis==5.2.0  # https://github.com/jazzband/django-redis
 
 # Celery
