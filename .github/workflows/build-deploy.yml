@@ -16,7 +16,7 @@ jobs:
       # Thus, we have to delete the old tag / release on every deploy. Deleting the tag right before
       # creating a new one, caused some race conditions (the releases was marked as draft).
       - name: Delete old `deploy` tag + release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           delete_release: true
           tag_name: deploy
